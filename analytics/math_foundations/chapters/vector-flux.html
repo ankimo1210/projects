@@ -1,0 +1,65 @@
+<section id="vector-flux-question">
+  <h2>流束と法線成分</h2>
+  <p>流れと平行に板を置くと、板の面積が大きくても流れは板を横切りません。面を通り抜ける寄与を数えるには、場のうち面に垂直な成分だけが必要です。線に沿う仕事では接方向を使いましたが、今度は面の法線方向を使います。</p>
+  <p class="note">復習は<a href="vector-fields.html#vector-fields-products">内積と外積</a>、<a href="vector-surfaces.html">曲面と面積要素</a>です。「流れ」は数学の場のモデルとして用い、物理的な保存則をここで仮定しません。</p>
+</section>
+
+<section id="vector-flux-definition">
+  <h2>ベクトル場の面積分と流束の定義</h2>
+  <p>正則な曲面片 r(u, v) の法線には二つの向きがあります。一方を n = (rᵤ × rᵥ)/‖rᵤ × rᵥ‖ と選べば、n は連続な単位法線です。逆は −n。複数の片で滑らかに続く面では、重なる座標でも同じ法線を選びます。こうして全体で整合する連続な単位法線を選べる曲面を<strong>向き付け可能</strong>と呼び、本章ではそのような面を扱います。角を持つ面では滑らかな各片に法線を選び、境界曲線は面積に寄与しないものとして積分します。</p>
+  <p>曲面 S 上で連続な場 F に対し、選んだ向きでの<strong>流束</strong>を次で定めます。n を選んだことがデータの一部であり、流束は正にも負にもなります。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>Flux</mi><mo>(</mo><mi>F</mi><mo>,</mo><mi>S</mi><mo>,</mo><mi>n</mi><mo>)</mo><mo>:=</mo><msub><mo>∬</mo><mi>S</mi></msub><mi>F</mi><mo>·</mo><mi>n</mi><mi>dS</mi><mo>=</mo><msub><mo>∬</mo><mi>D</mi></msub><mi>F</mi><mo>(</mo><mi>r</mi><mo>)</mo><mo>·</mo><mo>(</mo><msub><mi>r</mi><mi>u</mi></msub><mo>×</mo><msub><mi>r</mi><mi>v</mi></msub><mo>)</mo><mi>du</mi><mi>dv</mi></mrow></math></div>
+  <p>最後の等式は n を外積の向きに選んだ場合です。<strong>ベクトル面積要素</strong> dS⃗ = n dS と書くと、dS⃗ = (rᵤ × rᵥ)du dv。単位化で割った長さと面積要素の長さが打ち消し合います。反対の向きなら全体に負号を付けます。例えば F·n = 0 なら接方向の流れで寄与は0、F·n &gt; 0 なら選んだ正方向、F·n &lt; 0 なら逆方向へ横切る寄与です。</p>
+</section>
+
+<section id="vector-flux-graph">
+  <h2>グラフ曲面の上向き面積ベクトル</h2>
+  <p>z = g(x, y) を D 上の C¹ グラフとし、r(u, v) = (u, v, g(u, v)) とします。外積は (−gᵤ, −gᵥ, 1) で第三成分が正なので、上向きの法線を与えます。F = (P, Q, R) とすると、流束は次になります。P、Q、R はすべて (u, v, g(u, v)) で評価します。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mo>∬</mo><mi>S</mi></msub><mi>F</mi><mo>·</mo><mi>n</mi><mi>dS</mi><mo>=</mo><msub><mo>∬</mo><mi>D</mi></msub><mo>(</mo><mo>−</mo><mi>P</mi><msub><mi>g</mi><mi>u</mi></msub><mo>−</mo><mi>Q</mi><msub><mi>g</mi><mi>v</mi></msub><mo>+</mo><mi>R</mi><mo>)</mo><mi>du</mi><mi>dv</mi></mrow></math></div>
+  <p>具体的に F = (0, 0, c)、平面 z = au + bv、D = [−1, 1]² とします。外積は (−a, −b, 1) なので、曲面積は 4√(1 + a² + b²)。しかし上向き流束は ∬D c du dv = 4c で、傾き a、b によりません。下向きなら −4c です。面積の増加と法線への射影の減少が、正確に相殺します。</p>
+  <figure class="concept-figure" id="vector-flux-visual-tilt" data-visual="vector-flux-tilt">
+    <svg class="concept-svg" viewBox="0 0 360 500" role="img" aria-labelledby="vector-flux-tilt-title vector-flux-tilt-desc">
+      <title id="vector-flux-tilt-title">傾いた面で面積と法線成分が相殺する</title><desc id="vector-flux-tilt-desc">z=xの同縮尺xz断面。上向き単位法線は(−1,0,1)/√2。y方向の幅2を含む面積4√2と鉛直単位場の法線成分1/√2を掛けると4。向きを反転すると面積は同じで法線成分と流束だけが負になる。</desc>
+      <path d="M 85 245 L 225 105" stroke="var(--series-1)" stroke-width="5"/>
+      <path d="M 155 175 L 99 119" stroke="var(--series-2)" stroke-width="4"/><polygon points="99,119 103,134 112,125" fill="var(--series-2)"/>
+      <path d="M 270 240 L 270 140" stroke="var(--ink)" stroke-width="4"/><polygon points="270,140 264,152 276,152" fill="var(--ink)"/>
+      <path d="M 85 245 L 85 285" stroke="var(--ink-2)" stroke-width="2" stroke-dasharray="5 5"/><path d="M 225 105 L 225 285" stroke="var(--ink-2)" stroke-width="2" stroke-dasharray="5 5"/><path d="M 85 285 L 225 285" stroke="var(--ink-2)" stroke-width="3"/>
+      <g fill="var(--ink)" font-size="22"><text x="56" y="98">n</text><text x="283" y="192">F</text><text x="173" y="84">z = x</text><text x="155" y="320" text-anchor="middle">投影の幅 2</text><text x="180" y="351" text-anchor="middle">面積増加 × 射影減少</text></g>
+    <text x="180" y="392" text-anchor="middle" font-size="22" fill="var(--ink)">c=1で数値を比較</text><text x="180" y="430" text-anchor="middle" font-size="22" fill="var(--ink)">面積4√2 × 法線成分1/√2</text><text x="180" y="472" text-anchor="middle" font-size="22" fill="var(--ink)">流束4 = 投影面積4 × 1</text></svg><figcaption>a = 1、b = 0、c &gt; 0 の断面図です。位置の x 軸と z 軸は同じ縮尺です。n と F の矢印は方向だけを示し、互いの長さの比較には使いません。面の y 方向の幅2も含めると、面積は4√2、上向き流束は4cです。</figcaption>
+  </figure>
+  <div data-lab="vector-flux"></div>
+  <noscript><p class="note">傾きと法線の実験操作には JavaScript が必要です。D = [−1, 1]²、F = (0, 0, 1) では、a = b = 0 なら面積4、a = 1、b = 0 なら面積4√2、a = b = 1 なら面積4√3。上向き流束はすべて4、下向きなら−4です。曲面積と流束を別の量として比べてください。</p></noscript>
+</section>
+
+<section id="vector-flux-orientation">
+  <h2>曲面の座標変換と向き</h2>
+  <div class="proof"><h3>行列式の符号は、法線の反転を記録する</h3><p>前章の座標変換 η = r ∘ T では、ηₛ × ηₜ = det DT·(rᵤ × rᵥ) でした。det DT &gt; 0 なら同じ法線向きです。流束の式へ代入し、変数変換定理を使うと値が一致します。</p><p>det DT &lt; 0 なら η の外積は逆向きになります。そのまま外積を使って積分すれば符号が反転します。同じ<strong>向き付き曲面</strong>の流束を計算したいなら、η の外積に負号を付け、もとの選択 n に合わせます。座標の交換だけで、あらかじめ指定した面の正方向まで勝手に変えてはいけません。</p></div>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="曲面積と流束の向きに対する変化"><table class="concept-table" style="min-width:30rem" data-visual="vector-flux-orientation"><caption>z=x、−1≤x,y≤1の同じ面で、符号だけを替えて検算する</caption><thead><tr><th scope="col">操作と場</th><th scope="col">曲面積</th><th scope="col">流束</th></tr></thead><tbody><tr><th scope="row">上向き、F=(0,0,1)</th><td>4√2</td><td>4√2 × 1/√2 = 4</td></tr><tr><th scope="row">法線だけ反転</th><td>4√2</td><td>−4</td></tr><tr><th scope="row">場だけ−Fに変更</th><td>4√2</td><td>−4</td></tr><tr><th scope="row">法線と場の両方を反転</th><td>4√2</td><td>4。二つの負号が相殺する。</td></tr><tr><th scope="row">接方向の場F=(1,0,1)</th><td>4√2</td><td>0。F·(−1,0,1)=0で、面積が0なのではない。</td></tr><tr><th scope="row">同じ面と向きで正則な座標変更</th><td>4√2</td><td>4。座標の取り方だけでは変わらない。</td></tr></tbody></table></div>
+</section>
+
+<section id="vector-flux-closed">
+  <h2>閉曲面の外向き法線</h2>
+  <p>立体 Ω の境界 S = ∂Ω が有限個の滑らかな面でできるときは、通常は<strong>外向き</strong>を正とします。これは各点でΩから外へ出る方向です。球の上部では上向き、下部では下向きであり、「外向き」は「いつでも上向き」ではありません。稜線や角で法線が一つに決まらなくても、各面の積分を足します。</p>
+  <figure class="concept-figure" id="vector-flux-visual-outward" data-visual="vector-flux-outward">
+    <svg class="concept-svg" viewBox="0 0 360 360" role="img" aria-labelledby="vector-flux-outward-title vector-flux-outward-desc">
+      <title id="vector-flux-outward-title">外向き法線は、場所によって変わる</title><desc id="vector-flux-outward-desc">球を中心を通る断面の円で表し、上端では上、右端では右、下端では下、左端では左の外向き矢印を示す。上と下で法線の上下方向は逆。断面の横縦は同縮尺。</desc>
+      <circle cx="180" cy="170" r="75" fill="var(--series-1)" fill-opacity="0.10" stroke="var(--ink-2)" stroke-width="2"/>
+      <path d="M 180 95 L 180 45" stroke="var(--series-2)" stroke-width="4"/><polygon points="180,45 174,57 186,57" fill="var(--series-2)"/>
+      <path d="M 255 170 L 305 170" stroke="var(--series-2)" stroke-width="4"/><polygon points="305,170 293,164 293,176" fill="var(--series-2)"/>
+      <path d="M 180 245 L 180 295" stroke="var(--series-2)" stroke-width="4"/><polygon points="180,295 174,283 186,283" fill="var(--series-2)"/>
+      <path d="M 105 170 L 55 170" stroke="var(--series-2)" stroke-width="4"/><polygon points="55,170 67,164 67,176" fill="var(--series-2)"/>
+      <g fill="var(--ink)" font-size="22"><text x="180" y="177" text-anchor="middle">Ω</text><text x="207" y="68">上で上向き</text><text x="207" y="287">下で下向き</text><text x="180" y="340" text-anchor="middle">外向き：内側から外側へ</text></g>
+    </svg><figcaption>球の断面を用いた向きの図で、球全体の面積や流束を円の線積分として計算する図ではありません。法線の矢印の長さは共通です。</figcaption>
+  </figure>
+  <p>定数場 F = (0, 0, c) で直方体の外向き流束を考えると、上面の寄与は c × 上面積、下面は −c × 下面積、側面は0なので合計0です。一方、F(x, y, z) = (x, y, z) を半径 R の球で考えると、外向き単位法線 n = (x, y, z)/R との内積は R。前章の球面積から流束は R·4πR² = 4πR³ です。これらは各面の定義からの直接計算です。</p>
+  <p><a href="vector-gauss.html">第9章のGaussの定理</a>は、閉曲面の外向き流束を内部の積分と結びます。ここでは、閉じたという理由だけで流束0とは結論しません。内部にどんな場があるかが関わります。</p>
+</section>
+
+<details class="column" id="vector-flux-column"><summary>寄り道［自作モデル］：窓の量を二つの方法で数える</summary><p>一定の上向きの場 (0, 0, 1) と、投影が同じ正方形になる傾いた平面片のモデルでは、面の実面積は変わっても上向き流束は4のままです。面積を大きくするために傾けると、場の法線成分がちょうど小さくなります。</p><p>この相殺は、本章の平面・一定場の仮定から出た正確な結果です。場が場所により変わる場合、同じ投影だから同じ流束と即断できません。まず面上での場の値を評価する必要があります。</p><p class="source-note">出典：F = (0, 0, 1)、z = au + bv の自作モデルを直接積分したものです。</p></details>
+
+<section id="vector-flux-exercises"><h2>演習：面積・法線・流束</h2>
+  <article class="exercise"><h3>1．傾きが増えたら流束も増えるか</h3><p>F = (0, 0, 2)、S は z = 2u − v、−1 ≤ u, v ≤ 1 です。面積と上向き・下向きの流束を求めてください。</p><details><summary>ヒント1：外積</summary><p>rᵤ × rᵥ = (−2, 1, 1) で長さは √6。</p></details><details><summary>ヒント2：内積を先に取る</summary><p>(0, 0, 2)·(−2, 1, 1) = 2、座標面積は4です。</p></details><details><summary>解答</summary><p>面積は4√6、上向き流束は8、下向き流束は−8です。単位法線を使えば F·n = 2/√6 となり、面積要素の √6 と相殺します。</p></details></article>
+  <article class="exercise"><h3>2．場を面上で評価する</h3><p>F(x, y, z) = (x, 0, z)、S は z = 1 + x、0 ≤ x, y ≤ 1 の上向きグラフです。流束を求めてください。</p><details><summary>ヒント1：ベクトル面積要素</summary><p>r(x, y) = (x, y, 1 + x) なので外積は (−1, 0, 1)。</p></details><details><summary>ヒント2：第三成分も代入する</summary><p>F(r) = (x, 0, 1 + x) です。</p></details><details><summary>解答</summary><p>F(r)·(−1, 0, 1) = −x + 1 + x = 1。単位正方形で積分して流束は1です。場の第三成分を z のまま残して平面への代入を忘れると、正しい被積分関数になりません。</p></details></article>
+  <article class="exercise"><h3>3．閉じた面でも0とは限らない</h3><p>Ω = [−1, 1]³、F(x, y, z) = (x, y, z) とします。六面の外向き流束を直接足してください。</p><details><summary>ヒント1：x の二面</summary><p>x = 1 では n = (1, 0, 0)、x = −1 では n = (−1, 0, 0)。どちらも F·n = 1。</p></details><details><summary>ヒント2：各面の面積</summary><p>一面の面積は4です。y、z の面も同様です。</p></details><details><summary>解答</summary><p>六面のいずれでも F·n = 1 なので一面あたり4、合計24です。反対側の面では場も法線も反転するため、内積は同じ正の値です。閉曲面であることだけから合計0とはいえません。</p></details></article>
+</section>
+<section id="vector-flux-reflection"><h2>自分の言葉で</h2><ol><li>曲面積と流束は、何を同じように足し、何を違うように重み付けしますか。</li><li>座標を交換したとき、同じ向き付き曲面の流束を保つには何を確認しますか。</li><li>閉じた境界の「外向き」は「上向き」とどう違い、流束0を何も仮定せず結論できないのはなぜですか。</li></ol></section>

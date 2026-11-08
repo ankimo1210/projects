@@ -1,0 +1,132 @@
+<section id="independence-question">
+  <h2>事象の独立</h2>
+  <p>二台の装置が別々の場所にあっても、同じ電源に頼っていれば、一台の故障を知ることがもう一台の故障の見込みを変えるかもしれません。逆に、一個のさいころから作った二つの事象が独立になる場合もあります。独立は、物理的に離れているか、言葉の上で違う出来事かでは決まりません。</p>
+  <p>「B が起きたと分かっても A の確率が変わらない」を、<a href="conditional-probability.html">条件付き確率</a>で書けば P(A | B) = P(A) です。ただし P(B) = 0 では左辺を定義できません。そこで、分母を使わず、両者を対称に扱える形を定義に選びます。</p>
+</section>
+
+<section id="independence-definition">
+  <h2>二事象の独立と条件付き確率</h2>
+  <div class="theorem">
+    <h3>二事象の独立の定義</h3>
+    <p>二つの事象 A、B が<strong>独立</strong>であるとは、次の等式が成り立つことです。</p>
+    <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>P</mi><mo>(</mo><mi>A</mi><mo>∩</mo><mi>B</mi><mo>)</mo><mo>=</mo><mi>P</mi><mo>(</mo><mi>A</mi><mo>)</mo><mi>P</mi><mo>(</mo><mi>B</mi><mo>)</mo></mrow></math></div>
+  </div>
+  <div class="proof">
+    <h3>確率が変わらないという読み方との同値</h3>
+    <p>P(B) &gt; 0 のときは、上の等式を P(B) で割れば P(A | B) = P(A) です。逆にこの条件付き確率の等式に P(B) を掛ければ積の定義に戻ります。従って P(B) &gt; 0 の下では二つの言い方は同値です。P(A) &gt; 0 なら、同様に P(B | A) = P(B) とも同値になります。</p>
+  </div>
+  <p>例えば二回のコイン投げで、表表、表裏、裏表、裏裏の四結果を等確率とするモデルを置きます。A を「一回目が表」、B を「二回目が表」とすると P(A) = P(B) = 1/2、P(A ∩ B) = 1/4 なので独立です。最初に四結果を等確率と置いたことが、独立性を導くモデルの情報になっています。</p>
+  <p>確率 0 の事象 A も、積の定義では任意の B と独立です。A ∩ B ⊆ A より P(A ∩ B) = 0 = P(A)P(B) だからです。P(A) = 1 の場合も、P(Aᶜ ∩ B) ≤ P(Aᶜ) = 0 なので、P(A ∩ B) = P(B) − P(Aᶜ ∩ B) = P(B) = P(A)P(B)。従って任意の B と独立です。これは「A を条件にした割合を必ず計算できる」という意味ではありません。定義に分母を使わない利点と、条件付けの制限を分けて読みます。</p>
+</section>
+
+<section id="independence-disjoint">
+  <h2>排反と独立の違い</h2>
+  <p>公平なさいころで A を「偶数」、D を「奇数」とします。二つは排反ですが、P(A ∩ D) = 0 に対し P(A)P(D) = 1/4 で、独立ではありません。奇数が出たと分かれば偶数の可能性が消えるので、情報としては強く結び付いています。</p>
+  <p>一般に、P(A) &gt; 0、P(B) &gt; 0 の二事象が排反なら、同時確率は 0、積は正なので独立ではあり得ません。排反と独立が両立するのは、少なくとも一方の確率が 0 の場合です。排反事象では和を足せる、独立事象では同時確率を掛けられる、という二つの条件を混同しないようにします。</p>
+  <p>一方、同じさいころで A を「偶数」、B を「3 の倍数」とすると、P(A) = 1/2、P(B) = 1/3、A ∩ B = {6} で P(A ∩ B) = 1/6。従って独立です。一つの試行から作った事象でも、等式を満たすことはあります。独立性は、選んだ事象と確率モデルに対する性質です。</p>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="公平なさいころで作る排反と独立の比較">
+    <table class="concept-table" id="independence-visual-disjoint-comparison" data-visual="independence-disjoint-comparison">
+      <caption>同じ公平なさいころでも、選ぶ事象の組によって関係は変わる</caption>
+      <thead><tr><th scope="col"><span class="table-math">事象の組</span></th><th scope="col"><span class="table-math">共通部分の確率</span></th><th scope="col"><span class="table-math">個別確率の積</span></th><th scope="col"><span class="table-math">排反か</span></th><th scope="col"><span class="table-math">独立か</span></th></tr></thead>
+      <tbody>
+        <tr><th scope="row"><span class="table-math">偶数 A と奇数 D</span></th><td><span class="table-math">0</span></td><td><span class="table-math">(1/2)(1/2) = 1/4</span></td><td><span class="table-math">はい</span></td><td><span class="table-math">いいえ</span></td></tr>
+        <tr><th scope="row"><span class="table-math">偶数 A と3の倍数 B</span></th><td><span class="table-math">1/6</span></td><td><span class="table-math">(1/2)(1/3) = 1/6</span></td><td><span class="table-math">いいえ</span></td><td><span class="table-math">はい</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>排反では共通部分が空かを、独立では共通部分の<strong>重みが積と等しいか</strong>を確かめます。「別々に見える」という印象で判定するものではありません。</p>
+</section>
+
+<section id="independence-complements">
+  <h2>独立と補事象</h2>
+  <div class="theorem">
+    <h3>補集合との独立</h3>
+    <p>A と B が独立なら、A と Bᶜ、Aᶜ と B、Aᶜ と Bᶜ もそれぞれ独立です。</p>
+  </div>
+  <div class="proof">
+    <h3>A を二つに分けて引き算する</h3>
+    <p>A = (A ∩ B) ∪ (A ∩ Bᶜ) は排反な分割です。従って P(A ∩ Bᶜ) = P(A) − P(A ∩ B) = P(A) − P(A)P(B) = P(A)(1 − P(B)) = P(A)P(Bᶜ)。これが A と Bᶜ の独立です。A と B を入れ替えれば Aᶜ と B の独立も得られます。最後に、すでに独立と分かった A と Bᶜ に同じ結果を使い、A の側を補集合にすれば Aᶜ と Bᶜ も独立です。</p>
+  </div>
+  <p>例えば二台の装置がある期間を故障せずに動く事象が独立なら、その期間に両方が故障する確率も、各故障確率の積です。ただし、「各装置の故障しにくさ」を知っただけでは、独立という関係までは決まりません。関係を調べずに積を使わないことが大切です。</p>
+</section>
+
+<section id="independence-lab">
+  <h2>周辺確率と実現可能な同時確率</h2>
+  <p>a = P(A)、b = P(B)、c = P(A ∩ B) とします。全体は「両方」「A だけ」「B だけ」「どちらもない」の四部分に分かれ、その重みは順に c、a − c、b − c、1 − a − b + c です。すべて非負である条件から、重なりの動ける範囲は max(0, a + b − 1) ≤ c ≤ min(a, b) になります。</p>
+  <p>a、b を固定し、c だけ動かしてみます。独立になるのは c = ab の位置です。例えば a = b = 1/2 なら、c = 0 は排反、c = 1/4 は独立、c = 1/2 は二つが同じ側に重なるモデルになります。個別の確率だけでは、この三つを区別できません。</p>
+  <div class="lab" data-lab="probability-independence"></div>
+  <noscript><p class="note">実験の操作には JavaScript が必要です。初期値は a = b = 1/2、c = 1/4。四部分はすべて 1/4 で、c − ab = 0、P(A | B) = c/b = 1/2 なので独立です。a、b を固定して c = 0 にすると四部分は 0、1/2、1/2、0 となり、P(A | B) = 0 に変わります。</p></noscript>
+  <p class="note">独立の定義は正確な等式です。画面上で丸めた数が同じに見えることと、数学的に等しいことは区別します。また b = 0 では P(A | B) の比は定義しませんが、積の定義では独立かどうかを判定できます。</p>
+</section>
+
+<section id="independence-mutual">
+  <h2>対独立と相互独立</h2>
+  <p>A₁, …, Aₙ が<strong>相互に独立</strong>とは、どの二個以上の部分集団を選んでも、そのすべてが同時に起きる確率が個別の確率の積になることです。三事象なら、三通りの二事象の等式と、P(A ∩ B ∩ C) = P(A)P(B)P(C) の両方が必要です。二つずつの条件だけを満たす場合は<strong>対独立</strong>と呼びます。</p>
+  <p>反例を四結果で作れます。Ω = {00, 01, 10, 11} を等確率とし、A を「一文字目が 1」、B を「二文字目が 1」、C を「二文字が異なる」とします。A = {10, 11}、B = {01, 11}、C = {01, 10} なので、それぞれの確率は 1/2 です。</p>
+  <p>A ∩ B = {11}、A ∩ C = {10}、B ∩ C = {01} はいずれも確率 1/4。従って、どの二つも独立です。しかし A ∩ B ∩ C = ∅ で確率 0 なのに、三つの確率の積は 1/8 です。二文字とも 1 と分かれば「異なる」は不可能になります。二つずつでは見えない関係が三つの間に残りました。</p>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="二文字の四結果における三事象の所属表">
+    <table class="concept-table" id="independence-visual-pairwise-table" data-visual="independence-pairwise-table">
+      <caption>1=起きる、0=起きない。各結果1/4。下段で二つずつと三つ全体の独立を検査する</caption>
+      <thead><tr><th scope="col"><span class="table-math">結果 ω</span></th><th scope="col"><span class="table-math">A：一文字目が1</span></th><th scope="col"><span class="table-math">B：二文字目が1</span></th><th scope="col"><span class="table-math">C：二文字が異なる</span></th></tr></thead>
+      <tbody>
+        <tr><th scope="row"><span class="table-math">00</span></th><td><span class="table-math">0</span></td><td><span class="table-math">0</span></td><td><span class="table-math">0</span></td></tr>
+        <tr><th scope="row"><span class="table-math">01</span></th><td><span class="table-math">0</span></td><td><span class="table-math">1</span></td><td><span class="table-math">1</span></td></tr>
+        <tr><th scope="row"><span class="table-math">10</span></th><td><span class="table-math">1</span></td><td><span class="table-math">0</span></td><td><span class="table-math">1</span></td></tr>
+        <tr><th scope="row"><span class="table-math">11</span></th><td><span class="table-math">1</span></td><td><span class="table-math">1</span></td><td><span class="table-math">0</span></td></tr>
+      </tbody>
+    <tfoot><tr><th scope="row">各事象の確率</th><td><span class="table-math">P(A)=1/2</span></td><td><span class="table-math">P(B)=1/2</span></td><td><span class="table-math">P(C)=1/2</span></td></tr><tr><th scope="row">二つずつの検査</th><td colspan="3"><span class="table-math">A∩B</span>、<span class="table-math">A∩C</span>、<span class="table-math">B∩C</span> は、上段で両方1の行が各一つ。共通確率 <span class="table-math">1/4=(1/2)(1/2)</span> で、三組とも独立。</td></tr><tr><th scope="row">三つ全体の検査</th><td colspan="3">三列とも1の行はないので <span class="table-math">P(A∩B∩C)=0</span>。一方 <span class="table-math">P(A)P(B)P(C)=1/8</span>。<strong>不一致なので相互独立ではない。</strong></td></tr></tfoot></table>
+  </div>
+  <p>どの二列を選んでも両方 1 の行は一つあります。一方、三列が全て 1 の行はありません。この最後の検査が、二つずつの検査には含まれていません。</p>
+  <div class="theorem" id="independence-general-complements"><h3>相互独立な事象は、一部を補集合に替えてもよい</h3><p>相互独立な A₁, …, Aₙ の任意の一部を、それぞれの補集合に替えた事象族も相互独立です。成功する位置だけでなく、失敗する位置も指定した並びの確率を積で書ける理由です。</p></div>
+  <div class="proof"><h3>一つ替えて、同じ議論を繰り返す</h3><p>まず Aᵢ だけを補集合に替えます。Aᵢ を含まない部分集団の積の等式は変わりません。Aᵢ を含む部分集団では、残りの任意の共通部分を C とすると、相互独立の定義から P(Aᵢ ∩ C) = P(Aᵢ)P(C)、かつ P(C) は残りの確率の積です。従って P(Aᵢᶜ ∩ C) = P(C) − P(Aᵢ ∩ C) = (1 − P(Aᵢ))P(C)。残りがない場合は C = Ω、空の積は 1 と読みます。どの部分集団でも新しい積の等式が成立するので、替えた族も相互独立です。この操作を一つずつ繰り返せば、任意の一部を補集合に替えられます。</p></div>
+  <p class="note">n 個について「全部の同時確率が積になる」という一個の等式だけを調べるのも、相互独立の定義には足りません。途中の部分集団すべてが対象です。後で多数の試行の成功回数や平均を扱うときに使う「独立」は、この相互独立の意味で使います。</p>
+</section>
+
+<section id="independence-conditioning">
+  <h2>条件付けによる独立性の変化</h2>
+  <p>改めて、二回のコイン投げの四結果を等確率とし、A を「一回目が表」、B を「二回目が表」とします。元のモデルで A と B は独立です。ここで D =「少なくとも一回は表だった」という情報だけを受け取ると、残る表表、表裏、裏表はそれぞれ条件付き確率 1/3 になります。</p>
+  <p>この新しい確率の下では P(A | D) = P(B | D) = 2/3 に対し、P(A ∩ B | D) = 1/3。1/3 ≠ (2/3)² なので独立ではありません。少なくとも一回は表と分かった上で、一回目が裏だと追加で知れば、二回目は必ず表です。選ばれた集まりの中で、二つの結果が結び付いたのです。</p>
+  <p>逆に、ある条件の下で独立だからといって、条件を外しても独立だとは限りません。どの集まりで、何を条件にした確率を計算しているかを明記します。条件付き確率は原因を直接操作した結果ではなく、情報を使って重みを付け直したものでした。</p>
+</section>
+
+<details class="column" id="independence-column">
+  <summary>寄り道［応用］：部品の信頼性を掛けてよい条件</summary>
+  <p>NIST の直列システムのモデルは、どれか一つの部品が故障すると全体が停止し、部品の故障・生存が独立である場合に、各部品の信頼性を掛けて全体の信頼性を計算します。ここで信頼性は、指定した時点まで動く確率です。</p>
+  <p>本章の仮想例で、同じ時点まで部品 A が動く確率を 0.99、B を 0.98 とします。両方必要で、生存が独立と仮定すれば、全体が動く確率は 0.99×0.98 = 0.9702、停止する確率は 1 − 0.9702 = 0.0298 です。後者は二つの故障率を単純に足した 0.03 から、両方故障する確率 0.01×0.02 = 0.0002 を引いたものにも一致します。</p>
+  <p>共通の電源や環境があれば、生存の独立性は自動的には言えません。二つの周辺の確率だけを同じに保ちながら、同時確率を変えられることは実験でも見ました。掛け算は便利ですが、その便利さを支えているのは独立というモデルの仮定です。</p>
+  <p class="source-note">出典：<a href="https://www.itl.nist.gov/div898/handbook/apr/section1/apr182.htm">NIST/SEMATECH：8.1.8.2 Series model</a>。部品の数値と計算は本章の仮想設定です。</p>
+</details>
+
+<section id="independence-exercises">
+  <h2>演習：独立性と条件付け</h2>
+  <article class="exercise">
+    <h3>1．一個のさいころから作る独立</h3>
+    <p>公平なさいころで A を「偶数」、B を「4 以下」とします。A と B が独立かを判定し、Aᶜ と Bᶜ の独立も、確率を直接計算して確かめてください。</p>
+    <details><summary>ヒント1：同時に満たす出目を数える</summary><p>A ∩ B = {2, 4} です。</p></details>
+    <details><summary>ヒント2：両方の補集合の重なりも書く</summary><p>Aᶜ = {1, 3, 5}、Bᶜ = {5, 6} です。</p></details>
+    <details><summary>解答</summary><p>P(A) = 1/2、P(B) = 4/6 = 2/3、P(A ∩ B) = 2/6 = 1/3 = (1/2)(2/3) なので独立です。補集合は P(Aᶜ) = 1/2、P(Bᶜ) = 1/3、Aᶜ ∩ Bᶜ = {5} で確率 1/6 = (1/2)(1/3)。従って補集合どうしも独立です。一つの試行かどうかではなく、選んだ事象の重なりを計算しました。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>2．重なりを動かして独立にする</h3>
+    <p>P(A) = 0.6、P(B) = 0.5、P(A ∩ B) = 0.2 とします。四部分の確率と P(A | B) を求め、独立か判定してください。個別の確率を保ったまま独立にするには、重なりをいくつにすればよいですか。</p>
+    <details><summary>ヒント1：両方、A だけ、B だけ、どちらもない</summary><p>順に c、a − c、b − c、1 − a − b + c です。</p></details>
+    <details><summary>ヒント2：独立のときの重なりは積</summary><p>0.6×0.5 と今の 0.2 を比べます。</p></details>
+    <details><summary>解答</summary><p>四部分は 0.2、0.4、0.3、0.1 で、すべて非負、総和 1 です。P(A | B) = 0.2/0.5 = 0.4 で元の 0.6 と違い、0.2 ≠ 0.6×0.5 なので独立ではありません。独立にするには c = 0.3 とすればよく、四部分は 0.3、0.3、0.2、0.2 になります。許される重なりの範囲は 0.1 ≤ c ≤ 0.5 なので、新しい設定も実現できます。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>3．「同じだった」と知った後の独立</h3>
+    <p>二回のコイン投げの四結果を等確率とします。A を「一回目が表」、B を「二回目が表」、E を「二回の結果が同じ」として、P(A | E)、P(B | E)、P(A ∩ B | E) を求め、E を条件にした新しい確率の下で独立か判定してください。</p>
+    <details><summary>ヒント1：条件に合う結果は二つ</summary><p>E = {表表, 裏裏} です。</p></details>
+    <details><summary>ヒント2：新しい周辺確率の積と比べる</summary><p>独立であるためには P(A ∩ B | E) = P(A | E)P(B | E) が必要です。</p></details>
+    <details><summary>解答</summary><p>P(E) = 1/2。E の中で A、B、A ∩ B を満たす結果はいずれも表表だけなので、三つの条件付き確率はすべて (1/4)/(1/2) = 1/2 です。同時確率 1/2 は周辺確率の積 1/4 と違うので、E を条件にした確率では独立ではありません。元のモデルでは独立でしたが、同じ結果だけに絞る情報が二つを結び付けました。</p></details>
+  </article>
+</section>
+
+<section id="independence-reflection">
+  <h2>自分の言葉で</h2>
+  <ol>
+    <li>独立の定義に条件付き確率の比ではなく積を使うと、どんな場合も含められますか。排反とは何が違いますか。</li>
+    <li>対独立の反例では、二つずつの関係では見えなかったどんな情報が、三つを合わせると現れましたか。</li>
+    <li>ある集まりで独立と分かった後に情報で対象を絞るとき、同じ積の公式を使ってよいか、何を確かめますか。</li>
+  </ol>
+</section>

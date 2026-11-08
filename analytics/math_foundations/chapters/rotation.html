@@ -1,0 +1,99 @@
+<section id="rotation-question">
+  <h2>平面回転と座標表示</h2>
+  <p>紙に描いた矢印を 30 度回し、さらに 60 度回す。最初から 90 度回した矢印と同じ向きになります。この当たり前の動きを座標で計算しようとすると、行列が現れます。一方、<a href="numbers.html#numbers-complex">複素数</a>を使っても同じ動きを書けます。なぜ、形の違う二つの計算が同じ図を動かすのでしょう。</p>
+  <p class="note">前提として、<a href="numbers.html#numbers-laws">分配法則</a>、<a href="numbers.html#numbers-complex">複素数の積と i² = −1</a>、<a href="numbers.html#numbers-absolute-value">複素数の絶対値</a>を使います。三角関数は次節で単位円の座標として導入し、行列の計算もこの章で定めます。</p>
+  <p>この章では、原点を中心とする平面の回転を考えます。横軸は右が正、縦軸は上が正、角度の正方向は反時計回りです。矢印の先端を (x, y) と書き、始点は原点に固定します。図を動かすだけでなく、何が変わり、何が変わらないかを式から説明することが目標です。</p>
+</section>
+
+<section id="rotation-unit-circle">
+  <h2>回転行列と基底ベクトル</h2>
+  <p>長さ 1 の矢印 (1, 0) を角度 θ だけ回した先端を、(cos θ, sin θ) と表します。これが単位円による三角関数の見方です。円の半径が 1 なので、cos²θ + sin²θ = 1。例えば 0 度では (1, 0)、90 度では (0, 1)、180 度では (−1, 0) です。度でもラジアンでも、角度の単位をそろえれば以下の関係は同じです。</p>
+  <p>もう一本の基本の矢印 (0, 1) は、(1, 0) の 90 度先にあります。二本を一緒に回しても、その直角の位置関係は変わらないため、回転後は (−sin θ, cos θ) です。どんな矢印 (x, y) も、横向きの基本の矢印を x 倍し、上向きのものを y 倍して足したものと見られます。</p>
+  <p>回転は、矢印を足して作った平行四辺形をそのまま回します。したがって、足してから回すことと、各矢印を回してから足すことは一致します。倍率を変える操作とも両立します。この「足し算と実数倍を保つ」という性質を<strong>線形性</strong>と呼びます。基本の二本の行き先が決まれば、それらを足し合わせたすべての矢印の行き先も決まるのです。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msup><mi>x</mi><mo>′</mo></msup><mo>=</mo><mi>x</mi><mi>cos</mi><mi>θ</mi><mo>−</mo><mi>y</mi><mi>sin</mi><mi>θ</mi><mo>,</mo><mspace width="1em"/><msup><mi>y</mi><mo>′</mo></msup><mo>=</mo><mi>x</mi><mi>sin</mi><mi>θ</mi><mo>+</mo><mi>y</mi><mi>cos</mi><mi>θ</mi></mrow></math></div>
+  <p>x′、y′ は、回転後の座標を表す記号です。ここでの ′ は微分ではありません。この二本の式を、係数の並びが見やすい一つの表にまとめます。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>(</mo><mtable><mtr><mtd><msup><mi>x</mi><mo>′</mo></msup></mtd></mtr><mtr><mtd><msup><mi>y</mi><mo>′</mo></msup></mtd></mtr></mtable><mo>)</mo><mo>=</mo><munder><mrow><mo>(</mo><mtable><mtr><mtd><mi>cos</mi><mi>θ</mi></mtd><mtd><mo>−</mo><mi>sin</mi><mi>θ</mi></mtd></mtr><mtr><mtd><mi>sin</mi><mi>θ</mi></mtd><mtd><mi>cos</mi><mi>θ</mi></mtd></mtr></mtable><mo>)</mo></mrow><mrow><mi>R</mi><mo>(</mo><mi>θ</mi><mo>)</mo></mrow></munder><mo>(</mo><mtable><mtr><mtd><mi>x</mi></mtd></mtr><mtr><mtd><mi>y</mi></mtd></mtr></mtable><mo>)</mo></mrow></math></div>
+  <p>真ん中の係数の表が<strong>回転行列</strong> R(θ) です。行列と縦に並べた座標の積は、「各行の係数を座標に掛けて足す」と定義します。表の第 1 列、第 2 列を読むと、基本の二本の行き先がそのまま入っています。行列は計算を圧縮するだけでなく、変換の情報を保存する表なのです。</p>
+
+  <figure class="concept-figure" id="rotation-visual-basis-columns" data-visual="rotation-visual-basis-columns">
+      <svg class="concept-svg" viewBox="0 0 360 340" role="img" aria-labelledby="rotation-visual-basis-columns-title rotation-visual-basis-columns-desc">
+        <title id="rotation-visual-basis-columns-title">基底二本の行き先を、同じ回転の二つの列へ対応づける</title>
+        <desc id="rotation-visual-basis-columns-desc">濃い破線のe1とe2を同じ30度だけ反時計回りに回す。e1の像は右上で第1列、e2の像は左上で第2列。第2列の横成分は負になる。図は一角度の例であり、全角度の証明は式による。</desc>
+        <line x1="30" y1="180" x2="334" y2="180" stroke="var(--ink-3)" stroke-width="1.5" /><polygon points="334,180 324.99,184.339 324.99,175.661" fill="var(--ink-3)"/><line x1="180" y1="323" x2="180" y2="27" stroke="var(--ink-3)" stroke-width="1.5" /><polygon points="180,27 184.339,36.0097 175.661,36.0097" fill="var(--ink-3)"/><circle cx="180" cy="180" r="105" fill="none" stroke="var(--grid)" stroke-width="2"/><line x1="180" y1="180" x2="285" y2="180" stroke="var(--ink)" stroke-width="5" stroke-dasharray="7 4" /><polygon points="285,180 275.99,184.339 275.99,175.661" fill="var(--ink)"/><text x="303" y="208" text-anchor="middle" fill="var(--ink)" font-size="22" >e₁</text><line x1="180" y1="180" x2="180" y2="75" stroke="var(--ink)" stroke-width="5" stroke-dasharray="7 4" /><polygon points="180,75 184.339,84.0097 175.661,84.0097" fill="var(--ink)"/><text x="212" y="65" text-anchor="middle" fill="var(--ink)" font-size="22" >e₂</text><line x1="180" y1="180" x2="270.933" y2="127.5" stroke="var(--series-1)" stroke-width="3" /><polygon points="270.933,127.5 265.299,135.762 260.961,128.247" fill="var(--series-1)"/><text x="292" y="118" text-anchor="middle" fill="var(--ink)" font-size="22" >R e₁</text><line x1="180" y1="180" x2="127.5" y2="89.0673" stroke="var(--series-2)" stroke-width="3" /><polygon points="127.5,89.0673 135.762,94.7005 128.247,99.0394" fill="var(--series-2)"/><text x="93" y="65" text-anchor="middle" fill="var(--ink)" font-size="22" >R e₂</text><path d="M 221 180 A 41 41 0 0 0 215.507 159.5" fill="none" stroke="var(--series-1)" stroke-width="2"/><text x="258" y="171" text-anchor="middle" fill="var(--series-1)" font-size="22" >30°</text><path d="M180 130 A50 50 0 0 0 155 136.699" fill="none" stroke="var(--series-2)" stroke-width="2"/><text x="112" y="148" text-anchor="middle" fill="var(--series-2)" font-size="22">30°</text><text x="164" y="206" text-anchor="middle" fill="var(--ink)" font-size="22" >0</text>
+      </svg>
+      <figcaption>まず濃い破線の e₁ と e₂ から、それぞれの回転後の矢印へ、二つの弧を追います。細い灰色線は座標軸です。θ=30°では第1列が R e₁=(√3/2,1/2)、第2列が R e₂=(−1/2,√3/2) です。特に第2列の横成分は左向きなので負になります。二本を別々に選ぶのではなく、同じ角度だけ回すと長さと直角関係を保つ組になります。図は30°の例で、全角度の公式と長さの保存は本文の式で確かめます。</figcaption>
+    </figure>
+</section>
+
+<section id="rotation-lab">
+  <h2>回転の合成と行列の積</h2>
+  <p>下の図では、矢印 v = (1, 0.5) をまず β、次に α だけ回します。二段階の結果を、一度に α + β だけ回した結果と比べてください。角度を変えたとき、向きだけでなく、長さにも注目しましょう。</p>
+  <div data-lab="rotation"></div><p data-reading-note="rotation-composition">二段階の回転では破線の中間の矢印を経由し、角度の和による一回の回転では直接進みます。二つの最終点が重なることと、どちらも同じ円上にあることを別々に比べてください。開始点は v=(1,0.5) に固定した数値実験なので、有限個の角度と丸めた表示の一致を全ての入力の証明とは呼びません。一般の一致は行列積または複素数の式へ戻って確認します。</p>
+  <noscript><p class="note">図の操作には JavaScript が必要です。紙では v = (1, 0.5) を 90 度ずつ二回回してみてください。一回目は (−0.5, 1)、二回目は (−1, −0.5) となり、一度の 180 度回転と一致します。</p></noscript>
+  <p>二段階の座標計算は、最初の変換の出力を次の変換の入力に入れることです。この代入をまとめる計算を<strong>行列の積</strong>と定めます。右側の行列が先に働くので、β のあとに α なら R(α)R(β) です。幾何的には、同じ原点のまわりに二度回した角度は合計になるため、次が成り立ちます。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>R</mi><mo>(</mo><mi>α</mi><mo>)</mo><mi>R</mi><mo>(</mo><mi>β</mi><mo>)</mo><mo>=</mo><mi>R</mi><mo>(</mo><mi>α</mi><mo>+</mo><mi>β</mi><mo>)</mo></mrow></math></div>
+  <p>角度の足し算と、行列の足し算は違います。行列の足し算は対応する係数を足す操作です。例えば R(0) + R(0) は矢印を二倍にしてしまいます。順に操作をするという意味を保つために必要なのが、掛け算のほうなのです。図で何例か一致しても、それだけで全角度の証明にはなりません。ここでの根拠は、行列が回転を表すという導出と、回転角の合成です。</p>
+</section>
+
+<section id="rotation-complex">
+  <h2>複素数の積による回転</h2>
+  <p>点 (x, y) を複素数 z = x + yi と対応づけます。この点の原点からの距離 √(x² + y²) を、複素数 z の<strong>絶対値</strong>と呼びます。長さ 1 の複素数 uθ = cos θ + i sin θ を掛けてみましょう。<a href="numbers.html#numbers-laws">分配法則</a>と<a href="numbers.html#numbers-complex">複素数の積の規則（i² = −1）</a>から、次の式が出ます。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>(</mo><mi>cos</mi><mi>θ</mi><mo>+</mo><mi>i</mi><mi>sin</mi><mi>θ</mi><mo>)</mo><mo>(</mo><mi>x</mi><mo>+</mo><mi>y</mi><mi>i</mi><mo>)</mo><mo>=</mo><mo>(</mo><mi>x</mi><mi>cos</mi><mi>θ</mi><mo>−</mo><mi>y</mi><mi>sin</mi><mi>θ</mi><mo>)</mo><mo>+</mo><mi>i</mi><mo>(</mo><mi>x</mi><mi>sin</mi><mi>θ</mi><mo>+</mo><mi>y</mi><mi>cos</mi><mi>θ</mi><mo>)</mo></mrow></math></div>
+  <p>実部と虚部を読むと、回転行列が出した二つの座標と一致します。行列では二本の基本の矢印の行き先を記録し、複素数では一つの数を掛けています。別の現象を偶然似た式で書いたのではなく、同じ回転を二通りの表現で書いているのです。</p>
+  <p>単位複素数どうしを掛けても、二度の回転に対応します。分配して得られる積の実部は cos α cos β − sin α sin β、虚部は sin α cos β + cos α sin β。合計角の回転と同じなので、これらはそれぞれ cos(α + β)、sin(α + β) に等しくなります。三角関数の加法定理も、回転を合成する計算として読めます。</p>
+</section>
+
+<section id="rotation-proof">
+  <h2>回転による長さの保存</h2>
+  <div class="theorem">
+    <h3>回転は長さを保つ</h3>
+    <p>任意の実数 x、y と角度 θ について、上の回転後の座標は x′² + y′² = x² + y² を満たします。したがって、原点からの距離も変わりません。</p>
+  </div>
+  <div class="proof">
+    <h3>短い証明</h3>
+    <p>c = cos θ、s = sin θ と略記します。回転後の長さの平方は (cx − sy)² + (sx + cy)²。展開すると −2csxy と +2csxy が打ち消し合い、(c² + s²)x² + (c² + s²)y² が残ります。単位円の関係 c² + s² = 1 を使うと x² + y² です。長さは平方根のうち非負のほうなので、長さそのものも一致します。</p>
+  </div>
+  <p>仮定の「単位」が重要です。一般の複素数 a + bi を掛けた場合は、同じ展開から長さの平方が (a² + b²) 倍になります。0 でない複素数なら、長さを √(a² + b²) 倍する操作と、向きを回す操作に分けられます。特に絶対値 1 のときだけ、拡大縮小のない回転になります。0 を掛ける操作はすべてを原点へ移し、回転角は定まりません。</p>
+  <p class="note">逆向きの注意も必要です。「長さを保つ」だけで回転とは限りません。例えば (x, y) を (x, −y) にする鏡映も長さを保ちますが、平面の表裏の向きを反転させます。また、ここで扱ったのは原点を中心とする平面回転です。異なる中心の回転や立体の回転まで、同じ式をそのまま適用することはできません。</p>
+</section>
+
+<details class="column" id="rotation-column">
+  <summary>寄り道［応用］：ブラウザで画像を回すときにも</summary>
+  <p>Web ページの見た目を指定する CSS には、要素を平面内で回す rotate() があります。W3C の仕様では、回転を cos と sin を使う行列で表し、複数の変換の合成を行列の積で定めています。本文の計算が、そのまま画面の図形を動かす仕組みにつながります。</p>
+  <p>ただし、仕様の画面座標は右と下が正です。この座標で rotate(90deg) は時計回りに見えます。本文の縦軸は上向きなので、回る向きを読むときには座標の約束を確かめる必要があります。中心を点 p に変えるなら、まず v − p で中心を原点へ移し、回して p を足し戻すと p + R(θ)(v − p)。この式は本文から導け、p 自体は動きません。中心と座標の向きを分けて考えると、公式を画面に移すときの取り違えも防げます。</p>
+  <p class="source-note">出典：<a href="https://www.w3.org/TR/css-transforms-1/#funcdef-transform-rotate">W3C CSS Transforms：回転</a>、<a href="https://www.w3.org/TR/css-transforms-1/#transform-function-lists">W3C CSS Transforms：変換の合成</a>。</p>
+</details>
+
+<section id="rotation-exercises">
+  <h2>演習：回転行列と複素数</h2>
+  <article class="exercise">
+    <h3>1．90 度回して、戻す</h3>
+    <p>v = (1, 0.5) を 90 度回した座標を求め、さらに −90 度回すと元に戻ることを確かめてください。</p>
+    <details><summary>ヒント1：単位円の値</summary><p>cos 90° = 0、sin 90° = 1。−90 度では cos は 0、sin は −1 です。</p></details>
+    <details><summary>ヒント2：対応を簡単にする</summary><p>90 度回転は (x, y) → (−y, x)、−90 度回転は (x, y) → (y, −x) です。</p></details>
+    <details><summary>解答</summary><p>最初は (−0.5, 1)。次は (1, 0.5) となり戻ります。複素数なら i を掛けたあと −i を掛けており、その積 i(−i) = 1 が「何もしない」操作を表します。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>2．回転か、拡大もあるか</h3>
+    <p>z = 1 + 0.5i に 1 + i を掛け、座標と長さの倍率を求めてください。さらに 90 度回転と同じかを説明してください。</p>
+    <details><summary>ヒント1：まず分配する</summary><p>(1 + i)(1 + 0.5i) の四つの項を計算し、i² = −1 を使います。</p></details>
+    <details><summary>ヒント2：掛ける数の長さ</summary><p>1 + i の絶対値は √(1² + 1²) です。向きは単位円でなく、点 (1, 1) の向きから読みます。</p></details>
+    <details><summary>解答</summary><p>積は 0.5 + 1.5i、座標は (0.5, 1.5) です。長さは √2 倍になります。点 (1, 1) の向きは 45 度なので、45 度の回転と √2 倍の拡大の組合せであり、90 度回転ではありません。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>3．行列の和と積の違い</h3>
+    <p>R(0) を二回順に作用させる場合と、行列 R(0) + R(0) を作用させる場合を、任意の (x, y) について比較してください。</p>
+    <details><summary>ヒント1：0 度の行列</summary><p>cos 0 = 1、sin 0 = 0 なので、対角に 1、そのほかに 0 が並びます。</p></details>
+    <details><summary>ヒント2：係数を足す場合</summary><p>行列の和では、二つの対角成分がそれぞれ 2 になります。</p></details>
+    <details><summary>解答</summary><p>二回順に作用させても (x, y) のままです。行列の和を作用させると (2x, 2y) になり、長さが二倍です。前者は操作の合成なので行列の積、後者は二つの出力を足す操作なので行列の和です。</p></details>
+  </article>
+</section>
+
+<section id="rotation-reflection">
+  <h2>自分の言葉で</h2>
+  <ol>
+    <li>基本の二本の矢印の行き先だけで、回転行列を決められるのはなぜですか。</li>
+    <li>角度の和、行列の積、単位複素数の積は、どのように同じ操作を表していますか。</li>
+    <li>単位複素数を掛ける場合と、一般の複素数を掛ける場合で、保たれるものはどう違いますか。</li>
+  </ol>
+</section>

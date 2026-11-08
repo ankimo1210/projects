@@ -1,0 +1,72 @@
+<section id="discrete-relations-question">
+  <h2>二項関係と同値関係</h2>
+  <p>0、1、2、3、4、5 の札を、3 で割った余りごとにまとめます。0 と 3 は別の整数ですが、余りだけを見る問題では同じ役割を持ちます。「同じ」とみなす基準を選ぶと、六枚の札を三つの箱で扱えます。ただし、気分で似たものを寄せ集めると、箱の境界が重なるかもしれません。</p>
+  <p>この章の問いは、<strong>どんな関係なら、すべての対象を重ならない組へ分けられるか</strong>です。<a href="sets-maps.html">集合と写像</a>の言葉を使い、対象の等しさと、目的に応じた同一視を区別します。この見方は、<a href="modular-arithmetic.html">余りの計算</a>や、数え上げで順序を忘れる操作にもつながります。</p>
+</section>
+
+<section id="discrete-relations-relation">
+  <h2>二項関係と同値関係の定義</h2>
+  <p>二つの対象を一番目、二番目という順番を保って組にしたものを<strong>順序対</strong> (x, y) といいます。(x, y) = (u, v) とは x = u かつ y = v であることです。X の要素どうしの順序対をすべて集めた集合 X×X = {(x, y)：x, y ∈ X} を、X と X の<strong>直積</strong>と呼びます。</p>
+  <p>集合 X の<strong>二項関係</strong> R は X×X の部分集合です。(x, y) ∈ R を xRy と書き、「x と y の間で R が成り立つ」と読みます。二つ組には順序があり、xRy と yRx は別の条件です。たとえば整数で xRy を「x ≤ y」とすれば、2R5 は成り立ち、5R2 は成り立ちません。</p>
+  <p>関係は写像と違い、相手を一つに決める必要がありません。0 ≤ y となる整数 y は多数あります。「x と y の差が 3 の倍数」という関係なら、0 は 0、3、−3 などと関係します。何を同じとみなしたいかを、まず二つの対象についての条件にするわけです。</p>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="二項関係の三つの性質と確認する問い">
+    <table class="concept-table" id="discrete-relations-visual-properties" data-visual="discrete-relations-properties" style="min-width:40rem"><caption>三条件を整数の余りで確かめ、一つずつ欠く関係と比べる。条件はすべてのx,y,z∈Xについて。</caption><thead><tr><th scope="col">性質</th><th scope="col">必要な条件</th><th scope="col">余りが等しい関係（整数全体）</th><th scope="col">この性質を欠く反例</th></tr></thead><tbody><tr><th scope="row">反射律</th><td><span class="table-math">xRx</span></td><td><span class="table-math">1∼1</span>。自分自身の余りは同じ。</td><td>X={0,1}上の空の関係R=∅。対称律と推移律は破れないが、<span class="table-math">0R0</span>が偽。自分を入れる箱がない。</td></tr><tr><th scope="row">対称律</th><td><span class="table-math">xRy ⇒ yRx</span></td><td><span class="table-math">1∼4</span>なら<span class="table-math">4∼1</span>。先後を逆にしても余りは同じ。</td><td>X={0,1}上の<span class="table-math">≤</span>。反射律と推移律は成立するが、<span class="table-math">0≤1</span>から<span class="table-math">1≤0</span>は言えない。</td></tr><tr><th scope="row">推移律</th><td><span class="table-math">xRy</span>、<span class="table-math">yRz</span>から<span class="table-math">xRz</span></td><td><span class="table-math">0∼3</span>、<span class="table-math">3∼6</span>から<span class="table-math">0∼6</span>。同じ余りのままつながる。</td><td>X={0,1,2}で<span class="table-math">|x−y|≤1</span>。反射的・対称的でも、0と1、1と2が近いことから0と2が近いとは言えない。</td></tr></tbody></table>
+  </div>
+  <p>この三つを満たす関係が<strong>同値関係</strong>です。以後は x ∼ y と書きます。整数の「差が 3 の倍数」なら、x − x = 0、差の符号を変えても 3 の倍数、二つの差を足しても 3 の倍数なので、三条件を満たします。</p>
+  <p class="note">「差の絶対値が 1 以下」は反射的かつ対称的ですが、整数全体では推移的でありません。0 は 1 と、1 は 2 と関係しても、0 は 2 と関係しません。「近い」というだけでは、重ならない箱を作れるとは限りません。</p>
+</section>
+
+<section id="discrete-relations-classes">
+  <h2>同値類と商集合</h2>
+  <p>x と同値な対象をすべて集めた集合を、x の<strong>同値類</strong> [x] といいます。x は箱の名札になる代表元です。代表は変わっても、同じ箱を指すことがあります。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>[</mo><mi>x</mi><mo>]</mo><mo>=</mo><mo>{</mo><mi>y</mi><mo>∈</mo><mi>X</mi><mo>：</mo><mi>y</mi><mo>∼</mo><mi>x</mi><mo>}</mo></mrow></math></div>
+  <div class="concept-grid">
+    <figure class="concept-figure" id="discrete-relations-visual-remainders" data-visual="discrete-relations-remainders">
+      <svg class="concept-svg" viewBox="0 0 360 350" role="img" aria-labelledby="discrete-relations-remainders-title discrete-relations-remainders-desc">
+        <title id="discrete-relations-remainders-title">六つの整数を、三で割った余りで分ける</title>
+        <desc id="discrete-relations-remainders-desc">全体Xは0から5。余り0の箱は0と3、余り1の箱は1と4、余り2の箱は2と5。箱は重ならず、六つの要素をすべて含む。</desc>
+        <g fill="var(--surface)" stroke="var(--series-1)" stroke-width="2.5"><rect x="25" y="55" width="310" height="73" rx="12"/><rect x="25" y="151" width="310" height="73" rx="12"/><rect x="25" y="247" width="310" height="73" rx="12"/></g>
+        <g text-anchor="middle"><text x="180" y="30">X = {0, 1, 2, 3, 4, 5}</text><text x="87" y="100">余り 0</text><text x="220" y="100">0</text><text x="285" y="100">3</text><text x="87" y="196">余り 1</text><text x="220" y="196">1</text><text x="285" y="196">4</text><text x="87" y="292">余り 2</text><text x="220" y="292">2</text><text x="285" y="292">5</text></g>
+      </svg>
+      <figcaption>X = {0, 1, 2, 3, 4, 5} に限った同値類です。[0] = [3] = {0, 3}。整数全体を X にすれば、同じ基準でも類は無限集合になります。</figcaption>
+    </figure>
+    <figure class="concept-figure" id="discrete-relations-visual-quotient" data-visual="discrete-relations-quotient">
+      <svg class="concept-svg" viewBox="0 0 360 350" role="img" aria-labelledby="discrete-relations-quotient-title discrete-relations-quotient-desc">
+        <title id="discrete-relations-quotient-title">対象からその同値類へ移る写像</title>
+        <desc id="discrete-relations-quotient-desc">左に六つの入力0、3、1、4、2、5を一点ずつ配置。各入力から一本の矢印が出て、0と3は右の類{0,3}、1と4は{1,4}、2と5は{2,5}へ移る。三つの出力のそれぞれに二本の矢印が入り、全射だが単射ではない。</desc>
+        <g fill="var(--surface)" stroke="var(--rule)" stroke-width="2"><circle data-point="0" cx="60" cy="65" r="18"/><circle data-point="3" cx="60" cy="115" r="18"/><circle data-point="1" cx="60" cy="165" r="18"/><circle data-point="4" cx="60" cy="215" r="18"/><circle data-point="2" cx="60" cy="265" r="18"/><circle data-point="5" cx="60" cy="315" r="18"/><rect data-class-node="0" x="205" y="66" width="110" height="48" rx="8"/><rect data-class-node="1" x="205" y="166" width="110" height="48" rx="8"/><rect data-class-node="2" x="205" y="266" width="110" height="48" rx="8"/></g>
+        <g text-anchor="middle"><text x="60" y="29">入力</text><text x="260" y="29">同値類</text><text x="60" y="73">0</text><text x="60" y="123">3</text><text x="60" y="173">1</text><text x="60" y="223">4</text><text x="60" y="273">2</text><text x="60" y="323">5</text><text x="260" y="98">{0, 3}</text><text x="260" y="198">{1, 4}</text><text x="260" y="298">{2, 5}</text></g>
+        <g fill="none" stroke="var(--series-2)" stroke-width="3"><path data-input="0" data-class="0" d="M 84 65 L 198 82 M 188 75 L 198 82 L 186 87"/><path data-input="3" data-class="0" d="M 84 115 L 198 98 M 186 93 L 198 98 L 188 105"/><path data-input="1" data-class="1" d="M 84 165 L 198 182 M 188 175 L 198 182 L 186 187"/><path data-input="4" data-class="1" d="M 84 215 L 198 198 M 186 193 L 198 198 L 188 205"/><path data-input="2" data-class="2" d="M 84 265 L 198 282 M 188 275 L 198 282 L 186 287"/><path data-input="5" data-class="2" d="M 84 315 L 198 298 M 186 293 L 198 298 L 188 305"/></g>
+      </svg>
+      <figcaption>x ↦ [x] は六つの入力それぞれから一本の矢印を出し、同じ類の二入力を一つの出力へ送ります。三つの類すべてに届くので全射ですが、異なる入力が同じ出力へ移るので単射ではありません。同じ類を一度だけ集めた集合 X/∼ は三要素です。</figcaption>
+    </figure>
+  </div>
+  <div class="theorem"><h3>同値類は、等しいか、まったく交わらない</h3><p>[x] と [y] が一つでも共通要素を持てば、[x] = [y] です。また、すべての同値類を合わせると X になります。</p></div>
+  <div class="proof"><h3>一つの共通要素から、箱全体を比べる</h3><p>z ∈ [x] ∩ [y] とします。z ∼ x と z ∼ y から、対称律と推移律により x ∼ y です。任意の w ∈ [x] について、w ∼ x ∼ y なので w ∈ [y]。逆も同じなので二つの集合は等しくなります。さらに反射律から x ∈ [x] であり、どの x も少なくとも一つの類に入ります。これで、漏れも、別の箱どうしの重なりもないことが分かりました。</p></div>
+</section>
+
+<section id="discrete-relations-partitions">
+  <h2>同値関係と集合の分割</h2>
+  <p>X の<strong>分割</strong>は、空でない部分集合を箱として、異なる箱どうしは交わらず、すべての箱の和集合が X になるようにしたものです。箱に空集合を許すと、「実際には対象のない箱」を余分に足せるため、ここでは除きます。X = ∅ の場合は、箱も一つもない分割を認めます。</p>
+  <div class="proof"><h3>分割と同値関係は、同じ構造の二つの表現</h3><p>分割があれば、x ∼ y を「x と y が同じ箱に入る」と定義します。x はどれか一つの箱に入るので反射律、同じ箱という条件の向きを変えても同じなので対称律が成り立ちます。x と y が同じ箱、y と z が同じ箱なら、その二箱は y を共有するので同じ箱です。従って x と z も同じ箱で、推移律が成り立ちます。</p><p>この関係の [x] は、元の分割で x が入っていた箱そのものです。逆に、同値関係から類の分割を作り、同じ箱という関係へ戻しても、x ∼ y ⇔ [x] = [y] により元の関係が得られます。対象を比較する規則と、できあがった箱分けは互いに復元できます。</p></div>
+  <p>「同じ」の基準を変えれば分割も変わります。六つの整数を偶奇で分ければ二箱、数そのものの等しさで分ければ六箱です。何を捨て、何を残すかは問題次第。<a href="discrete-orders.html">次章の半順序</a>では、「同じ箱にいる」ではなく「こちらが先、こちらが含まれる」といった非対称な比較を調べます。</p>
+</section>
+
+<details class="column" id="discrete-relations-column">
+  <summary>寄り道［自作モデル］：回した並びを同じ模様とみなす</summary>
+  <p>三つの位置に A、B、C を一つずつ置き、向きを一周ずらした配置を同じとみなします。ABC、BCA、CAB は一つの類、ACB、CBA、BAC はもう一つの類です。何もしない回転、逆向きの回転、二つの回転の合成があるので、回転で移り合えるという関係は反射的・対称的・推移的です。</p>
+  <p>この例では、六つの配置が三つずつ二類に分かれます。ただし同じ文字を許すと AAA の類は一要素です。「回転で三つずつ重なるから、いつでも 3 で割る」は成り立ちません。類の大きさがそろう条件は、<a href="discrete-counting.html">数え上げ</a>で改めて確認します。</p>
+  <p class="source-note">出典：本章のために作成した有限配置モデル。外部の実測値や歴史的事実は用いていません。</p>
+</details>
+
+<section id="discrete-relations-exercises">
+  <h2>演習：同値関係と分割</h2>
+  <article class="exercise"><h3>1．似ているだけでは足りない</h3><p>整数上の xRy を |x − y| ≤ 2 で定めます。反射律・対称律・推移律を一つずつ判定してください。</p><details><summary>ヒント1：同じ数と、向きを逆にした差</summary><p>|x − x| と |x − y| = |y − x| を使います。</p></details><details><summary>ヒント2：二歩進むと、距離はどうなるか</summary><p>0、2、4 の三数を比べてください。</p></details><details><summary>解答</summary><p>反射律は |x − x| = 0 ≤ 2、対称律は差の絶対値が向きを変えても同じなので成り立ちます。0R2、2R4 は成り立つ一方、|0 − 4| = 4 &gt; 2 なので 0R4 は成り立ちません。推移律がなく、同値関係ではありません。</p></details></article>
+  <article class="exercise"><h3>2．余りの箱を全部書く</h3><p>X = {0, 1, 2, 3, 4, 5, 6, 7} で、差が 4 の倍数なら同値とします。同値類をすべて書き、[1] と [5] を比べてください。</p><details><summary>ヒント1：四で割った余りを名札にする</summary><p>余りは 0、1、2、3 のいずれかです。</p></details><details><summary>ヒント2：代表元が違っても、箱は同じか</summary><p>1 と 5 の差を調べてから、それぞれと同値な要素を集めます。</p></details><details><summary>解答</summary><p>類は {0, 4}、{1, 5}、{2, 6}、{3, 7} の四つです。[1] = [5] = {1, 5} です。1 と 5 自体は異なりますが、類を出力とする写像では同じ値へ送られます。</p></details></article>
+  <article class="exercise"><h3>3．箱の重なりが起こす矛盾</h3><p>X = {a, b, c} の「箱」を {a, b} と {b, c} の二つにし、どれか一つの箱に一緒に入れば xRy と定めます。分割にも同値関係にもならない理由を説明してください。</p><details><summary>ヒント1：分割の箱は交わってよいか</summary><p>二つの箱の共通要素を調べます。</p></details><details><summary>ヒント2：a から b、b から c とたどる</summary><p>a と c が一緒に入る箱はあるでしょうか。</p></details><details><summary>解答</summary><p>二箱は b を共有し、異なる箱どうしが交わらないという分割の条件を満たしません。関係は aRb、bRc を満たしても aRc を満たさず、推移律がありません。重なる箱を作ってから「同じ箱」と呼ぶだけでは、整合的な同一視は得られません。</p></details></article>
+</section>
+
+<section id="discrete-relations-reflection">
+  <h2>自分の言葉で</h2>
+  <ol><li>対象が等しいことと、選んだ関係で同値になることは、どう違いますか。</li><li>同値類が一つの要素を共有したとき、三つの性質のどれを使って全体の一致を導きましたか。</li><li>分割を先に指定する方法と、同値関係を先に指定する方法を、同じ具体例で説明できますか。</li></ol>
+</section>

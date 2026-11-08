@@ -1,0 +1,64 @@
+<section id="fundamental-theorem-question">
+  <h2>積分で定義した関数と微分</h2>
+  <p>ある容器へ水が入り、時刻 t における正味の流入速度が f(t) であるとします。負の値は流出です。時刻 a から x までの水量の変化を集めた関数 F(x) を作ると、その瞬間の変化率は元の f(x) に戻るでしょうか。微分と積分が逆の操作になるという言葉を、条件を確かめながら定理にします。</p>
+  <p>前提は<a href="integration.html">積分</a>の定義と<a href="integration.html#integration-properties">加法性・大小関係</a>、<a href="continuity.html">連続性</a>、<a href="mean-value.html">平均値の定理</a>です。連続関数は閉区間でRiemann積分可能であるという定理も、積分の章から借ります。積分の存在を原始関数で定義していないので、これからの議論は循環しません。</p>
+</section>
+
+<section id="fundamental-theorem-accumulation">
+  <h2>符号付き積分と面積</h2>
+  <p>f が [a, b] で連続として、各 x に対して a から x まで積分した値を F(x) と定めます。左端では F(a) = 0 です。積分の向きを逆にしたときは符号を変える約束を使います。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>F</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><msubsup><mo>∫</mo><mi>a</mi><mi>x</mi></msubsup><mi>f</mi><mo>(</mo><mi>t</mi><mo>)</mo><mi>d</mi><mi>t</mi></mrow></math></div>
+  <p>f が非負なら、この値はグラフと横軸の間の面積です。負の部分があれば、その部分を引きます。例えば f(t) = t を [−1, 1] で積分すると 0 ですが、左右の三角形の面積の合計は 1。面積そのものを求めるなら |f(t)| を積分します。水量の例で流入と流出を相殺するのは、正味の変化を知りたいからです。</p>
+  <p>x を少し動かしたとき F に加わるのは、細い区間の積分だけです。加法性により F(x + h) − F(x) は x から x + h までの積分になります。差商は、この小区間における f の平均値と読めます。</p>
+
+<figure class="concept-figure" id="fundamental-theorem-visual-signed-area" data-visual="fundamental-theorem-signed-area">
+  <svg class="concept-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 310" role="img" aria-labelledby="fundamental-theorem-visual-signed-area-title fundamental-theorem-visual-signed-area-desc">
+    <title id="fundamental-theorem-visual-signed-area-title">幾何学的面積と符号つき積分</title>
+    <desc id="fundamental-theorem-visual-signed-area-desc">f(t)=tを−1から1まで積分すると、左の三角形の寄与−1/2と右の寄与1/2が相殺する。</desc>
+    <g fill="var(--ink-2)" font-size="22"><path d="M 55 165 L 55 265 L 180 165 Z" fill="var(--series-2)" fill-opacity="0.16"/><path d="M 180 165 L 305 165 L 305 65 Z" fill="var(--series-1)" fill-opacity="0.16"/><path d="M 30 165 L 335 165" fill="none" stroke="var(--ink-2)" stroke-width="2"/><path d="M 180 285 L 180 30" fill="none" stroke="var(--ink-2)" stroke-width="2"/><path d="M 55.000 265.000 L 57.500 263.000 L 60.000 261.000 L 62.500 259.000 L 65.000 257.000 L 67.500 255.000 L 70.000 253.000 L 72.500 251.000 L 75.000 249.000 L 77.500 247.000 L 80.000 245.000 L 82.500 243.000 L 85.000 241.000 L 87.500 239.000 L 90.000 237.000 L 92.500 235.000 L 95.000 233.000 L 97.500 231.000 L 100.000 229.000 L 102.500 227.000 L 105.000 225.000 L 107.500 223.000 L 110.000 221.000 L 112.500 219.000 L 115.000 217.000 L 117.500 215.000 L 120.000 213.000 L 122.500 211.000 L 125.000 209.000 L 127.500 207.000 L 130.000 205.000 L 132.500 203.000 L 135.000 201.000 L 137.500 199.000 L 140.000 197.000 L 142.500 195.000 L 145.000 193.000 L 147.500 191.000 L 150.000 189.000 L 152.500 187.000 L 155.000 185.000 L 157.500 183.000 L 160.000 181.000 L 162.500 179.000 L 165.000 177.000 L 167.500 175.000 L 170.000 173.000 L 172.500 171.000 L 175.000 169.000 L 177.500 167.000 L 180.000 165.000 L 182.500 163.000 L 185.000 161.000 L 187.500 159.000 L 190.000 157.000 L 192.500 155.000 L 195.000 153.000 L 197.500 151.000 L 200.000 149.000 L 202.500 147.000 L 205.000 145.000 L 207.500 143.000 L 210.000 141.000 L 212.500 139.000 L 215.000 137.000 L 217.500 135.000 L 220.000 133.000 L 222.500 131.000 L 225.000 129.000 L 227.500 127.000 L 230.000 125.000 L 232.500 123.000 L 235.000 121.000 L 237.500 119.000 L 240.000 117.000 L 242.500 115.000 L 245.000 113.000 L 247.500 111.000 L 250.000 109.000 L 252.500 107.000 L 255.000 105.000 L 257.500 103.000 L 260.000 101.000 L 262.500 99.000 L 265.000 97.000 L 267.500 95.000 L 270.000 93.000 L 272.500 91.000 L 275.000 89.000 L 277.500 87.000 L 280.000 85.000 L 282.500 83.000 L 285.000 81.000 L 287.500 79.000 L 290.000 77.000 L 292.500 75.000 L 295.000 73.000 L 297.500 71.000 L 300.000 69.000 L 302.500 67.000 L 305.000 65.000" fill="none" stroke="var(--series-1)" stroke-width="3"/><text x="50" y="197" text-anchor="end">−1</text><text x="305" y="197" text-anchor="middle">1</text><text x="335" y="160" text-anchor="start">t</text><text x="195" y="32" text-anchor="start">f(t)</text><text x="100" y="200" text-anchor="middle">−1/2</text><text x="245" y="151" text-anchor="start">+1/2</text></g>
+  </svg>
+  <figcaption>f(t) = t、区間 [−1, 1]。積分は −1/2 + 1/2 = 0、面積の合計は 1/2 + 1/2 = 1 です。正味の増減を測るか、面積を測るかで集める量が違います。</figcaption>
+</figure>
+</section>
+
+<section id="fundamental-theorem-first">
+  <h2>微分積分学の基本定理：積分の微分</h2>
+  <div class="theorem"><h3>微積分の基本定理：蓄積を微分する形</h3><p>f が [a, b] で連続なら、F(x) = ∫ₐˣ f(t)dt は (a, b) で微分可能で、F′(x) = f(x) です。端では、それぞれ区間内側からの片側微分について同じ結論が成り立ちます。</p></div>
+  <div class="proof"><h3>平均値を挟む証明</h3><p>内点 x を固定します。連続性により、どんな ε &gt; 0 に対しても、x に十分近い t では f(x) − ε &lt; f(t) &lt; f(x) + ε です。h ≠ 0 を十分小さくすると、x と x + h の間のすべての点でこの比較が使えます。積分の大小関係から、その区間の平均値も両側の定数の間に入ります。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>|</mo><mfrac><mrow><mi>F</mi><mo>(</mo><mi>x</mi><mo>+</mo><mi>h</mi><mo>)</mo><mo>−</mo><mi>F</mi><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mi>h</mi></mfrac><mo>−</mo><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>|</mo><mo>≤</mo><mi>ε</mi></mrow></math></div>
+  <p>h &lt; 0 のときも、積分の向きと分母の符号が同時に反転するので、同じ平均の評価です。ε は任意だから差商の極限は f(x)。積分を微分する公式を仮定せず、連続性と積分の大小関係だけで結論へ届きました。</p></div>
+  <p>ここで連続性が働いたのは、細い区間の中で f が f(x) から大きく離れないことを保証する場面です。単に幅が小さくなるという図だけでは、平均値がその点の値へ近づくとは限りません。</p>
+  <p>なお、積分の中の文字 t は集める場所を表す仮の文字で、上端を動かす文字 x とは役割が違います。先に積分して一つの関数を作り、その入力を動かして微分する。この順序を意識すると、被積分関数の微分を勝手に積分記号の中へ入れる誤りを避けられます。</p>
+
+<figure class="concept-figure" id="fundamental-theorem-visual-average-squeeze" data-visual="fundamental-theorem-average-squeeze"><svg class="concept-svg" viewBox="0 0 360 485" role="img" aria-labelledby="fundamental-theorem-visual-average-squeeze-title fundamental-theorem-visual-average-squeeze-desc"><title id="fundamental-theorem-visual-average-squeeze-title">積分を幅で割った平均も、連続性の帯に挟まれる</title><desc id="fundamental-theorem-visual-average-squeeze-desc">f(t)=t、x=1、h=1/2。台形の積分5/8と、幅1/2・高さ平均5/4の破線長方形は同面積。平均はf(x)±epsilon=1/4,7/4の帯に入る。</desc><text x="180" y="28" text-anchor="middle" font-size="22" fill="var(--ink)">積分÷幅h = 平均の高さ</text><line x1="60" y1="270" x2="322" y2="270" stroke="var(--ink-3)" stroke-width="2"/><line x1="60" y1="270" x2="60" y2="65" stroke="var(--ink-3)" stroke-width="2"/><rect x="190" y="95" width="65" height="150" fill="var(--series-2)" fill-opacity="0.07"/><line x1="60" y1="95" x2="315" y2="95" stroke="var(--ink-3)" stroke-width="2" stroke-dasharray="6 5"/><line x1="60" y1="245" x2="315" y2="245" stroke="var(--ink-3)" stroke-width="2" stroke-dasharray="6 5"/><polygon points="190,270 255,270 255,120 190,170" fill="var(--series-1)" fill-opacity=".1" stroke="var(--series-1)" stroke-width="2"/><rect x="190" y="145" width="65" height="125" fill="none" stroke="var(--series-2)" stroke-width="3" stroke-dasharray="6 5"/><polygon points="190,170 190,145 222.5,145" fill="var(--series-2)" fill-opacity=".23"/><polygon points="222.5,145 255,145 255,120" fill="var(--series-1)" fill-opacity=".23"/><line x1="60" y1="270" x2="294" y2="90" stroke="var(--series-1)" stroke-width="3"/><line x1="190" y1="145" x2="255" y2="145" stroke="var(--series-2)" stroke-width="3" stroke-dasharray="6 5"/><circle cx="222.5" cy="145" r="4" fill="var(--series-2)"/><text x="35" y="102" text-anchor="middle" font-size="22" fill="var(--ink)">7/4</text><text x="35" y="252" text-anchor="middle" font-size="22" fill="var(--ink)">1/4</text><text x="125" y="133" text-anchor="middle" font-size="22" fill="var(--series-2)">平均5/4</text><text x="190" y="303" text-anchor="middle" font-size="22" fill="var(--ink)">1</text><text x="255" y="303" text-anchor="middle" font-size="22" fill="var(--ink)">3/2</text><text x="335" y="277" text-anchor="middle" font-size="22" fill="var(--ink)">t</text><text x="180" y="346" text-anchor="middle" font-size="22" fill="var(--ink)">積分=5/8、幅h=1/2</text><text x="180" y="385" text-anchor="middle" font-size="22" fill="var(--ink)">平均=(5/8)/(1/2)=5/4</text><text x="180" y="425" text-anchor="middle" font-size="22" fill="var(--ink)">f(1)=1、ε=3/4</text><text x="180" y="463" text-anchor="middle" font-size="22" fill="var(--ink)">1−ε &lt; 平均5/4 &lt; 1+ε</text></svg><figcaption>橙の台形と青破線の長方形は同じ面積で、切り分けた小三角形も同面積です。横軸と縦軸は別の縮尺です。積分をhで割る操作を長方形の高さとして読み、その高さも連続性の帯に残ることを比較します。これはf(t)=t、h&gt;0の一例で、一般の保証とh&lt;0の向きは本文で扱います。</figcaption></figure><p class="note" data-reading-note="fundamental-theorem-visual-average-squeeze">読み方：まず台形と長方形が同面積であることを追い、次に「面積÷幅」が高さへ変わる対応を見ます。有限の数値例だけを基本定理の証明とはせず、本文のε帯による全ての十分小さいhの評価へ戻ります。</p>
+</section>
+
+<section id="fundamental-theorem-second">
+  <h2>原始関数による定積分の計算</h2>
+  <p>区間で G′ = f を満たす関数 G を、f の<strong>原始関数</strong>と呼びます。上の定理は、連続な f には積分から作った原始関数 F があることも示しています。ただし、それを簡単な式で書けるとは限りません。</p>
+  <div class="theorem"><h3>微積分の基本定理：定積分を計算する形</h3><p>f が [a, b] で連続で、G が [a, b] で連続、(a, b) で微分可能かつ G′ = f なら、∫ₐᵇ f(x)dx = G(b) − G(a) です。</p></div>
+  <div class="proof"><h3>二つの原始関数の差を見る</h3><p>F(x) = ∫ₐˣ f(t)dt と置きます。f はこの閉区間でRiemann積分可能だから有界で、すべての t に対して |f(t)| ≤ M となる M ≥ 0 を取れます。<a href="integration.html#integration-properties">積分の加法性と大小関係</a>から、任意の x、y ∈ [a, b] で |F(y) − F(x)| ≤ M|y − x|。よって F は端点を含めて連続です。</p><p>前の定理により内点では (G − F)′ = 0。G − F は閉区間で連続、内点で微分可能なので、平均値の定理の仮定がそろい、区間で定数と分かります。したがって G(b) − F(b) = G(a) − F(a)。F(a) = 0 を使い、F(b) = G(b) − G(a) を得ます。</p></div>
+  <p>例えば f(x) = x² には G(x) = x³/3 が使えます。微分して確かめてから、[0, 2] の積分は 8/3 − 0 = 8/3。長方形を限りなく細かく足す定義と、端の二つの値を引く計算が、いま同じ量を与えると分かりました。原始関数の定数項は差で消えるので、どの原始関数を選んでも同じ結果です。</p>
+</section>
+
+<section id="fundamental-theorem-limits">
+  <h2>基本定理の適用条件と反例</h2>
+  <p>[0, 1] で、t &lt; 1/2 なら f(t) = 0、t ≥ 1/2 なら f(t) = 1 としましょう。積分は存在しますが、F(x) は x ≤ 1/2 で 0、x ≥ 1/2 で x − 1/2 です。x = 1/2 で左の傾きは 0、右の傾きは 1 なので微分できません。「積分可能なら各点で F′ = f」とは言えない反例です。</p>
+  <p class="note">連続性はこの章の十分条件です。不連続な関数で基本定理の形が一切成り立たない、とまでは主張していません。また端で発散する関数や無限区間の積分は、閉区間の定理をそのまま適用せず、<a href="integration-methods.html">広義積分</a>として極限を追加します。</p>
+</section>
+
+<details class="column" id="fundamental-theorem-column">
+  <summary>寄り道［応用］：電池の残りを数える回路と、積分定数</summary>
+  <p>電池の計測IC LTC2941 のメーカー資料は、電池へ出入りする電流を積分し、蓄積した電荷を記録すると説明しています。電流は単位時間に移動する電荷なので、流れ方を足し集めると、増減した電荷が分かります。変化率から量へ戻るという基本定理の見方が、実在の回路につながっています。</p>
+  <p>連続な電流 I(t) を考え、充電側を正とする理想化では、電荷は Q(t) = Q(a) + ∫ₐᵗ I(s)ds です。同じ電流が流れても、最初にどれだけ残っていたかで Q(t) は違います。積分が分かるのは増減分で、初期値は別の情報なのです。また現物の残量推定には電池の性質や測定誤差も関わります。積分だけで残量の百分率が完全に決まるとはせず、何を復元できたかを区別しましょう。</p>
+  <p class="source-note">出典：<a href="https://www.analog.com/en/products/ltc2941.html">Analog Devices：LTC2941 の電流積分による電荷計測</a>。</p>
+</details>
+
+<section id="fundamental-theorem-exercises">
+  <h2>基本定理と原始関数の演習</h2>
+  <article class="exercise"><h3>1．蓄積の傾き</h3><p>F(x) = ∫₁ˣ (t² + 2)dt とします。F′(x) と F(2) を求め、初期値 F(1) も確かめてください。</p><details><summary>ヒント1：微分には第1の形</summary><p>被積分関数は全実数で連続です。積分の上端 x に注目します。</p></details><details><summary>ヒント2：値の計算には原始関数</summary><p>t³/3 + 2t を微分して確認します。</p></details><details><summary>解答</summary><p>基本定理で F′(x) = x² + 2。F(2) = (8/3 + 4) − (1/3 + 2) = 13/3 です。同じ端から同じ端への積分は 0 なので F(1) = 0。式 F(x) = x³/3 + 2x − 7/3 からも確認できます。</p></details></article>
+  <article class="exercise"><h3>2．面積と正味の量</h3><p>∫₋₁¹ x dx と ∫₋₁¹ |x|dx を求め、値が違う理由を述べてください。</p><details><summary>ヒント1：最初は原始関数を使う</summary><p>x²/2 の両端の値を比べます。</p></details><details><summary>ヒント2：絶対値は区間を分ける</summary><p>[−1, 0] では |x| = −x、[0, 1] では |x| = x です。</p></details><details><summary>解答</summary><p>最初は 1/2 − 1/2 = 0。二番目は ∫₋₁⁰ (−x)dx + ∫₀¹ x dx = 1/2 + 1/2 = 1。最初は負の部分と正の部分が相殺する符号つき蓄積で、二番目は両側の面積を正として合計しています。</p></details></article>
+  <article class="exercise"><h3>3．原始関数は何通りか</h3><p>実数全体で G′(x) = 2x かつ G(1) = 5 を満たす G を求め、それが一つだけである理由も説明してください。</p><details><summary>ヒント1：まず一つ見つける</summary><p>x² の導関数は 2x。定数を足して初期値を合わせます。</p></details><details><summary>ヒント2：二つあると仮定する</summary><p>その差の導関数と、x = 1 での値を考えます。</p></details><details><summary>解答</summary><p>G(x) = x² + 4 です。別の候補 H があれば (H − G)′ = 0 なので、平均値の定理で H − G は定数。x = 1 では差が 0 なので、すべての x で H = G。初期値が一つに定めます。</p></details></article>
+</section>
+
+<section id="fundamental-theorem-reflection"><h2>自分の言葉で</h2><ol><li>積分の差商が小区間の平均になる理由と、連続性の役割を説明できますか。</li><li>原始関数で定積分を計算できる証明で、平均値の定理は何を保証しましたか。</li><li>面積、符号つき蓄積、初期値を含む総量をどう区別しますか。</li></ol></section>

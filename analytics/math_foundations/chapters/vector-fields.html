@@ -1,0 +1,57 @@
+<section id="vector-fields-question">
+  <h2>ベクトル場の基本概念</h2>
+  <p>温度のように各点へ一つの数を置く代わりに、向きと大きさを持つ矢印を置くと、流れや力を表す数学のモデルになります。しかし、地図上の矢印、粒子の位置、粒子が描く道は同じものではありません。この違いを保ちながら、三次元で矢印を測る道具を整えます。</p>
+  <p class="note">復習は<a href="vector-spaces.html">ベクトルの和と定数倍</a>、<a href="determinants.html">行列式と面積</a>、<a href="gradient.html">二変数の勾配</a>です。線形代数や常微分方程式の既存教材を先に修了する必要はありません。発展先は<a href="index.html#learning-map">学習経路</a>に残しています。</p>
+</section>
+
+<section id="vector-fields-products">
+  <h2>三次元ベクトルの内積と外積</h2>
+  <p>三次元ベクトル a = (a₁, a₂, a₃)、b = (b₁, b₂, b₃) の<strong>内積</strong>を a·b = a₁b₁ + a₂b₂ + a₃b₃、長さを ‖a‖ = √(a·a) と定めます。a ≠ 0 なら、b の a 方向の符号付き成分は b·a/‖a‖。内積0は直交を表し、向きが逆なら内積は負になります。</p>
+  <p>面積に向きも持たせたいときは、<strong>外積</strong>を使います。座標軸 e₁、e₂、e₃ は右手系とし、e₁ × e₂ = e₃ となる向きを採用します。右手の指を a から b へ曲げたときの親指の向きが a × b の向きです。平行な場合の外積は0で、向きは定まりません。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>a</mi><mo>×</mo><mi>b</mi><mo>=</mo><mo>(</mo><msub><mi>a</mi><mn>2</mn></msub><msub><mi>b</mi><mn>3</mn></msub><mo>−</mo><msub><mi>a</mi><mn>3</mn></msub><msub><mi>b</mi><mn>2</mn></msub><mo>,</mo><msub><mi>a</mi><mn>3</mn></msub><msub><mi>b</mi><mn>1</mn></msub><mo>−</mo><msub><mi>a</mi><mn>1</mn></msub><msub><mi>b</mi><mn>3</mn></msub><mo>,</mo><msub><mi>a</mi><mn>1</mn></msub><msub><mi>b</mi><mn>2</mn></msub><mo>−</mo><msub><mi>a</mi><mn>2</mn></msub><msub><mi>b</mi><mn>1</mn></msub><mo>)</mo></mrow></math></div>
+  <div class="proof"><h3>成分式が、垂直と面積を同時に保証する</h3><p>a·(a × b) を展開すると、a₁a₂b₃ と −a₂a₁b₃ のように六項が二つずつ消えて0になります。b との内積も同様です。また三成分の二乗を足して整理すると、‖a × b‖² = ‖a‖²‖b‖² − (a·b)²。a ≠ 0 のとき、b から a 方向の成分を引いた高さベクトル b⊥ = b − {(a·b)/‖a‖²}a は a と直交し、‖a‖²‖b⊥‖² が同じ右辺です。従って ‖a × b‖ は底辺 ‖a‖ と高さ ‖b⊥‖ の積、つまり平行四辺形の面積です。a = 0 でも両方0です。</p></div>
+  <figure class="concept-figure" id="vector-fields-visual-area" data-visual="vector-fields-area">
+    <svg class="concept-svg" viewBox="0 0 360 490" role="img" aria-labelledby="vector-fields-area-title vector-fields-area-desc">
+      <title id="vector-fields-area-title">平行成分は内積へ、垂直成分は面積へ</title><desc id="vector-fields-area-desc">同じa=(2,0)、b=(1,2)を、底辺方向の成分1と垂直な高さ2へ分ける。下の二式は同じ底辺2を掛け、内積2と外積の長さ4を比較する。⊙は手前向きの正のz。順序を逆にすると外積の向きだけが反転する。</desc>
+      <polygon points="55,260 195,260 265,120 125,120" fill="var(--series-1)" fill-opacity="0.12" stroke="var(--series-1)" stroke-width="2"/>
+      <path d="M 55 260 L 195 260" stroke="var(--series-1)" stroke-width="4"/><polygon points="195,260 183,254 183,266" fill="var(--series-1)"/>
+      <path d="M 55 260 L 125 120" stroke="var(--series-2)" stroke-width="4"/><polygon points="125,120 114,130 125,135" fill="var(--series-2)"/>
+      <path d="M 125 120 L 125 260" stroke="var(--ink-2)" stroke-width="2" stroke-dasharray="6 5"/>
+      <text x="128" y="292" text-anchor="middle" font-size="22" fill="var(--ink)">a = (2, 0)</text><text x="63" y="94" font-size="22" fill="var(--ink)">b = (1, 2)</text><text x="143" y="195" font-size="22" fill="var(--ink)">高さ 2</text><text x="180" y="333" text-anchor="middle" font-size="22" fill="var(--ink)">面積 4 ／ 両軸同縮尺</text>
+    <line x1="55" y1="245" x2="125" y2="245" stroke="var(--series-2)" stroke-width="2"/><polygon points="125,245 116.0,249.5 116.0,240.5" fill="var(--series-2)"/><text x="86" y="228" text-anchor="middle" font-size="22" fill="var(--ink)">1</text><text x="180" y="385" text-anchor="middle" font-size="22" fill="var(--ink)">a·b = 2×1 = 2</text><text x="180" y="425" text-anchor="middle" font-size="22" fill="var(--ink)">‖a×b‖ = 2×2 = 4</text><text x="180" y="465" text-anchor="middle" font-size="22" fill="var(--ink)">⊙ a×b = (0,0,4)</text></svg><figcaption>z = 0 の平面内の例。a·b = 2 は符号付き射影を含む量、a × b = (0, 0, 4) は垂直方向と面積を含む量です。順序を逆にすると b × a = −a × b。</figcaption>
+  </figure>
+</section>
+
+<section id="vector-fields-definition">
+  <h2>スカラー場とベクトル場</h2>
+  <p>領域 U ⊂ ℝ³ の各点 p にベクトル F(p) を対応させる写像 F : U → ℝ³ を<strong>ベクトル場</strong>と呼びます。F(x, y, z) = (P, Q, R) と書き、成分が連続なら連続な場、成分の偏微分が連続なら C¹ の場です。平面の場は二成分で同様に定義し、必要なら第三成分を0にして眺めます。</p>
+  <p>例えば F(x, y) = (−y, x) の矢印は、各点で原点からの半径に直交します。F(1, 0) = (0, 1) は場所 (1, 0) に立てる矢印であり、その点の位置ベクトル (1, 0) とは別物です。速度場と解釈するモデルでは、粒子の位置 r(t) は r′(t) = F(r(t)) を満たす曲線として別に求めます。この式を満たす道は場に沿う流線にもなりますが、一本の流線から場全体は分かりません。時間に依存する場の粒子軌道と各時刻の流線は、さらに区別が必要です。</p>
+  <figure class="concept-figure" id="vector-fields-visual-rotation" data-visual="vector-fields-rotation">
+    <svg class="concept-svg" viewBox="0 0 360 360" role="img" aria-labelledby="vector-fields-rotation-title vector-fields-rotation-desc">
+      <title id="vector-fields-rotation-title">回転する場の矢印と一本の流線</title><desc id="vector-fields-rotation-desc">同縮尺のxy平面。原点中心半径80の破線円は単位円の流線。右端で上、上端で左、左端で下、下端で右を向く四本は場マイナスy,xの矢印を同じ係数0.6で短縮したもの。</desc>
+      <path d="M 40 180 L 320 180" stroke="var(--grid)" stroke-width="2"/><path d="M 180 40 L 180 320" stroke="var(--grid)" stroke-width="2"/>
+      <circle cx="180" cy="180" r="80" fill="none" stroke="var(--ink-2)" stroke-width="2" stroke-dasharray="6 5"/>
+      <path d="M 260 180 L 260 132" stroke="var(--series-1)" stroke-width="4"/><polygon points="260,132 254,144 266,144" fill="var(--series-1)"/>
+      <path d="M 180 100 L 132 100" stroke="var(--series-1)" stroke-width="4"/><polygon points="132,100 144,94 144,106" fill="var(--series-1)"/>
+      <path d="M 100 180 L 100 228" stroke="var(--series-1)" stroke-width="4"/><polygon points="100,228 94,216 106,216" fill="var(--series-1)"/>
+      <path d="M 180 260 L 228 260" stroke="var(--series-1)" stroke-width="4"/><polygon points="228,260 216,254 216,266" fill="var(--series-1)"/>
+      <text x="270" y="205" font-size="22" fill="var(--ink)">(1, 0)</text><text x="167" y="207" font-size="22" fill="var(--ink)">0</text><text x="180" y="37" text-anchor="middle" font-size="22" fill="var(--ink)">F = (−y, x)</text><text x="180" y="338" text-anchor="middle" font-size="22" fill="var(--ink)">矢印：場　破線：道</text>
+    </svg><figcaption>r(t) = (cos t, sin t) なら r′(t) = (−sin t, cos t) = F(r(t))。破線は一つの道、実線の矢印は四点での場の値です。位置の両軸は同じ縮尺で、場の矢印は共通倍率0.6で描いています。</figcaption>
+  </figure>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="位置と場と流線の比較"><table class="concept-table" style="min-width:30rem" data-visual="vector-fields-objects"><caption>場所と時間を入れ替えず、具体的な出力を検算する</caption><thead><tr><th scope="col">対象</th><th scope="col">具体的な入力→出力</th><th scope="col">何を判断するか</th></tr></thead><tbody><tr><th scope="row">スカラー場</th><td>f=x²+y²、p=(1,2) → 5</td><td>場所から一つの数。場の値には方向がない。</td></tr><tr><th scope="row">ベクトル場</th><td>F=(−y,x)、p=(1,2) → (−2,1)</td><td>出力はその場所での向きと大きさ。次の位置そのものではない。</td></tr><tr><th scope="row">位置の曲線</th><td>r(t)=(cos t,sin t)、t=π/2 → (0,1)</td><td>時間から場所。同じtでr′=(−1,0)は位置と異なる。</td></tr><tr><th scope="row">速度場の軌道</th><td>r′(π/2)=(−1,0)=F(0,1)</td><td>すべてのtでr′(t)=F(r(t))（直前の本文）なら軌道です。π/2はその一点の検算です。</td></tr></tbody></table></div>
+</section>
+
+<section id="vector-fields-gradient">
+  <h2>勾配場の計算例</h2>
+  <p>開集合 U 上の C¹ 関数 φ(x, y, z) に対し、<strong>勾配</strong>を ∇φ = (φₓ, φᵧ, φ_z) と定めます。二変数の<a href="gradient.html">勾配</a>へ第三成分を加えたものです。全微分と連鎖律により、単位ベクトル u に沿う方向微分は Dᵤφ = ∇φ·u。Cauchy–Schwarz の不等式から |Dᵤφ| ≤ ‖∇φ‖ であり、∇φ ≠ 0 ならその向きで最も速く増えます。</p>
+  <p>例えば φ = x² + y² + z² なら ∇φ = (2x, 2y, 2z)。半径方向の場になります。しかし、どんな場も勾配とは限りません。回転する場 (−y, x, 0) が勾配でないことは、<a href="vector-line-integrals.html">道に沿う仕事</a>と<a href="vector-potentials.html">一周の積分</a>で確かめます。なお、内積0は二つのベクトルが平行という意味ではありません。a = (1, 0, 0)、b = (0, 1, 0) は内積0ですが外積は e₃ です。</p>
+</section>
+
+<details class="column" id="vector-fields-column"><summary>寄り道［数学の見方］：地図を一枚足しても、粒子はまだ動かない</summary><p>同じ場 F(x, y) = (−y, x) に、初期位置 (1, 0) と (2, 0) を入れるモデルを考えます。曲線 (cos t, sin t) と (2cos t, 2sin t) はどちらも r′ = F(r) を満たします。地図は一つでも、初期位置の選び方で道が変わります。</p><p>「各点で何が起こるか」という規則と、「どこから始めてどう動くか」という解を分けると、微分方程式への入口が見えます。存在や一意性の一般定理はここでは使っていません。</p><p class="source-note">出典：本章の二つの曲線を直接微分した自作モデルです。</p></details>
+
+<section id="vector-fields-exercises"><h2>演習：ベクトル演算と場の区別</h2>
+  <article class="exercise"><h3>1．垂直と面積を同じ計算で</h3><p>a = (1, 2, 0)、b = (0, 1, 3) の内積と外積を求め、外積の直交性と面積恒等式を確認してください。</p><details><summary>ヒント1：外積の順序を保つ</summary><p>第一成分は 2·3 − 0·1、第二成分は 0·0 − 1·3 です。</p></details><details><summary>ヒント2：二乗長さを比べる</summary><p>‖a‖² = 5、‖b‖² = 10。外積の二乗長さは成分の二乗の和です。</p></details><details><summary>解答</summary><p>a·b = 2、a × b = (6, −3, 1)。a との内積は 6 − 6 = 0、b とは −3 + 3 = 0。二乗長さは 36 + 9 + 1 = 46 で、5·10 − 2² = 46 と一致します。平行四辺形の面積は √46 です。</p></details></article>
+  <article class="exercise"><h3>2．場の値と位置の違い</h3><p>F(x, y, z) = (−y, x, 0)、r(t) = (2cos t, 2sin t, 3) について、r′(t) = F(r(t)) を確認し、t = 0 の位置と場の値を答えてください。</p><details><summary>ヒント1：成分ごとに微分する</summary><p>第三成分の3は定数です。</p></details><details><summary>ヒント2：場に代入する</summary><p>x と y をそれぞれ 2cos t と 2sin t に替えます。</p></details><details><summary>解答</summary><p>r′(t) = (−2sin t, 2cos t, 0) = F(r(t))。t = 0 の位置は (2, 0, 3)、場の値は (0, 2, 0) です。位置は点を指定し、場の値はその点からの速度を指定します。</p></details></article>
+  <article class="exercise"><h3>3．三次元の方向微分</h3><p>φ = xy + z²、p = (1, 2, 1)、u = (1, 0, 1)/√2 とします。勾配と Dᵤφ(p)、最大の方向微分を求めてください。</p><details><summary>ヒント1：三つの偏微分</summary><p>∇φ = (y, x, 2z) です。</p></details><details><summary>ヒント2：u は単位長さ</summary><p>方向微分は内積、最大値は勾配の長さです。</p></details><details><summary>解答</summary><p>∇φ(p) = (2, 1, 2)、Dᵤφ(p) = (2 + 2)/√2 = 2√2。‖∇φ(p)‖ = 3 なので最大の方向微分は3、向きは (2, 1, 2)/3 です。φ は多項式で C¹ のため、全微分と方向微分の内積公式を使えます。</p></details></article>
+</section>
+<section id="vector-fields-reflection"><h2>自分の言葉で</h2><ol><li>内積と外積は、それぞれどの幾何量を残しますか。順序を逆にするとどうなりますか。</li><li>場 F(p)、位置 r(t)、速度 r′(t) の入力と出力はどう違いますか。</li><li>方向微分を勾配との内積で表すとき、関数と方向に何を仮定しましたか。</li></ol></section>

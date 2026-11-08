@@ -1,0 +1,79 @@
+<section id="expectation-question">
+  <h2>期待値と重み付き平均</h2>
+  <p>公平な骰子の出目には 1 から 6 があります。全ての値を同じ重みで平均すると 3.5 ですが、3.5 の目はありません。ここで欲しいのは「次に出る数の予言」ではなく、分布全体の中心を表す一つの数です。</p>
+  <p>値によって起こりやすさが違うなら、その確率を重みにして平均します。これを先に定義し、実際の繰り返しの平均との関係は、最後の<a href="law-of-large-numbers.html">大数の法則</a>で条件を付けて証明します。</p>
+</section>
+
+<section id="expectation-definition">
+  <h2>離散確率変数の期待値</h2>
+  <p>まず有限の標本空間 Ω で、結果 ω の確率を q(ω) とします。確率変数 X の<strong>期待値</strong>を、全ての結果について X(ω)q(ω) を足した値と定義します。E[X] と書き、平均 μ と呼ぶこともあります。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>E</mi><mo>[</mo><mi>X</mi><mo>]</mo><mo>=</mo><munder><mo>∑</mo><mrow><mi>ω</mi><mo>∈</mo><mi>Ω</mi></mrow></munder><mi>X</mi><mo>(</mo><mi>ω</mi><mo>)</mo><mi>q</mi><mo>(</mo><mi>ω</mi><mo>)</mo><mo>=</mo><munder><mo>∑</mo><mi>x</mi></munder><mi>x</mi><msub><mi>p</mi><mi>X</mi></msub><mo>(</mo><mi>x</mi><mo>)</mo></mrow></math></div>
+  <div class="proof"><h3>結果で足しても、値でまとめても同じ</h3><p>X(ω) = x となる結果を一つの組にまとめます。その組の和は x ∑q(ω) = xP(X = x)。異なる x ごとにこれを足せば、右の式になります。有限和の順序を変えただけであり、どの値を取るかの確率、つまり分布から期待値が決まることが分かります。</p></div>
+  <p>例えば値 0、2、5 の確率が 1/2、1/4、1/4 なら、E[X] = 0 · (1/2) + 2 · (1/4) + 5 · (1/4) = 7/4 です。値だけを単純に足して 3 で割るのではありません。定数 c の期待値は c、また X の最小値と最大値の間に E[X] が入ります。これは、確率の重みが非負で合計 1 だからです。</p>
+  <p>関数 g で値を変えた変数も、同じ重みで平均できます。新しい変数 g(X) の分布を作り直す必要はありません。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>E</mi><mo>[</mo><mi>g</mi><mo>(</mo><mi>X</mi><mo>)</mo><mo>]</mo><mo>=</mo><munder><mo>∑</mo><mi>x</mi></munder><mi>g</mi><mo>(</mo><mi>x</mi><mo>)</mo><msub><mi>p</mi><mi>X</mi></msub><mo>(</mo><mi>x</mi><mo>)</mo></mrow></math></div>
+  <p>この式も、同じ値を持つ結果をまとめる証明から従います。ただし一般に E[g(X)] と g(E[X]) は等しくありません。二乗してから平均することと、平均してから二乗することは別の操作です。</p>
+  <figure class="concept-figure" id="expectation-visual-weighted-center" data-visual="expectation-weighted-center">
+    <svg class="concept-svg" viewBox="0 0 360 420" role="img" aria-labelledby="expectation-center-title expectation-center-desc" fill="var(--ink)" font-size="22">
+      <title id="expectation-center-title">0、2、5の確率の重みと、期待値7/4</title>
+      <desc id="expectation-center-desc">値0の棒の高さは確率1/2、値2と5の棒の高さは各1/4。横の位置は値に比例する。期待値7/4の縦点線は0と2の間にある。三角の印が期待値7/4。各点の確率を掛けた中心化距離の寄与は左から−7/8、1/16、13/16で合計0。左の大きい重みと右の長い距離が相殺し、期待値自身に質量がなくてもよい。</desc>
+      <text x="180" y="33" text-anchor="middle">確率の重み</text>
+      <path d="M 40 210 H 325 M 55 210 V 220 M 155 210 V 220 M 305 210 V 220" fill="none" stroke="var(--ink)" stroke-width="2"/>
+      <path d="M 55 80 V 210 M 155 145 V 210 M 305 145 V 210" fill="none" stroke="var(--series-1)" stroke-width="14"/>
+      <g text-anchor="middle"><text x="55" y="67">1/2</text><text x="155" y="132">1/4</text><text x="305" y="132">1/4</text><text x="55" y="246">0</text><text x="155" y="246">2</text><text x="305" y="246">5</text></g>
+      <path d="M 142.5 170 V 220" fill="none" stroke="var(--series-2)" stroke-width="2" stroke-dasharray="6 5"/>
+      <path d="M 142.5 210 L 134.5 224 H 150.5 Z" fill="var(--series-2)"/>
+      <text x="180" y="277" text-anchor="middle">▲ μ = 7/4</text>
+    <text x="180" y="315" text-anchor="middle">各点の p(x−μ)</text><text x="55" y="352" text-anchor="middle">−7/8</text><text x="155" y="352" text-anchor="middle">1/16</text><text x="305" y="352" text-anchor="middle">13/16</text><text x="180" y="396" text-anchor="middle">−7/8 + 1/16 + 13/16 = 0</text></svg>
+    <figcaption>横の位置は値、棒の高さは確率です。μ = 7/4 から測ると、左の「距離 × 重み」は (7/4)(1/2) = 7/8。右は (1/4)(1/4) + (13/4)(1/4) = 7/8 となり、つり合います。図の下段はこの計算を符号付き寄与として、各棒と同じ横位置に対応させています。負の寄与と正の寄与が相殺することが、重み付き中心の意味です。μ 自身を取る確率は 0 です。</figcaption>
+  </figure>
+</section>
+
+<section id="expectation-linearity">
+  <h2>期待値の線形性</h2>
+  <div class="theorem"><h3>有限の線形性と単調性</h3><p>同じ有限の確率モデル上の X、Y と実数 a、b に対し、E[aX + bY] = aE[X] + bE[Y] です。独立性は仮定しません。また全ての結果で X ≤ Y なら E[X] ≤ E[Y] です。</p></div>
+  <div class="proof"><h3>一つの結果での計算を、重み付きで足す</h3><p>定義へ代入すると、E[aX + bY] = ∑{aX(ω) + bY(ω)}q(ω) = a∑X(ω)q(ω) + b∑Y(ω)q(ω)。各結果に同じ重みを掛けて分配しただけで、X と Y の関係は使いませんでした。また X(ω)q(ω) ≤ Y(ω)q(ω) を足せば、単調性が出ます。</p></div>
+  <p>繰り返して使えば、有限個の和の期待値は期待値の和です。例えば Y = −X のように完全に結び付いていても、E[X + Y] = E[X] − E[X] = 0。対して、積について E[XY] = E[X]E[Y] と言うには追加の条件が必要です。その条件は<a href="joint-distributions.html">同時分布の章</a>で調べます。</p>
+</section>
+
+<section id="expectation-indicators">
+  <h2>指示変数による計数</h2>
+  <p>事象 A が起きたら 1、起きなければ 0 を取る<strong>指示変数</strong>を Iₐ と書きます。定義から E[Iₐ] = 1 · P(A) + 0 · P(A の補集合) = P(A) です。「起きた個数」を指示変数の和として書けば、その平均は確率を足すだけになります。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>E</mi><mo>[</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>I</mi><msub><mi>A</mi><mi>i</mi></msub></msub><mo>]</mo><mo>=</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mi>P</mi><mo>(</mo><msub><mi>A</mi><mi>i</mi></msub><mo>)</mo></mrow></math></div>
+  <p>独立で同じ成功確率 p の n 回の成功数 S は、Bernoulli 変数 n 個の和なので E[S] = np。これで<a href="random-variables.html#random-variables-binomial">二項分布</a>の平均が導けました。実は平均の式だけなら独立性は不要です。各回の成功確率が p なら、どのような依存があっても平均は np。一方、成功数の<strong>分布全体</strong>が二項分布になることを証明する際には、独立性を使いました。独立でなければ二項分布になるとは限りません。</p>
+  <p>例えば一回の公平なコインの結果を 10 回コピーした成功数は、0 または 10 です。それでも平均は 5。独立な 10 回の成功数も平均は 5 ですが、分布の形は違います。平均だけで、ばらつきや依存関係を復元することはできません。</p>
+</section>
+
+<section id="expectation-infinite">
+  <h2>可算分布の期待値と絶対収束</h2>
+  <p>可算個の値を取る X では、<strong>絶対収束</strong>する条件 ∑|x|pₓ(x) &lt; ∞ の下で、E[X] = ∑xpₓ(x) と定めます。有限の期待値を持つ、または可積分である、と言います。絶対収束級数の並べ替え・まとめ直しで和が変わらない定理を、ここでは証明せず借用します。この定理により、値の並べ方に依存しない平均を定められます。g(X) なら ∑|g(x)|pₓ(x) &lt; ∞ を確かめます。</p>
+  <p>非負の変数では、非負項の和が発散した場合に期待値を +∞ と呼ぶこともできます。ただし有限の実数の平均ではありません。正負両方を持つ場合、正の部分と負の部分がともに無限大なら、∞ − ∞ を数として計算することはできません。</p>
+  <p>反例として、各 k = 1、2、…に対し、X = 2ᵏ と X = −2ᵏ のそれぞれへ確率 2⁻⁽ᵏ⁺¹⁾ を置きます。正負を合わせた確率は各 k で 2⁻ᵏ なので、全確率は幾何級数の和 1 です。各 k の正の寄与も負の寄与の大きさも 1/2 なので、どちらの合計も発散します。「正負を一組にして 0」とする計算では、期待値 0 を定義できません。</p>
+  <p class="note">級数と絶対収束の意味は<a href="series.html">級数の章</a>で確認できます。そこで並べ替えの定理を証明済みとしているわけではありません。無限での条件は、有限和を無条件に繰り返せなくなる箇所に付いています。</p>
+</section>
+
+<section id="expectation-density">
+  <h2>密度を用いた期待値</h2>
+  <p>前章の密度 f を持つ X について、∫|x|f(x) dx &lt; ∞ のとき、期待値を次の積分で定めます。全実数上の絶対可積分性を要求し、正の側と負の側を対称に打ち消す極限で代用しません。g(X) の平均も、∫|g(x)|f(x) dx &lt; ∞ の下で求めます。g(X) の平均を元の密度 f で計算できる変換公式は、ここでは証明せず借用します。ここで使う積分が通常または広義積分として定義できる関数を扱います。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>E</mi><mo>[</mo><mi>X</mi><mo>]</mo><mo>=</mo><msubsup><mo>∫</mo><mrow><mo>−</mo><mi>∞</mi></mrow><mi>∞</mi></msubsup><mi>x</mi><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mi>d</mi><mi>x</mi><mo>,</mo><mspace width="1em"/><mi>E</mi><mo>[</mo><mi>g</mi><mo>(</mo><mi>X</mi><mo>)</mo><mo>]</mo><mo>=</mo><msubsup><mo>∫</mo><mrow><mo>−</mo><mi>∞</mi></mrow><mi>∞</mi></msubsup><mi>g</mi><mo>(</mo><mi>x</mi><mo>)</mo><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mi>d</mi><mi>x</mi></mrow></math></div>
+  <p>[a, b] の一様分布なら E[X] = ∫ₐᵇ x/(b − a) dx = (b² − a²)/{2(b − a)} = (a + b)/2 です。0 ≤ x ≤ 1 で f(x) = 2x なら、E[X] = ∫₀¹ 2x² dx = 2/3。同じ [0, 1] の中でも、大きな x の方へ多くの重みがあるため、一様分布の平均 1/2 より大きくなります。これらは有界区間で有界な被積分関数なので、絶対可積分です。</p>
+  <p class="note">一般の確率変数に対する積分の構成、g(X) の積分公式、一般の可積分な変数の線形性・単調性は、確率論の標準的な枠組みとして本冊では未証明で使います。有限離散については上で証明済みです。一つの密度に関する積分の計算規則は、既存の積分の性質から確かめられます。後の不等式と大数の法則も、有限離散ではその証明だけで読め、一般の場合はこの積分の枠組みを前提とします。</p>
+</section>
+
+<details class="column" id="expectation-column">
+  <summary>寄り道［見方］：平均は、分布を支えるつり合いの点</summary>
+  <p>MIT の確率入門は、期待値を確率の質量がつり合う位置として説明しています。この見方なら、期待値が実際には取らない値でも困らないことが分かります。</p>
+  <p>例えば自作の分布として、位置 0 に重み 0.8、位置 10 に重み 0.2 を置くと、平均は 2 です。2 から左右への距離に重みを掛ければ、左は 2 · 0.8、右は 8 · 0.2 で同じになります。位置 2 に質量がなくても、つり合いはそこで取れます。「最も起こりやすい値 0」と「平均 2」は、別の問いの答えなのです。</p>
+  <p class="source-note">出典：<a href="https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/resources/mit18_05_s22_class04-prep-b_pdf/">MIT OpenCourseWare 18.05：Discrete Random Variables: Expected Value、2.1</a>。位置と重みは本章の自作例です。</p>
+</details>
+
+<section id="expectation-exercises">
+  <h2>演習：期待値と線形性</h2>
+  <article class="exercise"><h3>1．平均と二乗の順序</h3><p>X は −1、1 をそれぞれ確率 1/2 で取ります。E[X]、E[X²]、(E[X])² を求めてください。</p><details><summary>ヒント1：値ごとに重みを掛ける</summary><p>平均では −1 と 1、二乗の平均では 1 と 1 を使います。</p></details><details><summary>ヒント2：先に平均したら</summary><p>E[X] を計算してから、その一つの数を二乗します。</p></details><details><summary>解答</summary><p>E[X] = (−1)/2 + 1/2 = 0。E[X²] = 1/2 + 1/2 = 1、(E[X])² = 0² = 0 です。従って E[g(X)] = g(E[X]) は g(x) = x² ですでに成立しません。</p></details></article>
+  <article class="exercise"><h3>2．戻さない抽選でも</h3><p>10 枚中 2 枚が赤い札から、一様に、戻さず順に 3 枚引きます。各位置の札が赤である確率は 2/10 です。赤い札の枚数 N の期待値を求めてください。位置どうしは独立である必要がありますか。</p><details><summary>ヒント1：三つの指示変数を作る</summary><p>i 番目が赤なら Iᵢ = 1 とすると、N = I₁ + I₂ + I₃ です。</p></details><details><summary>ヒント2：期待値の和を使う</summary><p>各 E[Iᵢ] は、与えられた赤の確率です。</p></details><details><summary>解答</summary><p>E[N] = E[I₁] + E[I₂] + E[I₃] = 3 · (2/10) = 3/5 です。線形性には独立性が不要です。実際、一枚目が赤なら二枚目の赤の確率は 1/9 となり、無条件の 1/5 と違うので独立ではありません。それでも期待値の計算は成立します。</p></details></article>
+  <article class="exercise"><h3>3．面積に位置を掛ける</h3><p>0 ≤ x ≤ 1 で密度 f(x) = 2x を持つ X の E[X] と E[X²] を求めてください。</p><details><summary>ヒント1：密度に掛ける関数を変える</summary><p>一つ目は x、二つ目は x² を f(x) に掛けます。</p></details><details><summary>ヒント2：べきの積分を使う</summary><p>∫₀¹ 2x² dx と ∫₀¹ 2x³ dx を計算します。</p></details><details><summary>解答</summary><p>E[X] = [2x³/3]₀¹ = 2/3、E[X²] = [x⁴/2]₀¹ = 1/2 です。両方とも有界区間の有界な関数の積分なので、絶対可積分性も満たします。E[X²] = 1/2 と (E[X])² = 4/9 は異なります。</p></details></article>
+</section>
+
+<section id="expectation-reflection">
+  <h2>自分の言葉で</h2><ol><li>期待値が、変数の取る値にも最も起こりやすい値にも一致する必要がないのはなぜですか。</li><li>期待値の線形性の証明には、なぜ独立性が現れないのでしょうか。</li><li>無限に多くの値を平均するとき、正負の項を都合よく組にするだけでは不十分なのはなぜですか。</li></ol>
+</section>

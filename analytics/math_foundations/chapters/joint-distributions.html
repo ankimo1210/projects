@@ -1,0 +1,109 @@
+<section id="joint-distributions-question">
+  <h2>同時分布と周辺分布</h2>
+  <p>X と Y がそれぞれ 0、1 を半々で取るとします。いつも Y = X なら和は 0 または 2。いつも Y = 1 − X なら和は必ず 1。X と Y それぞれの分布は同じなのに、和の分布は違います。</p>
+  <p>必要なのは、二つの値が<strong>同時に</strong>起きる確率です。この章では有限の同時確率の表を使い、条件付きの平均、独立性、和の分散を一つの表から導きます。</p>
+</section>
+
+<section id="joint-distributions-table">
+  <h2>同時確率分布と周辺化</h2>
+  <p>X の取り得る値を xᵢ、Y の取り得る値を yⱼ とし、pᵢⱼ = P(X = xᵢ, Y = yⱼ) と書きます。これが<strong>同時分布</strong>の表です。全てのセルが非負で、全てを足すと 1 になります。以下は自作のモデルです。</p>
+  <div class="formula"><table><caption>X と Y の同時確率</caption><thead><tr><th scope="col">X＼Y</th><th scope="col">0</th><th scope="col">1</th><th scope="col">行の和</th></tr></thead><tbody><tr><th scope="row">0</th><td>3/8</td><td>1/8</td><td>1/2</td></tr><tr><th scope="row">1</th><td>1/8</td><td>3/8</td><td>1/2</td></tr><tr><th scope="row">列の和</th><td>1/2</td><td>1/2</td><td>1</td></tr></tbody></table></div>
+  <p>行の和 rᵢ = ∑ⱼpᵢⱼ は P(X = xᵢ)、列の和 qⱼ = ∑ᵢpᵢⱼ は P(Y = yⱼ) です。このように一方の変数だけを残した分布を<strong>周辺分布</strong>と呼びます。</p>
+  <div class="proof"><h3>もう一方の値で、事象を分割する</h3><p>{X = xᵢ} は、異なる yⱼ についての {X = xᵢ, Y = yⱼ} の排反な和です。従って確率を足せば行の和になります。列も同様です。また任意の関数 h について、値の組を一つの結果としてまとめれば、E[h(X, Y)] = ∑ᵢ∑ⱼ h(xᵢ, yⱼ)pᵢⱼ。<a href="expectation.html#expectation-definition">期待値を値ごとにまとめる証明</a>と同じ考え方です。</p></div>
+  <p>この表では E[X] = E[Y] = 1/2。積 XY は (1, 1) だけで 1 になるので E[XY] = 3/8 です。一変数の周辺分布だけでは、この 3/8 という同時の重みを知ることはできません。</p>
+</section>
+
+<section id="joint-distributions-conditional">
+  <h2>条件付き分布と条件付き期待値</h2>
+  <p>qⱼ = P(Y = yⱼ) &gt; 0 のとき、Y = yⱼ を条件とする X の<strong>条件付き分布</strong>は、P(X = xᵢ | Y = yⱼ) = pᵢⱼ/qⱼ です。選んだ列を、その列の確率で割って合計 1 にします。これは<a href="conditional-probability.html">条件付き確率</a>の定義そのものです。</p>
+  <p>上の表で Y = 1 の列を使うと、P(X = 0 | Y = 1) = 1/4、P(X = 1 | Y = 1) = 3/4。従って<strong>条件付き期待値</strong> E[X | Y = 1] は 3/4 です。一方、Y = 0 なら E[X | Y = 0] = 1/4。条件で重みを変えた後に、普通の期待値を計算しています。</p>
+  <div class="theorem"><h3>有限の場合の全期待値の法則</h3><p>m(yⱼ) = E[X | Y = yⱼ] とします。qⱼ = 0 の値では、m(yⱼ) を便宜上 0 などの任意の値に置きます。このとき m(Y) も確率変数になり、その期待値は E[X] です。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>E</mi><mo>[</mo><mi>m</mi><mo>(</mo><mi>Y</mi><mo>)</mo><mo>]</mo><mo>=</mo><munder><mo>∑</mo><mrow><mi>j</mi><mo>:</mo><msub><mi>q</mi><mi>j</mi></msub><mo>&gt;</mo><mn>0</mn></mrow></munder><mi>E</mi><mo>[</mo><mi>X</mi><mo>|</mo><mi>Y</mi><mo>=</mo><msub><mi>y</mi><mi>j</mi></msub><mo>]</mo><msub><mi>q</mi><mi>j</mi></msub><mo>=</mo><mi>E</mi><mo>[</mo><mi>X</mi><mo>]</mo></mrow></math></div></div>
+  <div class="proof"><h3>条件で割った重みを、外側で戻す</h3><p>qⱼ &gt; 0 の列では m(yⱼ) = ∑ᵢxᵢpᵢⱼ/qⱼ です。これに qⱼ を掛けて j で足すと ∑ⱼ∑ᵢxᵢpᵢⱼ = ∑ᵢxᵢrᵢ = E[X]。qⱼ = 0 の列は、非負のセルの和が 0 なので全セルが 0 であり、合計に影響しません。未定義の条件付き分布を計算したのではなく、その列を除いて計算しています。</p></div>
+  <p>例では (1/4)(1/2) + (3/4)(1/2) = 1/2。条件付き平均を、条件が起こる確率でもう一度平均すると、元の平均に戻ります。E[E[X | Y]] = E[X] という書き方も、この m(Y) の意味で読みます。</p>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="同時分布の各列を正規化して作る条件付き分布と平均">
+    <table class="concept-table" id="joint-distributions-visual-normalize-columns" data-visual="joint-distributions-normalize-columns">
+      <caption>先ほどの同時表の各列を、列の和 1/2 で割って合計 1 にする</caption>
+      <thead><tr><th scope="col"><span class="table-math">条件</span></th><th scope="col"><span class="table-math">P(X = 0 | 条件)</span></th><th scope="col"><span class="table-math">P(X = 1 | 条件)</span></th><th scope="col"><span class="table-math">条件付き平均</span></th></tr></thead>
+      <tbody>
+        <tr><th scope="row"><span class="table-math">Y = 0</span></th><td><span class="table-math">(3/8) ÷ (1/2) = 3/4</span></td><td><span class="table-math">(1/8) ÷ (1/2) = 1/4</span></td><td><span class="table-math">1/4</span></td></tr>
+        <tr><th scope="row"><span class="table-math">Y = 1</span></th><td><span class="table-math">(1/8) ÷ (1/2) = 1/4</span></td><td><span class="table-math">(3/8) ÷ (1/2) = 3/4</span></td><td><span class="table-math">3/4</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>外側では、表の二行を等しく数えるからではなく、P(Y = 0) = P(Y = 1) = 1/2 を重みにします。従って (1/2) × (1/4) + (1/2) × (3/4) = 1/2 です。</p>
+</section>
+
+<section id="joint-distributions-independence">
+  <h2>独立な確率変数と積分布</h2>
+  <p>有限値の X、Y が<strong>独立</strong>であるとは、全ての値の組について pᵢⱼ = rᵢqⱼ が成り立つことです。このとき任意の値の集合 A、B に対して、P(X ∈ A, Y ∈ B) = P(X ∈ A)P(Y ∈ B) です。実際、該当するセルを足すと、∑ᵢ∈A∑ⱼ∈B rᵢqⱼ が二つの和の積へ分かれます。逆に任意の集合で成立するなら、一点の集合を取ってセルの式を得ます。</p>
+  <div class="theorem"><h3>独立な有限変数の積の平均</h3><p>独立な有限値の X、Y について、E[XY] = E[X]E[Y] です。</p></div>
+  <div class="proof"><h3>二重の有限和を因数分解する</h3><p>E[XY] = ∑ᵢ∑ⱼ xᵢyⱼpᵢⱼ = ∑ᵢ∑ⱼ(xᵢrᵢ)(yⱼqⱼ) = (∑ᵢxᵢrᵢ)(∑ⱼyⱼqⱼ)。これが E[X]E[Y] です。ここでは、期待値の和の線形性とは違って、同時確率を積へ変える箇所で独立性を使いました。</p></div>
+  <p>最初の表は (1, 1) のセルが 3/8 ですが、周辺の積は (1/2)(1/2) = 1/4 なので独立ではありません。独立なら、正の確率を持つ条件 Y = yⱼ で割った後も、X の分布は rᵢ のままです。</p>
+  <p>有限値の変数 X₁、…、Xₙ が相互に独立であるとは、どの値の組に対しても、同時確率 P(X₁ = x₁, …, Xₙ = xₙ) が P(X₁ = x₁) · … · P(Xₙ = xₙ) へ分かれることです。任意の二つについては、残りの値を全て足せば二変数の独立性が従います。逆に二変数ずつの独立性だけから相互独立は言えないことは、<a href="independence.html">独立性の章</a>で見た通りです。</p>
+  <p class="note">一般の実数値の変数では、任意の範囲に入る事象どうしの独立を定義に使います。独立な可積分変数についての積の期待値の因数分解も成立しますが、その積分による一般化は本冊では未証明で使う標準的な性質です。ここでの有限表の主張は、上で全て証明しました。</p>
+</section>
+
+<section id="joint-distributions-covariance">
+  <h2>共分散と和の分散</h2>
+  <p>平均 μₓ、μᵧ を持つ変数の<strong>共分散</strong>を Cov(X, Y) = E[(X − μₓ)(Y − μᵧ)] と定義します。有限表では必ず有限です。一般の場合は E[X²]、E[Y²] が有限と仮定すれば、2|XY| ≤ X² + Y² により積も可積分となり、以下の式を使えます。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>Cov</mi><mo>(</mo><mi>X</mi><mo>,</mo><mi>Y</mi><mo>)</mo><mo>=</mo><mi>E</mi><mo>[</mo><mi>X</mi><mi>Y</mi><mo>]</mo><mo>−</mo><mi>E</mi><mo>[</mo><mi>X</mi><mo>]</mo><mi>E</mi><mo>[</mo><mi>Y</mi><mo>]</mo></mrow></math></div>
+  <div class="theorem"><h3>和の分散</h3><p>二乗の期待値が有限なら、次の式が成立します。特に独立なら共分散が 0 なので、和の分散は分散の和になります。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>Var</mi><mo>(</mo><mi>X</mi><mo>+</mo><mi>Y</mi><mo>)</mo><mo>=</mo><mi>Var</mi><mo>(</mo><mi>X</mi><mo>)</mo><mo>+</mo><mi>Var</mi><mo>(</mo><mi>Y</mi><mo>)</mo><mo>+</mo><mn>2</mn><mi>Cov</mi><mo>(</mo><mi>X</mi><mo>,</mo><mi>Y</mi><mo>)</mo></mrow></math></div></div>
+  <div class="proof"><h3>二乗の交差項を残す</h3><p>まず共分散の定義を展開し、期待値の線形性を使うと E[XY] − μₓE[Y] − μᵧE[X] + μₓμᵧ = E[XY] − μₓμᵧ です。次に、和の平均からの差は (X − μₓ) + (Y − μᵧ)。二乗して平均すると二つの分散と、交差項 2E[(X − μₓ)(Y − μᵧ)] が現れます。独立なら E[XY] が平均の積に分かれるので、共分散は 0 です。</p></div>
+  <p>最初の表では Cov(X, Y) = 3/8 − 1/4 = 1/8 です。各分散は 1/4 なので Var(X + Y) = 1/4 + 1/4 + 2 · (1/8) = 3/4。二つの値が同じ側になりやすい重みが、和の散らばりに現れました。逆に Y = 1 − X の場合は共分散が負となり、和の分散は 0 です。</p>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="同じ周辺分布を持つ三つの関係と和の分布の比較">
+    <table class="concept-table" id="joint-distributions-visual-same-marginals" data-visual="joint-distributions-same-marginals">
+      <caption>X、Y はどちらも 0 と 1 を半々で取る。関係だけを変える</caption>
+      <thead><tr><th scope="col"><span class="table-math">二変数の関係</span></th><th scope="col"><span class="table-math">P(X + Y = 0)</span></th><th scope="col"><span class="table-math">P(X + Y = 1)</span></th><th scope="col"><span class="table-math">P(X + Y = 2)</span></th><th scope="col"><span class="table-math">Cov(X, Y)</span></th><th scope="col"><span class="table-math">Var(X + Y)</span></th></tr></thead>
+      <tbody>
+        <tr><th scope="row"><span class="table-math">Y = X</span></th><td><span class="table-math">1/2</span></td><td><span class="table-math">0</span></td><td><span class="table-math">1/2</span></td><td><span class="table-math">1/4</span></td><td><span class="table-math">1</span></td></tr>
+        <tr><th scope="row"><span class="table-math">X、Y が独立</span></th><td><span class="table-math">1/4</span></td><td><span class="table-math">1/2</span></td><td><span class="table-math">1/4</span></td><td><span class="table-math">0</span></td><td><span class="table-math">1/2</span></td></tr>
+        <tr><th scope="row"><span class="table-math">Y = 1 − X</span></th><td><span class="table-math">0</span></td><td><span class="table-math">1</span></td><td><span class="table-math">0</span></td><td><span class="table-math">−1/4</span></td><td><span class="table-math">0</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>三行とも E[X] = E[Y] = 1/2、Var(X) = Var(Y) = 1/4 です。同じ側に動くか、独立か、打ち消し合うかで、和の分散は変わります。</p>
+  <p>有限個の和にも、同じ二乗の展開が使えます。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>Var</mi><mo>(</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>X</mi><mi>i</mi></msub><mo>)</mo><mo>=</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mi>Var</mi><mo>(</mo><msub><mi>X</mi><mi>i</mi></msub><mo>)</mo><mo>+</mo><mn>2</mn><munder><mo>∑</mo><mrow><mi>i</mi><mo>&lt;</mo><mi>j</mi></mrow></munder><mi>Cov</mi><mo>(</mo><msub><mi>X</mi><mi>i</mi></msub><mo>,</mo><msub><mi>X</mi><mi>j</mi></msub><mo>)</mo></mrow></math></div>
+  <p>交差項は各組 i &lt; j に一つずつ対応します。各組が独立なら全て消えます。従って独立な Bernoulli 変数 n 個の成功数の分散は np(1 − p)。実は、和の分散の加法性だけには、各組の共分散が 0 であれば十分です。</p>
+</section>
+
+<section id="joint-distributions-counterexample">
+  <h2>無相関と独立の違い</h2>
+  <p>共分散が 0 であることを<strong>無相関</strong>と呼びます。独立なら無相関ですが、逆向きは一般に誤りです。X が −1、0、1 をそれぞれ確率 1/3 で取り、Y = X² としましょう。X が決まれば Y も決まります。</p>
+  <p>E[X] = 0、E[Y] = E[X²] = 2/3、E[XY] = E[X³] = (−1 + 0 + 1)/3 = 0。従って Cov(X, Y) = 0 です。しかし P(X = 0, Y = 0) = 1/3 に対し、P(X = 0)P(Y = 0) = (1/3)(1/3) = 1/9 で、独立の条件を満たしません。</p>
+  <p>正と負の X による交差の寄与が相殺したことが、共分散 0 の理由です。二次的な結び付きまで消えたわけではありません。平均と分散だけでなく、依存関係の要約にも、落ちる情報があります。</p>
+  <figure class="concept-figure" id="joint-distributions-visual-uncorrelated-dependence" data-visual="joint-distributions-uncorrelated-dependence">
+    <svg class="concept-svg" viewBox="0 0 360 350" role="img" aria-labelledby="joint-distributions-uncorrelated-title joint-distributions-uncorrelated-desc" fill="var(--ink)" font-size="22">
+      <title id="joint-distributions-uncorrelated-title">三点に質量を置く、無相関だが依存する分布</title>
+      <desc id="joint-distributions-uncorrelated-desc">横軸X、縦軸Y。マイナス1,1、0,0、1,1の三点に各1/3の確率を置き、YはXの二乗で決まる。平均Xは0、平均Yは2/3。中心化した積は左でマイナス1/3、中央0、右プラス1/3なので、確率を掛けて足すと共分散は0になる。</desc>
+      <text x="265" y="35" text-anchor="middle">Y = X²</text>
+      <path d="M 45 270 H 325 M 180 285 V 50" fill="none" stroke="var(--ink)" stroke-width="2"/>
+      <path d="M 45 156.666667 H 325" stroke="var(--series-2)" stroke-width="2" stroke-dasharray="7 5"/>
+      <text x="245" y="145" text-anchor="middle">E[Y] = 2/3</text>
+      <g fill="var(--series-1)" stroke="var(--ink)" stroke-width="2"><circle cx="80" cy="100" r="8"/><circle cx="180" cy="270" r="8"/><circle cx="280" cy="100" r="8"/></g>
+      <g text-anchor="middle"><text x="80" y="78">1/3</text><text x="280" y="78">1/3</text><text x="225" y="255">1/3</text><text x="80" y="310">−1</text><text x="180" y="310">0</text><text x="280" y="310">1</text></g>
+      <text x="50" y="108">1</text><text x="333" y="260">X</text><text x="155" y="55">Y</text>
+    </svg>
+    <figcaption>質量は三点に各 1/3。中心化した積 (X − 0)(Y − 2/3) は左から −1/3、0、1/3 です。確率を掛けた共分散への寄与は −1/9、0、1/9 と相殺しますが、Y は X から完全に決まります。</figcaption>
+  </figure>
+</section>
+
+<details class="column" id="joint-distributions-column">
+  <summary>寄り道［応用］：別々に見える集計にも、同じデータが混ざる</summary>
+  <p>MIT の共分散の教材は、三回のコイン投げから、最初の二回の表の数と、最後の二回の表の数を作る例を扱っています。元の投げ方が独立でも、二つの集計は真ん中の一回を共有します。</p>
+  <p>本章でも公平で独立な 0、1 の変数 A、B、C から U = A + B、V = B + C を作ると、E[U] = E[V] = 1。積を展開して E[UV] = E[AB] + E[AC] + E[B²] + E[BC] = 1/4 + 1/4 + 1/2 + 1/4 = 5/4 です。従って共分散は 1/4。別の名前の集計でも、入力を共有すれば独立とは限らないことが、表を作る前にも見えてきます。</p>
+  <p class="source-note">出典：<a href="https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/resources/mit18_05_s22_class07-prep-b_pdf/">MIT OpenCourseWare 18.05：Covariance and Correlation、例1</a>。式は本章の記号で再計算しました。</p>
+</details>
+
+<section id="joint-distributions-exercises">
+  <h2>演習：同時分布と共分散</h2>
+  <article class="exercise"><h3>1．列を選び、平均を戻す</h3><p>本文の表について E[X | Y = 0]、E[X | Y = 1] を求め、全期待値の法則で E[X] を確かめてください。</p><details><summary>ヒント1：列の和はどちらも 1/2</summary><p>各セルを 1/2 で割って、条件付き確率を作ります。</p></details><details><summary>ヒント2：0、1 の平均は 1 の確率</summary><p>条件付き平均を、Y の二つの周辺確率で重み付けします。</p></details><details><summary>解答</summary><p>E[X | Y = 0] = (1/8)/(1/2) = 1/4、E[X | Y = 1] = (3/8)/(1/2) = 3/4。外側で平均すると (1/4)(1/2) + (3/4)(1/2) = 1/2 で、周辺分布から得る E[X] と一致します。</p></details></article>
+  <article class="exercise"><h3>2．同じ周辺分布で独立にする</h3><p>X、Y がそれぞれ 0、1 を半々で取り、さらに独立とします。同時表の四つのセルと、Var(X + Y) を求め、本文の表と比較してください。</p><details><summary>ヒント1：セルは周辺確率の積</summary><p>全ての組で (1/2)(1/2) です。</p></details><details><summary>ヒント2：独立なら交差項は 0</summary><p>各分散は Bernoulli の公式により 1/4 です。</p></details><details><summary>解答</summary><p>四つのセルは全て 1/4。E[XY] = 1/4 で共分散は 1/4 − (1/2)(1/2) = 0 です。従って Var(X + Y) = 1/4 + 1/4 = 1/2。本文の表では周辺分布が同じでも共分散が 1/8 なので、和の分散は 3/4 でした。</p></details></article>
+  <article class="exercise"><h3>3．無相関でも依存する二変数</h3><p>本文の X = −1、0、1 が等確率で Y = X² の例について、Var(X)、Var(Y)、Var(X + Y) を求めてください。独立性を仮定してよいですか。</p><details><summary>ヒント1：Y² = Y</summary><p>E[Y] = 2/3 なので、Var(Y) = 2/3 − (2/3)² です。</p></details><details><summary>ヒント2：共分散は既に 0</summary><p>和の分散の公式は、独立でなくても使えます。</p></details><details><summary>解答</summary><p>Var(X) = 2/3 − 0² = 2/3、Var(Y) = 2/3 − 4/9 = 2/9。共分散 0 なので Var(X + Y) = 2/3 + 2/9 = 8/9 です。直接にも X + Y は 0 を確率 2/3、2 を確率 1/3 で取り、分散は 4/3 − (2/3)² = 8/9。二変数は独立ではなく、ここでは無相関だけで加法性が成立しています。</p></details></article>
+</section>
+
+<section id="joint-distributions-reflection">
+  <h2>自分の言葉で</h2><ol><li>周辺分布が同じでも、和の分布や分散が変わる理由を、同時表で説明できますか。</li><li>全期待値の法則で、条件付き平均にもう一度条件の確率を掛けるのはなぜですか。</li><li>無相関と独立の違いは何ですか。独立性は積の期待値の証明のどこで使われましたか。</li></ol>
+</section>

@@ -1,0 +1,79 @@
+<section id="discrete-orders-question">
+  <h2>半順序と比較不能</h2>
+  <p>資料を集める作業 A と、図を作る作業 B は、どちらを先に進めてもよいとします。ただし両方が済むまで本文 C は完成できず、本文 C の後に点検 D を行います。A、B の間には先後がなくても、全体には守るべき順序があります。</p>
+  <p>大小の順序に慣れると、比較できない二つがあることを欠陥に感じるかもしれません。この章では、<strong>必要な比較だけを持つ半順序</strong>を定義し、矢印で表した先行条件を一本の実行順へ並べられる条件を証明します。後のグラフの知識は前提にしません。</p>
+</section>
+
+<section id="discrete-orders-partial">
+  <h2>半順序と全順序</h2>
+  <p>集合 X 上の関係 ≼ が次の三条件を満たすとき、<strong>半順序</strong>と呼びます。記号 ≼ は、問題に応じて「以下」「含まれる」「先行してよい」などと読みます。</p>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="半順序の三条件と包含関係の例">
+    <table class="concept-table" id="discrete-orders-visual-axioms" data-visual="discrete-orders-axioms" style="min-width:40rem"><caption>半順序の各条件が欠けると、どの比較が壊れるか。条件はすべてのx,y,z∈Xについて。</caption><thead><tr><th scope="col">条件</th><th scope="col">包含での意味と具体例</th><th scope="col">条件を欠く関係</th><th scope="col">検査が失敗する場所</th></tr></thead><tbody><tr><th scope="row">反射律<br><span class="table-math">x≼x</span></th><td><span class="table-math">S⊆S</span>。例：<span class="table-math">{a}⊆{a}</span>。</td><td>X={0,1}上の厳しい不等号<span class="table-math">&lt;</span>。</td><td><span class="table-math">0&lt;0</span>は偽。この本の反射的な半順序の条件は満たさない（厳密順序は別の規約）。</td></tr><tr><th scope="row">反対称律<br><span class="table-math">x≼y</span>、<span class="table-math">y≼x</span><br>なら<span class="table-math">x=y</span></th><td><span class="table-math">S⊆T</span>、<span class="table-math">T⊆S</span>なら<span class="table-math">S=T</span>。</td><td>X={0,1,2}で「差が2の倍数」。</td><td><span class="table-math">0R2</span>と<span class="table-math">2R0</span>が両方真でも<span class="table-math">0≠2</span>。同値関係としては正しいが、このXの半順序ではない。</td></tr><tr><th scope="row">推移律<br><span class="table-math">x≼y</span>、<span class="table-math">y≼z</span><br>なら<span class="table-math">x≼z</span></th><td><span class="table-math">∅⊆{a}</span>、<span class="table-math">{a}⊆{a,b}</span>から<span class="table-math">∅⊆{a,b}</span>。</td><td>X={0,1,2}で、自分自身との三組と<span class="table-math">(0,1)</span>、<span class="table-math">(1,2)</span>だけをRに入れる。</td><td><span class="table-math">0R1</span>、<span class="table-math">1R2</span>でも<span class="table-math">0R2</span>は偽。反射律・反対称律は満たすが、二段の比較がつながらない。</td></tr></tbody></table>
+  </div>
+  <p>整数の ≤ も半順序です。集合 {a, b} の部分集合全体での ⊆ も半順序ですが、{a} と {b} の間にはどちら向きの包含もありません。この二つは<strong>比較不能</strong>です。任意の x、y に x ≼ y または y ≼ x が成り立つ半順序は<strong>全順序</strong>です。半順序は比較不能を許し、全順序は許しません。</p>
+  <p class="note"><strong>反対称は「対称でない」の言い換えではありません。</strong>対称律は xRy ⇒ yRx、反対称律は両方向が成り立つなら x = y という条件です。等号 = は両方を満たします。前章の「差が 3 の倍数」は対称ですが、0 と 3 のような異なる二つでも両方向が成り立つため、整数上で反対称ではありません。</p>
+  <p>x ≼ y かつ x ≠ y を x ≺ y と書きます。また、x より真に小さい要素がないとき x を<strong>極小元</strong>、すべての y に x ≼ y となるとき x を<strong>最小元</strong>といいます。集合族 {{a}, {b}, {a, b}} では {a} と {b} が極小元で、最小元はありません。最小元があれば反対称律により一つだけですが、極小元は複数ありえます。</p>
+</section>
+
+<section id="discrete-orders-hasse">
+  <h2>被覆関係とハッセ図</h2>
+  <p>有限の半順序を図にするとき、x ≺ y のうち、間に x ≺ z ≺ y となる z がない組だけを線で結びます。y を x より上に置き、自己関係と推移律で分かる線を省いた図が<strong>Hasse 図</strong>です。線の上向きを「小さい方から大きい方」と読む約束なので、矢印の先端も省きます。</p>
+  <div class="concept-grid">
+    <figure class="concept-figure" id="discrete-orders-visual-hasse" data-visual="discrete-orders-hasse">
+      <svg class="concept-svg" viewBox="0 0 360 350" role="img" aria-labelledby="discrete-orders-hasse-title discrete-orders-hasse-desc">
+        <title id="discrete-orders-hasse-title">二要素集合の部分集合を包含で並べたHasse図</title>
+        <desc id="discrete-orders-hasse-desc">一番下に空集合、中段の左にaだけの集合、右にbだけの集合、一番上にaとbの集合。空集合から中段の二つへ、中段の二つから最上段へ線がある。中段二つは比較不能で、空集合から最上段への直接線は省略される。</desc>
+        <path d="M 180 272 L 82 188 M 180 272 L 278 188 M 82 158 L 180 74 M 278 158 L 180 74" fill="none" stroke="var(--series-1)" stroke-width="3"/>
+        <g fill="var(--surface)" stroke="var(--rule)" stroke-width="2"><rect x="119" y="28" width="122" height="48" rx="8"/><rect x="30" y="149" width="104" height="48" rx="8"/><rect x="226" y="149" width="104" height="48" rx="8"/><rect x="143" y="271" width="74" height="48" rx="8"/></g>
+        <g text-anchor="middle"><text x="180" y="60">{a, b}</text><text x="82" y="181">{a}</text><text x="278" y="181">{b}</text><text x="180" y="303">∅</text></g>
+      </svg>
+      <figcaption>上へ線をたどれるときに包含が成り立ちます。∅ ⊆ {a, b} の直接線と、各集合から自分への関係は描きません。左右の位置自体は大小を表しません。</figcaption>
+    </figure>
+    <figure class="concept-figure" id="discrete-orders-visual-tasks" data-visual="discrete-orders-tasks">
+      <svg class="concept-svg" viewBox="0 0 360 400" role="img" aria-labelledby="discrete-orders-tasks-title discrete-orders-tasks-desc">
+        <title id="discrete-orders-tasks-title">先行条件の矢印と、許される実行順</title>
+        <desc id="discrete-orders-tasks-desc">左上のAと右上のBから中央のCへ、Cから下のDへ矢印。AとBには入る矢印がない。A,B,C,DとB,A,C,Dの二つの順序が先行条件を満たす。</desc>
+        <path d="M 97 96 L 161 174 M 263 96 L 199 174 M 180 226 V 277" fill="none" stroke="var(--series-2)" stroke-width="3"/>
+        <path d="M 149 169 L 161 174 L 158 161 M 202 161 L 199 174 L 211 169 M 173 268 L 180 277 L 187 268" fill="none" stroke="var(--series-2)" stroke-width="3"/>
+        <g fill="var(--surface)" stroke="var(--rule)" stroke-width="2"><circle cx="80" cy="75" r="28"/><circle cx="280" cy="75" r="28"/><circle cx="180" cy="200" r="28"/><circle cx="180" cy="307" r="28"/></g>
+        <g text-anchor="middle"><text x="80" y="83">A</text><text x="280" y="83">B</text><text x="180" y="208">C</text><text x="180" y="315">D</text><text x="180" y="375">A B C D ／ B A C D</text></g>
+      </svg>
+      <figcaption>こちらは実行条件を先から後への矢印で描いた図で、時間は下へ進みます。Hasse 図の上向きという約束と区別してください。C の後でなければ D は実行できません。</figcaption>
+    </figure>
+  </div>
+  <p>有限であれば、比較 x ≺ y の間に中間点があるたび線を分ける操作は、点の数に限りがあるので終わります。従って省いた比較も上向きの線の連鎖から復元できます。ただし図に直接線がないことだけでは、比較不能とは限りません。下から上へたどる連鎖があるかを調べます。</p>
+</section>
+
+<section id="discrete-orders-arrows">
+  <h2>有向非巡回グラフとトポロジカル順序</h2>
+  <p>有限個の点 V と、点から点への矢印の集合 E ⊆ V×V を指定します。u → v は「u を v より先に置く」という<strong>厳密な先行条件</strong>です。矢印を順にたどり、点を繰り返さない列を<strong>有向道</strong>と呼びます。一点だけの道も許します。同じ点へ戻る長さ 1 以上の矢印の列で、始点と終点以外に点の重なりがないものを<strong>有向閉路</strong>といいます。u → u も長さ 1 の閉路です。閉路のない有限の矢印の系を、有限 DAG（有向非巡回グラフ）とも呼びます。</p>
+  <p>各点へ入ってくる矢印の本数が<strong>入次数</strong>です。すべての点を一度ずつ並べ、どの矢印も左の点から右の点へ向くようにした並びが<strong>トポロジカル順序</strong>です。すべての点どうしを比較する元の規則はなくても、選んだ一本の列の中では先後が決まります。</p>
+  <div class="theorem"><h3>有限で閉路がなければ、実行順を作れる</h3><p>空でない有限 DAG には入次数 0 の点があります。それを先頭にして除く操作を繰り返せば、トポロジカル順序が得られます。</p></div>
+  <div class="proof"><h3>最長の有向道の先頭を見る</h3><p>空でない有限の点集合では、点を繰り返さない有向道は有限通りしかないので、最も長いものを一つ選べます。それを v₀ → v₁ → … → vₖ とします。先頭へ入る矢印 u → v₀ があると、u が道の途中の点なら有向閉路ができ、u が道にない点なら道を前へ延ばせます。u = v₀ でも長さ 1 の閉路です。いずれも条件に反するので、v₀ の入次数は 0 です。</p><p>次に点の数について帰納法を使います。0 点なら空の列でよいとします。入次数 0 の点 v を除いた系にも閉路はないので、帰納法で残りを並べられます。v をその先頭に置けば、v に入る矢印はなく、v から出る矢印はすべて後ろへ進みます。残りの矢印も帰納法で守られるので、列全体が条件を満たします。</p></div>
+  <p>逆に有向閉路があれば、その閉路の点を一周する間ずっと「先」を要求するため、一列には並べられません。よって有限の系で並べられる条件は、ちょうど閉路がないことです。点が無限だと証明の有限性は失われます。整数に n → n + 1 をすべて置いた系は閉路がありませんが、どの点にも一つ前からの矢印があり、先頭として取り除ける点はありません。</p>
+</section>
+
+<section id="discrete-orders-connection">
+  <h2>半順序とDAGの接続</h2>
+  <p>有限半順序の x ≺ y を矢印にすれば閉路はありません。もし閉路があれば、最初の一辺 x ≺ y に対し、残りの矢印を推移律でつないで y ≼ x です。反対称律から x = y となり、最初の辺の x ≠ y に反します。自分への矢印も定義からありません。従って有限半順序は、比較可能だった二点の向きを保ったまま全体を一列に並べられます。これは比較不能な二点のどちらを先にするかを選ぶ操作で、元の比較が増えていたと主張するものではありません。</p>
+  <p>逆に DAG から、x ≼ y を「x = y、または矢印を何本かたどって x から y へ行ける」と定めると、反射律は等号、推移律は列の連結から従います。異なる二点の間で両方向に行けるなら、その往復の列の中で同じ点へ戻る最短の非空区間を選びます。その内部に重複はないので有向閉路になり、DAG の条件に反します。従って反対称律も成り立ちます。直接の先行条件を、推移的な順序関係へ広げられるわけです。</p>
+</section>
+
+<details class="column" id="discrete-orders-column">
+  <summary>寄り道［自作モデル］：同じ条件でも、実行順は一つとは限らない</summary>
+  <p>冒頭の四作業では、最初に選べる点は A と B の二つです。A を除いた後は B が残り、両方を終えると C、最後に D が選べます。先頭の選択を逆にした二通りがあり、C と D の位置は動かせません。</p>
+  <p>入次数 0 の点が複数あることは、条件だけからは一つの次の作業に決まらないという情報です。同時に作業できる人数、作業時間、期限などを決めた最適な日程は、さらに別の問題です。トポロジカル順序は、ここで指定した先行条件を守る列の存在を保証します。</p>
+  <p class="source-note">出典：本章のために作成した四作業モデル。現実の作業時間や処理性能を推定するものではありません。</p>
+</details>
+
+<section id="discrete-orders-exercises">
+  <h2>演習：半順序と実行順序</h2>
+  <article class="exercise"><h3>1．割り切れる関係は半順序か</h3><p>X = {1, 2, 3, 6} で、x ≼ y を「x が y を割り切る」とします。半順序の三条件を確認し、比較不能な二点と Hasse 図に残る組を挙げてください。</p><details><summary>ヒント1：両方向に割り切れる正の整数</summary><p>y = kx、x = ℓy で k、ℓ は正の整数です。</p></details><details><summary>ヒント2：1 と 6 の間には何があるか</summary><p>1 から 6 の直接線は、2 または 3 を経由して復元できるか考えます。</p></details><details><summary>解答</summary><p>x は自分を割り切ります。両方向に割り切れると kℓ = 1 なので k = ℓ = 1、従って x = y です。y = kx、z = ℓy なら z = ℓkx なので推移的です。2 と 3 は比較不能。Hasse 図に残る組は 1–2、1–3、2–6、3–6 で、1–6 は省略します。</p></details></article>
+  <article class="exercise"><h3>2．並べられるか、閉路を探す</h3><p>矢印 P → Q、P → R、Q → S、R → S のトポロジカル順序を二つ示してください。さらに S → P を加えると何が起こりますか。</p><details><summary>ヒント1：最初に入次数が 0 の点</summary><p>最初は P だけです。P を除いた後を考えます。</p></details><details><summary>ヒント2：S から P に戻ると、一周できるか</summary><p>P → Q → S をつなげます。</p></details><details><summary>解答</summary><p>P, Q, R, S と P, R, Q, S が条件を満たします。S → P を加えると P → Q → S → P という有向閉路ができるので、すべての先行条件を守る列は存在しません。</p></details></article>
+  <article class="exercise"><h3>3．極小元は最小元か</h3><p>集合族 X = {{a}, {b}, {a, b}} を包含で順序づけます。極小元と最小元を求め、∅ を X に追加するとどう変わるか説明してください。</p><details><summary>ヒント1：下に何もない、全員の下にある</summary><p>この二つの条件は同じでしょうか。</p></details><details><summary>ヒント2：空集合はどの集合に含まれるか</summary><p>追加前は、空集合が X の要素でないことにも注意します。</p></details><details><summary>解答</summary><p>追加前の極小元は {a} と {b} です。どちらももう一方の部分集合でないため、最小元はありません。∅ を追加すると、∅ がすべての要素の部分集合なので最小元になります。また他の三要素には真に小さい ∅ があるため、極小元も ∅ だけになります。</p></details></article>
+</section>
+
+<section id="discrete-orders-reflection">
+  <h2>自分の言葉で</h2>
+  <ol><li>反対称律は、対称律の否定とどう違いますか。両方を満たす例を挙げられますか。</li><li>Hasse 図に直接線がない二点が、比較不能とは限らないのはなぜですか。</li><li>入次数 0 の点がある証明と、その点を除いて並べる証明では、それぞれどこで有限性を使いましたか。</li></ol>
+</section>

@@ -1,0 +1,85 @@
+<section id="variance-question">
+  <h2>分散と標準偏差</h2>
+  <p>必ず 0 を取る変数と、−10、10 を半々で取る変数は、どちらも期待値が 0 です。しかし平均からの離れ方は大きく違います。期待値に加えて、散らばりを数にする必要があります。</p>
+  <p>単に平均からの差を平均すると、E[X − E[X]] = 0 になって左右が打ち消し合います。差を二乗してから平均すれば、符号による相殺を防げます。その数から、大きく外れる確率の上限も引き出します。</p>
+  <div class="concept-grid">
+    <figure class="concept-figure" id="variance-visual-constant" data-visual="variance-constant">
+      <svg class="concept-svg" viewBox="0 0 360 280" role="img" aria-labelledby="variance-constant-title variance-constant-desc" fill="var(--ink)" font-size="22">
+        <title id="variance-constant-title">必ず0を取る変数の質量</title>
+        <desc id="variance-constant-desc">横軸の値0に高さ1の確率の棒が一本あり、平均は0、分散と標準偏差も0。隣の比較図と横軸および棒の高さの尺度をそろえている。</desc>
+        <text x="180" y="24" text-anchor="middle">必ず 0</text>
+        <path d="M 40 185 H 320 M 60 185 V 195 M 180 185 V 195 M 300 185 V 195" fill="none" stroke="var(--ink)" stroke-width="2"/>
+        <path d="M 180 65 V 185" stroke="var(--series-1)" stroke-width="16"/>
+        <g text-anchor="middle"><text x="180" y="56">1</text><text x="60" y="228">−10</text><text x="180" y="228">0</text><text x="300" y="228">10</text></g>
+        <text x="180" y="267" text-anchor="middle">平均 0</text>
+      </svg>
+      <figcaption>Var = 0、標準偏差 = 0。棒の高さは値の確率を表します。</figcaption>
+    </figure>
+    <figure class="concept-figure" id="variance-visual-spread" data-visual="variance-spread">
+      <svg class="concept-svg" viewBox="0 0 360 280" role="img" aria-labelledby="variance-spread-title variance-spread-desc" fill="var(--ink)" font-size="22">
+        <title id="variance-spread-title">マイナス10と10を半々で取る変数の質量</title>
+        <desc id="variance-spread-desc">横軸の値マイナス10と10に、それぞれ高さ1/2の確率の棒がある。平均は0だが、平均からの二乗距離はどちらも100なので分散100、標準偏差10。必ず0の図と同じ尺度。</desc>
+        <text x="180" y="24" text-anchor="middle">−10 と 10 を半々</text>
+        <path d="M 40 185 H 320 M 60 185 V 195 M 180 185 V 195 M 300 185 V 195" fill="none" stroke="var(--ink)" stroke-width="2"/>
+        <path d="M 60 125 V 185 M 300 125 V 185" stroke="var(--series-1)" stroke-width="16"/>
+        <g text-anchor="middle"><text x="60" y="113">1/2</text><text x="300" y="113">1/2</text><text x="60" y="228">−10</text><text x="180" y="228">0</text><text x="300" y="228">10</text></g>
+        <text x="180" y="267" text-anchor="middle">平均 0</text>
+      </svg>
+      <figcaption>Var = 100、標準偏差 = 10。横軸と棒の高さは左の図と同じ尺度です。</figcaption>
+    </figure>
+  </div>
+  <p>どちらも中心は 0 ですが、右では二乗距離 100 に合計 1 の重みがあります。平均だけでは、この違いが消えてしまいます。</p>
+</section>
+
+<section id="variance-definition">
+  <h2>分散の定義と計算公式</h2>
+  <p>E[X²] &lt; ∞ を仮定します。この条件なら |x| ≤ 1 + x² と期待値の単調性から E[|X|] ≤ 1 + E[X²] &lt; ∞ であり、平均 μ = E[X] も有限です。<strong>分散</strong>を Var(X) = E[(X − μ)²]、<strong>標準偏差</strong>を σ = √Var(X) と定義します。有限離散では全ての値が有限なので、この条件を自動的に満たします。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>Var</mi><mo>(</mo><mi>X</mi><mo>)</mo><mo>=</mo><mi>E</mi><mo>[</mo><msup><mrow><mo>(</mo><mi>X</mi><mo>−</mo><mi>μ</mi><mo>)</mo></mrow><mn>2</mn></msup><mo>]</mo><mo>=</mo><mi>E</mi><mo>[</mo><msup><mi>X</mi><mn>2</mn></msup><mo>]</mo><mo>−</mo><msup><mrow><mo>(</mo><mi>E</mi><mo>[</mo><mi>X</mi><mo>]</mo><mo>)</mo></mrow><mn>2</mn></msup></mrow></math></div>
+  <div class="proof"><h3>二乗を展開し、線形性を使う</h3><p>(X − μ)² = X² − 2μX + μ² の期待値を取ります。μ は定数なので E[(X − μ)²] = E[X²] − 2μE[X] + μ² = E[X²] − μ²。各項の期待値は有限で、∞ − ∞ を計算していません。また (X − μ)² ≤ 2X² + 2μ² から、分散自体も有限です。非負な量の期待値なので Var(X) ≥ 0 です。</p></div>
+  <p>例えば Bernoulli 変数 X では X² = X なので E[X²] = p。従って Var(X) = p − p² = p(1 − p) です。p = 0、1 なら必ず同じ値を取って分散は 0、p = 1/2 なら分散は 1/4 になります。密度 f を持つ場合は、絶対可積分性を確認して Var(X) = ∫(x − μ)²f(x) dx と計算します。</p>
+  <p>単位にも違いがあります。X が秒なら、分散は秒²、標準偏差は秒です。標準偏差は元の値と同じ尺度で散らばりを読めますが、「必ずその幅に収まる」という意味ではありません。</p>
+</section>
+
+<section id="variance-scaling">
+  <h2>分散の平行移動と尺度変換</h2>
+  <div class="theorem"><h3>尺度変換の公式</h3><p>有限な二乗の期待値を持つ X と実数 a、b に対して、Var(aX + b) = a²Var(X) です。従って標準偏差は |a| 倍です。</p></div>
+  <div class="proof"><h3>新しい平均からの差を取る</h3><p>E[aX + b] = aμ + b なので、(aX + b) − (aμ + b) = a(X − μ)。二乗して期待値を取れば a²Var(X) です。定数 b は差の中で消え、a が負でも二乗で非負になります。</p></div>
+  <p>例えば計測値を秒からミリ秒へ変えると a = 1000 なので分散は 100 万倍、標準偏差は 1000 倍です。単位を変えただけで散らばり方の意味が変わったわけではありません。なお Var(X + Y) をいつでも Var(X) + Var(Y) とすることはできません。和に現れる追加の項は、<a href="joint-distributions.html#joint-distributions-covariance">共分散</a>で扱います。</p>
+</section>
+
+<section id="variance-markov">
+  <h2>Markovの不等式</h2>
+  <div class="theorem"><h3>Markov の不等式</h3><p>Y ≥ 0 で E[Y] &lt; ∞ とし、a &gt; 0 とします。このとき P(Y ≥ a) ≤ E[Y]/a です。右辺が 1 を超える場合は、確率の上限 1 と合わせて小さい方を使えます。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>P</mi><mo>(</mo><mi>Y</mi><mo>≥</mo><mi>a</mi><mo>)</mo><mo>≤</mo><mfrac><mrow><mi>E</mi><mo>[</mo><mi>Y</mi><mo>]</mo></mrow><mi>a</mi></mfrac><mspace width="1em"/><mo>(</mo><mi>Y</mi><mo>≥</mo><mn>0</mn><mo>,</mo><mspace width="0.3em"/><mi>a</mi><mo>&gt;</mo><mn>0</mn><mo>)</mo></mrow></math></div></div>
+  <div class="proof"><h3>しきい値以上の部分だけを残す</h3><p>A = {Y ≥ a} とします。A 上では Y ≥ a、外では Y ≥ 0 なので、全ての結果で Y ≥ aIₐ です。<a href="expectation.html#expectation-linearity">期待値の単調性</a>と指示変数の公式から、E[Y] ≥ aE[Iₐ] = aP(A)。a &gt; 0 で割れば結論です。分布の形や独立性は使っていません。</p></div>
+  <p>Y の非負性は証明の外側の部分で必要です。反例として、Y が −1 を確率 9/10、9 を確率 1/10 で取ると E[Y] = 0 ですが、P(Y ≥ 1) = 1/10。非負性を外して E[Y]/1 = 0 を上限とすることはできません。また a = 0 では割り算自体が定義されません。</p>
+</section>
+
+<section id="variance-chebyshev">
+  <h2>Chebyshevの不等式</h2>
+  <div class="theorem"><h3>Chebyshev の不等式</h3><p>有限な二乗の期待値を持ち、平均 μ、分散 σ² の変数 X について、任意の t &gt; 0 に対し、平均から t 以上離れる確率は σ²/t² 以下です。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>P</mi><mo>(</mo><mo>|</mo><mi>X</mi><mo>−</mo><mi>μ</mi><mo>|</mo><mo>≥</mo><mi>t</mi><mo>)</mo><mo>≤</mo><mfrac><msup><mi>σ</mi><mn>2</mn></msup><msup><mi>t</mi><mn>2</mn></msup></mfrac><mspace width="1em"/><mo>(</mo><mi>t</mi><mo>&gt;</mo><mn>0</mn><mo>)</mo></mrow></math></div></div>
+  <div class="proof"><h3>二乗した差に Markov を使う</h3><p>Y = (X − μ)² と置きます。Y ≥ 0、E[Y] = σ² で、|X − μ| ≥ t と Y ≥ t² は同じ事象です。従って Markov の不等式をしきい値 a = t² &gt; 0 で使えば結論を得ます。これが、二乗による散らばりと、確率の上限を結ぶ理由です。</p></div>
+  <p>σ &gt; 0 のとき、例えば t = 2σ なら外れる確率は高々 1/4。これは分布の形を知らずに使える上限です。実際の確率がちょうど 1/4 だという意味でも、観測値が必ず 2σ 以内だという意味でもありません。</p>
+  <figure class="concept-figure" id="variance-visual-chebyshev-regions" data-visual="variance-chebyshev-regions"><svg class="concept-svg" viewBox="0 0 360 440" role="img" aria-labelledby="variance-chebyshev-title variance-chebyshev-desc"><title id="variance-chebyshev-title">二標準偏差の両尾1/4が、Chebyshev上界1/k²=1/4に一致する</title><desc id="variance-chebyshev-desc">Xが−2と2を各1/8、0を3/4で取る分布。平均0、分散1、標準偏差1、k=2。棒の横位置は値に比例し、高さは確率に比例する。数直線の両端の太線と塗点はX≤−2またはX≥2で、境界を含む両尾。P(|X|≥2)=1/8+1/8=1/4で、Chebyshev上界1/k²=1/4と等しい。開区間の中央は3/4。これは等号になる一つの分布。</desc><text x="180" y="28" text-anchor="middle" font-size="22" fill="var(--ink)">μ=0、σ=1、k=2</text><text x="180" y="66" text-anchor="middle" font-size="22" fill="var(--ink)">棒の高さ＝確率</text><line x1="30" y1="230" x2="330" y2="230" stroke="var(--ink)" stroke-width="2"/><line x1="30" y1="230" x2="70" y2="230" stroke="var(--series-1)" stroke-width="6"/><line x1="290" y1="230" x2="330" y2="230" stroke="var(--series-1)" stroke-width="6"/><rect x="63" y="210.0" width="14" height="20.0" fill="var(--series-1)"/><text x="70" y="196.0" text-anchor="middle" font-size="22" fill="var(--ink)">1/8</text><circle cx="70" cy="230" r="5" fill="var(--series-1)"/><rect x="173" y="110.0" width="14" height="120.0" fill="var(--series-2)"/><text x="180" y="96.0" text-anchor="middle" font-size="22" fill="var(--ink)">3/4</text><circle cx="180" cy="230" r="5" fill="var(--series-2)"/><rect x="283" y="210.0" width="14" height="20.0" fill="var(--series-1)"/><text x="290" y="196.0" text-anchor="middle" font-size="22" fill="var(--ink)">1/8</text><circle cx="290" cy="230" r="5" fill="var(--series-1)"/><text x="70" y="265" text-anchor="middle" font-size="22" fill="var(--ink)">−2</text><text x="180" y="265" text-anchor="middle" font-size="22" fill="var(--ink)">0</text><text x="290" y="265" text-anchor="middle" font-size="22" fill="var(--ink)">2</text><text x="344" y="237" text-anchor="middle" font-size="22" fill="var(--ink)">x</text><text x="180" y="303" text-anchor="middle" font-size="22" style="fill:var(--series-1)">X≤−2 または X≥2</text><text x="180" y="341" text-anchor="middle" font-size="22" style="fill:var(--series-1)">P(|X|≥2)=1/4=1/k²</text><text x="180" y="379" text-anchor="middle" font-size="22" style="fill:var(--series-1)">尾の確率 = 上界（k=2）</text><text x="180" y="417" text-anchor="middle" font-size="22" style="fill:var(--series-2)">中央：P(−2&lt;X&lt;2)=3/4</text></svg><figcaption>この三点分布では平均0、分散 <span class="table-math">4(1/8+1/8)=1</span>、従ってσ=1です。<span class="table-math">k=2</span> とすると、境界 <span class="table-math">X=±2</span> の質量も含む両尾は <span class="table-math">P(|X|≥2)=1/8+1/8=1/4</span>。比較するChebyshev上界も <span class="table-math">1/k²=1/2²=1/4</span> なので、この例では尾の確率が上界に達します。中央 <span class="table-math">−2&lt;X&lt;2</span> は3/4です。これは一般の不等式が等号になる一例で、すべての分布がこの三点や左右等確率になるとは主張しません。棒の高さは確率、横位置は値で、両軸の単位は異なります。</figcaption></figure>
+  <p>σ² = 0 なら全ての正の t で P(|X − μ| ≥ t) = 0 です。X ≠ μ なら、ある正の整数 m で |X − μ| ≥ 1/m となるため、{X ≠ μ} はこれらの事象の可算和です。<a href="probability-models.html#probability-models-countable-bound">可算個の和事象の上界</a>から P(X ≠ μ) = 0。つまり X は<strong>確率 1 で</strong> μ に等しくなります。確率 0 の結果を含む一般モデルでは、全ての結果で等しいという主張とは区別します。</p>
+  <p class="note">有限離散ではこの証明は全て有限和の期待値の性質に基づきます。一般のモデルでは<a href="expectation.html#expectation-density">前章で明示した積分の単調性</a>と、確率の可算加法性の枠組みを使っています。次章で和の分散を求めれば、最後に繰り返しの平均へこの不等式を適用できます。</p>
+</section>
+
+<details class="column" id="variance-column">
+  <summary>寄り道［見方］：平均が同じ分布を、どこまで見分けられるか</summary>
+  <p>MIT の分散の教材は、同じ平均を持っていても散らばりが違う分布を比べるところから始まります。本章の言葉なら、中心の情報だけでは、中心からの距離の情報が欠けています。</p>
+  <p>自作の例で、X は −1、1 を半々、Y は −2、2 を半々で取るとします。両方とも平均 0 ですが、分散はそれぞれ 1、4 です。Y は X の尺度を 2 倍にした分布なので、分散は 4 倍。標準偏差に戻せば 1 と 2 になり、元の距離の倍率を読めます。平均と標準偏差の二つが分かっても分布全体が決まるわけではなく、目的に応じて情報の残し方を選んでいるのです。</p>
+  <p class="source-note">出典：<a href="https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/resources/mit18_05_s22_class05-prep-a_pdf/">MIT OpenCourseWare 18.05：Variance of Discrete Random Variables、2–3</a>。X、Y の分布は本章の自作例です。</p>
+</details>
+
+<section id="variance-exercises">
+  <h2>演習：分散と確率不等式</h2>
+  <article class="exercise"><h3>1．成否を別の尺度で記録する</h3><p>X は成功確率 1/5 の Bernoulli 変数です。E[X]、Var(X)、Z = 5X + 3 の平均と分散を求めてください。</p><details><summary>ヒント1：X² = X を使う</summary><p>Var(X) = p − p² です。</p></details><details><summary>ヒント2：平均は一次、分散は倍率の二乗</summary><p>E[Z] = 5E[X] + 3、Var(Z) = 25Var(X) です。</p></details><details><summary>解答</summary><p>E[X] = 1/5、Var(X) = (1/5)(4/5) = 4/25。従って E[Z] = 1 + 3 = 4、Var(Z) = 25 · (4/25) = 4 です。定数 3 は平均を移動させますが、分散には影響しません。</p></details></article>
+  <article class="exercise"><h3>2．非負な待ち時間</h3><p>Y ≥ 0 で E[Y] = 3 分と分かっています。12 分以上待つ確率の上限を求めてください。独立性や密度の形の仮定は必要ですか。</p><details><summary>ヒント1：平均しか分からない</summary><p>非負性と平均を使う Markov の不等式を選びます。</p></details><details><summary>ヒント2：単位をそろえる</summary><p>しきい値 a = 12 分で、E[Y]/a を計算します。</p></details><details><summary>解答</summary><p>P(Y ≥ 12) ≤ 3/12 = 1/4 です。比の単位は消えます。非負性と有限な期待値で十分であり、独立性も特定の密度も不要です。これは上限であって、待ち時間の確率を正確に決めたものではありません。</p></details></article>
+  <article class="exercise"><h3>3．区間の外と内を対応させる</h3><p>X の平均が 50、分散が 9 のとき、P(|X − 50| ≥ 6) の上限と、P(44 &lt; X &lt; 56) の下限を求めてください。</p><details><summary>ヒント1：分散は既に二乗の量</summary><p>Chebyshev の右辺は 9/6² であり、9²/6² ではありません。</p></details><details><summary>ヒント2：端点の含め方を確認する</summary><p>|X − 50| ≥ 6 の補集合は |X − 50| &lt; 6 です。</p></details><details><summary>解答</summary><p>P(|X − 50| ≥ 6) ≤ 9/36 = 1/4。補集合を取ると P(44 &lt; X &lt; 56) ≥ 3/4 です。端点 44、56 は外側の事象に含めたので、内側の区間は厳密な不等号になります。</p></details></article>
+</section>
+
+<section id="variance-reflection">
+  <h2>自分の言葉で</h2><ol><li>平均からの差をそのまま平均する代わりに、二乗してから平均する理由は何ですか。</li><li>Markov の証明で非負性を使う箇所と、Chebyshev がその条件を満たす理由を説明できますか。</li><li>確率の上限と正確な確率、確率 1 の主張と全ての結果の主張は、それぞれどう違いますか。</li></ol>
+</section>

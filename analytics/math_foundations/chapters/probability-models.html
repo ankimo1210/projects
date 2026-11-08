@@ -1,0 +1,129 @@
+<section id="probability-models-question">
+  <h2>標本空間・事象と確率モデル</h2>
+  <p>明日、ある装置が故障するかどうかは二通りです。しかし、二通りだから故障する確率が 1/2 になるわけではありません。「何が起こり得るか」と「それぞれにどれだけの重みを置くか」は別の情報です。確率の最初の仕事は、この二つを分け、問いに合うモデルを作ることです。</p>
+  <p>本書では、確率を整合的な計算規則として定めます。繰り返したときの頻度とのつながりは、独立性などの条件を加えた<a href="law-of-large-numbers.html">大数の法則</a>として最後に説明します。観測した割合とモデルの確率は関係しますが、同じ言葉として出発すると、なぜ割合が安定するのかを問えなくなってしまいます。</p>
+</section>
+
+<section id="probability-models-events">
+  <h2>標本空間と事象</h2>
+  <p>一回の試行で記録する結果を並べた集合を<strong>標本空間</strong>といい、Ω と書きます。その要素 ω が一つの結果です。さいころの出目だけを記録するなら Ω = {1, 2, 3, 4, 5, 6}。「偶数が出る」という<strong>事象</strong>は A = {2, 4, 6} という部分集合です。ω ∈ A なら A が起きた、といいます。集合の記号は<a href="sets-maps.html">集合と写像</a>でも復習できます。</p>
+  <p>A ∩ B は「A かつ B」、A ∪ B は「A または B」、Aᶜ = Ω ∖ A は「A でない」です。ここで「または」は両方が起きる場合も含みます。A ∩ B = ∅ のとき、二つの事象は<strong>排反</strong>といいます。同時には起きないという意味で、<a href="independence.html">独立</a>とは異なる言葉です。Ω は必ず起きる事象、空集合 ∅ は起きない事象です。</p>
+  <p>同じ実験でも、何を記録するかによって Ω は変わります。二個のさいころなら順序つきの出目 (i, j) を記録する方法と、和だけを記録する方法があります。ただし、細かい結果をまとめたからといって、まとめ先の重みまで等しくなるとは限りません。この違いを次の<a href="counting-probability.html">数え上げ</a>で確かめます。</p>
+  <figure class="concept-figure" id="probability-models-visual-events" data-visual="probability-models-events">
+    <svg class="concept-svg" viewBox="0 0 360 330" role="img" aria-labelledby="probability-models-events-title probability-models-events-desc" fill="var(--ink)" font-size="22">
+      <title id="probability-models-events-title">さいころの六つの結果を、事象の所属で分ける</title>
+      <desc id="probability-models-events-desc">全体Ωの中に偶数の事象Aと4以上の事象Bを置く。Aだけに2、共通部分に4と6、Bだけに5、両方の外に1と3がある。囲みの面積は模式的で、確率は各出目の重み1/6から計算する。</desc>
+      <rect x="20" y="50" width="320" height="260" rx="8" fill="var(--surface)" stroke="var(--rule)" stroke-width="2"/>
+      <text x="25" y="35">Ω = {1, …, 6}</text>
+      <circle cx="135" cy="180" r="90" fill="var(--series-1)" fill-opacity="0.12" stroke="var(--series-1)" stroke-width="3"/>
+      <circle cx="225" cy="180" r="90" fill="var(--series-2)" fill-opacity="0.12" stroke="var(--series-2)" stroke-width="3" stroke-dasharray="8 5"/>
+      <text x="95" y="125" text-anchor="middle">A</text><text x="265" y="125" text-anchor="middle">B</text>
+      <text x="80" y="188" text-anchor="middle">2</text><text x="180" y="158" text-anchor="middle">4</text>
+      <text x="180" y="218" text-anchor="middle">6</text><text x="280" y="188" text-anchor="middle">5</text>
+      <text x="55" y="290" text-anchor="middle">1</text><text x="305" y="290" text-anchor="middle">3</text>
+    </svg>
+    <figcaption>公平なさいころのモデルでは、各結果の重みは 1/6。A = {2, 4, 6}、B = {4, 5, 6} なので、共通部分は二結果です。囲みの面積は確率を表していません。</figcaption>
+  </figure>
+</section>
+
+<section id="probability-models-axioms">
+  <h2>確率の公理と有限標本空間の重み</h2>
+  <p>まず Ω が有限の場合を扱い、すべての部分集合を事象とします。事象 A に数 P(A) を対応させる規則が<strong>確率</strong>であるために、次を要求します。</p>
+  <ol>
+    <li>どの事象 A にも P(A) ≥ 0。</li>
+    <li>全体の重みは P(Ω) = 1。</li>
+    <li>A と B が排反なら P(A ∪ B) = P(A) + P(B)。</li>
+  </ol>
+  <p>最後の規則が<strong>加法性</strong>です。同じ結果を二度数えない集まりなら、重みを足せるという約束です。∅ と Ω は排反で、∅ ∪ Ω = Ω なので、加法性から P(Ω) = P(∅) + P(Ω)。従って P(∅) = 0 も導けます。三つ以上の、互いに排反な有限個の事象にも、一つずつ加法性を適用すれば同じ足し算が通ります。</p>
+  <div class="theorem">
+    <h3>有限モデルは、各結果の非負の重みで作れる</h3>
+    <p>Ω = {ω₁, …, ωₘ} に対し、p₁, …, pₘ ≥ 0、p₁ + ⋯ + pₘ = 1 とします。A に入る結果の重みだけを足した P(A) = ∑<sub>ωᵢ∈A</sub>pᵢ は、上の三つの約束を満たします。逆に、三つの約束を満たす有限モデルは、pᵢ = P({ωᵢ}) と置けばこの形です。</p>
+  </div>
+  <div class="proof">
+    <h3>約束と重みを往復する</h3>
+    <p>非負の数の和は非負で、Ω にはすべての重みが入るため総和は 1 です。A と B が排反なら、和の中で同じ pᵢ を二度使わないので加法性も満たします。逆向きは、A をそこに入る一要素集合 {ωᵢ} の排反な合併に分け、有限回の加法性を使うだけです。従って結果ごとの重みを決めれば、すべての事象の確率が決まります。</p>
+  </div>
+  <p>例えば三つの結果に (1/2, 1/3, 1/6) を割り当てても、(1/3, 1/3, 1/3) を割り当てても、確率の約束に矛盾しません。<strong>等確率</strong>は公理から出る結論ではなく、対称性や選び方を根拠に別途置くモデルの仮定です。公理は一貫性を確かめますが、そのモデルが現実に合うかまでは保証しません。</p>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="同じ標本空間に異なる重みを置く二つの確率モデル">
+    <table class="concept-table" id="probability-models-visual-weights" data-visual="probability-models-weights">
+      <caption>同じ三結果でも、重みの置き方で事象の確率は変わる</caption>
+      <thead><tr><th scope="col"><span class="table-math">モデル</span></th><th scope="col"><span class="table-math">ω₁</span></th><th scope="col"><span class="table-math">ω₂</span></th><th scope="col"><span class="table-math">ω₃</span></th><th scope="col"><span class="table-math">P({ω₁, ω₂})</span></th></tr></thead>
+      <tbody>
+        <tr><th scope="row"><span class="table-math">等しくない重み</span></th><td><span class="table-math">1/2</span></td><td><span class="table-math">1/3</span></td><td><span class="table-math">1/6</span></td><td><span class="table-math">5/6</span></td></tr>
+        <tr><th scope="row"><span class="table-math">等しい重み</span></th><td><span class="table-math">1/3</span></td><td><span class="table-math">1/3</span></td><td><span class="table-math">1/3</span></td><td><span class="table-math">2/3</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>どちらも非負の重みの合計は 1 です。「三結果中の二結果」という個数だけでは、上の二つの確率を区別できません。</p>
+</section>
+
+<section id="probability-models-rules">
+  <h2>補集合と確率の加法定理</h2>
+  <div class="theorem">
+    <h3>補集合・単調性・二事象の加法公式</h3>
+    <p>P(Aᶜ) = 1 − P(A)。A ⊆ B なら P(A) ≤ P(B)。また任意の A、B について、次が成り立ちます。</p>
+    <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>P</mi><mo>(</mo><mi>A</mi><mo>∪</mo><mi>B</mi><mo>)</mo><mo>=</mo><mi>P</mi><mo>(</mo><mi>A</mi><mo>)</mo><mo>+</mo><mi>P</mi><mo>(</mo><mi>B</mi><mo>)</mo><mo>−</mo><mi>P</mi><mo>(</mo><mi>A</mi><mo>∩</mo><mi>B</mi><mo>)</mo></mrow></math></div>
+  </div>
+  <div class="proof">
+    <h3>重ならない部分へ切り分ける</h3>
+    <p>Ω = A ∪ Aᶜ は排反な分割なので、1 = P(A) + P(Aᶜ)。これが補集合の公式です。A ⊆ B なら B = A ∪ (B ∖ A) も排反で、P(B) = P(A) + P(B ∖ A) ≥ P(A)。特に ∅ ⊆ A ⊆ Ω より 0 ≤ P(A) ≤ 1 です。</p>
+    <p>最後は A ∪ B = A ∪ (B ∖ A)、B = (A ∩ B) ∪ (B ∖ A) という二つの排反な分割を使います。前者から P(A ∪ B) = P(A) + P(B ∖ A)、後者から P(B ∖ A) = P(B) − P(A ∩ B)。代入すれば公式です。重なりを一回引く理由は、P(A) + P(B) ではそこを二回足しているからです。</p>
+  </div>
+  <p>例えば公平なさいころで A = {2, 4, 6}、B = {4, 5, 6} なら、P(A) = P(B) = 1/2、P(A ∩ B) = 2/6。従って P(A ∪ B) = 1/2 + 1/2 − 2/6 = 2/3 です。排反でないのに単純に足すと 1 になり、出目 4 と 6 を重複して数えてしまいます。</p>
+</section>
+
+<section id="probability-models-bound">
+  <h2>和事象の確率の上界</h2>
+  <p>加法公式と P(A ∩ B) ≥ 0 から P(A ∪ B) ≤ P(A) + P(B) が得られます。これを繰り返すと、有限個の事象について<strong>和事象の上界（union bound）</strong>になります。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>P</mi><mo>(</mo><munderover><mo>⋃</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>m</mi></munderover><msub><mi>A</mi><mi>i</mi></msub><mo>)</mo><mo>≤</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>m</mi></munderover><mi>P</mi><mo>(</mo><msub><mi>A</mi><mi>i</mi></msub><mo>)</mo></mrow></math></div>
+  <p>二個で示した不等式を、最初の m − 1 個の合併と最後の Aₘ に適用すれば、一段ずつ証明できます。<a href="induction.html">帰納法</a>の形です。独立性は使っていません。例えば三つの異常の確率が 0.02、0.03、0.04 なら、少なくとも一つ起きる確率は 0.09 以下です。これは正確な値ではなく、重なりを知らなくても言える保証です。右辺が 1 を超えたら、確率は 1 以下という上界の方が役立ちます。</p>
+</section>
+
+<section id="probability-models-infinite">
+  <h2>可算加法性と無限標本空間</h2>
+  <p>有限回の足し算だけでは、無限個の結果を扱う規則は決まりません。一般の確率では、事象の族を F とし、Ω を含み、補集合と可算個の合併について閉じているものを選びます。その上で、互いに排反な事象 A₁, A₂, … に対し P(⋃ᵢ₌₁∞Aᵢ) = ∑ᵢ₌₁∞P(Aᵢ) を要求します。これが<strong>可算加法性</strong>です。右辺は有限部分和の極限として読む<a href="series.html">級数</a>です。</p>
+  <p id="probability-models-countable-bound">可算個の事象にも和事象の上界が成り立ちます。B₁ = A₁、i ≥ 2 では Bᵢ = Aᵢ ∖ (A₁ ∪ ⋯ ∪ Aᵢ₋₁) と置くと、Bᵢ は互いに排反で、合併は元の Aᵢ の合併と同じです。可算加法性と Bᵢ ⊆ Aᵢ より、P(⋃ᵢ Aᵢ) = ∑ᵢP(Bᵢ) ≤ ∑ᵢP(Aᵢ)。後の<a href="variance.html">分散の章</a>でも、この形を使います。</p>
+  <p>有限モデルではすべての部分集合を事象にでき、可算個の排反事象に非空なものは有限個しかないので、ここまでの約束で十分です。一方、実数全体を標本空間にするときは、すべての部分集合に無条件で確率を付けるとはしません。本書は一般の可測性や測度の構成を証明せず、<a href="probability-density.html">密度の章</a>で区間と積分を使うモデルを扱います。</p>
+  <p class="note">「0、1、2、…から一つを全部等確率で選ぶ」は、可算加法的な確率モデルにできません。一点の重みを p &gt; 0 とすると、十分多く集めた有限集合の確率が 1 を超えます。p = 0 なら、可算加法性により全体まで 0 になり、P(Ω) = 1 と矛盾します。有限で自然だった一様な選び方が、どの無限集合にも同じ形で広がるわけではありません。</p>
+</section>
+
+<details class="column" id="probability-models-column">
+  <summary>寄り道［応用］：無作為な抽出にも、設計がある</summary>
+  <p>カナダ統計局の調査設計の解説は、確率標本抽出に複数の方法を挙げ、それぞれの単位が選ばれる確率を計算できることを重視しています。単純無作為抽出はその一つです。「無作為」という言葉だけから、すべての対象が同じ確率だとは決まりません。</p>
+  <p>本章の仮想例で考えます。部署 A に 10 人、B に 30 人いて、まず部署を半々で選び、その部署内で一人を等確率に選ぶとします。A の一人が選ばれる重みは (1/2)×(1/10) = 1/20、B の一人なら (1/2)×(1/30) = 1/60。40 人全員から一人を等確率で選ぶ 1/40 とは違う設計です。ここで積を使う理由は<a href="conditional-probability.html">条件付き確率</a>で説明します。どちらの設計でも重みの総和は 1 ですが、何を公平に扱うかという問いは変わります。</p>
+  <p class="source-note">出典：<a href="https://www150.statcan.gc.ca/n1/edu/power-pouvoir/ch13/prob/5214899-eng.htm">Statistics Canada：3.2.2 Probability sampling</a>。部署・人数・確率の数値は本章の仮想設定です。</p>
+</details>
+
+<section id="probability-models-exercises">
+  <h2>演習：確率モデルと事象</h2>
+  <article class="exercise">
+    <h3>1．等確率でない四つの結果</h3>
+    <p>Ω = {a, b, c, d} の重みを順に 1/8、1/8、1/4、1/2 とします。A = {a, c}、B = {b, c} について P(A)、P(A ∩ B)、P(A ∪ B)、P(Aᶜ) を求め、加法公式も確かめてください。</p>
+    <details><summary>ヒント1：集合を書き出す</summary><p>A ∩ B = {c}、A ∪ B = {a, b, c} です。</p></details>
+    <details><summary>ヒント2：個数ではなく重みを足す</summary><p>A の二要素は、それぞれ 1/8 と 1/4 を持ちます。</p></details>
+    <details><summary>解答</summary><p>P(A) = 1/8 + 1/4 = 3/8、P(A ∩ B) = 1/4、P(A ∪ B) = 1/8 + 1/8 + 1/4 = 1/2、P(Aᶜ) = 1 − 3/8 = 5/8 です。P(B) = 3/8 なので、加法公式の右辺も 3/8 + 3/8 − 1/4 = 1/2 になります。A が四要素中二要素でも、その確率は 1/2 とは限りません。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>2．三つの数字は一緒に実現できるか</h3>
+    <p>P(A) = 0.7、P(B) = 0.6、P(A ∩ B) = 0.1 という設定は、確率の約束を満たせますか。満たせないなら P(A ∩ B) に必要な下限も求めてください。</p>
+    <details><summary>ヒント1：合併の確率を作る</summary><p>P(A ∪ B) は 1 以下でなければなりません。</p></details>
+    <details><summary>ヒント2：重なりを文字のままにする</summary><p>0.7 + 0.6 − P(A ∩ B) ≤ 1 を整理します。</p></details>
+    <details><summary>解答</summary><p>設定通りなら P(A ∪ B) = 0.7 + 0.6 − 0.1 = 1.2 となり、全体の確率 1 を超えるので実現できません。合併が 1 以下であるには P(A ∩ B) ≥ 0.3 が必要です。各数字が単独で 0 以上 1 以下に入ることだけでは、全体の整合性は保証されません。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>3．上界は、正確な値なのか</h3>
+    <p>三つの事象の確率が 0.02、0.03、0.04 のとき、合併は必ず 0.09 ですか。100 個の等確率の結果を使い、合併が 0.09 になる例と 0.04 になる例を作ってください。</p>
+    <details><summary>ヒント1：重なりをなくす</summary><p>2 個、3 個、4 個の結果を、それぞれ別の場所から取ります。</p></details>
+    <details><summary>ヒント2：全部を一番大きい事象に収める</summary><p>A ⊆ B ⊆ C とすれば、三つの合併は C です。</p></details>
+    <details><summary>解答</summary><p>必ず 0.09 とは限らず、union bound は 0.09 以下だけを保証します。Ω = {1, …, 100} として、A = {1, 2}、B = {3, 4, 5}、C = {6, 7, 8, 9} なら排反なので合併は 9/100 = 0.09。別の設定で A = {1, 2}、B = {1, 2, 3}、C = {1, 2, 3, 4} なら同じ個別確率のまま合併は 4/100 = 0.04 です。重なりの情報によって正確な値が変わります。</p></details>
+  </article>
+</section>
+
+<section id="probability-models-reflection">
+  <h2>自分の言葉で</h2>
+  <ol>
+    <li>標本空間と確率の重みは、それぞれモデルの何を決めますか。等確率はどちらについての仮定ですか。</li>
+    <li>加法公式と union bound は、重なりの情報をどのように使い分けますか。</li>
+    <li>有限の加法性と可算加法性では、許している足し算がどう違いますか。頻度との関係は本書のどこで説明されますか。</li>
+  </ol>
+</section>

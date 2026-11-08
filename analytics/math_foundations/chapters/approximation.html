@@ -1,0 +1,87 @@
+<section id="approximation-question">
+  <h2>近似値と誤差評価</h2>
+  <p>f(x) = x² を x = 1 の近くで計算するなら、接線 y = 1 + 2(x − 1) が使えます。x = 1.1 では 1.2 と見積もれますが、本当の値は 1.21。誤差は 0.01 でした。近くで使えばよさそう、という感覚を、計算する前の保証へ変えられるでしょうか。</p>
+  <p><a href="derivatives.html">微分可能性</a>は、誤差が入力の変化より速く小さくなると述べますが、それだけでは「0.1 動かしたら何桁合うか」は分かりません。そこで、区間内の高い階数の導関数を抑えます。近似式を作ることと、近似の誤差を保証することを、分けて考えましょう。</p>
+</section>
+
+<section id="approximation-taylor">
+  <h2>線形近似・二次近似と剰余の評価</h2>
+  <p>f′ をもう一度微分したものが二階導関数 f″、さらに微分したものが三階導関数 f‴ です。点 a から x = a + h までの閉区間を S とします。h が負のときは S = [x, a] です。以下では、必要な導関数が S を含む開区間で存在すると仮定します。</p>
+  <div class="theorem">
+    <h3>有限の Taylor 近似の誤差評価</h3>
+    <p>f が二回微分可能で、S 全体で |f″(t)| ≤ M₂ なら、一次式 P₁(x) = f(a) + f′(a)h の誤差は M₂|h|²/2 以下です。さらに f が三回微分可能で、S 全体で |f‴(t)| ≤ M₃ なら、二次式 P₂(x) = f(a) + f′(a)h + f″(a)h²/2 の誤差は M₃|h|³/6 以下です。</p>
+    <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>|</mo><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>−</mo><msub><mi>P</mi><mn>1</mn></msub><mo>(</mo><mi>x</mi><mo>)</mo><mo>|</mo><mo>≤</mo><mfrac><msub><mi>M</mi><mn>2</mn></msub><mn>2</mn></mfrac><msup><mrow><mo>|</mo><mi>h</mi><mo>|</mo></mrow><mn>2</mn></msup><mo>,</mo><mspace width="1em"/><mo>|</mo><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>−</mo><msub><mi>P</mi><mn>2</mn></msub><mo>(</mo><mi>x</mi><mo>)</mo><mo>|</mo><mo>≤</mo><mfrac><msub><mi>M</mi><mn>3</mn></msub><mn>6</mn></mfrac><msup><mrow><mo>|</mo><mi>h</mi><mo>|</mo></mrow><mn>3</mn></msup></mrow></math></div>
+  </div>
+  <div class="proof">
+    <h3>Rolle の定理を繰り返す短い証明</h3>
+    <p>h = 0 なら両方の誤差は 0 です。h ≠ 0 とし、まず一次式との差 R = f(x) − P₁(x) に対して C = R/h² と置きます。F(t) = f(t) − P₁(t) − C(t − a)² は F(a) = F(x) = 0、かつ F′(a) = 0 を満たします。<a href="mean-value.html">Rolle の定理</a>で F′ に a と x の間の零点ができ、それと a の間でもう一度使えば F″(ξ) = 0 となる点 ξ が得られます。よって C = f″(ξ)/2、R = f″(ξ)h²/2 で、主張の上限が従います。</p>
+    <p>二次式でも C = {f(x) − P₂(x)}/h³ と置き、F(t) = f(t) − P₂(t) − C(t − a)³ を考えます。今度は F(a)、F′(a)、F″(a) がすべて 0、さらに F(x) = 0 です。Rolle を三回使うと F‴(ξ) = 0、つまり C = f‴(ξ)/6。これで二次の評価も得られます。必要な連続性は、仮定した微分可能性から従います。</p>
+  </div>
+  <p>f(x) = x² では f″ = 2、f‴ = 0 です。一次近似の誤差は |h|² 以下で、冒頭の h = 0.1 なら 0.01 以下と事前に保証できます。二次近似は元の多項式そのものなので誤差 0 です。一般の関数では、二次式が厳密な値になるとは限りません。</p>
+  <p class="note">導関数の上限は点 a だけでなく、a から x までの区間全体で必要です。例えば f(t) = Kt³ の a = 0 では、どんな K でも f″(0) = 0 ですが、f(h) と一次式 0 の差は K h³ です。一点の二階導関数だけでは、一定の幅での誤差を共通に抑えられません。また有限の近似の定理だけから、無限に項を足せば必ず元の関数に戻るとは言えません。それは<a href="taylor.html">Taylor 級数</a>で別に調べます。</p>
+</section>
+
+<section id="approximation-newton">
+  <h2>方程式に対するNewton法</h2>
+  <p>近似の別の使い方が、f(x) = 0 の根を探すことです。現在の推定値 xₙ の近くで、f(x) を f(xₙ) + f′(xₙ)(x − xₙ) に置き換えます。この直線が 0 になる点を次の推定値にすると、<strong>Newton 法</strong>を得ます。ただし f′(xₙ) ≠ 0 が必要です。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>x</mi><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><msub><mi>x</mi><mi>n</mi></msub><mo>−</mo><mfrac><mrow><mi>f</mi><mo>(</mo><msub><mi>x</mi><mi>n</mi></msub><mo>)</mo></mrow><mrow><msup><mi>f</mi><mo>′</mo></msup><mo>(</mo><msub><mi>x</mi><mi>n</mi></msub><mo>)</mo></mrow></mfrac></mrow></math></div>
+  <p>f(x) = x² − 2 なら f′(x) = 2x なので、xₙ₊₁ = (xₙ + 2/xₙ)/2 です。x₀ = 1 から始めると x₁ = 3/2、x₂ = 17/12 となります。<a href="continuity.html">連続性の章</a>で存在を確認した正の根 r = √2 に、少ない更新で近づきます。</p>
+  <p>この場合は誤差の仕組みまで調べられます。r² = 2 として引き算すると、xₙ₊₁ − r = (xₙ − r)²/(2xₙ)。x₀ &gt; 0 なら全項が正で、最初の更新後は xₙ ≥ r です。また xₙ ≥ r のとき次の項は xₙ 以下。よって以後は単調減少で下に有界であり、極限 L が存在します。更新式の極限を取ると L² = 2、L &gt; 0 なので L = r です。</p>
+  <p>誤差の式は、根の近くでは次の誤差が今の誤差の二乗に比例することも示します。ただしこれは、この関数・正の初期値・正確な計算という条件の下の結論です。繰り返し式を書けたことだけでは、一般の収束は保証されません。</p>
+</section>
+
+<section id="approximation-failure">
+  <h2>Newton法の非収束例</h2>
+  <p>f(x) = x³ − 2x + 2 では f′(x) = 3x² − 2 です。x₀ = 0 から始めると、次は 0 − 2/(−2) = 1。そこからは 1 − 1/1 = 0 に戻ります。したがって 0、1、0、1、… と循環し、根へ収束しません。通過する二点では導関数が 0 でなく、関数も実数全体で滑らかです。</p>
+  <p>Newton 法の接線は、区間の外や、根から遠い場所を指すことがあります。一方、<a href="continuity.html#continuity-bisection">二分法</a>は、閉区間での連続性と両端の符号の違いを保てば、その中に根を残し、区間幅から誤差を保証できます。Newton 法を選ぶなら、初期値、導関数、更新が定義域に残るか、停止の基準を別に検討します。|f(xₙ)| が小さいことと、根との距離が小さいことも、一般には同じ保証ではありません。</p>
+
+<figure class="concept-figure" id="approximation-visual-newton-cycle" data-visual="approximation-newton-cycle">
+  <svg class="concept-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 310" role="img" aria-labelledby="approximation-visual-newton-cycle-title approximation-visual-newton-cycle-desc">
+    <title id="approximation-visual-newton-cycle-title">Newton更新が0と1を行き来する</title>
+    <desc id="approximation-visual-newton-cycle-desc">関数x³−2x+2の0での接線y=2−2xはx軸の1と交わり、1での接線y=xは0と交わる。</desc>
+    <g fill="var(--ink-2)" font-size="22"><path d="M 28 245 L 338 245" fill="none" stroke="var(--ink-2)" stroke-width="2"/><path d="M 96 255 L 96 28" fill="none" stroke="var(--ink-2)" stroke-width="2"/><path d="M 40.000 85.573 L 42.800 87.306 L 45.600 89.075 L 48.400 90.880 L 51.200 92.717 L 54.000 94.585 L 56.800 96.482 L 59.600 98.406 L 62.400 100.356 L 65.200 102.328 L 68.000 104.322 L 70.800 106.334 L 73.600 108.365 L 76.400 110.410 L 79.200 112.469 L 82.000 114.540 L 84.800 116.621 L 87.600 118.709 L 90.400 120.803 L 93.200 122.900 L 96.000 125.000 L 98.800 127.100 L 101.600 129.197 L 104.400 131.291 L 107.200 133.379 L 110.000 135.460 L 112.800 137.531 L 115.600 139.590 L 118.400 141.635 L 121.200 143.666 L 124.000 145.678 L 126.800 147.672 L 129.600 149.644 L 132.400 151.594 L 135.200 153.518 L 138.000 155.415 L 140.800 157.283 L 143.600 159.120 L 146.400 160.925 L 149.200 162.694 L 152.000 164.428 L 154.800 166.122 L 157.600 167.776 L 160.400 169.388 L 163.200 170.955 L 166.000 172.476 L 168.800 173.948 L 171.600 175.371 L 174.400 176.741 L 177.200 178.057 L 180.000 179.318 L 182.800 180.520 L 185.600 181.663 L 188.400 182.744 L 191.200 183.761 L 194.000 184.713 L 196.800 185.597 L 199.600 186.412 L 202.400 187.155 L 205.200 187.825 L 208.000 188.420 L 210.800 188.938 L 213.600 189.376 L 216.400 189.734 L 219.200 190.008 L 222.000 190.198 L 224.800 190.300 L 227.600 190.314 L 230.400 190.238 L 233.200 190.068 L 236.000 189.805 L 238.800 189.444 L 241.600 188.986 L 244.400 188.427 L 247.200 187.765 L 250.000 187.000 L 252.800 186.128 L 255.600 185.149 L 258.400 184.059 L 261.200 182.858 L 264.000 181.543 L 266.800 180.111 L 269.600 178.563 L 272.400 176.894 L 275.200 175.104 L 278.000 173.191 L 280.800 171.152 L 283.600 168.986 L 286.400 166.690 L 289.200 164.264 L 292.000 161.704 L 294.800 159.009 L 297.600 156.177 L 300.400 153.207 L 303.200 150.095 L 306.000 146.841 L 308.800 143.442 L 311.600 139.896 L 314.400 136.202 L 317.200 132.357 L 320.000 128.360" fill="none" stroke="var(--series-1)" stroke-width="3"/><path d="M 64 101 L 256 245" fill="none" stroke="var(--series-2)" stroke-width="2" stroke-dasharray="7 5"/><path d="M 96 245 L 320 161" fill="none" stroke="var(--ink-2)" stroke-width="2" stroke-dasharray="2 5"/><path d="M 256 185 L 256 245" fill="none" stroke="var(--rule)" stroke-width="2" stroke-dasharray="4 4"/><circle cx="96" cy="125" r="5" fill="var(--series-1)" stroke="var(--series-1)" stroke-width="2"/><circle cx="256" cy="185" r="5" fill="var(--series-1)" stroke="var(--series-1)" stroke-width="2"/><circle cx="96" cy="245" r="4" fill="var(--series-2)" stroke="var(--series-2)" stroke-width="2"/><circle cx="256" cy="245" r="4" fill="var(--series-2)" stroke="var(--series-2)" stroke-width="2"/><text x="24" y="65" text-anchor="start">(0, 2)</text><text x="235" y="148" text-anchor="start">(1, 1)</text><text x="96" y="285" text-anchor="middle">x₀ = 0</text><text x="256" y="285" text-anchor="middle">x₁ = 1</text><text x="338" y="239" text-anchor="start">x</text></g>
+  </svg>
+  <figcaption>破線は x₀ = 0 での接線 y = 2 − 2x、点線は x₁ = 1 での接線 y = x。横軸との交点を次の値にすると 0 → 1 → 0 と戻ります。使う二点で導関数が非零でも、収束の保証にはなりません。</figcaption>
+</figure>
+</section>
+
+<details class="column" id="approximation-column">
+  <summary>寄り道［背景］：粘土板に残る、√2 の六桁に迫る近似</summary>
+  <p>Yale Babylonian Collection 所蔵の粘土板 YBC 7289 には、対角線のある正方形と、60進法の数 1;24,51,10 が記されています。CDLI の資料では、これは √2 の近似値として読まれています。現代の表記で計算すると、a = 1 + 24/60 + 51/60² + 10/60³ = 30547/21600 ≈ 1.41421296 です。</p>
+  <p>この板の数だけから、書き手がどの算法を使ったかまでは決まりません。一方、近似のよさは自分で検査できます。2 − a² = 791/466560000 で、|a − √2| = |a² − 2|/(a + √2)。a も √2 も 1 より大きいので、誤差はその差の半分より小さく、10⁻⁶ 未満だと保証できます。昔の計算を眺めるだけでなく、本文の不等式で精度を確かめられるのです。</p>
+  <p class="source-note">出典：<a href="https://cdli.earth/artifacts/255048">CDLI：YBC 07289 の所蔵・転写資料</a>。</p>
+</details>
+
+<section id="approximation-exercises">
+  <h2>近似値と誤差保証の演習</h2>
+  <article class="exercise">
+    <h3>1．一次と二次を比べる</h3>
+    <p>f(x) = x³、a = 1、x = 1.1 とします。二つの近似値を求め、[1, 1.1] 上の導関数から誤差上限を保証してください。</p>
+    <details><summary>ヒント1：必要な導関数をそろえる</summary><p>f′ = 3x²、f″ = 6x、f‴ = 6 です。</p></details>
+    <details><summary>ヒント2：区間全体の上限を選ぶ</summary><p>M₂ = 6.6、M₃ = 6 が使えます。</p></details>
+    <details><summary>解答</summary><p>h = 0.1 より P₁ = 1 + 3 · 0.1 = 1.3、P₂ = 1.3 + 6 · 0.1²/2 = 1.33。一次誤差は 6.6 · 0.1²/2 = 0.033 以下、二次誤差は 6 · 0.1³/6 = 0.001 以下です。実際の値 1.331 との差は 0.031 と 0.001 で、いずれも保証内に入ります。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>2．Newton 法の更新を確かめる</h3>
+    <p>x² − 2 の Newton 法で x₀ = 1 から二回更新し、各更新で 0 による割り算が起きないことを確認してください。</p>
+    <details><summary>ヒント1：専用の更新式を使う</summary><p>次の値は (x + 2/x)/2 です。</p></details>
+    <details><summary>ヒント2：分数のまま進める</summary><p>二回目には 2/(3/2) = 4/3 を使います。</p></details>
+    <details><summary>解答</summary><p>x₁ = (1 + 2)/2 = 3/2、x₂ = (3/2 + 4/3)/2 = 17/12。使った点 1、3/2 はともに正で、導関数 2x は 0 でありません。二回で根そのものを得たわけではなく、根に近い有理数を得ています。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>3．循環を停止と取り違えない</h3>
+    <p>x³ − 2x + 2 の Newton 法を x₀ = 0 から使うとき、三回更新し、根が得られていない理由を述べてください。</p>
+    <details><summary>ヒント1：二点の値と傾きを調べる</summary><p>f(0) = 2、f′(0) = −2、f(1) = 1、f′(1) = 1 です。</p></details>
+    <details><summary>ヒント2：反復する値を見る</summary><p>一回目と三回目が同じ値になります。</p></details>
+    <details><summary>解答</summary><p>x₁ = 1、x₂ = 0、x₃ = 1 です。同じ二点を永久に往復し、数列は収束しません。また f(0) = 2、f(1) = 1 で、どちらも根ではありません。関数が微分可能で更新式が毎回計算できても、収束の保証にはなりません。</p></details>
+  </article>
+</section>
+
+<section id="approximation-reflection">
+  <h2>自分の言葉で</h2>
+  <ol>
+    <li>近似式を計算する情報と、その誤差を保証する情報はどう違いますか。</li>
+    <li>一次近似の誤差評価で、区間全体の二階導関数を抑えるのはなぜですか。</li>
+    <li>Newton 法と二分法では、根への接近について何が保証されていますか。</li>
+  </ol>
+</section>

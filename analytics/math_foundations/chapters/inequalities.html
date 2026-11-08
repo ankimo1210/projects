@@ -1,0 +1,114 @@
+<section id="inequalities-question">
+  <h2>不等式による評価と誤差の上限</h2>
+  <p>二つの測定値にそれぞれ誤差があるとき、足した値の誤差はどこまで大きくなり得るでしょうか。個々の誤差が正か負か分からなくても、上限は知りたいものです。不等式は、答えをぴったり求める代わりに、答えが入る範囲を保証します。後の<a href="limits.html">極限</a>や<a href="approximation.html">近似</a>では、この「保証できる範囲」が中心になります。</p>
+  <p>以下では通常の大小関係を持つ実数を扱います。不等式の両辺には同じ数を足せますが、掛ける場合は符号の確認が必要です。正の数なら向きは同じ、負の数なら向きは逆になります。また −3 &lt; 2 から 9 &lt; 4 は導けません。両辺の二乗が大小を保つのは、両辺が非負であるなど、適切な条件があるときです。</p>
+</section>
+
+<section id="inequalities-triangle">
+  <h2>絶対値と三角不等式</h2>
+  <p>実数 x の<strong>絶対値</strong> |x| は、x ≥ 0 なら x、x &lt; 0 なら −x です。数直線では 0 からの距離、|x − a| は a と x の間の距離を表します。常に −|x| ≤ x ≤ |x| です。したがって |x| ≤ M と言うことは、M ≥ 0 のもとで −M ≤ x ≤ M と言うことと同じです。</p>
+  <div class="theorem">
+    <h3>三角不等式</h3>
+    <p>どんな実数 a、b に対しても、|a + b| ≤ |a| + |b| が成り立ちます。</p>
+  </div>
+  <div class="proof">
+    <h3>短い証明</h3>
+    <p>−|a| ≤ a ≤ |a| と −|b| ≤ b ≤ |b| を辺々足すと、−(|a| + |b|) ≤ a + b ≤ |a| + |b| です。|a| + |b| は非負なので、絶対値の意味から |a + b| ≤ |a| + |b| が従います。</p>
+  </div>
+  <p>等号になるとは限りません。a = 2、b = −2 なら、左辺は 0、右辺は 4 です。向きの違う誤差が打ち消し合うこともあるので、右辺は最悪の場合まで含めた上限です。実数の場合、a、b が同じ符号か、少なくとも一方が 0 のときには等号になります。</p>
+  <p>この不等式を a = (a − b) + b に使うと、|a| ≤ |a − b| + |b|、つまり |a| − |b| ≤ |a − b| が得られます。a と b を入れ替えれば逆向きの差も同様に評価でき、||a| − |b|| ≤ |a − b| です。絶対値を取った後の差は、取る前の差より大きくならないことが分かります。</p>
+
+  <div class="concept-grid">
+    <figure class="concept-figure" id="inequalities-visual-cancellation" data-visual="inequalities-visual-cancellation">
+      <svg class="concept-svg" viewBox="0 0 360 290" role="img" aria-labelledby="inequalities-visual-cancellation-title inequalities-visual-cancellation-desc">
+        <title id="inequalities-visual-cancellation-title">逆向きの移動は打ち消し合う</title>
+        <desc id="inequalities-visual-cancellation-desc">数直線上で0から2へ進み、2から0へ戻る。移動した長さの合計は4だが、始点と終点の距離は0。</desc>
+        <line x1="28" y1="185" x2="332" y2="185" stroke="var(--ink-2)" stroke-width="2" /><text x="32" y="217" text-anchor="middle" fill="var(--ink)" font-size="22" >0</text><text x="180" y="217" text-anchor="middle" fill="var(--ink)" font-size="22" >2</text><text x="328" y="217" text-anchor="middle" fill="var(--ink)" font-size="22" >4</text><line x1="32" y1="179" x2="32" y2="191" stroke="var(--ink-2)" stroke-width="2" /><line x1="180" y1="179" x2="180" y2="191" stroke="var(--ink-2)" stroke-width="2" /><line x1="328" y1="179" x2="328" y2="191" stroke="var(--ink-2)" stroke-width="2" /><line x1="32" y1="80" x2="180" y2="80" stroke="var(--series-1)" stroke-width="3" /><polygon points="180,80 170.99,84.3388 170.99,75.6612" fill="var(--series-1)"/><text x="106" y="59" text-anchor="middle" fill="var(--ink)" font-size="22" >+2</text><line x1="180" y1="126" x2="32" y2="126" stroke="var(--series-2)" stroke-width="3" /><polygon points="32,126 41.0097,121.661 41.0097,130.339" fill="var(--series-2)"/><text x="106" y="158" text-anchor="middle" fill="var(--ink)" font-size="22" >−2</text><text x="180" y="270" text-anchor="middle" fill="var(--ink)" font-size="22" >|2 + (−2)| = 0</text>
+      </svg>
+      <figcaption>どちらの移動も長さ2なのに、+2の後の−2で元へ戻ります。実際の合計誤差は0、各誤差の大きさを足した上限は4です。隣図は同じ大きさで向きだけを替えた例です。一般の三角不等式は本文の証明を使い、観測した打消しが次にも起こるとは仮定しません。</figcaption>
+    </figure>
+    <figure class="concept-figure" id="inequalities-visual-equality" data-visual="inequalities-visual-equality">
+      <svg class="concept-svg" viewBox="0 0 360 290" role="img" aria-labelledby="inequalities-visual-equality-title inequalities-visual-equality-desc">
+        <title id="inequalities-visual-equality-title">同じ向きの移動では等号になる</title>
+        <desc id="inequalities-visual-equality-desc">数直線上で0から2へ進み、さらに4へ進む。移動した長さの合計4と始点からの距離4が等しい。</desc>
+        <line x1="28" y1="185" x2="332" y2="185" stroke="var(--ink-2)" stroke-width="2" /><text x="32" y="217" text-anchor="middle" fill="var(--ink)" font-size="22" >0</text><text x="180" y="217" text-anchor="middle" fill="var(--ink)" font-size="22" >2</text><text x="328" y="217" text-anchor="middle" fill="var(--ink)" font-size="22" >4</text><line x1="32" y1="179" x2="32" y2="191" stroke="var(--ink-2)" stroke-width="2" /><line x1="180" y1="179" x2="180" y2="191" stroke="var(--ink-2)" stroke-width="2" /><line x1="328" y1="179" x2="328" y2="191" stroke="var(--ink-2)" stroke-width="2" /><line x1="32" y1="80" x2="180" y2="80" stroke="var(--series-1)" stroke-width="3" /><polygon points="180,80 170.99,84.3388 170.99,75.6612" fill="var(--series-1)"/><text x="106" y="59" text-anchor="middle" fill="var(--ink)" font-size="22" >+2</text><line x1="180" y1="126" x2="328" y2="126" stroke="var(--series-2)" stroke-width="3" /><polygon points="328,126 318.99,130.339 318.99,121.661" fill="var(--series-2)"/><text x="254" y="158" text-anchor="middle" fill="var(--ink)" font-size="22" >+2</text><text x="180" y="270" text-anchor="middle" fill="var(--ink)" font-size="22" >|2 + 2| = 4</text>
+      </svg>
+      <figcaption>+2の後に+2なら、終点の距離4が各移動の長さの和4と一致します。隣の往復では0だったので、同じ各誤差の上限2でも合計は変わります。符号が未知なら4を保証する必要があります。二図は同縮尺の具体例で、一般の等号条件は本文の同符号・一方0という条件です。</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="inequalities-amgm">
+  <h2>相加平均・相乗平均の不等式と等号条件</h2>
+  <div class="theorem">
+    <h3>二数の相加平均・相乗平均の不等式</h3>
+    <p>a、b が正の実数なら、(a + b)/2 ≥ √(ab) です。等号が成り立つのは、a = b のとき、そしてそのときに限ります。</p>
+  </div>
+  <div class="proof">
+    <h3>平方の非負性から示す</h3>
+    <p>(√a − √b)² ≥ 0 を展開すると a + b − 2√(ab) ≥ 0 です。両辺を整理し、正の数 2 で割れば不等式が得られます。平方が 0 になるのは √a = √b のときだけなので、等号条件は a = b です。</p>
+  </div>
+  <p>たとえば x &gt; 0 に対し、x と 1/x の積は 1 なので、x + 1/x ≥ 2 です。最小値 2 は x = 1 のときに実現します。下限を示しただけでは、その値を取れるかは未確定です。等号条件まで確認して初めて、最小値と言えます。前提 x &gt; 0 を落とすと、x = −1 では和は −2 となり、この評価は成り立ちません。</p>
+</section>
+
+<section id="inequalities-bernoulli">
+  <h2>ベルヌーイの不等式と帰納法</h2>
+  <div class="theorem">
+    <h3>ベルヌーイの不等式</h3>
+    <p>x ≥ −1 を実数、n ≥ 1 を整数とすると、(1 + x)ⁿ ≥ 1 + nx が成り立ちます。</p>
+  </div>
+  <div class="proof">
+    <h3>帰納法による証明</h3>
+    <p>n = 1 では等号です。k ≥ 1 で (1 + x)ᵏ ≥ 1 + kx を仮定します。1 + x ≥ 0 なので、両辺に 1 + x を掛けても不等号の向きは変わりません。よって (1 + x)ᵏ⁺¹ ≥ (1 + kx)(1 + x) = 1 + (k + 1)x + kx² ≥ 1 + (k + 1)x です。最後は kx² ≥ 0 を使いました。したがって<a href="induction.html">帰納法</a>からすべての整数 n ≥ 1 で成立します。</p>
+  </div>
+  <p>この証明で x ≥ −1 は、掛ける数の符号を保証しています。範囲外へそのまま広げると、たとえば x = −3、n = 3 では左辺は −8、右辺は −8 で等号ですが、x = −4、n = 3 では −27 ≥ −11 となり誤りです。一つの範囲外の例がうまくいっても、前提を外してよい証明にはなりません。</p>
+</section>
+
+<section id="inequalities-error">
+  <h2>誤差評価とε–δによる入力範囲の選択</h2>
+  <p>x² を 4 に近づけたいとします。差を因数分解すると |x² − 4| = |x − 2||x + 2| です。|x − 2| が小さくても、もう一つの因子を放置しては評価が終わりません。まず |x − 2| &lt; 1 とすれば 1 &lt; x &lt; 3 となり、|x + 2| &lt; 5 が得られます。したがって |x² − 4| ≤ 5|x − 2| です。</p>
+  <p>ほしい誤差を任意の正の実数 ε とします。δ = min(1, ε/5)、つまり 1 と ε/5 の小さい方を選び、|x − 2| &lt; δ とすれば、|x − 2| &lt; 1 と 5|x − 2| &lt; ε が同時に成り立ちます。よって |x² − 4| &lt; ε です。先に因子を一定値で押さえ、次に誤差の要求へ合わせる。この二段階が、極限の議論の基本になります。</p>
+
+  <figure class="concept-figure" id="inequalities-visual-two-bounds" data-visual="inequalities-visual-two-bounds"><svg class="concept-svg" viewBox="0 0 360 430" role="img" aria-labelledby="inequalities-visual-two-bounds-title inequalities-visual-two-bounds-desc"><title id="inequalities-visual-two-bounds-title">入力の許容区間を選ぶと像が出力誤差の帯に入る</title><desc id="inequalities-visual-two-bounds-desc">ε=2,δ=.4の例。先に|x−2|&lt;1で1&lt;x&lt;3を確保し、3&lt;x+2&lt;5からもう一つの因子|x+2|を5で押さえる。入力xは(1.6,2.4)で中心2。正の範囲で二乗した像は(2.56,5.76)となり、要求|x²−4|&lt;2の区間(2,6)へ入る。上下は入力と出力という別の量で縮尺も異なる。端点は含まない。</desc><defs><marker id="inequalities-visual-two-bounds-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--series-1)"/></marker></defs><text x="180" y="30" font-size="22" fill="var(--ink)" text-anchor="middle">入力幅を選び、出力誤差を抑える</text><text x="180" y="67" font-size="22" fill="var(--ink)" text-anchor="middle">入力 δ=min(1,2/5)=0.4</text><text x="180" y="101" font-size="22" fill="var(--ink)" text-anchor="middle">① |x−2|&lt;1 ⇒ 1&lt;x&lt;3</text><text x="180" y="135" font-size="22" fill="var(--ink)" text-anchor="middle">② 3&lt;x+2&lt;5 ⇒ |x+2|&lt;5</text><rect x="60" y="165" width="240" height="38" rx="0" fill="var(--surface-2)"/><rect x="132" y="169" width="96" height="30" rx="0" fill="var(--accent-wash)"/><line x1="45" y1="184" x2="315" y2="184" stroke="var(--ink-3)" stroke-width="2"/><circle cx="132" cy="184" r="6" fill="var(--surface)" stroke="var(--series-2)" stroke-width="3"/><circle cx="228" cy="184" r="6" fill="var(--surface)" stroke="var(--series-2)" stroke-width="3"/><circle cx="180" cy="184" r="4" fill="var(--ink)"/><text x="60" y="175" font-size="22" fill="var(--ink)" text-anchor="middle">1</text><text x="300" y="175" font-size="22" fill="var(--ink)" text-anchor="middle">3</text><text x="132" y="217" font-size="22" fill="var(--ink)" text-anchor="middle">1.6</text><text x="180" y="217" font-size="22" fill="var(--ink)" text-anchor="middle">2</text><text x="228" y="217" font-size="22" fill="var(--ink)" text-anchor="middle">2.4</text><path d="M180 230 L180 243" fill="none" stroke="var(--series-1)" stroke-width="2" marker-end="url(#inequalities-visual-two-bounds-arrow)"/><text x="180" y="271" font-size="22" fill="var(--ink)" text-anchor="middle">二乗後：|x²−4|&lt;2</text><rect x="60" y="315" width="240" height="38" rx="0" fill="var(--accent-wash)"/><rect x="93.6" y="320" width="192" height="28" fill="var(--series-2)" fill-opacity=".18"/><line x1="45" y1="333" x2="315" y2="333" stroke="var(--ink-3)" stroke-width="2"/><circle cx="60" cy="333" r="6" fill="var(--surface)" stroke="var(--series-1)" stroke-width="2.5"/><circle cx="300" cy="333" r="6" fill="var(--surface)" stroke="var(--series-1)" stroke-width="2.5"/><circle cx="93.6" cy="333" r="4.5" fill="var(--surface)" stroke="var(--series-2)" stroke-width="3"/><circle cx="285.6" cy="333" r="4.5" fill="var(--surface)" stroke="var(--series-2)" stroke-width="3"/><text x="93.6" y="307" font-size="22" fill="var(--ink)" text-anchor="middle">2.56</text><text x="285.6" y="307" font-size="22" fill="var(--ink)" text-anchor="middle">5.76</text><text x="60" y="379" font-size="22" fill="var(--ink)" text-anchor="middle">2</text><text x="180" y="379" font-size="22" fill="var(--ink)" text-anchor="middle">4</text><text x="300" y="379" font-size="22" fill="var(--ink)" text-anchor="middle">6</text><text x="180" y="420" font-size="22" fill="var(--ink)" text-anchor="middle">像の区間 ⊂ 目標の区間(2,6)</text></svg><figcaption>δ≤1 により上段の外側の帯 (1,3) に入り、①②から |x+2|&lt;5 が得られます。次に δ≤ε/5 と合わせて |x²−4|&lt;5δ≤ε。これが min の1と5の役割です。内側の端 1.6,2.4 を二乗すると、下段の像の端 2.56,5.76 です。これが目標の端2,6の内側にあると確認できます。ε=2での一例で、一般の δ=min(1,ε/5) の保証は本文の二段階評価から得ます。最も広い許容幅を求めた図ではありません。上下は異なる量・縮尺の数直線で、全て開区間です。</figcaption></figure>
+</section>
+
+<details class="column" id="inequalities-column">
+  <summary>寄り道［応用］：答えを一個にせず、入っている区間を計算する</summary>
+  <p>数値計算には、答えを小数一個で表示する代わりに、真の値が入る区間を計算する「区間演算」があります。NIST の数理関数の資料も、丸め誤差を含めた計算結果の囲い込みに、この方法を位置づけています。近そうな値を出すだけでなく、どこまで外れないかを返す発想です。</p>
+  <p>例えば a ≤ x ≤ b、c ≤ y ≤ d なら、足し算の順序の性質から a + c ≤ x + y ≤ b + d。入力の上下限だけで、出力の上下限が求まります。実際のコンピュータでは、丸めで区間を内側へ縮めないよう、端を適切な方向へ丸めます。ただし同じ x が二度出る式を別々の値として扱うと、区間が広がりすぎることもあります。不等式による保証の確かさと、評価の鋭さは、別に考える必要があります。</p>
+  <p class="source-note">出典：<a href="https://dlmf.nist.gov/3.1.ii">NIST DLMF：3.1(ii) Interval Arithmetic</a>。</p>
+</details>
+
+<section id="inequalities-exercises">
+  <h2>演習：不等式の条件と等号の達成</h2>
+  <article class="exercise">
+    <h3>1．三つの誤差をまとめる</h3>
+    <p>実数 a、b、c について |a + b + c| ≤ |a| + |b| + |c| を示してください。</p>
+    <details><summary>ヒント1：二つずつまとめる</summary><p>a + b + c を (a + b) + c と見ます。</p></details>
+    <details><summary>ヒント2：同じ不等式を二回使う</summary><p>まず |(a + b) + c| を評価し、その後 |a + b| を評価します。</p></details>
+    <details><summary>解答</summary><p>三角不等式から |(a + b) + c| ≤ |a + b| + |c| ≤ |a| + |b| + |c| です。最初から三つの数の定理を仮定せず、二数の場合を繰り返せば示せます。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>2．下限と最小値を区別する</h3>
+    <p>x &gt; 0 のとき、x + 9/x の最小値と、その値を取る x を求めてください。</p>
+    <details><summary>ヒント1：積が一定の二数を選ぶ</summary><p>x と 9/x はともに正で、積が 9 です。</p></details>
+    <details><summary>ヒント2：等号条件も解く</summary><p>和は 2√9 以上です。等号は x = 9/x のときです。</p></details>
+    <details><summary>解答</summary><p>相加平均・相乗平均の不等式より x + 9/x ≥ 6 です。等号条件は x² = 9。x &gt; 0 なので x = 3 で、実際に 3 + 9/3 = 6 となります。したがって最小値は 6、そのとき x = 3 です。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>3．指定された誤差に応じて選ぶ</h3>
+    <p>ε &gt; 0 が与えられたとき、|x − 1| &lt; δ なら |x² − 1| &lt; ε となる δ &gt; 0 を一つ選び、理由を示してください。</p>
+    <details><summary>ヒント1：因数分解して局所的に押さえる</summary><p>|x² − 1| = |x − 1||x + 1| です。|x − 1| &lt; 1 なら 0 &lt; x &lt; 2 です。</p></details>
+    <details><summary>ヒント2：二つの要求を同時に満たす</summary><p>|x + 1| &lt; 3 を使えます。δ は 1 以下、かつ ε/3 以下にします。</p></details>
+    <details><summary>解答</summary><p>δ = min(1, ε/3) とします。ε &gt; 0 より δ &gt; 0 です。|x − 1| &lt; δ なら |x + 1| &lt; 3 なので、|x² − 1| ≤ 3|x − 1| &lt; 3δ ≤ ε です。入力の範囲を、任意に指定された正の誤差に合わせて選べました。</p></details>
+  </article>
+</section>
+
+<section id="inequalities-reflection">
+  <h2>自分の言葉で</h2>
+  <ol>
+    <li>不等式の両辺に数を掛けるとき、なぜその数の符号を確認しますか。</li>
+    <li>最小値の証明に、下からの評価と等号条件の両方が必要なのはなぜですか。</li>
+    <li>δ を二つの数の最小値で選ぶのは、どの二つの要求を満たすためですか。</li>
+  </ol>
+</section>

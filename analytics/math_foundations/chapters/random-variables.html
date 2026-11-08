@@ -1,0 +1,72 @@
+<section id="random-variables-question">
+  <h2>確率変数と確率分布</h2>
+  <p>二回のコイン投げでは、表裏の並びが結果です。一方、知りたいものが「表の回数」なら、表裏と裏表を同じ数 1 としてまとめます。このまとめ方を明示すると、元の結果の確率から、知りたい数の確率を計算できます。</p>
+  <p>この章は、確率のある世界から実数への<a href="sets-maps.html">写像</a>を作る章です。有限の場合から始め、成功回数と、初めて成功するまでの回数を比べます。</p>
+</section>
+
+<section id="random-variables-definition">
+  <h2>確率変数の定義</h2>
+  <p>標本空間 Ω 上の<strong>確率変数</strong> X は、各結果 ω に実数 X(ω) を対応させる写像です。「変数自体が勝手に変わる」というより、どの結果が実現するかによって読まれる値が変わります。有限の Ω で全ての部分集合を事象にする場合は、どんな実数値写像でも構いません。</p>
+  <p>例えば二回の独立な公平なコイン投げで、Ω = {表表, 表裏, 裏表, 裏裏} とします。X を表の回数とすれば、それぞれ 2、1、1、0 です。X = 1 という事象は、元の空間では {表裏, 裏表}。したがって P(X = 1) = 1/2 であり、三つの値 0、1、2 が等確率になるわけではありません。</p>
+  <p class="note">一般の実数のモデルでは、{ω : X(ω) ≤ t} が全ての実数 t で事象となる条件を加えます。これは可測性と呼ばれます。その一般理論と無限列の確率モデルの構成は、本冊では証明せずに使う枠組みです。有限の集合をまとめる計算は、この章で直接確かめます。</p>
+  <figure class="concept-figure" id="random-variables-visual-pushforward" data-visual="random-variables-pushforward">
+    <svg class="concept-svg" viewBox="0 0 360 370" role="img" aria-labelledby="random-variables-map-title random-variables-map-desc" fill="var(--ink)" font-size="22">
+      <title id="random-variables-map-title">四つのコインの結果を、表の回数へ写す</title>
+      <desc id="random-variables-map-desc">各結果の重みは1/4。裏裏から0へ、表裏と裏表から1へ、表表から2へそれぞれ一本の矢印を引く。値0と2には1/4ずつ、値1には二結果の重みを足した1/2が集まる。配置や矢印の長さは確率を表さない。</desc>
+      <text x="75" y="35" text-anchor="middle">結果 ω</text><text x="260" y="35" text-anchor="middle">X(ω)</text>
+      <g fill="var(--surface)" stroke="var(--rule)" stroke-width="2"><rect x="15" y="56" width="120" height="48" rx="6"/><rect x="15" y="136" width="120" height="48" rx="6"/><rect x="15" y="206" width="120" height="48" rx="6"/><rect x="15" y="276" width="120" height="48" rx="6"/></g>
+      <g text-anchor="middle"><text x="75" y="88">裏裏</text><text x="75" y="168">表裏</text><text x="75" y="238">裏表</text><text x="75" y="308">表表</text></g>
+      <path d="M 140 80 H 220 M 211 73 L 220 80 L 211 87 M 140 160 L 220 187 M 214 177 L 220 187 L 209 189 M 140 230 L 220 202 M 209 200 L 220 202 L 214 212 M 140 300 H 220 M 211 293 L 220 300 L 211 307" fill="none" stroke="var(--series-1)" stroke-width="3"/>
+      <g fill="var(--surface-2)" stroke="var(--series-1)" stroke-width="2"><circle cx="260" cy="80" r="28"/><circle cx="260" cy="195" r="28"/><circle cx="260" cy="300" r="28"/></g>
+      <g text-anchor="middle"><text x="260" y="88">0</text><text x="260" y="203">1</text><text x="260" y="308">2</text><text x="260" y="126">1/4</text><text x="260" y="241">1/2</text><text x="260" y="346">1/4</text></g>
+    </svg>
+    <figcaption>各結果の重みは 1/4。各入力から出る矢印は一本ですが、同じ値に複数の結果が集まっても構いません。右の分数は、そこへ集まった重みの合計です。配置は模式図です。</figcaption>
+  </figure>
+</section>
+
+<section id="random-variables-distribution">
+  <h2>確率質量関数と累積分布関数</h2>
+  <p>X の<strong>分布</strong>とは、X がどの範囲に入るかの確率を与える規則です。有限または可算個の値を取る離散型では、<strong>確率質量関数</strong>（PMF）pₓ(x) = P(X = x) を並べれば分布が分かります。pₓ(x) ≥ 0 で、異なる取り得る値について足すと 1 です。値の添字を区別するため、ここでは関数名を pₓ と書きます。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>P</mi><mo>(</mo><mi>X</mi><mo>∈</mo><mi>A</mi><mo>)</mo><mo>=</mo><munder><mo>∑</mo><mrow><mi>x</mi><mo>∈</mo><mi>A</mi></mrow></munder><msub><mi>p</mi><mi>X</mi></msub><mo>(</mo><mi>x</mi><mo>)</mo><mo>,</mo><mspace width="1em"/><munder><mo>∑</mo><mi>x</mi></munder><msub><mi>p</mi><mi>X</mi></msub><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><mn>1</mn></mrow></math></div>
+  <div class="proof"><h3>同じ値になる結果をまとめる</h3><p>異なる x に対して {X = x} は互いに排反です。これらを全て合わせると Ω になるので、加法性から質量の合計は 1。A に入る値だけを合わせれば、上の確率も得られます。有限個なら有限加法性、可算個なら<a href="probability-models.html">可算加法性</a>を使っています。</p></div>
+  <p><strong>累積分布関数</strong>（CDF）は Fₓ(t) = P(X ≤ t) です。離散型では t 以下の質量を全て足します。t を増やすと事象が広がるので Fₓ は減少しません。先ほどのコインでは、t &lt; 0 で 0、0 ≤ t &lt; 1 で 1/4、1 ≤ t &lt; 2 で 3/4、t ≥ 2 で 1。値 1 における飛びの大きさ 1/2 が P(X = 1) です。</p>
+  <p>同じ分布でも、同じ写像とは限りません。一回の公平なコインで、表なら X = 1、裏なら X = 0 とし、Y = 1 − X とします。X と Y の分布は同じですが、同じ結果に対する値は必ず異なります。二つの変数が一緒にどう動くかは、<a href="joint-distributions.html">同時分布</a>が記録します。</p>
+</section>
+
+<section id="random-variables-binomial">
+  <h2>Bernoulli分布と二項分布</h2>
+  <p>成功なら 1、失敗なら 0 を取る変数を<strong>Bernoulli 分布</strong>と呼びます。成功確率を p とすると P(X = 1) = p、P(X = 0) = 1 − p。条件は 0 ≤ p ≤ 1 で、p = 0、1 という必ず同じ値になる場合も含みます。</p>
+  <div class="theorem"><h3>二項分布の質量</h3><p>n を正の整数とします。成功確率が全て p の、相互に独立な n 回の Bernoulli 試行の成功数 S は、次の<strong>二項分布</strong>に従います。まず 0 &lt; p &lt; 1 で式を読みます。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>P</mi><mo>(</mo><mi>S</mi><mo>=</mo><mi>k</mi><mo>)</mo><mo>=</mo><mrow><mo>(</mo><mfrac linethickness="0"><mi>n</mi><mi>k</mi></mfrac><mo>)</mo></mrow><msup><mi>p</mi><mi>k</mi></msup><msup><mrow><mo>(</mo><mn>1</mn><mo>−</mo><mi>p</mi><mo>)</mo></mrow><mrow><mi>n</mi><mo>−</mo><mi>k</mi></mrow></msup><mo>,</mo><mspace width="1em"/><mi>k</mi><mo>=</mo><mn>0</mn><mo>,</mo><mo>…</mo><mo>,</mo><mi>n</mi></mrow></math></div></div>
+  <div class="proof"><h3>一つの並びの重みと、並びの数を掛ける</h3><p>成功位置がちょうど k 個決まった並びの確率は、<a href="independence.html#independence-general-complements">成功・失敗の事象を混ぜても保たれる相互独立</a>により pᵏ(1 − p)ⁿ⁻ᵏ です。その位置の選び方は<a href="counting-probability.html">組合せ</a>により nCk 通り。異なる並びは排反なので、同じ重みを足せば公式になります。全ての k で足すと、二項定理から {p + (1 − p)}ⁿ = 1。確かに正規化されています。</p></div>
+  <p>p = 0 では P(S = 0) = 1、p = 1 では P(S = n) = 1 と直接定めます。これなら 0⁰ の扱いに頼りません。各回の成功確率が違ったり、独立でなかったりすれば、成功数がこの二項分布になるとは限りません。例えば全ての回で同じ一回のコインの結果をコピーすると、S は 0 または n だけです。</p>
+  <div class="lab" data-lab="probability-binomial"></div>
+  <noscript><p class="note">実験には JavaScript が必要です。初期値は n = 10、p = 0.5 です。成功数 k の棒は P(S = k)、累積は P(S ≤ k) を表します。例えば P(S = 5) = 252/1024 = 63/256。n は 1〜40、p は 0〜1 の範囲で動かせます。p = 0 なら 0 回、p = 1 なら n 回に全ての質量が集まります。表示される平均 np と分散 np(1 − p) の理由は、後の期待値・同時分布の章で導きます。</p></noscript>
+  <p>棒の高さは各整数値の<strong>確率そのもの</strong>です。次章の密度の高さとは、この点が違います。実験の丸め誤差があっても、数学上の質量の合計は厳密に 1 です。</p>
+</section>
+
+<section id="random-variables-geometric">
+  <h2>幾何分布と可算分布</h2>
+  <p>独立で同じ成功確率 p の試行を続け、初成功の試行番号を T とします。ここでは<strong>幾何分布</strong>を 1、2、3、…から始まる約束で使います。条件は 0 &lt; p ≤ 1。最初の k − 1 回が失敗し、k 回目が成功するので、0 &lt; p &lt; 1 では P(T = k) = (1 − p)ᵏ⁻¹p です。p = 1 なら T = 1 に確率 1 を置きます。</p>
+  <div class="proof"><h3>有限までの合計を先に求める</h3><p>q = 1 − p とすると、最初の m 項の合計は p(1 + q + … + qᵐ⁻¹) = 1 − qᵐ です。0 ≤ q &lt; 1 だから m → ∞ で 1 になり、正規化が確かめられます。この有限和と極限は<a href="series.html">幾何級数</a>と同じ計算です。また正の整数 m について P(T &gt; m) = qᵐ、P(T ≤ m) = 1 − qᵐ です。m = 0 なら P(T &gt; 0) = 1 と直接分かります。実数 t ≥ 1 での CDF なら、m を t 以下の最大の整数に置き換えます。t &lt; 1 では CDF は 0 です。</p></div>
+  <p>無限の試行列のモデルで「いつまでも成功しない」列を考える場合、その事象の確率は P(T &gt; m) 以下であることが全ての m で成り立ち、従って 0 です。その事象上の T には便宜上 1 などの値を割り当てれば、実数値の確率変数として同じ幾何分布を持ちます。確率 0 の事象を取り除いたモデルでも構いません。</p>
+  <p>p = 0 を上の有限値の公式に代入すると全て 0 になり、合計は 1 でなくなります。この場合は成功が起こらず、有限の待ち回数の分布にはなりません。また「初成功までの失敗数」を数える資料では値が 0 から始まります。名前が同じでも、何を数えるかを確認します。</p>
+</section>
+
+<details class="column" id="random-variables-column">
+  <summary>寄り道［応用］：二項分布の「成功」は、良い結果とは限らない</summary>
+  <p>NIST の統計ハンドブックは、二項分布を二種類の結果のうち一方を数えるモデルとして説明しています。「成功」は数える側の名前なので、不具合の検出を 1 としても構いません。</p>
+  <p>例えば仮想の検査で、各製品が独立に確率 0.02 で不具合となると仮定すれば、10 個中の不具合数は二項分布です。しかし同じ製造条件が全製品へ影響するなら、独立性の点検が必要です。数を数えられることと、二項モデルの条件を満たすことを分けて考えましょう。</p>
+  <p class="source-note">出典：<a href="https://itl.nist.gov/div898/handbook/eda/section3/eda366i.htm">NIST/SEMATECH：Binomial Distribution</a>。検査数と確率は本章の仮想値です。</p>
+</details>
+
+<section id="random-variables-exercises">
+  <h2>演習：写像と確率分布</h2>
+  <article class="exercise"><h3>1．同じ数へまとめる</h3><p>公平な六面の骰子で、出目が 1 または 2 なら X = 0、それ以外なら X = 1 とします。PMF と CDF を求めてください。</p><details><summary>ヒント1：値ごとの元の結果を数える</summary><p>X = 0 は二つの出目、X = 1 は四つの出目をまとめます。</p></details><details><summary>ヒント2：実数 t の範囲を分ける</summary><p>t &lt; 0、0 ≤ t &lt; 1、t ≥ 1 の三つです。</p></details><details><summary>解答</summary><p>P(X = 0) = 2/6 = 1/3、P(X = 1) = 4/6 = 2/3 で、他の値の質量は 0 です。CDF は t &lt; 0 で 0、0 ≤ t &lt; 1 で 1/3、t ≥ 1 で 1 となります。元の六面が等確率でも、まとめた二値は等確率ではありません。</p></details></article>
+  <article class="exercise"><h3>2．成功が高々一回</h3><p>独立な 4 回の試行で成功確率が毎回 1/3 のとき、成功数 S について P(S = 1) と P(S ≤ 1) を求めてください。</p><details><summary>ヒント1：成功位置は四通り</summary><p>各並びの確率は (1/3)(2/3)³ です。</p></details><details><summary>ヒント2：0 回も忘れない</summary><p>P(S ≤ 1) は P(S = 0) と P(S = 1) の和です。</p></details><details><summary>解答</summary><p>P(S = 1) = 4 · (1/3) · (2/3)³ = 32/81 です。P(S = 0) = (2/3)⁴ = 16/81 なので P(S ≤ 1) = 48/81 = 16/27。ちょうど一回と、高々一回という事象を区別しました。</p></details></article>
+  <article class="exercise"><h3>3．三回目を待つ</h3><p>成功確率 p = 1/4 の幾何分布で、P(T ≥ 3) と P(T ≤ 3) を求めてください。</p><details><summary>ヒント1：三回目以降なら</summary><p>最初の二回が失敗していればよく、三回目自体の成否は問いません。</p></details><details><summary>ヒント2：三回以内の補集合</summary><p>T ≤ 3 の補集合は T &gt; 3 です。</p></details><details><summary>解答</summary><p>P(T ≥ 3) = (3/4)² = 9/16。P(T ≤ 3) = 1 − (3/4)³ = 37/64 です。前者は T &gt; 2、後者の補集合は T &gt; 3 なので、指数が一つ違います。</p></details></article>
+</section>
+
+<section id="random-variables-reflection">
+  <h2>自分の言葉で</h2><ol><li>標本空間の結果と確率変数の値を分けると、どんな計算がしやすくなりますか。</li><li>二項分布で独立性と同じ成功確率は、証明のどこで使われましたか。</li><li>幾何分布で p = 0 を除く理由と、数え始める値を確認する理由は何ですか。</li></ol>
+</section>

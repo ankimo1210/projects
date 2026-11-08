@@ -1,0 +1,61 @@
+<section id="vector-line-integrals-question">
+  <h2>仕事と力の接線成分</h2>
+  <p>同じ強さの力でも、進む方向に押す場合と、真横へ押す場合とでは移動への寄与が違います。道に沿って集めたいのは力の大きさそのものではなく、移動に平行な成分です。前章の正の長さ要素 ds を、向きを持つ移動 dr に替えると何が起きるでしょう。</p>
+  <p class="note">復習は<a href="vector-fields.html#vector-fields-products">内積</a>、<a href="vector-curves.html">区分 C¹ 曲線</a>、<a href="fundamental-theorem.html">微積分の基本定理</a>です。ここでの「仕事」は、力と変位の内積を足す数学モデルとして使います。</p>
+</section>
+
+<section id="vector-line-integrals-definition">
+  <h2>ベクトル場の線積分の定義</h2>
+  <p>区分 C¹ 曲線 r : [a, b] → U ⊂ ℝ³ と、その像で連続な場 F を考えます。<strong>ベクトル場の線積分</strong>を次で定めます。角がある場合は有限個の C¹ 部分で積分して足します。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mo>∫</mo><mi>C</mi></msub><mi>F</mi><mo>·</mo><mi>d</mi><mi>r</mi><mo>:=</mo><msubsup><mo>∫</mo><mi>a</mi><mi>b</mi></msubsup><mi>F</mi><mo>(</mo><mi>r</mi><mo>(</mo><mi>t</mi><mo>)</mo><mo>)</mo><mo>·</mo><msup><mi>r</mi><mo>′</mo></msup><mo>(</mo><mi>t</mi><mo>)</mo><mi>d</mi><mi>t</mi></mrow></math></div>
+  <p>F = (P, Q, R)、r = (x, y, z) なら、被積分関数は P(r)x′ + Q(r)y′ + R(r)z′。この意味で ∫<sub>C</sub>F·dr = ∫<sub>C</sub>P dx + Q dy + R dz とも書きます。場が力、座標が長さの単位なら、積分は「力 × 長さ」の単位です。速度が非零の点では r′ = T‖r′‖ なので、F·dr = (F·T)ds。仕事は、進む方向への符号付き成分を長さに沿って集めます。</p>
+  <figure class="concept-figure" id="vector-line-integrals-visual-projection" data-visual="vector-line-integrals-projection">
+    <svg class="concept-svg" viewBox="0 0 360 360" role="img" aria-labelledby="vector-line-integrals-projection-title vector-line-integrals-projection-desc">
+      <title id="vector-line-integrals-projection-title">力のうち移動に沿う成分だけが内積へ入る</title><desc id="vector-line-integrals-projection-desc">同縮尺のxy平面で、原点を共通の始点とし、横軸と縦軸を同じ縮尺にする。力Fは0,2、変位dは2,1。Fのd方向への射影は0.8,0.4。射影の端とFの端を破線で結ぶ。</desc>
+      <path d="M 70 260 L 70 120" stroke="var(--series-1)" stroke-width="4"/><polygon points="70,120 64,132 76,132" fill="var(--series-1)"/>
+      <path d="M 70 260 L 210 190" stroke="var(--series-2)" stroke-width="4"/><polygon points="210,190 195,191 201,202" fill="var(--series-2)"/>
+      <path d="M 70 260 L 126 232" stroke="var(--ink)" stroke-width="5"/><polygon points="126,232 113,232 118,243" fill="var(--ink)"/>
+      <path d="M 70 120 L 126 232" stroke="var(--ink-2)" stroke-width="2" stroke-dasharray="6 5"/>
+      <g fill="var(--ink)" font-size="22"><text x="41" y="93">F = (0, 2)</text><text x="188" y="164">d = (2, 1)</text><text x="161" y="256">射影</text><text x="180" y="310" text-anchor="middle">F·d = 2</text><text x="180" y="342" text-anchor="middle">位置の両軸は同縮尺</text></g>
+    </svg><figcaption>射影は {(F·d)/‖d‖²}d = (4/5, 2/5)。破線は d と垂直です。有限の変位で F が一定なら仕事はこの内積に等しく、変化する場では小さな変位ごとの寄与を積分します。</figcaption>
+  </figure>
+</section>
+
+<section id="vector-line-integrals-orientation">
+  <h2>線積分の再パラメータ化と向きの反転</h2>
+  <p>η(s) = r(ψ(s)) とします。ψ は新しい閉区間から [a, b] への増加全単射で、有限分割の各部分で C¹、ψ′ &gt; 0、片側導関数が端まで連続に延長できるとします。r の分割点の逆像でも区切れば、連鎖律と一変数の置換で次が分かります。ここではこの条件を満たす向きを保つ正則な再パラメータ化を扱います。</p>
+  <div class="proof"><h3>速さの係数を、積分の幅へ戻す</h3><p>各部分で η′ = r′(ψ)ψ′。従って F(η)·η′ = {F(r(ψ))·r′(ψ)}ψ′ です。t = ψ(s) と置換すると元の積分になり、部分を足せば ∫ηF·dr = ∫rF·dr を得ます。ψ′ が正なので始点と終点の順序は保たれます。</p><p>逆向き −r(t) = r(a + b − t) では、微分に負号が現れます。置換後に ∫<sub>−C</sub>F·dr = −∫<sub>C</sub>F·dr。道の連結では各積分が足され、同じ周回を二回行えば二倍です。</p></div>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="二つの線積分の向きと定義の比較"><table class="concept-table" style="min-width:30rem" data-visual="vector-line-integrals-comparison"><caption>同じ線分を逆にたどり、残る長さと反転する仕事を比較する</caption><thead><tr><th scope="col">量・設定</th><th scope="col">一片の寄与</th><th scope="col">順向き・逆向き</th></tr></thead><tbody><tr><th scope="row">線分：A=(0,0) → B=(2,1)</th><td>変位d=(2,1)、長さ√5</td><td>反転するとd→−d、長さは√5のまま。</td></tr><tr><th scope="row">スカラー線積分、f=1</th><td>‖r′‖dt=ds</td><td>√5 → √5。長さは符号を持たない。</td></tr><tr><th scope="row">一定場F=(0,2)の仕事</th><td>F·r′dt=F·dr</td><td>2 → −2。移動方向だけが逆になる。</td></tr><tr><th scope="row">一般の変化する場</th><td>各点でのFとdrの内積</td><td>反転で負号が付くが、F·(B−A)の一回の計算へは通常まとめられない。</td></tr></tbody></table></div>
+</section>
+
+<section id="vector-line-integrals-paths">
+  <h2>線積分の経路依存性</h2>
+  <p>平面の場 F(x, y) = (−y, x) で、A = (0, 0) から B = (1, 1) へ進みます。直線 r(t) = (t, t)、0 ≤ t ≤ 1 では、F(r)·r′ = (−t, t)·(1, 1) = 0 で仕事は0。一方、x 軸を (1, 0) へ進んでから縦に上がる道では、第一部分の寄与は0、第二部分 r₂(t) = (1, t) の寄与は (−t, 1)·(0, 1) = 1 なので仕事は1です。</p>
+  <figure class="concept-figure" id="vector-line-integrals-visual-paths" data-visual="vector-line-integrals-paths">
+    <svg class="concept-svg" viewBox="0 0 360 360" role="img" aria-labelledby="vector-line-integrals-paths-title vector-line-integrals-paths-desc">
+      <title id="vector-line-integrals-paths-title">同じ端点を結ぶ二つの道</title><desc id="vector-line-integrals-paths-desc">横軸と縦軸が同じ縮尺の座標。Aの0,0からBの1,1へ、直線の仕事は0。Aから1,0へ右に進み、そこからBへ上がる折れ線の仕事は1。細い黒矢印は共通倍率のFで、対角線上の二点では道と直交し、右辺では上向き成分が1。</desc>
+      <path d="M 60 280 L 240 100" stroke="var(--series-1)" stroke-width="4"/><polygon points="240,100 226,105 235,114" fill="var(--series-1)"/>
+      <path d="M 60 280 L 240 280" stroke="var(--series-2)" stroke-width="4"/><polygon points="240,280 228,274 228,286" fill="var(--series-2)"/>
+      <path d="M 240 280 L 240 100" stroke="var(--series-2)" stroke-width="4"/><polygon points="240,100 234,112 246,112" fill="var(--series-2)"/>
+<defs><marker id="vector-path-field-arrow" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="var(--ink-2)"/></marker></defs><line x1="114" y1="226" x2="100.5" y2="212.5" stroke="var(--ink-2)" stroke-width="2.5" marker-end="url(#vector-path-field-arrow)"/><line x1="186" y1="154" x2="154.5" y2="122.5" stroke="var(--ink-2)" stroke-width="2.5" marker-end="url(#vector-path-field-arrow)"/><line x1="240" y1="235" x2="228.75" y2="190" stroke="var(--ink-2)" stroke-width="2.5" marker-end="url(#vector-path-field-arrow)"/><line x1="240" y1="163" x2="210.75" y2="118" stroke="var(--ink-2)" stroke-width="2.5" marker-end="url(#vector-path-field-arrow)"/><path d="M190.95 149.05 L186 144.10 L181.05 149.05" fill="none" stroke="var(--ink-2)" stroke-width="1.5"/><g fill="var(--ink)" font-size="22"><text x="180" y="35" text-anchor="middle">細い黒矢印：F（共通倍率）</text><text x="90" y="110">F⊥道</text><text x="290" y="270" text-anchor="middle">F_y=1</text></g>      <g fill="var(--ink)" font-size="22"><text x="41" y="314">A</text><text x="247" y="88">B(1, 1)</text><text x="69" y="168">仕事 0</text><text x="253" y="212">仕事 1</text><text x="180" y="345" text-anchor="middle">F = (−y, x)</text></g>
+    </svg><figcaption>直線を速くたどる変更と、折れ線へ道を替える変更は別です。二つの仕事の差は1で、折れ線のあと直線を逆向きに戻る閉曲線の積分も1です。両軸の縮尺は同じです。</figcaption>
+  </figure>
+  <div data-lab="vector-work"></div>
+  <noscript><p class="note">道を替える実験の操作には JavaScript が必要です。本文の F = (−y, x)、A = (0, 0)、B = (1, 1) なら、直線の仕事は0、右へ進んでから上がる道は1、各道を逆にたどれば0と−1です。実験で比較する勾配場 F = (y, x) = ∇(xy) なら、どちらの道も仕事は1です。数値近似と、この厳密な計算を比べてください。</p></noscript>
+</section>
+
+<section id="vector-line-integrals-gradient">
+  <h2>勾配場の線積分と基本定理</h2>
+  <div class="theorem"><h3>線積分の基本定理</h3><p>開集合 U 上で φ が C¹、F = ∇φ とします。C は U に含まれる区分 C¹ 曲線で、始点 A、終点 B を持つとします。このとき ∫<sub>C</sub>F·dr = φ(B) − φ(A) です。</p></div>
+  <div class="proof"><h3>一変数の基本定理へ戻す</h3><p>各 C¹ 部分で連鎖律により (φ(r(t)))′ = ∇φ(r(t))·r′(t)。一変数の微積分の基本定理を使えば、その部分の積分は両端での φ の差です。有限個の部分を足すと、隣り合う端点の値は打ち消し合い、最初と最後の値だけが残ります。</p></div>
+  <p>例えば φ = (x² + y² + z²)/2 なら F = (x, y, z)。原点から (1, 1, 0) までの仕事はどんな許された道でも1です。閉曲線なら始点と終点が同じなので0。反対に、先ほどの (−y, x) の二つの仕事は異なるので、この平面全体でその場を勾配とする C¹ 関数は存在しません。<a href="vector-potentials.html">次章</a>では、どんな場が勾配になるかを定義域の形も含めて調べます。</p>
+</section>
+
+<details class="column" id="vector-line-integrals-column"><summary>寄り道［数学の見方］：消えるのは道か、途中の値か</summary><p>勾配場の線積分でも、道は計算の中から最初から消えているわけではありません。各小部分では場も速度も道に依存します。連鎖律により「一つの関数の変化率」になったため、基本定理を適用したあとで中間の値が消えます。</p><p>端点だけで決まる性質を見つけたいときには、被積分関数を「何かの微分」に戻せるかが手がかりです。これは実一変数の積分と同じ発想ですが、多変数では定義域に穴がある場合の注意が加わります。</p><p class="source-note">出典：本章の連鎖律と基本定理の証明を言い換えたものです。</p></details>
+
+<section id="vector-line-integrals-exercises"><h2>演習：線積分・向き・端点</h2>
+  <article class="exercise"><h3>1．定数場の折れ線の仕事</h3><p>F = (2, −1, 3) の下で、A = (0, 0, 0) から任意の区分 C¹ 曲線で B = (1, 2, −1) へ進む仕事と、戻る仕事を求めてください。</p><details><summary>ヒント1：成分の基本定理</summary><p>定数場では ∫F·r′dt = F·∫r′dt です。</p></details><details><summary>ヒント2：変位全体</summary><p>B − A = (1, 2, −1)。このベクトルとの内積を取ります。</p></details><details><summary>解答</summary><p>仕事は 2·1 − 1·2 + 3·(−1) = −3。戻る道では向きが逆なので3です。φ = 2x − y + 3z を使っても同じ結果です。</p></details></article>
+  <article class="exercise"><h3>2．円を逆にたどる</h3><p>F(x, y) = (−y, x)、r(t) = (cos t, sin t)、0 ≤ t ≤ 2π の線積分と、その逆向きの値を求めてください。</p><details><summary>ヒント1：場と速度</summary><p>どちらも (−sin t, cos t) になります。</p></details><details><summary>ヒント2：内積の値</summary><p>sin²t + cos²t = 1 です。</p></details><details><summary>解答</summary><p>F(r)·r′ = 1 なので積分は2π。逆向きは−2πです。弧長は両方2πですが、仕事には向きが残ります。閉曲線の積分が非零なので、この場は平面全体で勾配ではありません。</p></details></article>
+  <article class="exercise"><h3>3．空間の道を計算せずに積分する</h3><p>φ(x, y, z) = xy + z²、F = ∇φ とします。A = (1, 0, 1) から B = (2, 3, −1) へ進む任意の区分 C¹ 曲線の仕事を求め、必要な仮定を述べてください。</p><details><summary>ヒント1：ポテンシャルの値</summary><p>φ(A) = 1、φ(B) = 6 + 1 です。</p></details><details><summary>ヒント2：適用する定理</summary><p>φ は ℝ³ 全体で C¹、曲線はその領域内にあります。</p></details><details><summary>解答</summary><p>F = (y, x, 2z)、仕事は φ(B) − φ(A) = 7 − 1 = 6。φ の C¹ 性と曲線の区分 C¹ 性から連鎖律と基本定理を各部分で使えます。曲線の具体的な形や速さを決める必要はありません。</p></details></article>
+</section>
+<section id="vector-line-integrals-reflection"><h2>自分の言葉で</h2><ol><li>仕事の積分が ∫‖F‖ds ではないのはなぜですか。</li><li>再パラメータ化、逆向き、道そのものの変更は、何をそれぞれ保ちますか。</li><li>線積分の基本定理の証明で、連鎖律と一変数の基本定理はどこを担当しますか。</li></ol></section>

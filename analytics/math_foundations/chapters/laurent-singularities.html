@@ -1,0 +1,64 @@
+<section id="laurent-singularities-question">
+  <h2>円環領域とローラン展開</h2>
+  <p>1/z は0の近くで正則でも、0そのものでは定義されません。非負のべきだけのTaylor級数なら中心に値が入ってしまうので、この振る舞いを表せません。負のべきも許すと、穴へ近づくときの情報を読み分けられます。それが<strong>Laurent級数</strong>です。</p>
+  <p>前提は<a href="complex-taylor.html">Taylor展開とべき級数の正則性</a>、<a href="complex-contours.html">円周積分とML評価</a>です。導出では<a href="cauchy-theorem.html">Cauchyの定理の有限円孔への拡張</a>を、そこで明示した条件で借ります。可除特異点の定理を先に使うことはせず、展開を作った後に「穴を埋められる」を判定します。</p>
+</section>
+
+<section id="laurent-singularities-annulus">
+  <h2>円環領域の積分公式</h2>
+  <p>f が円環 A = {z : r &lt; |z − a| &lt; R} で正則とします。0 ≤ r &lt; R で、R = ∞ も許しますが、積分には有限半径だけを使います。点 z に対して r &lt; r′ &lt; |z − a| &lt; R′ &lt; R を選びます。半径 R′ の外円 C<sub>out</sub> と半径 r′ の内円 C<sub>in</sub> は、式の中では両方とも反時計回りです。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>f</mi><mo>(</mo><mi>z</mi><mo>)</mo><mo>=</mo><mfrac><mn>1</mn><mrow><mn>2</mn><mi>π</mi><mi>i</mi></mrow></mfrac><mo>(</mo><msub><mo>∮</mo><msub><mi>C</mi><mtext>out</mtext></msub></msub><mfrac><mrow><mi>f</mi><mo>(</mo><mi>ζ</mi><mo>)</mo></mrow><mrow><mi>ζ</mi><mo>−</mo><mi>z</mi></mrow></mfrac><mspace width="0.2em"/><mi>d</mi><mi>ζ</mi><mo>−</mo><msub><mo>∮</mo><msub><mi>C</mi><mtext>in</mtext></msub></msub><mfrac><mrow><mi>f</mi><mo>(</mo><mi>ζ</mi><mo>)</mo></mrow><mrow><mi>ζ</mi><mo>−</mo><mi>z</mi></mrow></mfrac><mspace width="0.2em"/><mi>d</mi><mi>ζ</mi><mo>)</mo></mrow></math></div>
+  <div class="proof"><h3>点 z の小円を、もう一つの穴にする</h3><p>z を中心とする十分小さい閉円板を、内側の閉円板と交わらず外円の内部に入るように除きます。f(ζ)/(ζ − z) は残った閉領域と全境界を含む開近傍で正則です。借用した境界定理の条件が満たされ、外周積分は、内円の反時計回り積分と z の小円の反時計回り積分の和になります。</p><p>小円上では f(ζ) = f(z) + [f(ζ) − f(z)] と分けます。定数部分の積分は 2πif(z)。誤差の絶対値は、小円の半径を ε とすると ML評価で 2π max<sub>|ζ−z|=ε</sub>|f(ζ) − f(z)| 以下です。連続性により0へ行くので、上の外円−内円の式が得られます。これは前々章のCauchy公式と同じ小円の議論です。</p></div>
+  <figure class="concept-figure" id="laurent-singularities-visual-annulus" data-visual="laurent-singularities-annulus">
+    <svg class="concept-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 375" role="img" aria-labelledby="laurent-annulus-title laurent-annulus-desc">
+      <title id="laurent-annulus-title">円環に、点zの小さい穴を追加する</title><desc id="laurent-annulus-desc">中心aの外円R′と内円r′、その間の点zを囲む小円。外周積分は二つの穴を反時計回りに回る積分の和で、小円の極限からf(z)を取り出す。</desc>
+      <circle cx="180" cy="160" r="133" fill="var(--surface-2)" stroke="var(--series-1)" stroke-width="3"/>
+      <circle cx="180" cy="160" r="47" fill="var(--ground)" stroke="var(--series-2)" stroke-width="3" stroke-dasharray="7 5"/>
+      <circle cx="262" cy="160" r="17" fill="var(--ground)" stroke="var(--ink-2)" stroke-width="2"/>
+      <path d="M180 160 L180 27 M180 160 L147 193 M262 160 L288 220" fill="none" stroke="var(--ink-2)" stroke-width="2"/>
+      <circle cx="180" cy="160" r="4" fill="var(--ink)"/><circle cx="262" cy="160" r="3" fill="var(--ink)"/>
+      <g fill="var(--ink)" font-size="22"><text x="191" y="103">R′</text><text x="125" y="218">r′</text><text x="161" y="151">a</text><text x="248" y="139">z</text><text x="291" y="247">小円</text><text x="180" y="331" text-anchor="middle">外円 − 内円</text><text x="180" y="362" text-anchor="middle">両円は反時計回り</text></g>
+    </svg><figcaption>中心aの元の穴と、積分公式を得るため点zへ一時的に空ける小円を区別します。外円と内円をともに反時計回りにたどると、その差がzの小円の積分です。r′&lt;|z−a|&lt;R′ なので、外円の核では |z−a|/R′&lt;1、内円の核では r′/|z−a|&lt;1。二つの幾何級数を逆の比で展開できる理由が、この二つの距離関係です。全境界と穴を除いた閉領域の開近傍での正則性を使います。</figcaption>
+  </figure>
+</section>
+
+<section id="laurent-singularities-expansion">
+  <h2>正負のべきの展開と係数公式</h2>
+  <p>w = z − a、η = ζ − a と略記します。外円では |w/η| &lt; 1 なので 1/(η − w) = ∑ₙ₌₀∞ wⁿ/ηⁿ⁺¹。内円では |η/w| &lt; 1 なので 1/(η − w) = −∑ₙ₌₀∞ ηⁿ/wⁿ⁺¹。内円側のマイナスが、積分公式のマイナスと打ち消し合います。</p>
+  <div class="theorem"><h3>円環上のLaurent展開</h3><p>f が r &lt; |z − a| &lt; R で正則なら、次のように展開できます。負の部分と非負の部分はそれぞれ収束し、任意の閉部分円環 r &lt; α ≤ |z − a| ≤ β &lt; R で一様収束します。</p></div>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mtable columnalign="left"><mtr><mtd><mrow><mi>f</mi><mo>(</mo><mi>z</mi><mo>)</mo><mo>=</mo><munderover><mo>∑</mo><mrow><mi>n</mi><mo>=</mo><mn>0</mn></mrow><mi>∞</mi></munderover><msub><mi>c</mi><mi>n</mi></msub><msup><mrow><mo>(</mo><mi>z</mi><mo>−</mo><mi>a</mi><mo>)</mo></mrow><mi>n</mi></msup><mo>+</mo><munderover><mo>∑</mo><mrow><mi>m</mi><mo>=</mo><mn>1</mn></mrow><mi>∞</mi></munderover><msub><mi>c</mi><mrow><mo>−</mo><mi>m</mi></mrow></msub><msup><mrow><mo>(</mo><mi>z</mi><mo>−</mo><mi>a</mi><mo>)</mo></mrow><mrow><mo>−</mo><mi>m</mi></mrow></msup></mrow></mtd></mtr><mtr><mtd><mrow><msub><mi>c</mi><mi>k</mi></msub><mo>=</mo><mfrac><mn>1</mn><mrow><mn>2</mn><mi>π</mi><mi>i</mi></mrow></mfrac><msub><mo>∮</mo><mrow><mo>|</mo><mi>ζ</mi><mo>−</mo><mi>a</mi><mo>|</mo><mo>=</mo><mi>s</mi></mrow></msub><mfrac><mrow><mi>f</mi><mo>(</mo><mi>ζ</mi><mo>)</mo></mrow><msup><mrow><mo>(</mo><mi>ζ</mi><mo>−</mo><mi>a</mi><mo>)</mo></mrow><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow></msup></mfrac><mspace width="0.2em"/><mi>d</mi><mi>ζ</mi><mo>,</mo><mspace width="0.5em"/><mi>k</mi><mo>∈</mo><mi>ℤ</mi><mo>,</mo><mspace width="0.5em"/><mi>r</mi><mo>&lt;</mo><mi>s</mi><mo>&lt;</mo><mi>R</mi></mrow></mtd></mtr></mtable></math></div>
+  <div class="proof"><h3>二つの残りを、別々に0へ送る</h3><p>閉部分円環に対して r &lt; r′ &lt; α ≤ β &lt; R′ &lt; R を選び、外円・内円での |f| の最大を M<sub>out</sub>、M<sub>in</sub> とします。外側の幾何和を n = 0,…,N で止めた積分誤差は、前章と同じ ML評価で [M<sub>out</sub>R′/(R′ − β)](β/R′)ᴺ⁺¹ 以下。内側の幾何和を同じ n で止めた誤差は [M<sub>in</sub>r′/(α − r′)](r′/α)ᴺ⁺¹ 以下です。</p><p>二つの比がともに1未満なので、誤差は全点で同時に0へ行きます。各有限項を積分すると、外側から cₙwⁿ、内側から c₋ₙ₋₁w⁻ⁿ⁻¹ が得られます。これで無限和と積分を無条件に交換せずに、展開と一様収束が得られました。</p></div>
+  <p>係数に用いる半径 s は、同じ円環内ならどれでも構いません。実際、f(ζ)/(ζ − a)ᵏ⁺¹ は二つの同心円の間を含む開近傍で正則なので、有限円孔への境界定理から両円の積分が一致します。これが<strong>係数の半径不変性</strong>です。</p>
+  <p>一意性も積分で分かります。同じ性質で収束する別の展開があれば、円 |ζ − a| = s 上で (ζ − a)⁻ᵏ⁻¹ を掛けて積分します。ML評価によって一様な残りの積分は0へ行き、<a href="complex-contours.html">べきの円周積分</a>から k 番の係数だけが残ります。どちらの係数も上の積分に等しいので、展開は一意です。</p>
+</section>
+
+<section id="laurent-singularities-example">
+  <h2>収束円環とローラン係数</h2>
+  <p>f(z) = 1/[z(z − 1)] を中心0で展開します。部分分数は −1/z + 1/(z − 1)。0 &lt; |z| &lt; 1 では、後半に比 z の幾何級数を使い、f(z) = −z⁻¹ − ∑ₙ₌₀∞ zⁿ です。一方 |z| &gt; 1 では f(z) = z⁻²/(1 − z⁻¹) = ∑ₙ₌₀∞ z⁻ⁿ⁻² となります。</p>
+  <figure class="concept-figure" id="laurent-singularities-visual-regions" data-visual="laurent-singularities-regions"><svg class="concept-svg" viewBox="0 0 360 430" role="img" aria-labelledby="laurent-singularities-visual-regions-title laurent-singularities-visual-regions-desc"><title id="laurent-singularities-visual-regions-title">同じ関数の二つの収束円環を、二つの展開と対応づける</title><desc id="laurent-singularities-visual-regions-desc">中心0で極0と1を示す。内側0&lt;|z|&lt;1では-z^-1-1-z-...でc-1=-1。外側|z|&gt;1ではz^-2+z^-3+...でc-1=0。極1を越えて同じ正則円環とは扱えない。</desc><text x="180" y="29" font-size="22" fill="var(--ink)" text-anchor="middle">f(z)=1/[z(z−1)]</text><rect x="18" y="43" width="324" height="218" rx="8" fill="var(--surface-2)"/><circle cx="180" cy="160" r="80" fill="var(--accent-wash)" stroke="var(--series-1)" stroke-width="2.5" stroke-dasharray="6 5"/><line x1="30" y1="160" x2="330" y2="160" stroke="var(--grid)" stroke-width="1.5"/><line x1="174" y1="154" x2="186" y2="166" stroke="var(--ink)" stroke-width="3"/><line x1="174" y1="166" x2="186" y2="154" stroke="var(--ink)" stroke-width="3"/><line x1="254" y1="154" x2="266" y2="166" stroke="var(--ink)" stroke-width="3"/><line x1="254" y1="166" x2="266" y2="154" stroke="var(--ink)" stroke-width="3"/><text x="159" y="190" font-size="22" fill="var(--ink)">0</text><text x="276" y="190" font-size="22" fill="var(--ink)">1</text><text x="180" y="140" font-size="22" fill="var(--ink)" text-anchor="middle">0&lt;|z|&lt;1</text><text x="180" y="67" font-size="22" fill="var(--ink)" text-anchor="middle">|z|&gt;1</text><text x="180" y="296" font-size="22" fill="var(--ink)" text-anchor="middle">内：−z⁻¹−1−z−⋯</text><text x="180" y="330" font-size="22" fill="var(--ink)" text-anchor="middle">c₋₁=−1（0&lt;|z|&lt;1）</text><text x="180" y="371" font-size="22" fill="var(--ink)" text-anchor="middle">外：z⁻²+z⁻³+⋯</text><text x="180" y="405" font-size="22" fill="var(--ink)" text-anchor="middle">c₋₁=0（|z|&gt;1）</text></svg><figcaption>同じ関数 f=1/[z(z−1)] でも、内側では比zの幾何級数、外側では比1/zの幾何級数を使います。二つの展開から負一乗の係数だけを拾うと−1と0。境界 |z|=1 上には極1があるため、両円環をつないで半径不変性を適用できません。×は0と1の特異点で、塗りは展開の領域を分けるための模式表示です。式と収束環域は必ず組にして読みます。</figcaption></figure>
+  <p>「中心を決めれば展開は一つ」と覚えると、この例で間違えます。中心と、どの円環で関数を表すかの両方を指定したとき、一意性が働きます。</p>
+</section>
+
+<section id="laurent-singularities-classification">
+  <h2>可除特異点・極・真性特異点</h2>
+  <p>ここからは中心のすぐ近くまで来られる、穴あき円板 0 &lt; |z − a| &lt; R で f が正則とします。このとき a を<strong>孤立特異点</strong>と呼びます。Laurent展開のうち負のべきの部分を<strong>主要部</strong>と呼び、その形によって三つに分類します。一般の円環での展開と、孤立特異点の分類を区別してください。</p>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="Laurent主要部による孤立特異点の三分類">
+    <table class="concept-table" data-visual="laurent-singularities-classification"><caption>穴を埋められるか、有限のべきで抑えられるか</caption><thead><tr><th scope="col"><span class="table-math">種類</span></th><th scope="col"><span class="table-math">主要部</span></th><th scope="col"><span class="table-math">例：a = 0</span></th></tr></thead><tbody>
+      <tr><th scope="row"><span class="table-math">可除</span></th><td>負の係数はすべて0。中心へ正則に延長できる。</td><td><span class="table-math">sin z / z</span>。0での値を1とする。</td></tr>
+      <tr><th scope="row"><span class="table-math">m位の極</span></th><td>負の項が有限個で、最も負の指数が −m。<span class="table-math">c₋ₘ ≠ 0</span>。</td><td><span class="table-math">z⁻³ + 2z⁻¹</span> は3位の極。</td></tr>
+      <tr><th scope="row"><span class="table-math">真性</span></th><td>負の非零係数が無限個。可除でも有限位の極でもない。</td><td><span class="table-math">e¹ᐟᶻ</span>。</td></tr>
+    </tbody></table>
+  </div><p data-reading-note="laurent-classification">極の位数は最も負の非零の項で決まり、留数は負一乗の係数で決まるので別の情報です。例 z⁻³+2z⁻¹ は三位の極でも留数は2です。e¹ᐟᶻ が真性である理由は、eʷ の級数に全ての次数の非零項があり、有限個では終わらないことです。</p>
+  <div class="proof"><h3>係数の分類と、関数の振る舞いを結ぶ</h3><p>主要部が0なら、残りは非負のべき級数です。前章の補題から中心を含む円板で正則になり、f(a) = c₀ と埋められます。逆に正則に埋められるならTaylor展開を持ち、Laurentの一意性から負の係数は0。従ってこれは可除の必要十分条件です。</p><p>さらに、穴の近くで |f| ≤ M と有界なら、m ≥ 1 に対し係数の円周積分を半径 s で評価して |c₋ₘ| ≤ Msᵐ。s → 0 とすれば c₋ₘ = 0 なので可除です。逆に正則な延長は中心近くの閉円板で連続・有界です。これで「有界なら穴を埋められる」ことも証明できました。</p><p>最も負の項が c₋ₘ(z − a)⁻ᵐ なら、(z − a)ᵐf(z) は正則に延長でき、中心での値は c₋ₘ ≠ 0。逆にこの性質があれば、その正則な関数をTaylor展開して (z − a)ᵐ で割ると、主要部はちょうどこの形です。特に |f(z)| は a に近づくと∞へ行きます。有限個でも0個でもない残りの場合が真性です。</p></div>
+  <p>sin z / z の可除性は sin z = z − z³/3! + … から分かります。e¹ᐟᶻ は前章の指数関数の展開へ 1/z を代入すると 1 + z⁻¹ + z⁻²/2! + … となり、負の非零係数が無限個なので真性です。実軸の正側では∞へ、負側では0へ近づき、極のように絶対値が一律に∞へ行くわけでもありません。真性特異点についてのさらに強い値域の定理は、ここでは使いません。</p>
+</section>
+
+<details class="column" id="laurent-singularities-column"><summary>寄り道［数学の見方］：穴へ近づくことを、無限遠へ行くことに変える</summary>
+  <p>w = 1/(z − a) と置くと、z が a に近づくことは |w| が大きくなることです。有限の主要部 c₋₁/(z − a) + … + c₋ₘ/(z − a)ᵐ は、w について c₋₁w + … + c₋ₘwᵐ という多項式になります。一方 e¹ᐟ⁽ᶻ⁻ᵃ⁾ は eʷ に変わり、有限次数の多項式では終わりません。</p><p>これは<a href="complex-plane.html">逆数写像</a>と級数を組み合わせた見方です。「負のべき」は不自然な追加ではなく、中心への接近を反転して見る座標だと考えられます。ただし一般のLaurent展開には非負の部分もあり、反転後の全関数がいつも多項式になるという意味ではありません。</p><p class="source-note">出典：本章の主要部の定義を逆数変換で読み直した自作の比較。</p></details>
+
+<section id="laurent-singularities-exercises"><h2>演習：ローラン展開と孤立特異点</h2>
+  <article class="exercise"><h3>1．半径2の内側と外側</h3><p>f(z) = 1/[z(z − 2)] を、0 &lt; |z| &lt; 2 と |z| &gt; 2 のそれぞれで中心0のLaurent級数にし、c₋₁ を求めてください。</p><details><summary>ヒント1：内側では部分分数</summary><p>f = −1/(2z) + 1/[2(z − 2)] と分けます。</p></details><details><summary>ヒント2：外側では z⁻² をくくる</summary><p>f = z⁻²/(1 − 2/z) と書けます。</p></details><details><summary>解答</summary><p>内側は −1/(2z) − ∑ₙ₌₀∞ zⁿ/2ⁿ⁺² で c₋₁ = −1/2。外側は ∑ₙ₌₀∞ 2ⁿz⁻ⁿ⁻² で c₋₁ = 0 です。二円環の間に極2があるので、係数の半径不変性で両者を結ぶことはできません。</p></details></article>
+  <article class="exercise"><h3>2．打ち消した後の主要部</h3><p>(eᶻ − 1)/z と (eᶻ − 1 − z)/z³ の、0における特異点を分類し、可除なら延長値、極なら位数を求めてください。</p><details><summary>ヒント1：最初の非零項を書く</summary><p>eᶻ − 1 = z + z²/2 + …、eᶻ − 1 − z = z²/2 + z³/6 + …。</p></details><details><summary>ヒント2：割り算後に負の項があるか</summary><p>二つ目の最初の項は 1/(2z) です。</p></details><details><summary>解答</summary><p>最初は 1 + z/2 + … で主要部がなく可除、延長値は1。二つ目は 1/(2z) + 1/6 + z/24 + … で1位の極です。元の分子が0であるだけでは可除とは限らず、分母のべきとの比較が必要です。</p></details></article>
+  <article class="exercise"><h3>3．有界性から係数を消す</h3><p>0 &lt; |z − a| &lt; R で正則な f が |f(z)| ≤ 7 を満たすとします。c₋₂ が0になることを、任意の小半径 s での積分評価から示してください。</p><details><summary>ヒント1：係数公式の指数</summary><p>c₋₂ = (1/2πi)∮ f(ζ)(ζ − a)dζ です。</p></details><details><summary>ヒント2：円の長さと被積分関数の上界</summary><p>長さは 2πs、絶対値の上界は 7s です。</p></details><details><summary>解答</summary><p>ML評価から |c₋₂| ≤ (1/2π)(2πs)(7s) = 7s²。係数は s に依存しないので、s → 0 として c₋₂ = 0。同じ議論をすべての m ≥ 1 に適用すると主要部がすべて消え、f は可除です。</p></details></article>
+</section>
+<section id="laurent-singularities-reflection"><h2>自分の言葉で</h2><ol><li>外円と内円で、幾何級数の比を逆に選ぶ理由を説明できますか。</li><li>係数の半径不変性は、どの範囲で成り立ち、どんな障害を越えられませんか。</li><li>可除・極・真性の違いを、主要部と中心近くの振る舞いの両方で述べられますか。</li></ol></section>

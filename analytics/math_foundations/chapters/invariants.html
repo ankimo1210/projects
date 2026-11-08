@@ -1,0 +1,157 @@
+<section id="invariants-question">
+  <h2>不変量と到達不能性</h2>
+  <p>並べ方が何通りもあるとき、全部を試す前に「どの操作でも変わらないものはないか」と考えてみましょう。目的の状態ではその量が別の値になるなら、どんな順番で操作しても到達できません。操作のたびに保存される量や性質を<strong>不変量</strong>と呼びます。動くものを眺めながら、変わらないものを選ぶのが、この章の考え方です。</p>
+  <p>不変量は、最初から問題文に数値として書かれているとは限りません。色を付ける、余りを取る、共通する約数を見る、といった見方をこちらで加えます。ただし、見つけた量が本当にすべての許された操作で保存されることを証明しなければ、到達できないという結論には使えません。</p>
+</section>
+
+<section id="invariants-board">
+  <h2>市松模様の不変量とドミノ敷き詰め</h2>
+  <p>縦 8 升、横 8 升の正方形の盤を考えます。上から数えた行を r、左から数えた列を c とし、(r, c) で升を表します。ここから左上の (1, 1) と右下の (8, 8) を取り除きます。残りは 62 升なので、2 升を覆うドミノ 31 枚と面積は合います。ドミノは辺を共有する二つの升を、横向きまたは縦向きに覆い、重ねたり盤からはみ出したりしないものとします。</p>
+  <p>面積の条件は必要ですが、それだけでは足りません。盤を市松模様に塗り、r + c が偶数の升を黒、奇数の升を白とします。隣の升へ横または縦に一歩動くと r + c の偶奇が変わるので、どのドミノも黒と白を一升ずつ覆います。</p>
+  <figure id="invariants-visual-board" data-visual="invariants-visual-board" style="margin:24px 0">
+    <svg viewBox="0 0 360 450" role="img" aria-labelledby="invariants-board-title invariants-board-desc" style="display:block;width:100%;max-width:360px;height:auto">
+      <title id="invariants-board-title">ドミノを何枚置いても、二種類の升の残りの差は消えない</title>
+      <desc id="invariants-board-desc">左上と右下の二升を取り除いた八行八列の盤。塗り升は三十升、枠のみの升は三十二升。下の一枚のドミノは両種類を一升ずつ覆うため、置くたびに両方の数が一つずつ減り、差の二升は変わらない。</desc>
+      <path data-removed-cell="1,1" d="M 30 30 l 20 20 m -20 0 l 20 -20" fill="none" stroke="var(--series-1)" stroke-width="3"/>
+      <rect data-board-cell="1,2" data-shade="white" x="60" y="20" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect data-board-cell="1,3" data-shade="black" x="100" y="20" width="40" height="40" fill="var(--ink-2)" stroke="var(--grid)"/>
+      <rect data-board-cell="1,4" data-shade="white" x="140" y="20" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect data-board-cell="1,5" data-shade="black" x="180" y="20" width="40" height="40" fill="var(--ink-2)" stroke="var(--grid)"/>
+      <rect data-board-cell="1,6" data-shade="white" x="220" y="20" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect data-board-cell="1,7" data-shade="black" x="260" y="20" width="40" height="40" fill="var(--ink-2)" stroke="var(--grid)"/>
+      <rect data-board-cell="1,8" data-shade="white" x="300" y="20" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect data-board-cell="2,1" data-shade="white" x="20" y="60" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect data-board-cell="2,2" data-shade="black" x="60" y="60" width="40" height="40" fill="var(--ink-2)" stroke="var(--grid)"/>
+      <rect data-board-cell="2,3" data-shade="white" x="100" y="60" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect data-board-cell="2,4" data-shade="black" x="140" y="60" width="40" height="40" fill="var(--ink-2)" stroke="var(--grid)"/>
+      <rect data-board-cell="2,5" data-shade="white" x="180" y="60" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect data-board-cell="2,6" data-shade="black" x="220" y="60" width="40" height="40" fill="var(--ink-2)" stroke="var(--grid)"/>
+      <rect data-board-cell="2,7" data-shade="white" x="260" y="60" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect data-board-cell="2,8" data-shade="black" x="300" y="60" width="40" height="40" fill="var(--ink-2)" stroke="var(--grid)"/>
+      <rect data-board-cell="3,1" data-shade="black" x="20" y="100" width="40" height="40" fill="var(--ink-2)" stroke="var(--grid)"/>
+      <rect data-board-cell="3,2" data-shade="white" x="60" y="100" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect data-board-cell="3,3" data-shade="black" x="100" y="100" width="40" height="40" fill="var(--ink-2)" stroke="var(--grid)"/>
+      <rect data-board-cell="3,4" data-shade="white" x="140" y="100" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect data-board-cell="3,5" data-shade="black" x="180" y="100" width="40" height="40" fill="var(--ink-2)" stroke="var(--grid)"/>
+      <rect data-board-cell="3,6" data-shade="white" x="220" y="100" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect data-board-cell="3,7" data-shade="black" x="260" y="100" width="40" height="40" fill="var(--ink-2)" stroke="var(--grid)"/>
+      <rect data-board-cell="3,8" data-shade="white" x="300" y="100" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect data-board-cell="4,1" data-shade="white" x="20" y="140" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect data-board-cell="4,2" data-shade="black" x="60" y="140" width="40" height="40" fill="var(--ink-2)" stroke="var(--grid)"/>
+      <rect data-board-cell="4,3" data-shade="white" x="100" y="140" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect data-board-cell="4,4" data-shade="black" x="140" y="140" width="40" height="40" fill="var(--ink-2)" stroke="var(--grid)"/>
+      <rect data-board-cell="4,5" data-shade="white" x="180" y="140" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect data-board-cell="4,6" data-shade="black" x="220" y="140" width="40" height="40" fill="var(--ink-2)" stroke="var(--grid)"/>
+      <rect data-board-cell="4,7" data-shade="white" x="260" y="140" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect data-board-cell="4,8" data-shade="black" x="300" y="140" width="40" height="40" fill="var(--ink-2)" stroke="var(--grid)"/>
+      <rect data-board-cell="5,1" data-shade="black" x="20" y="180" width="40" height="40" fill="var(--ink-2)" stroke="var(--grid)"/>
+      <rect data-board-cell="5,2" data-shade="white" x="60" y="180" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect data-board-cell="5,3" data-shade="black" x="100" y="180" width="40" height="40" fill="var(--ink-2)" stroke="var(--grid)"/>
+      <rect data-board-cell="5,4" data-shade="white" x="140" y="180" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect data-board-cell="5,5" data-shade="black" x="180" y="180" width="40" height="40" fill="var(--ink-2)" stroke="var(--grid)"/>
+      <rect data-board-cell="5,6" data-shade="white" x="220" y="180" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect data-board-cell="5,7" data-shade="black" x="260" y="180" width="40" height="40" fill="var(--ink-2)" stroke="var(--grid)"/>
+      <rect data-board-cell="5,8" data-shade="white" x="300" y="180" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect data-board-cell="6,1" data-shade="white" x="20" y="220" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect data-board-cell="6,2" data-shade="black" x="60" y="220" width="40" height="40" fill="var(--ink-2)" stroke="var(--grid)"/>
+      <rect data-board-cell="6,3" data-shade="white" x="100" y="220" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect data-board-cell="6,4" data-shade="black" x="140" y="220" width="40" height="40" fill="var(--ink-2)" stroke="var(--grid)"/>
+      <rect data-board-cell="6,5" data-shade="white" x="180" y="220" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect data-board-cell="6,6" data-shade="black" x="220" y="220" width="40" height="40" fill="var(--ink-2)" stroke="var(--grid)"/>
+      <rect data-board-cell="6,7" data-shade="white" x="260" y="220" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect data-board-cell="6,8" data-shade="black" x="300" y="220" width="40" height="40" fill="var(--ink-2)" stroke="var(--grid)"/>
+      <rect data-board-cell="7,1" data-shade="black" x="20" y="260" width="40" height="40" fill="var(--ink-2)" stroke="var(--grid)"/>
+      <rect data-board-cell="7,2" data-shade="white" x="60" y="260" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect data-board-cell="7,3" data-shade="black" x="100" y="260" width="40" height="40" fill="var(--ink-2)" stroke="var(--grid)"/>
+      <rect data-board-cell="7,4" data-shade="white" x="140" y="260" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect data-board-cell="7,5" data-shade="black" x="180" y="260" width="40" height="40" fill="var(--ink-2)" stroke="var(--grid)"/>
+      <rect data-board-cell="7,6" data-shade="white" x="220" y="260" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect data-board-cell="7,7" data-shade="black" x="260" y="260" width="40" height="40" fill="var(--ink-2)" stroke="var(--grid)"/>
+      <rect data-board-cell="7,8" data-shade="white" x="300" y="260" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect data-board-cell="8,1" data-shade="white" x="20" y="300" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect data-board-cell="8,2" data-shade="black" x="60" y="300" width="40" height="40" fill="var(--ink-2)" stroke="var(--grid)"/>
+      <rect data-board-cell="8,3" data-shade="white" x="100" y="300" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect data-board-cell="8,4" data-shade="black" x="140" y="300" width="40" height="40" fill="var(--ink-2)" stroke="var(--grid)"/>
+      <rect data-board-cell="8,5" data-shade="white" x="180" y="300" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect data-board-cell="8,6" data-shade="black" x="220" y="300" width="40" height="40" fill="var(--ink-2)" stroke="var(--grid)"/>
+      <rect data-board-cell="8,7" data-shade="white" x="260" y="300" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <path data-removed-cell="8,8" d="M 310 310 l 20 20 m -20 0 l 20 -20" fill="none" stroke="var(--series-1)" stroke-width="3"/>
+      <g fill="var(--ink-2)" font-size="21"><text x="20" y="375">塗り 30升 ／ 枠のみ 32升</text></g>
+      <rect x="20" y="395" width="40" height="40" fill="var(--ink-2)" stroke="var(--grid)"/>
+      <rect x="60" y="395" width="40" height="40" fill="var(--surface)" stroke="var(--grid)"/>
+      <rect x="20" y="395" width="80" height="40" fill="none" stroke="var(--series-2)" stroke-width="3"/>
+      <text x="118" y="410" fill="var(--ink-2)" font-size="21">ドミノは両種類を</text><text x="118" y="435" fill="var(--ink-2)" font-size="21">一升ずつ覆う</text>
+    </svg>
+    <figcaption style="font-size:14px;line-height:1.8;color:var(--ink-2)">× を除いた盤の塗り30升・枠のみ32升と、下のドミノが覆う両種類一升ずつを比べます。k枚置いた残りは塗り30−k、枠のみ32−kなので差は常に二升です。両方を同時に0にできず、面積が足りても敷き詰められません。この差は不可能性の判定に使えますが、差が0なら必ず敷き詰められることまでは示しません。本文の「黒」は塗り升、「白」は枠だけの升に対応します。</figcaption>
+  </figure>
+  <div class="theorem">
+    <h3>この盤はドミノでは敷き詰められない</h3>
+    <p>8 × 8 の盤から (1, 1) と (8, 8) を取り除いた領域は、上で指定したドミノだけでは完全に覆えません。</p>
+  </div>
+  <div class="proof">
+    <h3>色の差を見る短い証明</h3>
+    <p>元の盤には黒と白が 32 升ずつあります。取り除いた二つの升は r + c がそれぞれ 2 と 16 なので、どちらも黒です。残りは黒 30 升、白 32 升です。ドミノを一枚置いて残りの升から取り除くと、黒も白も一つずつ減り、差「黒の数 − 白の数」は −2 のまま変わりません。しかし全部を覆った状態では残りは黒も白も 0 で、差は 0 になるはずです。この値には到達できないため、敷き詰めは不可能です。</p>
+  </div>
+  <p>不可能という結論は、どの順番で置くかに依存しません。一枚の操作で保存されることが、<a href="induction.html">帰納法</a>によって何枚置いた後にも続くからです。試行回数を増やす代わりに、すべての操作列に共通する制約を取り出しました。</p>
+  <p>ただし、黒と白の数が等しければ必ず敷き詰められる、とはまだ言えません。たとえば (1, 1) と (1, 4) の二升だけからなる領域は黒白一升ずつですが、升が離れているため一枚のドミノでは覆えません。不変量は不可能性の理由を与えますが、その障害がないことだけで可能性まで証明したことにはならないのです。</p>
+</section>
+
+<section id="invariants-euclid">
+  <h2>ユークリッドの互除法：不変量と停止性</h2>
+  <p>不変量は、できないことの証明だけでなく、答えを求める手順の正しさにも使えます。二つの正の整数 a、b の最大公約数を考えましょう。最大公約数は、両方を割り切る正の整数のうち最大のものです。大きな数の約数を全部並べる代わりに、数の組を小さくしても共通の約数が変わらない操作を探します。</p>
+  <div class="theorem">
+    <h3>余りへ置き換えても最大公約数は同じ</h3>
+    <p>a ≥ b &gt; 0 を整数とし、整数の割り算で a = qb + r、0 ≤ r &lt; b と書くと、a と b の最大公約数は b と r の最大公約数に等しくなります。r = 0 の場合は、b と 0 の最大公約数を b とします。</p>
+  </div>
+  <div class="proof">
+    <h3>共通の約数を両方向に追う</h3>
+    <p>正の整数 d が a、b の両方を割り切るなら、r = a − qb も割り切ります。逆に d が b、r を割り切るなら、a = qb + r も割り切ります。したがって二つの組の共通の正の約数はまったく同じです。その中で最大のものも同じなので、主張が成り立ちます。</p>
+  </div>
+  <p>この置き換えを繰り返す方法がユークリッドの互除法です。表では 252 と 105 から始め、最後の 0 でない数 21 が最大公約数になります。数そのものは変化しますが、共通の約数の集合という情報が残ります。</p>
+  <p>正しい値を保つだけでは、計算が終わるとは限りません。ここでは次の余りが、前の正の割る数より必ず小さくなります。正の整数を無限に減らし続けることはできないため、いつか余りが 0 になります。「何を保つか」が答えの正しさを、「何が減るか」が終了を支えます。二つの役割を分けて確認することが重要です。</p>
+
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="252 と 105 の互除法：答えを保ちながら、余りを小さくする">
+    <table id="invariants-visual-euclid-run" class="concept-table" style="min-width:42rem" data-visual="invariants-visual-euclid-run"><caption>共通の約数は保ち、割る数は減らす：正しさと終了の二つの理由</caption><thead><tr><th scope="col">組 (a,b)</th><th scope="col">割り算と次の組</th><th scope="col">保たれる共通の正の約数</th><th scope="col">第二成分</th></tr></thead><tbody><tr><th scope="row"><span class="table-math">(252,105)</span></th><td><span class="table-math">252=2·105+42</span><br>次は(105,42)。</td><td><span class="table-math">{1,3,7,21}</span></td><td>105</td></tr><tr><th scope="row"><span class="table-math">(105,42)</span></th><td><span class="table-math">105=2·42+21</span><br>次は(42,21)。</td><td><span class="table-math">{1,3,7,21}</span></td><td>42</td></tr><tr><th scope="row"><span class="table-math">(42,21)</span></th><td><span class="table-math">42=2·21+0</span><br>次は(21,0)。</td><td><span class="table-math">{1,3,7,21}</span></td><td>21</td></tr><tr><th scope="row"><span class="table-math">(21,0)</span></th><td>余り0で終了。最後の非零数21が答え。</td><td><span class="table-math">{1,3,7,21}</span></td><td>0</td></tr></tbody></table>
+  </div><p data-reading-note="invariants-visual-euclid-run" class="note">同じ集合を横に比較すると、答えを保つ理由が見えます。最後の列を縦にたどると、正の整数が減って0に達する終了の理由が見えます。これは252と105の実例で、一般の保存と終了の証明は直前の段落で別々に確認しました。</p>
+</section>
+
+<details class="column" id="invariants-column">
+  <summary>寄り道［背景］：15パズルには、動かし続けても解けない配置がある</summary>
+  <p>4 × 4 の枠に15枚の札と空所を置く15パズルは、1879年の Johnson と Story の論文でも扱われています。完成形の14と15だけを入れ替えた配置は解けません。ここでは、その障害を偶奇で見てみましょう。</p>
+  <p>札を上の行から読み、空所を除いて「大きい数が小さい数より先にある組」を数え、逆転数と呼びます。横移動では札の読み順は変わりません。縦移動では一枚がほかの三枚をまたぐため、逆転数の偶奇が反転します。同時に、空所の行番号の偶奇も反転します。したがって二つの和の偶奇は不変です。14と15だけを交換すると逆転数だけが反転し、この不変量が変わるので到達できません。手数を増やす努力が、そもそも届かない配置を変えることはないのです。</p>
+  <p class="source-note">出典：<a href="https://www.jstor.org/stable/2369492">Johnson・Story：Notes on the “15” Puzzle（1879）</a>。</p>
+</details>
+
+<section id="invariants-exercises">
+  <h2>演習：不変量と到達可能性</h2>
+  <article class="exercise">
+    <h3>1．盤の大きさを変える</h3>
+    <p>6 × 6 の盤から (1, 1) と (6, 6) を取り除きます。本文と同じドミノで敷き詰められるでしょうか。</p>
+    <details><summary>ヒント1：取り除く升の色を見る</summary><p>黒を r + c が偶数の升とします。二つの隅は何色ですか。</p></details>
+    <details><summary>ヒント2：残りの数を比較する</summary><p>元は黒白が 18 升ずつです。取り除いた後の差を求めます。</p></details>
+    <details><summary>解答</summary><p>取り除く二升はともに黒なので、黒 16 升、白 18 升です。各ドミノは黒白を一つずつ覆うため、差 −2 は残り続けます。全部を覆った差 0 にはできず、敷き詰めは不可能です。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>2．色の障害がないとき、実際に作る</h3>
+    <p>8 × 8 の盤から、今度は (1, 1) と (1, 2) を取り除きます。色の数を確認し、実際の敷き詰め方を説明してください。</p>
+    <details><summary>ヒント1：同じ行の隣り合う二升である</summary><p>取り除くのは黒白一升ずつです。第1行には何升残りますか。</p></details>
+    <details><summary>ヒント2：行ごとに横向きに置く</summary><p>第1行の列 3、4 を一組にし、その後も二升ずつ組にします。</p></details>
+    <details><summary>解答</summary><p>黒白は 31 升ずつです。第1行は列 (3, 4)、(5, 6)、(7, 8) の三組を横向きに覆います。第2行から第8行では、各行の列 (1, 2)、(3, 4)、(5, 6)、(7, 8) を覆います。計 3 + 7·4 = 31 枚で完成です。色の一致だけでなく、具体的な構成で可能性を示しました。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>3．互除法の途中で何を保ったか</h3>
+    <p>414 と 162 の最大公約数を互除法で求め、途中で共通の約数が変わらない理由も一文で述べてください。</p>
+    <details><summary>ヒント1：余りを次の割る数にする</summary><p>414 = 2·162 + 90 から始めます。</p></details>
+    <details><summary>ヒント2：0 まで続ける</summary><p>162 = 90 + 72、90 = 72 + 18 です。次の余りを求めます。</p></details>
+    <details><summary>解答</summary><p>72 = 4·18 + 0 なので最大公約数は 18 です。a = qb + r の各段階で、a、b を割り切る数と b、r を割り切る数が一致するため、最大公約数は保存されます。余りが小さくなることは、別に計算の終了を保証します。</p></details>
+  </article>
+</section>
+
+<section id="invariants-reflection">
+  <h2>自分の言葉で</h2>
+  <ol>
+    <li>市松模様の証明で、面積では見えず、色の差で見えた条件は何ですか。</li>
+    <li>不変量の条件を満たすことと、目的の状態を実際に作れることは、どう違いますか。</li>
+    <li>互除法で保存されるものと減っていくものを、それぞれ説明してください。</li>
+  </ol>
+</section>

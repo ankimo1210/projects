@@ -1,0 +1,110 @@
+<section id="conditional-probability-question">
+  <h2>条件付き確率と検査モデル</h2>
+  <p>ある検査装置が「不良品の 90% に警報を出す」とします。警報が出た製品は、90% の確率で不良品でしょうか。「不良品の中で警報が出る割合」と「警報が出た中で不良品である割合」は、分母が違います。さらに、元から不良品がどれくらいあるかも、警報の内訳を変えます。</p>
+  <p>この章の工場、製品、検査値はすべて計算のための仮想モデルです。目的は装置を評価することではなく、情報を得たときに確率の基準となる全体がどう変わるかを見ることです。条件付き確率は、すでに起きた情報を新しい全体として重みを付け直します。</p>
+</section>
+
+<section id="conditional-probability-definition">
+  <h2>条件付き確率の定義</h2>
+  <p>事象 B が起きたと分かったとします。A のうち残る部分は A ∩ B で、新しい全体は B です。P(B) &gt; 0 のとき、<strong>B の下での A の条件付き確率</strong>を次で定義します。縦棒の右側が、分かっている条件です。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>P</mi><mo>(</mo><mi>A</mi><mo>|</mo><mi>B</mi><mo>)</mo><mo>=</mo><mfrac><mrow><mi>P</mi><mo>(</mo><mi>A</mi><mo>∩</mo><mi>B</mi><mo>)</mo></mrow><mrow><mi>P</mi><mo>(</mo><mi>B</mi><mo>)</mo></mrow></mfrac><mo>,</mo><mspace width="0.5em"/><mi>P</mi><mo>(</mo><mi>B</mi><mo>)</mo><mo>&gt;</mo><mn>0</mn></mrow></math></div>
+  <p>公平なさいころで、B = {4, 5, 6} が分かった後に、A = {2, 4, 6} の確率を問うなら、残る偶数は {4, 6} です。従って P(A | B) = (2/6)/(3/6) = 2/3。元の P(A) = 1/2 から変わりました。出目そのものを変更したのではなく、使う情報が変わったのです。</p>
+  <div class="proof">
+    <h3>重みを付け直しても、確率の約束を満たす</h3>
+    <p>P<sub>B</sub>(A) = P(A | B) と置きます。非負性は分子と分母から従い、P<sub>B</sub>(Ω) = P(B)/P(B) = 1 です。A と C が排反なら A ∩ B と C ∩ B も排反で、P((A ∪ C) ∩ B) = P(A ∩ B) + P(C ∩ B)。両辺を同じ P(B) で割れば加法性です。従って条件付けは、その場限りの割り算ではなく、新しい確率の規則を作っています。新しい規則では B 自身も確率 1 です。</p>
+  </div>
+  <p class="note">P(B) = 0 では、この比は定義しません。0/0 を 0 と置くこともできません。有限モデルなら、正の重みを持たない結果だけに絞るため、このモデルの重みから新しい割合を決められないのです。連続量の「ちょうどある値」という情報の扱いには、別の定義と条件が必要です。本章の公式の対象には入れません。</p>
+</section>
+
+<section id="conditional-probability-multiplication">
+  <h2>確率の乗法定理</h2>
+  <p>定義の両辺に P(B) を掛ければ、P(A ∩ B) = P(B)P(A | B) です。P(A) &gt; 0 なら、条件にする側を入れ替えた P(A ∩ B) = P(A)P(B | A) も使えます。これが<strong>乗法公式</strong>です。</p>
+  <p>例えば赤三枚・青二枚の札から、各段で等確率に二枚を戻さず引きます。一枚目が赤である確率は 3/5。一枚目が赤と分かった後は赤二枚・青二枚なので、二枚目も赤の条件付き確率は 2/4。従って両方赤は (3/5)×(2/4) = 3/10 です。二枚目が赤の無条件の確率 3/5 を、そのまま二回掛けることはできません。</p>
+  <p>三段階なら、P(A) &gt; 0、P(A ∩ B) &gt; 0 の下で P(A ∩ B ∩ C) = P(A)P(B | A)P(C | A ∩ B)。各段で、それまでに分かった情報を条件に入れます。独立という特別な関係があれば条件を省けますが、その条件は<a href="independence.html">次章</a>で扱います。</p>
+  <figure class="concept-figure" id="conditional-probability-visual-card-tree" data-visual="conditional-probability-card-tree">
+    <svg class="concept-svg" viewBox="0 0 360 350" role="img" aria-labelledby="conditional-probability-tree-title conditional-probability-tree-desc" fill="var(--ink)" font-size="22">
+      <title id="conditional-probability-tree-title">赤三枚、青二枚から戻さず二枚引く確率木</title>
+      <desc id="conditional-probability-tree-desc">最初は赤が3/5、青が2/5。赤の後は赤2/4と青2/4、青の後は赤3/4と青1/4。経路内の枝の確率を掛けると、赤赤、赤青、青赤はそれぞれ3/10、青青は1/10になる。線の長さや枝の幅は確率を表していない。</desc>
+      <text x="180" y="33" text-anchor="middle">開始：5 枚</text>
+      <path d="M 180 47 L 90 105 M 180 47 L 270 105 M 90 138 L 45 242 M 90 138 L 135 242 M 270 138 L 225 242 M 270 138 L 315 242" fill="none" stroke="var(--ink-3)" stroke-width="2"/>
+      <g text-anchor="middle"><text x="65" y="73">3/5</text><text x="295" y="73">2/5</text><text x="90" y="127">赤</text><text x="270" y="127">青</text><text x="34" y="193">2/4</text><text x="144" y="193">2/4</text><text x="214" y="193">3/4</text><text x="324" y="193">1/4</text><text x="45" y="271">赤</text><text x="135" y="271">青</text><text x="225" y="271">赤</text><text x="315" y="271">青</text></g>
+      <path d="M 25 285 H 335" stroke="var(--rule)" stroke-width="2"/>
+      <g text-anchor="middle" fill="var(--series-1)"><text x="45" y="323">3/10</text><text x="135" y="323">3/10</text><text x="225" y="323">3/10</text><text x="315" y="323">1/10</text></g>
+    </svg>
+    <figcaption>下段の枝は、一枚目の色を条件にした二枚目の確率です。枝の分数を経路に沿って掛けると、葉の下にある同時確率になります。四つの同時確率の和は 1。枝の長さと幅は模式的です。</figcaption>
+  </figure>
+</section>
+
+<section id="conditional-probability-total">
+  <h2>全確率の公式</h2>
+  <p>Ω を、互いに排反な A₁, …, Aₘ に分け、合併が Ω となるとき、これを<strong>分割</strong>と呼びます。まず各 P(Aᵢ) &gt; 0 とします。どの経路から B が起きたかを分ければ、全体の P(B) が求まります。</p>
+  <div class="theorem">
+    <h3>全確率の公式</h3>
+    <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>P</mi><mo>(</mo><mi>B</mi><mo>)</mo><mo>=</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>m</mi></munderover><mi>P</mi><mo>(</mo><msub><mi>A</mi><mi>i</mi></msub><mo>)</mo><mi>P</mi><mo>(</mo><mi>B</mi><mo>|</mo><msub><mi>A</mi><mi>i</mi></msub><mo>)</mo></mrow></math></div>
+  </div>
+  <div class="proof">
+    <h3>分割で切ると、重複なく B を覆う</h3>
+    <p>B = (B ∩ A₁) ∪ ⋯ ∪ (B ∩ Aₘ) は排反な分割です。加法性から P(B) = ∑ᵢP(B ∩ Aᵢ)。各項に乗法公式 P(B ∩ Aᵢ) = P(Aᵢ)P(B | Aᵢ) を使えば得られます。確率 0 の Aᵢ がある場合は、P(B ∩ Aᵢ) = 0 なのでその項を除いて計算します。未定義の P(B | Aᵢ) に 0 を掛けたと書く必要はありません。</p>
+  </div>
+  <p>全確率は、経路ごとの割合の単純平均ではありません。経路そのものが選ばれる重みを掛けて足す平均です。部署の人数を忘れて集計するなど、分母の違う割合をそのまま足す間違いを避けられます。</p>
+</section>
+
+<section id="conditional-probability-bayes">
+  <h2>ベイズの定理</h2>
+  <p>P(A) &gt; 0、P(B) &gt; 0 とします。A ∩ B の同じ重みを二通りに表すと、P(B)P(A | B) = P(A)P(B | A)。従って次の<strong>Bayes（ベイズ）の公式</strong>が得られます。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>P</mi><mo>(</mo><mi>A</mi><mo>|</mo><mi>B</mi><mo>)</mo><mo>=</mo><mfrac><mrow><mi>P</mi><mo>(</mo><mi>A</mi><mo>)</mo><mi>P</mi><mo>(</mo><mi>B</mi><mo>|</mo><mi>A</mi><mo>)</mo></mrow><mrow><mi>P</mi><mo>(</mo><mi>B</mi><mo>)</mo></mrow></mfrac></mrow></math></div>
+  <p>分割の一つ Aⱼ に当てはめ、全確率を分母に使えば、P(Aⱼ | B) = P(Aⱼ)P(B | Aⱼ)/∑ᵢP(Aᵢ)P(B | Aᵢ) です。観測前の重み P(Aⱼ) を、B との同時確率に変え、B 全体で割り直しています。条件を逆にするというより、同じ重なりのどちら側を基準に見るかを変えた式です。</p>
+  <p class="note">P(B | A) と P(A | B) は一般に等しくありません。また条件付けは、A が B の原因であることを示す操作でもありません。情報の関係と、外から働きかけたときの因果関係は別の問いです。本章は、与えた確率モデルの内部で計算しています。</p>
+</section>
+
+<section id="conditional-probability-factory">
+  <h2>検査モデルの事後確率</h2>
+  <p>D を「製品が不良」、T を「警報が出る」とします。仮想モデルを P(D) = 0.01、P(T | D) = 0.90、P(T | Dᶜ) = 0.05 と置きます。最初の 1% が<strong>基準率</strong>です。二番目は不良品の検出率、三番目は良品に警報を出す誤警報率です。</p>
+  <p>警報は「不良品で検出」と「良品で誤警報」という排反な二経路から来ます。前者の確率は 0.01×0.90 = 0.009、後者は 0.99×0.05 = 0.0495。従って P(T) = 0.0585、求める割合は P(D | T) = 0.009/0.0585 = 2/13 ≈ 0.1538、約 15.4% です。</p>
+  <p>同じ重みを一万単位の仮想的な内訳に拡大すると、不良 100 のうち警報 90・警報なし 10、良品 9,900 のうち警報 495・警報なし 9,405 です。警報全体 585 の中に不良は 90 しかありません。この内訳はモデルの比率を読みやすくしたもので、実際の一万個の製品で必ず同じ個数が出るという予言ではありません。</p>
+  <div class="lab" data-lab="probability-bayes"></div>
+  <noscript><p class="note">実験の操作には JavaScript が必要です。初期値は不良率 0.01、検出率 0.90、誤警報率 0.05。不良かつ警報 0.009、不良かつ警報なし 0.001、良品かつ警報 0.0495、良品かつ警報なし 0.9405 で、和は 1。警報の確率は 0.0585、その中の不良の割合は 2/13 ≈ 15.4% です。</p></noscript>
+  <p>基準率だけを変えると、二つの警報経路の比はどう動くでしょうか。検出率と誤警報率を同時に 0 にすれば警報全体の確率が 0 になり、警報が出たという条件付けはできません。画面の「条件付け不可」は、事後の割合が 0 という意味ではありません。</p>
+</section>
+
+<details class="column" id="conditional-probability-column">
+  <summary>寄り道［応用］：同じ装置でも、使う場所が変わると警報の内訳が変わる</summary>
+  <p>NIST の信頼性評価の解説は、事前の情報と現在のデータを Bayes の公式で組み合わせる考え方を扱っています。本章では未知の寿命などを推定する手法には進まず、観測前の重みを忘れずに使う点に注目します。</p>
+  <p>本章の仮想装置を別の生産ラインへ移し、不良率だけが 10% になったとします。検出率 90%、誤警報率 5% はそのままと仮定します。不良からの警報は 0.10×0.90 = 0.09、良品からの警報は 0.90×0.05 = 0.045 なので、警報の中の不良は 0.09/(0.09 + 0.045) = 2/3。前の約 15.4% から大きく変わります。</p>
+  <p>装置の二つの条件付き確率を同じと仮定しても、使う集団が変われば逆向きの確率は同じになりません。さらに現実では、製品の種類が変われば検出率や誤警報率も変わり得ます。Bayes の公式そのものの正しさと、入力した三つの値がその現場に合うかは、別に確かめる必要があります。</p>
+  <p class="source-note">出典：<a href="https://www.itl.nist.gov/div898/handbook/apr/section2/apr1a.htm">NIST/SEMATECH：How can Bayesian methodology be used for reliability evaluation?</a>。工場・検査装置・数値比較は本章の仮想モデルです。</p>
+</details>
+
+<section id="conditional-probability-exercises">
+  <h2>演習：条件付き確率と全確率</h2>
+  <article class="exercise">
+    <h3>1．同じ重なりを、違う側から見る</h3>
+    <p>1 から 10 までの番号札を一枚、等確率で引きます。A を「3 の倍数」、B を「6 以上」として、P(A | B) と P(B | A) を求め、それぞれの分母を説明してください。</p>
+    <details><summary>ヒント1：三つの集合を書き出す</summary><p>A = {3, 6, 9}、B = {6, 7, 8, 9, 10}、A ∩ B = {6, 9} です。</p></details>
+    <details><summary>ヒント2：縦棒の右が新しい全体</summary><p>P(A | B) では B の五枚、P(B | A) では A の三枚を基準にします。</p></details>
+    <details><summary>解答</summary><p>P(A | B) = (2/10)/(5/10) = 2/5、P(B | A) = (2/10)/(3/10) = 2/3。どちらも重なる札は 6 と 9 ですが、条件に合う札が五枚か三枚かで割合が違います。P(B)P(A | B) = (5/10)(2/5) = 2/10 と P(A)P(B | A) = (3/10)(2/3) = 2/10 は、同じ同時確率に戻ります。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>2．基準率を含めて警報を読む</h3>
+    <p>仮想工場で不良率 0.02、検出率 0.80、誤警報率 0.04 とします。警報が出る確率と、その中で不良である確率を求めてください。検出率と誤警報率が両方 0 の場合にも、後者を計算できますか。</p>
+    <details><summary>ヒント1：良品の確率も使う</summary><p>良品は 0.98。そのうちの 0.04 が誤警報になります。</p></details>
+    <details><summary>ヒント2：分子は不良からの警報、分母はすべての警報</summary><p>分子は 0.02×0.80、分母には 0.98×0.04 も加えます。</p></details>
+    <details><summary>解答</summary><p>P(T) = 0.02×0.80 + 0.98×0.04 = 0.016 + 0.0392 = 0.0552。従って P(D | T) = 0.016/0.0552 = 20/69 ≈ 0.2899、約 29.0% です。検出率と誤警報率がともに 0 なら P(T) = 0 となり、P(D | T) はこの定義では計算できません。値を 0 と置くことは、割合が未定義であることと区別します。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>3．どちらの機械から来た不良品か</h3>
+    <p>製品の 60% は機械 A、40% は機械 B が作ります。それぞれの不良率は 2%、6% とします。全製品から等確率に一個を選んだときの不良率と、不良と分かった製品が機械 B 製である確率を求めてください。</p>
+    <details><summary>ヒント1：機械別の重みを先に掛ける</summary><p>不良の経路は 0.60×0.02 と 0.40×0.06 です。</p></details>
+    <details><summary>ヒント2：機械 B の全体比率では割らない</summary><p>条件にするのは「不良」なので、分母は全体の不良率です。</p></details>
+    <details><summary>解答</summary><p>全体の不良率は 0.60×0.02 + 0.40×0.06 = 0.012 + 0.024 = 0.036、つまり 3.6%。不良かつ機械 B 製の確率は 0.024 なので、求める条件付き確率は 0.024/0.036 = 2/3 です。機械 B の生産量は少なくても、不良品という集まりの中では多い側になります。機械別不良率の単純平均 4% は、生産量の違いを無視しています。</p></details>
+  </article>
+</section>
+
+<section id="conditional-probability-reflection">
+  <h2>自分の言葉で</h2>
+  <ol>
+    <li>P(A | B) を作るとき、何を残し、どの重みで割りますか。P(B) &gt; 0 はなぜ必要ですか。</li>
+    <li>全確率と Bayes の公式は、同じ「経路ごとの同時確率」をそれぞれどう使いますか。</li>
+    <li>検出率と誤警報率が同じでも、基準率が変わると警報の中の不良率が変わる理由を説明できますか。</li>
+  </ol>
+</section>

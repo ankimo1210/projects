@@ -1,0 +1,112 @@
+<section id="continuity-question">
+  <h2>連続性と方程式の解の存在</h2>
+  <p>正方形の面積を 2 にする辺の長さを知りたいとします。長さ 1 なら面積は小さすぎ、長さ 2 なら大きすぎる。途中にちょうどよい長さがありそうです。では、「ありそう」を「必ずある」に変えるには何が必要でしょうか。</p>
+  <p>関数 f(x) = x² − 2 を使えば、問いは「f(x) = 0 となる実数 x があるか」です。区間 [0, 2] の端では f(0) = −2、f(2) = 2。まずこの符号の違いを手がかりに、答えのありかを絞りましょう。ここで [a, b] は、両端を含む a 以上 b 以下の実数の集まりを表します。</p>
+</section>
+
+<section id="continuity-bisection">
+  <h2>二分法と区間の縮小</h2>
+  <p>区間の中点を調べ、値が 0 なら終了します。負なら中点を左端に、正なら右端にして、両端の符号が違う半分を残します。これを<strong>二分法</strong>と呼びます。最初の中点 1 では値が −1 なので、次の区間は [1, 2]。その中点 1.5 では値が 0.25 なので、[1, 1.5] が残ります。</p>
+  <p>下の実験では、同じ手順を三つの関数に使います。二つ目は 1.3 を境に −1 から +1 へ飛ぶ関数、三つ目は 1/(x − 1.3) です。反復回数を増やし、区間の幅と、その中に本当に 0 になる点があるかを分けて見てください。</p>
+  <div data-lab="continuity"></div>
+  <noscript><p class="note">実験の操作には JavaScript が必要です。紙では、x² − 2 の区間が [0, 2] → [1, 2] → [1, 1.5] → [1.25, 1.5] と変わることを確認できます。一方、−1 と +1 しか値を取らない飛び移りの関数には、0 になる点がありません。</p></noscript>
+  <p>区間を狭くする手順自体は、連続でない関数にも実行できてしまいます。飛び移りの関数では境目へ迫っても値は ±1 のまま。三つ目の関数では、両端の符号が違っていても 1.3 で関数が定義されず、ほかのどこでも値は 0 になりません。<strong>区間が狭まるという観察だけでは、根の存在は証明できない</strong>のです。</p>
+</section>
+
+<section id="continuity-definition">
+  <h2>連続関数のε–δ定義</h2>
+  <p>グラフを「ひと筆で描ける」という感覚を、議論で使える言葉に直しましょう。点 c で連続とは、出力のずれをどんな小さい許容幅 ε に収めたいと指定しても、入力のずれを十分小さい幅 δ に制限すれば、その要求を満たせることです。ε、δ はともに正の数です。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>|</mo><mi>x</mi><mo>−</mo><mi>c</mi><mo>|</mo><mo>&lt;</mo><mi>δ</mi><mo>⇒</mo><mo>|</mo><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>−</mo><mi>f</mi><mo>(</mo><mi>c</mi><mo>)</mo><mo>|</mo><mo>&lt;</mo><mi>ε</mi></mrow></math></div>
+  <p>この条件は、定義域にあるすべての該当する x について満たす必要があります。区間の端では、その区間の内側からの近づき方を考えます。区間全体で連続とは、各点でこの条件が成り立つことです。「少し変えれば少し変わる」を、相手が要求する精度に応じて入力の精度を選べる、という約束にしたのです。</p>
+  <p>x² − 2 なら、x と c が [0, 2] にあるとき、出力の差は |x² − c²| = |x − c||x + c| ≤ 4|x − c|。したがって δ = ε/4 と選べば要求を満たせます。一方、飛び移りの関数の c = 1.3 では、いくら近い左側の点でも出力の差は 2。例えば ε = 1 という要求に応えられません。この境目では連続でない、と判定できます。</p>
+</section>
+
+<section id="continuity-limits">
+  <h2>合成関数と点列による連続性</h2>
+  <div class="theorem"><h3>連続関数と極限</h3><p>g(h) → c で f が c で連続なら、合成が定義される範囲で f(g(h)) → f(c) です。また f が c で連続であることは、定義域内のどの数列 xₙ → c に対しても f(xₙ) → f(c) となることと同値です。</p></div>
+  <div class="proof"><h3>許容幅を順につなぐ</h3><p>最初の主張では、出力の要求 ε に対し、f の連続性で入力の幅 η を選び、次に g(h) が c から η 未満になる入力の幅を選びます。点列の場合も、十分先で |xₙ − c| &lt; η とすれば同じです。逆に連続でなければ、ある ε₀ &gt; 0 に対し、各 n で |xₙ − c| &lt; 1/n なのに |f(xₙ) − f(c)| ≥ ε₀ となる点を選べます。これは xₙ → c なのに f(xₙ) が f(c) へ収束しない列なので、点列による条件と矛盾します。</p></div>
+  <p>ここでは外側の関数が c で定義され、連続であることを使いました。c を除いた極限だけが分かっている場合、内側がちょうど c を取る入力で合成が未定義になる可能性があり、同じ形を無条件には使えません。</p>
+</section>
+
+<section id="continuity-completeness">
+  <h2>区間縮小法と実数の完備性</h2>
+  <p>二分法で得た閉区間は、前の区間の中に次の区間が入る「入れ子」です。幅はどこまでも小さくなります。しかし、手順を有限回実行しても、一般には答えそのものは出ません。「永久に絞り続けた先に、数がひとつ存在する」という部分を支えるのが実数の<strong>完備性</strong>です。</p>
+  <div class="theorem">
+    <h3>最小上界性から導く入れ子区間の定理</h3>
+    <p>空でない実数の閉区間 [aₙ, bₙ] が入れ子になり、その幅が 0 に近づくなら、すべての区間に共通する実数がただひとつ存在します。</p>
+  </div>
+  <div class="proof"><h3>左端の上限を取る</h3><p>左端の集合は空でなく、b₁ 以下なので、<a href="limits.html#limits-completeness">最小上界性</a>により c = sup{aₙ} が存在します。任意の固定した n について、すべての左端は bₙ 以下です。後の左端は入れ子の条件から、前の左端は aₙ 以下であることから分かります。よって aₙ ≤ c ≤ bₙ で、c は全区間に入ります。別の共通点 d があれば |c − d| ≤ bₙ − aₙ → 0 となるため d = c です。二分法で幅が 0 へ近づくことは、<a href="limits.html#limits-geometric">r = 1/2 の補題</a>で保証されます。</p></div>
+  <p>なぜ「実数」とわざわざ書くのでしょう。定義域を [0, 2] 内の有理数だけに限り、同じ x² − 2 を考えてみます。中点を取る操作は分数のまま続けられ、関数も有理数の範囲で連続です。それでも、<a href="numbers.html">数の世界の章</a>で証明したように x² = 2 を満たす有理数はありません。実数の世界で区間を埋め合わせる √2 が、有理数の世界にはないからです。計算の規則だけでなく、数の世界の性質も結論に関わります。</p>
+
+<figure class="concept-figure" id="continuity-visual-nested-intervals" data-visual="continuity-nested-intervals">
+  <svg class="concept-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 330" role="img" aria-labelledby="continuity-visual-nested-intervals-title continuity-visual-nested-intervals-desc">
+    <title id="continuity-visual-nested-intervals-title">同じ縮尺で見る入れ子の閉区間</title>
+    <desc id="continuity-visual-nested-intervals-desc">二分法の閉区間が順に狭まり、すべてが共通の実数√2を含む。縦の破線はその共通点を表す。</desc>
+    <g fill="var(--ink-2)" font-size="22"><path d="M 245.919 35 L 245.919 275" fill="none" stroke="var(--series-2)" stroke-width="2" stroke-dasharray="5 5"/><text x="18" y="30" text-anchor="start">[0, 2]</text><path d="M 55 45 L 325 45" fill="none" stroke="var(--series-1)" stroke-width="5"/><circle cx="55" cy="45" r="4" fill="var(--series-1)" stroke="var(--series-1)" stroke-width="2"/><circle cx="325" cy="45" r="4" fill="var(--series-1)" stroke="var(--series-1)" stroke-width="2"/><text x="18" y="95" text-anchor="start">[1, 2]</text><path d="M 190 110 L 325 110" fill="none" stroke="var(--series-1)" stroke-width="5"/><circle cx="190" cy="110" r="4" fill="var(--series-1)" stroke="var(--series-1)" stroke-width="2"/><circle cx="325" cy="110" r="4" fill="var(--series-1)" stroke="var(--series-1)" stroke-width="2"/><text x="18" y="160" text-anchor="start">[1, 1.5]</text><path d="M 190 175 L 257.5 175" fill="none" stroke="var(--series-1)" stroke-width="5"/><circle cx="190" cy="175" r="4" fill="var(--series-1)" stroke="var(--series-1)" stroke-width="2"/><circle cx="257.5" cy="175" r="4" fill="var(--series-1)" stroke="var(--series-1)" stroke-width="2"/><text x="18" y="225" text-anchor="start">[1.25, 1.5]</text><path d="M 223.75 240 L 257.5 240" fill="none" stroke="var(--series-1)" stroke-width="5"/><circle cx="223.75" cy="240" r="4" fill="var(--series-1)" stroke="var(--series-1)" stroke-width="2"/><circle cx="257.5" cy="240" r="4" fill="var(--series-1)" stroke="var(--series-1)" stroke-width="2"/><text x="245.919" y="308" text-anchor="middle">√2</text></g>
+  </svg>
+  <figcaption>各線分は同じ数直線上の閉区間です。幅を縮める手順と、全区間に共通する実数が存在する保証は別です。完備性が共通点を受け止め、その点で関数値が0になることには連続性を使います。</figcaption>
+</figure>
+</section>
+
+<section id="continuity-theorem">
+  <h2>中間値の定理</h2>
+  <div class="theorem">
+    <h3>中間値の定理の、根を見つける形</h3>
+    <p>実数の閉区間 [a, b]（a &lt; b）全体で f が定義され連続であり、f(a) &lt; 0 &lt; f(b) なら、a &lt; c &lt; b を満たす実数 c で f(c) = 0 となるものが存在します。符号が逆の場合も同様です。端の値が 0 なら、その端がすでに根です。</p>
+  </div>
+  <div class="proof">
+    <h3>二分法からの短い証明</h3>
+    <p>中点で 0 が出れば、それが求める点です。出なければ、左端で負、右端で正という条件を保って区間を半分にし続けます。いま証明した入れ子区間の定理により、すべての区間に入る一点 c が存在します。幅が 0 に近づくので、左右の端はともに c に近づきます。</p>
+    <p>もし f(c) &gt; 0 なら、連続性で出力のずれを f(c)/2 より小さく抑えられるため、c に十分近い点の値も正です。しかし左端は c に近づくのに、値はずっと負。これは矛盾です。f(c) &lt; 0 と仮定しても右端の正の値と矛盾するので、残るのは f(c) = 0 です。端 a、b の値は 0 でないため、c はその内側にあります。</p>
+  </div>
+  <p>ここで二つの条件が別々に働きました。完備性は区間の先に<strong>入力 c がある</strong>ことを保証し、連続性はその点の<strong>出力が 0 である</strong>ことを保証します。定理は、ただ図を信じるための名前ではありません。どの橋を渡って結論へ届いたかを示しています。</p>
+  <p class="note">この定理が保証するのは根の存在で、個数ではありません。例えば f(x) = x³ − x は [−2, 2] の両端で符号が違いますが、根は −1、0、1 の三つです。唯一の根を求めたいなら、区間内で厳密に増加するなど、別の条件が要ります。</p>
+</section>
+
+<section id="continuity-error">
+  <h2>二分法の誤差評価</h2>
+  <p>最初の [0, 2] から n 回半分にした区間を [aₙ, bₙ]、その中点を mₙ とします。幅は毎回半分なので、根 c に対する中点の誤差には次の保証があります。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>b</mi><mi>n</mi></msub><mo>−</mo><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><mfrac><mn>2</mn><msup><mn>2</mn><mi>n</mi></msup></mfrac><mo>,</mo><mspace width="1em"/><mo>|</mo><msub><mi>m</mi><mi>n</mi></msub><mo>−</mo><mi>c</mi><mo>|</mo><mo>≤</mo><mfrac><mn>1</mn><msup><mn>2</mn><mi>n</mi></msup></mfrac></mrow></math></div>
+  <p>根が区間に入っているので、中点から根までの距離は幅の半分以下です。この誤差は x の誤差であり、|f(mₙ)| という出力の誤差とは区別します。√2 は無理数なので、有理数である有限回の中点と完全には一致しません。それでも、必要な精度を決めれば、何回計算すればよいかを先に決められます。</p>
+</section>
+
+<details class="column" id="continuity-column">
+  <summary>寄り道［応用］：実用の根探しにも「連続であること」と書いてある</summary>
+  <p>科学計算ライブラリ SciPy の brentq は、符号が違う両端の間から方程式の根を探す関数です。公式文書は入力の条件として、区間で関数が連続であることと、端の値が異符号であることを明記しています。内部では二分法をほかの近似手順と組み合わせていますが、速く探す工夫の下にも、この章の存在保証があります。</p>
+  <p>コンピュータに渡せるのは、有限個の点で値を計算する手順です。それだけで区間の全点における連続性を検査したことにはなりません。飛びや極を含む式を入れて区間が狭まっても、根の存在は別問題です。定理の仮定は、実装の説明に添える飾りではなく、計算結果を根として受け取るために、使う側も確認すべき契約なのです。</p>
+  <p class="source-note">出典：<a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.brentq.html">SciPy：brentq の条件とアルゴリズム</a>。</p>
+</details>
+
+<section id="continuity-exercises">
+  <h2>中間値の定理と二分法の演習</h2>
+  <article class="exercise">
+    <h3>1．何回で十分か</h3>
+    <p>[0, 2] からの二分法で、中点の誤差を 0.001 以下と保証したいとき、何回半分にすれば十分ですか。</p>
+    <details><summary>ヒント1：幅と誤差を区別する</summary><p>中点の誤差の上限は 2/2ⁿ ではなく 1/2ⁿ です。</p></details>
+    <details><summary>ヒント2：近い二つのべき乗</summary><p>2⁹ = 512、2¹⁰ = 1024 を使います。</p></details>
+    <details><summary>解答</summary><p>10 回で 1/1024 = 0.0009765625 ≤ 0.001 なので十分です。9 回では上限が 1/512 &gt; 0.001 のため、この評価だけでは保証できません。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>2．仮定のどこが欠けるか</h3>
+    <p>「x &lt; 1.3 で −1、それ以外で +1」と「1/(x − 1.3)」に、[0, 2] 上の中間値の定理を使えない理由を、それぞれ述べてください。</p>
+    <details><summary>ヒント1：定理の条件へ戻る</summary><p>両端の符号以外に、「全体で定義される」と「連続」が必要です。</p></details>
+    <details><summary>ヒント2：境目の値を見る</summary><p>前者は 1.3 で値を持ちます。後者はどうでしょう。</p></details>
+    <details><summary>解答</summary><p>前者は全体で定義されますが、1.3 で連続でありません。後者は 1.3 で分母が 0 になり、区間全体では定義されません。どちらも両端の符号は違いますが、0 になる点はありません。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>3．根は一つだけか</h3>
+    <p>x² − 2 の根が [0, 2] にただ一つしかないことを、中間値の定理にもう一つの議論を加えて説明してください。</p>
+    <details><summary>ヒント1：二点を比べる</summary><p>0 ≤ x &lt; y ≤ 2 としたときの y² − x² を調べます。</p></details>
+    <details><summary>ヒント2：因数分解する</summary><p>y² − x² = (y − x)(y + x)。二つの因子の符号はどうなりますか。</p></details>
+    <details><summary>解答</summary><p>y − x &gt; 0、y + x &gt; 0 なので y² − x² &gt; 0。関数は厳密に増加し、異なる二点で同じ値 0 を取れません。中間値の定理が少なくとも一つの存在を保証し、この比較が高々一つであることを保証するので、ただ一つです。</p></details>
+  </article>
+</section>
+
+<section id="continuity-reflection">
+  <h2>自分の言葉で</h2>
+  <ol>
+    <li>二分法の手順、根の存在の証明、有限回の誤差保証は、それぞれ何を述べていますか。</li>
+    <li>完備性と連続性は、証明のどの段階で必要でしたか。</li>
+    <li>区間が狭まる図を見たとき、根があると言う前に何を確認しますか。</li>
+  </ol>
+</section>

@@ -1,0 +1,62 @@
+<section id="series-question">
+  <h2>級数と部分和の極限</h2>
+  <p>1 + 1/2 + 1/4 + 1/8 + … は 2 になる、と聞いたことがあるかもしれません。有限回足した値はいつも 2 より小さいのに、どうして等号で結べるのでしょう。無限個を一度に足す操作を仮定するのでなく、有限の計算を並べ、その極限として意味を与えます。前提は<a href="limits.html">数列の極限</a>と、<a href="induction.html">帰納法</a>です。</p>
+  <p>項 a₁、a₂、… に対して Sₙ = a₁ + … + aₙ を<strong>部分和</strong>と呼びます。部分和の数列 Sₙ が有限の実数 S に近づくとき、級数 ∑aₙ は収束し、その和を S と定めます。部分和がどこまでも増える場合も、振動して落ち着かない場合も、ここでは発散です。</p>
+</section>
+
+<section id="series-geometric">
+  <h2>等比級数と収束条件</h2>
+  <p>まず 1、r、r²、… の N 項の和を、一般の部分和 Sₙ と区別して G<sub>N</sub> と書きます。添字を 0 から始めるので、最後の項は rᴺ⁻¹ です。G<sub>N</sub> を r 倍して元の和から引くと、中間の項が消えます。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>G</mi><mi>N</mi></msub><mo>=</mo><munderover><mo>∑</mo><mrow><mi>n</mi><mo>=</mo><mn>0</mn></mrow><mrow><mi>N</mi><mo>−</mo><mn>1</mn></mrow></munderover><msup><mi>r</mi><mi>n</mi></msup><mo>,</mo><mspace width="1em"/><mo>(</mo><mn>1</mn><mo>−</mo><mi>r</mi><mo>)</mo><msub><mi>G</mi><mi>N</mi></msub><mo>=</mo><mn>1</mn><mo>−</mo><msup><mi>r</mi><mi>N</mi></msup></mrow></math></div>
+  <div class="theorem"><h3>幾何級数の収束</h3><p>|r| &lt; 1 なら、∑ₙ₌₀∞ rⁿ = 1/(1 − r)。N 項で打ち切った誤差の絶対値は |r|ᴺ/|1 − r| です。</p></div>
+  <div class="proof"><h3>極限へ渡す部分を明確にする</h3><p>r ≠ 1 のとき、有限の恒等式を割って G<sub>N</sub> = (1 − rᴺ)/(1 − r)。<a href="limits.html#limits-geometric">幾何べきの極限</a>により、|r| &lt; 1 なら |r|ᴺ → 0、したがって rᴺ → 0 なので極限は 1/(1 − r) です。和から部分和を引けば rᴺ/(1 − r) となり、絶対値を取ると誤差の式が得られます。出発点は有限の等式であり、無限の和を先に引き算したのではありません。</p></div>
+  <p>r = 1 では各項が 1 なので G<sub>N</sub> = N。r = −1 では 1、0、1、0、… と振動します。|r| &gt; 1 でも項の大きさが増え、有限の和へ収束しません。式 1/(1 − r) が計算できるだけでは、それが級数の和であるとは言えません。</p>
+</section>
+
+<section id="series-lab">
+  <h2>等比級数の部分和の実験</h2>
+  <p>比 r と項数 N を動かし、有限の和 G<sub>N</sub> の変化を見てください。r が負なら、部分和は極限を挟んで行き来することがあります。|r| が 1 に近いと、収束する場合でも30項では近づき方がゆっくりです。表示される有限個の値が落ち着いて見えることと、収束の証明は分けて考えます。</p>
+  <div data-lab="series"></div>
+  <noscript><p class="note">実験では比 r を −1.2 から 1.2、項数 N を1から30まで動かし、1 + r + … + rᴺ⁻¹ という有限の部分和を計算します。極限 1/(1 − r) を示すのは |r| &lt; 1 の場合だけです。JavaScriptが無効でも、r = 1/2 なら N = 1、2、3 で部分和は 1、1.5、1.75。r = −1 なら 1、0、1 で、極限はありません。</p></noscript>
+  <p class="note">N 項の計算結果はどの r に対しても定まります。無限級数の収束条件を外れた領域でも、有限和が「未定義」になるわけではありません。r = 1 の有限和には、割り算を含む公式の代わりに N を使います。</p>
+</section>
+
+<section id="series-necessary">
+  <h2>級数収束の必要条件と調和級数</h2>
+  <p>級数が収束して Sₙ → S なら、aₙ = Sₙ − Sₙ₋₁ → S − S = 0。したがって、項が 0 に近づかない級数はただちに発散と分かります。これは収束の必要条件であって、十分条件ではありません。</p>
+  <div class="theorem"><h3>調和級数は発散する</h3><p>1 + 1/2 + 1/3 + … の各項は 0 に近づきますが、部分和はどんな上限も超えます。</p></div>
+  <div class="proof"><h3>倍々のまとまりで下から評価する</h3><p>1/2 を一つの組、1/3 + 1/4 を次の組、1/5 + … + 1/8 を次の組とします。一般に分母が 2ᵏ + 1 から 2ᵏ⁺¹ までの組には 2ᵏ 項があり、各項は少なくとも 1/2ᵏ⁺¹。よって一組の和は少なくとも 1/2 です。</p><p>2ᵐ までの部分和は 1 + m/2 以上です。m を増やせばどんな数より大きくなるので、部分和は有限値に収束しません。「項が小さくなる速さ」が重要だと、この反例が教えています。</p></div>
+
+<figure class="concept-figure" id="series-visual-harmonic-groups" data-visual="series-harmonic-groups">
+  <svg class="concept-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 330" role="img" aria-labelledby="series-visual-harmonic-groups-title series-visual-harmonic-groups-desc">
+    <title id="series-visual-harmonic-groups-title">項が小さくなっても、各組の合計は小さくならない</title>
+    <desc id="series-visual-harmonic-groups-desc">調和級数の1項、2項、4項の組分け。各組には、分母の最大値の逆数を使うと少なくとも1/2の下界がある。</desc>
+    <g fill="var(--ink-2)" font-size="22"><text x="13" y="76" text-anchor="start">1項</text><rect x="90" y="45" width="240" height="43" fill="var(--series-1)" fill-opacity="0.10" stroke="var(--ink-2)"/><text x="210" y="74" text-anchor="middle">1/2</text><text x="210" y="116" text-anchor="middle">≥ 1/2</text><text x="13" y="171" text-anchor="start">2項</text><rect x="90" y="140" width="120" height="43" fill="var(--series-1)" fill-opacity="0.10" stroke="var(--ink-2)"/><text x="150" y="169" text-anchor="middle">1/3</text><rect x="210" y="140" width="120" height="43" fill="var(--series-1)" fill-opacity="0.10" stroke="var(--ink-2)"/><text x="270" y="169" text-anchor="middle">1/4</text><text x="210" y="211" text-anchor="middle">≥ 1/2</text><text x="13" y="266" text-anchor="start">4項</text><rect x="90" y="235" width="60" height="43" fill="var(--series-1)" fill-opacity="0.10" stroke="var(--ink-2)"/><text x="120" y="264" text-anchor="middle">1/5</text><rect x="150" y="235" width="60" height="43" fill="var(--series-1)" fill-opacity="0.10" stroke="var(--ink-2)"/><text x="180" y="264" text-anchor="middle">1/6</text><rect x="210" y="235" width="60" height="43" fill="var(--series-1)" fill-opacity="0.10" stroke="var(--ink-2)"/><text x="240" y="264" text-anchor="middle">1/7</text><rect x="270" y="235" width="60" height="43" fill="var(--series-1)" fill-opacity="0.10" stroke="var(--ink-2)"/><text x="300" y="264" text-anchor="middle">1/8</text><text x="210" y="306" text-anchor="middle">≥ 1/2</text></g>
+  </svg>
+  <figcaption>枠は項の組分けを表し、幅を和の値に比例させた図ではありません。2項の組は各項 ≥ 1/4、4項の組は各項 ≥ 1/8。組を一つ増やすたび、少なくとも1/2ずつ加わります。</figcaption>
+</figure>
+</section>
+
+<section id="series-absolute">
+  <h2>絶対収束と比較による評価</h2>
+  <p>∑|aₙ| が収束するとき、元の級数を<strong>絶対収束</strong>と呼びます。このとき ∑aₙ も収束します。理由は、後ろの項の和の絶対値が、同じ範囲の |aₙ| の和以下だからです。絶対値の和の「残り」が小さければ、元の部分和どうしの差も小さくなります。</p>
+  <p>ここでは「項が十分後ろなら部分和どうしの差をどんな精度でも小さくできる数列は収束する」という<a href="limits.html#limits-cauchy">Cauchyの収束判定法</a>を使います。これは<a href="limits.html#limits-completeness">実数の最小上界性</a>から、極限の章で導いた定理です。単なる上界の存在だけから、符号の混じる部分和の収束を結論しているのではありません。</p>
+  <p>級数は収束するが、絶対値を付けると発散する場合を<strong>条件収束</strong>と呼びます。代表例は 1 − 1/2 + 1/3 − 1/4 + …。偶数番目の部分和は増加し、奇数番目の部分和は減少します。どの偶数部分和もどの奇数部分和以下なので、両者は有界です。<a href="limits.html#limits-monotone">最小上界性から示した有界単調列の収束定理</a>で、それぞれに極限があります。隣り合う奇数番目と偶数番目の部分和の差は 1/(2m + 1) → 0 なので、二つの極限は等しくなります。一方、絶対値の級数は調和級数なので発散です。</p>
+  <p>有限和では順序を変えても答えは同じですが、無限和は「どの順で部分和を作るか」も含む定義です。絶対収束なら並べ替えても和は保たれますが、その一般的な証明は先へ譲ります。条件収束では並べ替えで値が変わることがあります。ここではその深い一般定理を証明せず、有限和の交換法則を無条件に移さない、という注意にとどめます。</p>
+</section>
+
+<details class="column" id="series-column">
+  <summary>寄り道［応用］：リンクをたどる寄与にも、幾何級数が現れる</summary>
+  <p>ネットワークの重要度を計算するライブラリ NetworkX には、Web ページの順位づけから生まれた PageRank が実装されています。通常のモデルには、確率 α でリンクをたどり、確率 1 − α で別の出発点へ移る仕組みがあります。延々と同じ場所を巡る動きに、再出発を混ぜるのです。</p>
+  <p>0 &lt; α &lt; 1 とし、再出発後、次の再出発までにちょうど k 回リンクをたどる確率は (1 − α)αᵏ。この重みを k = 0 から全部足すと、幾何級数より 1 になります。N 回までで切れば、残りの重みは αᴺ⁺¹ です。これは単純化した確率モデルでの計算ですが、無限の寄与に有限の合計と打切り誤差を与える役割が見えます。実装では行き先のないページの処理や停止基準も別に必要で、級数の一式だけで全体の正しさを示したわけではありません。</p>
+  <p class="source-note">出典：<a href="https://networkx.org/documentation/stable/_modules/networkx/algorithms/link_analysis/pagerank_alg.html">NetworkX：PageRank の公式実装</a>。</p>
+</details>
+
+<section id="series-exercises">
+  <h2>級数の収束条件と残差の演習</h2>
+  <article class="exercise"><h3>1．何項なら誤差を抑えられるか</h3><p>1 + 1/2 + 1/4 + … を N 項で打ち切り、和との差を 1/16 以下にしたいとします。最小の N はいくつですか。</p><details><summary>ヒント1：初項の添字</summary><p>N 項の最後は (1/2)ᴺ⁻¹ です。</p></details><details><summary>ヒント2：残りの公式</summary><p>誤差は (1/2)ᴺ/(1 − 1/2) = 2¹⁻ᴺ です。</p></details><details><summary>解答</summary><p>2¹⁻ᴺ ≤ 2⁻⁴ には N ≥ 5 が必要なので最小は5項。部分和は 1 + 1/2 + 1/4 + 1/8 + 1/16 = 31/16、和 2 との差は 1/16 です。4項では差が 1/8 になります。</p></details></article>
+  <article class="exercise"><h3>2．必要条件の向き</h3><p>「aₙ → 0 なら ∑aₙ は収束する」と「∑aₙ が収束するなら aₙ → 0」のどちらが正しいか、証明または反例を示してください。</p><details><summary>ヒント1：正しい向きは差を見る</summary><p>aₙ を連続する二つの部分和の差で表します。</p></details><details><summary>ヒント2：逆向きには調和級数</summary><p>aₙ = 1/n を使えます。</p></details><details><summary>解答</summary><p>後者が正しく、Sₙ → S なら aₙ = Sₙ − Sₙ₋₁ → 0。前者は誤りで、1/n → 0 でも調和級数は倍々の組分けによって発散します。必要条件を満たした段階では、収束の判定はまだ終わっていません。</p></details></article>
+  <article class="exercise"><h3>3．負の比と境界</h3><p>∑ₙ₌₀∞ (−1/2)ⁿ と ∑ₙ₌₀∞ (−1)ⁿ について、収束するか、収束するなら絶対収束かを判定してください。</p><details><summary>ヒント1：比の絶対値</summary><p>最初の級数では、絶対値を付けても比 1/2 の幾何級数です。</p></details><details><summary>ヒント2：二番目は部分和を書く</summary><p>1項、2項、3項の和を並べます。</p></details><details><summary>解答</summary><p>最初は絶対収束し、和は 1/(1 + 1/2) = 2/3。絶対値の和は 2 です。二番目は部分和が 1、0、1、0、… で発散し、条件収束でもありません。符号が交互というだけでは十分でなく、項が 0 へ近づく必要があります。</p></details></article>
+</section>
+
+<section id="series-reflection"><h2>自分の言葉で</h2><ol><li>有限の部分和と無限級数の和は、どういう定義で結ばれていますか。</li><li>項が 0 に近づくことだけで収束と言えない理由を、調和級数で説明できますか。</li><li>絶対収束を確かめると、符号の打ち消しに頼る議論と比べて何が保証されますか。</li></ol></section>

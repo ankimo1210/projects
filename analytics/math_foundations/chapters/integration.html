@@ -1,0 +1,118 @@
+<section id="integration-question">
+  <h2>リーマン積分と長方形による近似</h2>
+  <p>高さが場所によって変わる図形の面積を、細い長方形に分けて求めたいとします。例えば y = x² と横軸に挟まれた、0 ≤ x ≤ 1 の部分です。左端の高さを使えば控えめに、右端の高さを使えば多めに見積もれます。分割を細かくすると、二つの見積もりは同じ数へ近づくでしょうか。</p>
+  <p>細かく分ければ必ず一つの値に落ち着くでしょうか。「小片の合計が定まる」を定義して調べます。この章では、実数の有限な閉区間上の<strong>Riemann 積分</strong>を扱います。</p>
+</section>
+
+<section id="integration-sums">
+  <h2>分割・下和・上和</h2>
+  <p>a &lt; b とし、f は [a, b] 全体で定義された有界な実数値関数とします。分割 P は a = x₀ &lt; x₁ &lt; … &lt; xₙ = b という点の並びです。第 i 小区間 [xᵢ₋₁, xᵢ] の幅を Δxᵢ、その区間の値の最大の下界を mᵢ、最小の上界を Mᵢ とします。これらは最小値・最大値として達成されなくても構いません。有界性と実数の完備性により存在します。</p>
+  <p>幅に mᵢ を掛けたものを合計した<strong>下和</strong>を L(P)、幅に Mᵢ を掛けたものを合計した<strong>上和</strong>を U(P) と呼びます。また各小区間の代表点 ξᵢ を一つずつ選び、f(ξᵢ)Δxᵢ を足すものが Riemann 和です。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>L</mi><mo>(</mo><mi>P</mi><mo>)</mo><mo>=</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>m</mi><mi>i</mi></msub><mi>Δ</mi><msub><mi>x</mi><mi>i</mi></msub><mo>≤</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mi>f</mi><mo>(</mo><msub><mi>ξ</mi><mi>i</mi></msub><mo>)</mo><mi>Δ</mi><msub><mi>x</mi><mi>i</mi></msub><mo>≤</mo><mi>U</mi><mo>(</mo><mi>P</mi><mo>)</mo></mrow></math></div>
+  <p>f が非負なら図形の面積に対応し、負の値は横軸より下を負に数える合計になります。</p>
+</section>
+
+<section id="integration-definition">
+  <h2>リーマン可積分性の定義</h2>
+  <div class="theorem">
+    <h3>積分可能性の定義</h3>
+    <p>有界な f について、すべての下和の最小の上界と、すべての上和の最大の下界が一致するとき、f は Riemann 積分可能といいます。その共通の実数 I を積分値とし、∫ₐᵇ f(x) dx と書きます。x は合計する位置を表す変数です。</p>
+    <p>同じ条件は「どんな ε &gt; 0 に対しても、U(P) − L(P) &lt; ε となる分割 P がある」と言い換えられます。各 ε で分割を選び直して構いません。</p>
+  </div>
+  <div class="proof">
+    <h3>言い換えが成り立つ理由</h3>
+    <p>分割へ点を追加すると下和は下がらず、上和は上がりません。二つの分割の点をすべて集めた共通の細分を考えると、どの下和もどの上和以下です。したがって下積分 α = sup L(P)、上積分 β = inf U(P) には α ≤ β が成り立ちます。</p>
+    <p>隙間を任意に小さくできれば 0 ≤ β − α ≤ U(P) − L(P) &lt; ε なので α = β です。逆に α = β = I なら、L(P₁) &gt; I − ε/2 となる分割と U(P₂) &lt; I + ε/2 となる分割を選べます。共通の細分 P では U(P) − L(P) &lt; ε。これで二つの定義が一致します。</p>
+  </div>
+  <p>積分値はどの分割でも L(P) ≤ I ≤ U(P) を満たします。上下の隙間が小さければ、代表点の選び方による揺れも小さくなります。</p>
+</section>
+
+<section id="integration-properties">
+  <h2>積分の線形性・単調性・区間加法性</h2>
+  <div class="theorem"><h3>区間加法性・線形性・単調性</h3><p>積分可能な関数について、a &lt; c &lt; b なら、全区間の積分は二つの部分区間の積分の和です。実数 α、β と積分可能な f、g に対し αf + βg も積分可能で、∫(αf + βg) = α∫f + β∫g。同じ区間で f ≤ g なら ∫f ≤ ∫g です。上下端を省略した積分は、すべて同じ [a, b] を表します。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msubsup><mo>∫</mo><mi>a</mi><mi>b</mi></msubsup><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mi>d</mi><mi>x</mi><mo>=</mo><msubsup><mo>∫</mo><mi>a</mi><mi>c</mi></msubsup><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mi>d</mi><mi>x</mi><mo>+</mo><msubsup><mo>∫</mo><mi>c</mi><mi>b</mi></msubsup><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mi>d</mi><mi>x</mi></mrow></math></div></div>
+  <div class="proof"><h3>共通の細分で比べる</h3><p>まず区間加法性です。分割に c を追加すると、上下の和は左右それぞれの和を足したものになります。全体の隙間が ε 未満なら、各部分の隙間も ε 未満なので、部分区間でも積分可能です。逆に左右で隙間の小さい分割を選び、合わせれば全体でも隙間が小さくなります。全体の積分値と左右の積分値の和は、ともに同じ上下の和の間に入るので、その隙間を 0 へ縮めると等しくなります。</p>
+  <p>次に線形性です。小区間の値の振れについて、αf + βg の振れは |α| と f の振れの積、|β| と g の振れの積の和以下です。f、g の上下和差を共通の細分で任意に小さくできるため、αf + βg も積分可能です。同じ代表点を使う Riemann 和は有限和の線形性を満たします。各和と積分値の差は対応する上下和の隙間以下なので、三つの隙間を 0 へ近づければ積分の線形性が従います。最後に f ≤ g なら、各小区間の下限もこの順序を満たすので Lf(P) ≤ Lg(P)。両側で上限を取れば積分の単調性です。</p></div>
+  <p>定数 C の上下和はどちらも C(b − a) なので、その積分も同じ値です。特に |f| ≤ M なら定数 −M、M と比較して |∫ₐᵇ f| ≤ M(b − a) を得ます。</p>
+  <p>等しい端の積分は 0、b から a までの積分は a から b までの積分に負号を付けたものと<strong>定義</strong>します。三点を昇順に並べた加法式を移項すれば、区間加法性は端点の並びによらず成立します。従って |f| ≤ M なら、任意の二点 x、y について |∫ₓʸ f| ≤ M|y − x| です。これらは原始関数や微積分の基本定理を用いず、上下和から得た規則です。</p>
+</section>
+
+<section id="integration-continuous">
+  <h2>連続関数の可積分性</h2>
+  <div class="theorem">
+    <h3>閉区間で連続なら積分可能</h3>
+    <p>f が [a, b] 全体で連続なら、f はそこで有界であり、Riemann 積分可能です。</p>
+  </div>
+  <div class="proof">
+    <h3>一つの幅で、全区間をまとめて制御する</h3>
+    <p>有界性は<a href="mean-value.html#mean-value-extreme">最大値・最小値定理</a>から従います。また閉区間で連続な関数は<strong>一様連続</strong>です。これは、出力の許容幅 η &gt; 0 に対して、全区間で共通に使える δ &gt; 0 があり、|s − t| &lt; δ なら |f(s) − f(t)| &lt; η となる性質です。</p>
+    <p>この性質も証明しましょう。もし成立しなければ、ある η₀ &gt; 0 に対し、各 n で |sₙ − tₙ| &lt; 1/n かつ |f(sₙ) − f(tₙ)| ≥ η₀ となる二点を選べます。<a href="mean-value.html#mean-value-extreme">平均値の章で証明したコンパクト性</a>から sₙ の収束部分列を取ると、対応する tₙ も同じ点へ収束します。連続性により二つの出力の差は 0 へ近づくので矛盾です。</p>
+    <p>そこで η = ε/{2(b − a)} とし、各幅が δ 未満の分割を選びます。小区間ごとの値の振れ Mᵢ − mᵢ は η 以下なので、U(P) − L(P) ≤ η(b − a) = ε/2 &lt; ε。積分可能性の条件を満たしました。一様連続性は最小上界性から導いた定理で、独立に借りた仮定ではありません。</p>
+  </div>
+  <p>閉区間という条件から、各点の連続性を全区間共通の制御へ変えたことが要点です。</p>
+</section>
+
+<section id="integration-square">
+  <h2>二次関数の積分と平方和</h2>
+  <p>[0, 1] を n 等分します。x² はこの区間で増加するので、左端の値を使う和が下和 Lₙ、右端の値を使う和が上和 Uₙ です。幅は 1/n、高さはそれぞれ (k/n)² で、左端では k = 0, …, n − 1、右端では k = 1, …, n を使います。</p>
+  <div data-lab="integration"></div>
+  <noscript><p class="note">実験の操作には JavaScript が必要です。x² を [0, 1] で積分する場面で、等分数 n を 1 から 64 まで変えます。左端の和と右端の和は、正確な値 1/3 を下と上から挟みます。n = 1 では 0 と 1、n = 2 では 1/8 と 5/8 です。上下の差は 1/n になります。</p></noscript>
+  <p>平方和の公式 1² + … + m² = m(m + 1)(2m + 1)/6 を使うと、Lₙ = 1/3 − 1/(2n) + 1/(6n²)、Uₙ = 1/3 + 1/(2n) + 1/(6n²)。差は 1/n なので積分可能で、両方の和が 1/3 へ収束するため積分値も決まります。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>L</mi><mi>n</mi></msub><mo>≤</mo><msubsup><mo>∫</mo><mn>0</mn><mn>1</mn></msubsup><msup><mi>x</mi><mn>2</mn></msup><mi>d</mi><mi>x</mi><mo>≤</mo><msub><mi>U</mi><mi>n</mi></msub><mo>,</mo><mspace width="1em"/><msubsup><mo>∫</mo><mn>0</mn><mn>1</mn></msubsup><msup><mi>x</mi><mn>2</mn></msup><mi>d</mi><mi>x</mi><mo>=</mo><mfrac><mn>1</mn><mn>3</mn></mfrac></mrow></math></div>
+  <p class="note">平方和の公式は<a href="induction.html">数学的帰納法</a>で確かめられます。m = 1 で成立し、右辺を m + 1 の式へ変えた差は (m + 1)² です。したがって和に次の平方を足す操作と一致します。ここでの面積値は、分割の合計とその極限から得ました。微分との結び付きは<a href="fundamental-theorem.html">微積分の基本定理</a>で確立します。</p>
+</section>
+
+<section id="integration-counterexamples">
+  <h2>不連続関数の可積分性と反例</h2>
+  <p>[0, 1] で、x &lt; 1/2 なら 0、x ≥ 1/2 なら 1 となる関数を考えます。境目で連続でありませんが、境目の直前に幅 η の小区間を作れば、上下の和が違うのはその幅の部分だけです。例えば分割 0、1/2 − η、1/2、1（0 &lt; η &lt; 1/2）では下和 1/2、上和 1/2 + η。差をいくらでも小さくできるので積分可能で、値は 1/2 です。</p>
+  <p>一方、有理数で 1、無理数で 0 となる関数を同じ [0, 1] で考えます。どんな正の幅の実数区間にも有理数と無理数があるという性質を使うと、すべての小区間で mᵢ = 0、Mᵢ = 1。どんな分割でも下和は 0、上和は 1 で、隙間が縮みません。この Dirichlet 関数は有界でも Riemann 積分可能でありません。連続性は十分な条件ですが必要な条件ではなく、有界性だけでは十分でないのです。</p>
+
+<div class="concept-table-wrap" tabindex="0" role="region" aria-label="上下和の隙間は縮められるか">
+  <table class="concept-table" data-visual="integration-integrability">
+    <caption>上下和の隙間は縮められるか</caption>
+    <thead><tr><th scope="col"><span class="table-math">関数（0 ≤ x ≤ 1）</span></th><th scope="col"><span class="table-math">上下和の差</span></th><th scope="col"><span class="table-math">Riemann積分</span></th></tr></thead>
+    <tbody><tr><th scope="row"><span class="table-math">x²</span></th><td><span class="table-math">n等分で 1/n → 0</span></td><td><span class="table-math">可能。値は1/3</span></td></tr><tr><th scope="row"><span class="table-math">x &lt; 1/2</span> で0、それ以外で1</th><td>境目の左を幅ηで囲めば η → 0</td><td><span class="table-math">可能。値は1/2</span></td></tr><tr><th scope="row">有理数で1、無理数で0</th><td>どの分割でも <span class="table-math">1 − 0 = 1</span></td><td>不可能。有界でも隙間が残る</td></tr></tbody>
+  </table>
+</div>
+</section>
+
+<details class="column" id="integration-column">
+  <summary>寄り道［背景］：曲線の面積を、三角形で追い詰めたアルキメデス</summary>
+  <p>アルキメデス『放物線の求積』命題24は、放物線と弦で囲まれた領域の面積が、領域と同じ底辺と高さを持つ内接三角形の面積の 4/3 になることを示します。曲がった境界なのに、答えが三角形との簡単な比になるのは意外ではないでしょうか。</p>
+  <p>証明では残ったすき間へさらに三角形を入れ、近似を重ねます。加わる面積は、最初の面積 A に対し A/4、A/16、…となり、現代の記号なら幾何級数が見えます。ただ、図が埋まって見えることだけで面積を決めるのではありません。原文は目標より大きい場合と小さい場合をそれぞれ退けます。この章の上側・下側の和も、近似の列を作るだけでなく、その間から値が逃げられないようにする設計です。</p>
+  <p class="source-note">出典：<a href="https://abel.math.harvard.edu/archive/archimedes09/pdf/Heath_QP.pdf">Archimedes：Quadrature of the Parabola、Heath 英訳（命題21–24）</a>。</p>
+</details>
+
+<section id="integration-exercises">
+  <h2>可積分性と上下和の演習</h2>
+  <article class="exercise">
+    <h3>1．幅 0.01 の保証</h3>
+    <p>x² の [0, 1] 上の等分による上下の和の差を 0.01 以下にしたいとき、何等分以上にすればよいですか。</p>
+    <details><summary>ヒント1：二つの公式を引く</summary><p>共通の 1/3 と 1/(6n²) が消えます。</p></details>
+    <details><summary>ヒント2：必要な不等式を書く</summary><p>1/n ≤ 0.01 を満たす正の整数 n を求めます。</p></details>
+    <details><summary>解答</summary><p>Uₙ − Lₙ = 1/n なので n ≥ 100、つまり 100 等分以上です。積分値はその二つの数の間にあるため、幅 0.01 以下の区間で値を挟めます。実験の最大 64 等分から先の保証も、式を使えば求められます。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>2．飛びの位置を変える</h3>
+    <p>[0, 1] で、x &lt; 3/4 なら 0、それ以外なら 1 とする関数の積分値を、上下の和で示してください。</p>
+    <details><summary>ヒント1：境目の直前を狭く囲う</summary><p>0、3/4 − η、3/4、1 を分割点にします。</p></details>
+    <details><summary>ヒント2：高さ 1 が確定する幅を数える</summary><p>[3/4, 1] の幅は 1/4 です。</p></details>
+    <details><summary>解答</summary><p>0 &lt; η &lt; 3/4 として示された分割を使うと、下和は 1/4、上和は 1/4 + η。任意の ε &gt; 0 に対して η &lt; ε とできるので積分可能です。積分値はすべての η で 1/4 と 1/4 + η の間に入り、したがって 1/4 です。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>3．代表点によって違う合計</h3>
+    <p>Dirichlet 関数の Riemann 和で、代表点をすべて有理数にする場合と、すべて無理数にする場合の値を比べ、積分できない理由を説明してください。</p>
+    <details><summary>ヒント1：各長方形の高さを見る</summary><p>二つの選び方で、高さはすべて 1、またはすべて 0 になります。</p></details>
+    <details><summary>ヒント2：幅の合計は変わらない</summary><p>どんな分割でも幅を足すと 1 です。</p></details>
+    <details><summary>解答</summary><p>有理数の代表点だけなら和は 1 · (幅の合計) = 1、無理数だけなら 0 です。分割をいくら細かくしてもこの二つの選び方ができ、合計は共通の値に定まりません。上下の和でも、差が常に 1 となるため定義の条件を満たしません。</p></details>
+  </article>
+</section>
+
+<section id="integration-reflection">
+  <h2>自分の言葉で</h2>
+  <ol>
+    <li>上和と下和を使うと、代表点の選び方をまとめて制御できるのはなぜですか。</li>
+    <li>閉区間上の連続性から積分可能性へ進む際、一様連続性は何を保証しましたか。</li>
+    <li>一つの飛びがある関数と Dirichlet 関数では、分割を細かくしたとき何が違いますか。</li>
+  </ol>
+</section>

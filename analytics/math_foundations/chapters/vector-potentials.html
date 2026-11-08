@@ -1,0 +1,68 @@
+<section id="vector-potentials-question">
+  <h2>ポテンシャルと端点の値の差</h2>
+  <p>勾配場の仕事は端点の値の差だけで決まりました。では、与えられた場 F を ∇φ と書けるか、どう判定すればよいでしょう。偏微分の一致は局所的な検査ですが、一本の φ を領域全体へ作れるかどうかには、領域の穴も関わります。</p>
+  <p class="note">復習は<a href="vector-line-integrals.html#vector-line-integrals-gradient">線積分の基本定理</a>、<a href="partial-derivatives.html">偏微分</a>、<a href="hessian-extrema.html">連続な二階偏微分の交換</a>です。本章は回転を表す演算子をまだ使いません。</p>
+</section>
+
+<section id="vector-potentials-equivalence">
+  <h2>ポテンシャル・経路独立性・閉曲線積分</h2>
+  <p>開かつ連結な U ⊂ ℝ³ 上の C¹ 場 F を考えます。φ が C¹ で ∇φ = F を満たすとき、φ を F の<strong>ポテンシャル</strong>と呼びます。ここでは「開連結集合の任意の二点は、その中の区分 C¹ の道（実際は有限折れ線）で結べる」という標準事実を未証明で使います。この条件の下で、次の三つは同値です。</p>
+  <ol><li>U 上にポテンシャル φ が存在する。</li><li>U 内の二点 A、B に対する ∫<sub>A→B</sub>F·dr は、道によらない。</li><li>U 内のすべての閉じた区分 C¹ 曲線 C で ∮<sub>C</sub>F·dr = 0。</li></ol>
+  <div class="proof"><h3>閉じた道を、行きと戻りへ分ける</h3><p>1から2は線積分の基本定理です。2から3は、閉じた道と同じ点にとどまる定数曲線を比べれば、定数曲線の積分が0なので従います。3から2は、A から B への道 C₁ と C₂ を取り、C₁ のあとに −C₂ をつないだ閉曲線を考えます。その積分は ∫C₁F·dr − ∫C₂F·dr = 0 です。</p><p>2から1を示します。基点 a を固定し、φ(x) を a から x への積分と定めます。道は存在し、仮定2により値が一つに決まります。x の十分近くの小球が U に入るので、その中で座標方向の短い線分を足せます。経路独立性から φ(x + heⱼ) − φ(x) = ∫₀ʰFⱼ(x + seⱼ)ds。h で割って h → 0 とすると、連続性により ∂ⱼφ(x) = Fⱼ(x)。これらの偏微分は連続なので φ は C¹ で、∇φ = F です。</p></div>
+  <p>ポテンシャルに定数を加えても勾配は同じです。逆に二つのポテンシャルの差は、任意の二点を結ぶ道に沿う変化が0なので U 全体で定数です。領域が非連結なら、この定数は成分ごとに違って構いません。</p>
+</section>
+
+<section id="vector-potentials-star">
+  <h2>星形領域でのポテンシャルの構成</h2>
+  <p>開集合 U が a ∈ U に関して<strong>星形</strong>であるとは、任意の x ∈ U に対し線分 a + t(x − a)、0 ≤ t ≤ 1 がすべて U に入ることです。凸集合なら任意の基点について星形ですが、星形集合は凸でなくても構いません。星形なら基点と各点を線分で結べるので連結です。</p>
+  <figure class="concept-figure" id="vector-potentials-visual-star" data-visual="vector-potentials-star">
+    <svg class="concept-svg" viewBox="0 0 360 360" role="img" aria-labelledby="vector-potentials-star-title vector-potentials-star-desc">
+      <title id="vector-potentials-star-title">星形領域では基点からの線分が使える</title><desc id="vector-potentials-star-desc">開正方形を破線の境界で示す。内部の基点aから内部の三点へ線分を引き、特にxへ向かう線分を太くする。線分上のtは0から1へ動く。横縦の縮尺は等しい。</desc>
+      <rect x="55" y="45" width="250" height="250" fill="var(--series-1)" fill-opacity="0.08" stroke="var(--ink-2)" stroke-width="2" stroke-dasharray="6 5"/>
+      <path d="M 140 220 L 265 95" stroke="var(--series-1)" stroke-width="4"/><path d="M 140 220 L 85 105" stroke="var(--ink-2)" stroke-width="2"/><path d="M 140 220 L 270 265" stroke="var(--ink-2)" stroke-width="2"/>
+      <g fill="var(--ink)"><circle cx="140" cy="220" r="5"/><circle cx="265" cy="95" r="5"/><circle cx="85" cy="105" r="5"/><circle cx="270" cy="265" r="5"/></g>
+      <g fill="var(--ink)" font-size="22"><text x="117" y="249">a</text><text x="276" y="92">x</text><text x="180" y="30" text-anchor="middle">0 ≤ t ≤ 1</text><text x="180" y="332" text-anchor="middle">a + t(x − a)</text></g>
+    </svg><figcaption>図は凸でもある開正方形の例です。星形の定義が要求するのは、固定した a と各 x を結ぶ線分です。境界は領域に含みません。有限本の線分の図だけで全点についての星形性を証明したわけではありません。</figcaption>
+  </figure>
+  <div class="theorem"><h3>星形領域でのポテンシャル構成</h3><p>U は a に関して星形な開集合、F = (F₁, F₂, F₃) は U 上で C¹ とします。すべての i、j について ∂ᵢFⱼ = ∂ⱼFᵢ なら、次の関数は ∇φ = F を満たします。</p>
+    <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>φ</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><msubsup><mo>∫</mo><mn>0</mn><mn>1</mn></msubsup><mi>F</mi><mo>(</mo><mi>a</mi><mo>+</mo><mi>t</mi><mo>(</mo><mi>x</mi><mo>−</mo><mi>a</mi><mo>)</mo><mo>)</mo><mo>·</mo><mo>(</mo><mi>x</mi><mo>−</mo><mi>a</mi><mo>)</mo><mi>d</mi><mi>t</mi></mrow></math></div>
+  </div>
+  <p>これは a から x への直線の仕事そのものです。経路独立性を先に仮定して式を作ったのではありません。この候補を微分して F へ戻ることを確かめます。</p>
+</section>
+
+<section id="vector-potentials-proof">
+  <h2>ポテンシャル構成の微分と偏微分の対称性</h2>
+  <div class="proof"><h3>小補題：連続な偏微分は、差商を一様に近づける</h3><p>固定した x に対し、線分 K = {a + t(x − a) : 0 ≤ t ≤ 1} は U 内のコンパクト集合です。U が開なので、K の十分細い閉じた管状近傍も U に含められます。x を小さく動かしても対応する線分はこの近傍に入ります。被積分関数 g(x, t) = F(a + t(x − a))·(x − a) とその x に関する偏微分は、その小近傍と [0, 1] の積で連続です。</p><p>固定した x と成分 j に対し、x + seⱼ が上の小近傍に入るよう δ &gt; 0 を選び、G(s, t) = ∂ⱼg(x + seⱼ, t) を閉矩形 [−δ, δ] × [0, 1] 上で考えます。G は連続な二変数関数なので、<a href="double-integrals.html">二重積分で用いた二次元の一様連続性</a>を使えます。一変数の基本定理から、{g(x + heⱼ, t) − g(x, t)}/h = ∫₀¹∂ⱼg(x + θheⱼ, t)dθ。G(θh, t) と G(0, t) の差は t、θ ∈ [0, 1] について一様に0へ行くので、右辺と ∂ⱼg(x, t) の差の絶対値の上限も、t ∈ [0, 1] について一様に0へ行きます。その差を t で積分しても、区間の長さ1を掛けた上限以下。従って ∂ⱼ∫₀¹g(x, t)dt = ∫₀¹∂ⱼg(x, t)dt です。ここで連続偏微分と閉矩形上の二次元の一様連続性を使いました。</p></div>
+  <div class="proof"><h3>線分方向の微分を、t の微分へまとめる</h3><p>d = x − a、q(t) = a + td と書きます。積と連鎖律、および前の補題から、∂ⱼφ(x) は次の式になります。</p>
+    <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mo>∂</mo><mi>j</mi></msub><mi>φ</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><msubsup><mo>∫</mo><mn>0</mn><mn>1</mn></msubsup><mo>[</mo><msub><mi>F</mi><mi>j</mi></msub><mo>(</mo><mi>q</mi><mo>)</mo><mo>+</mo><mi>t</mi><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mn>3</mn></munderover><msub><mi>d</mi><mi>i</mi></msub><msub><mo>∂</mo><mi>j</mi></msub><msub><mi>F</mi><mi>i</mi></msub><mo>(</mo><mi>q</mi><mo>)</mo><mo>]</mo><mi>d</mi><mi>t</mi></mrow></math></div>
+    <p>仮定 ∂ⱼFᵢ = ∂ᵢFⱼ を使えば、角括弧は Fⱼ(q(t)) + t(d/dt)Fⱼ(q(t)) = (d/dt){tFⱼ(q(t))} です。基本定理により ∂ⱼφ(x) = [tFⱼ(a + td)]₀¹ = Fⱼ(x)。F は連続なので φ は C¹、実際には F が C¹ のため φ は C² です。</p>
+  </div>
+  <p>逆に F = ∇φ で F が C¹ なら φ は C² なので、連続な二階偏微分の交換から ∂ᵢFⱼ = ∂ⱼFᵢ は必要です。この成分の一致を、<a href="vector-div-curl.html">第6章</a>で「curl F = 0」とまとめて呼びます。今の証明はその記号にも、GreenやStokesの定理にも依存していません。</p>
+</section>
+
+<section id="vector-potentials-hole">
+  <h2>穴のある領域と大域ポテンシャル</h2>
+  <p>同じ議論は二次元でも成り立ちます。原点を除いた平面 U = ℝ² ∖ {(0, 0)} で、F = (P, Q) = (−y/(x² + y²), x/(x² + y²)) を考えます。この場は U で C¹ で、直接微分すると ∂ᵧP = (y² − x²)/(x² + y²)² = ∂ₓQ。局所の対称性は満たします。</p>
+  <p>しかし単位円 r(t) = (cos t, sin t)、0 ≤ t ≤ 2π 上では F(r(t)) = (−sin t, cos t) = r′(t)。従って ∮F·dr = ∫₀²π1dt = 2π ≠ 0。基本定理より、U 全体でのポテンシャルは存在しません。原点で場を定義したことにしても連続にならず、仮定の穴は埋まりません。</p>
+  <figure class="concept-figure" id="vector-potentials-visual-hole" data-visual="vector-potentials-hole">
+    <svg class="concept-svg" viewBox="0 0 360 510" role="img" aria-labelledby="vector-potentials-hole-title vector-potentials-hole-desc">
+      <title id="vector-potentials-hole-title">curl0でも、穴を回る仕事は消えない</title><desc id="vector-potentials-hole-desc">原点を除いた平面。単位円上の基点a=(1,0)と反対点−aを破線で結ぶと、原点を横切り許された経路でなくなる。円に沿う場と速度の内積は1なので一周2π。原点以外でcurl_zは0でも大域ポテンシャルはない。</desc>
+      <path d="M 40 170 L 320 170" stroke="var(--grid)" stroke-width="2"/><path d="M 180 35 L 180 290" stroke="var(--grid)" stroke-width="2"/>
+      <circle cx="180" cy="170" r="90" fill="none" stroke="var(--series-1)" stroke-width="3"/><line x1="90" y1="170" x2="270" y2="170" stroke="var(--ink)" stroke-width="2" stroke-dasharray="6 5"/><circle cx="180" cy="170" r="7" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/>
+      <path d="M 270 170 L 270 110" stroke="var(--series-2)" stroke-width="4"/><polygon points="270,110 264,122 276,122" fill="var(--series-2)"/>
+      <path d="M 180 80 L 120 80" stroke="var(--series-2)" stroke-width="4"/><polygon points="120,80 132,74 132,86" fill="var(--series-2)"/>
+
+    <circle cx="90" cy="170" r="5" fill="var(--ink)"/><circle cx="270" cy="170" r="5" fill="var(--ink)"/><text x="78" y="268" text-anchor="middle" font-size="22" fill="var(--ink)">−a</text><text x="282" y="268" text-anchor="middle" font-size="22" fill="var(--ink)">a=(1,0)</text><text x="180" y="320" text-anchor="middle" font-size="22" fill="var(--ink)">線分は除外点0を通る</text><text x="180" y="360" text-anchor="middle" font-size="22" fill="var(--ink)">F=(−y,x)/(x²+y²)</text><text x="180" y="400" text-anchor="middle" font-size="22" fill="var(--ink)">局所：curl_z F=0</text><text x="180" y="440" text-anchor="middle" font-size="22" fill="var(--ink)">単位円：F(r)·r′=1</text><text x="180" y="480" text-anchor="middle" font-size="22" fill="var(--ink)">一周：∫₀²π1 dt = 2π</text><line x1="270" y1="170" x2="305" y2="235" stroke="var(--ink-3)" stroke-width="1.5"/><line x1="90" y1="170" x2="55" y2="235" stroke="var(--ink-3)" stroke-width="1.5"/></svg><figcaption>原点の小円は一つの除外点の記号です。破線の直径は、この領域で使えない線分を示します。一般の基点a≠0にも反対点−aがあり、同じ問題が起こります。青い場の矢印は共通倍率で短縮しています。局所の微分条件と、全体の領域条件を同時に検査する例です。</figcaption>
+  </figure>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="ポテンシャルの判定条件と領域の比較"><table class="concept-table" style="min-width:30rem" data-visual="vector-potentials-conditions"><caption>同じ局所条件でも、領域を替えると大域結論が変わる</caption><thead><tr><th scope="col">条件と領域</th><th scope="col">言える結論</th><th scope="col">検算・言えない結論</th></tr></thead><tbody><tr><th scope="row">F=∇φ、F∈C¹、開集合</th><td>成分偏微分が対称。</td><td>φはC²となり混合偏微分を交換できる。</td></tr><tr><th scope="row">偏微分対称、開集合の小球内</th><td>各点の近くにポテンシャル。</td><td>小球は星形。離れた領域まで一つのφになるとは限らない。</td></tr><tr><th scope="row">偏微分対称、開星形領域</th><td>一つの大域ポテンシャルを構成できる。</td><td>基点からの全線分を領域内に置ける。</td></tr><tr><th scope="row">偏微分対称、原点を除いた平面</th><td>局所条件だけでは大域φを保証しない。</td><td>円の仕事2πが反例。穴をまたぐ線分も使えない。</td></tr><tr><th scope="row">全閉曲線の仕事0、開連結領域</th><td>経路独立⇔大域ポテンシャル。</td><td>有限個の閉曲線を試すだけでは「全閉曲線」を確認したことにならない。</td></tr></tbody></table></div>
+  <p>穴のない一般領域に何を仮定すればよいか、という位相の一般論はここでは証明しません。星形は検査しやすい十分条件であって、ポテンシャルが存在するための必要条件ではありません。例えば原点を除いた平面でも、定数場 (1, 0) は φ = x を持ちます。</p>
+</section>
+
+<details class="column" id="vector-potentials-column"><summary>寄り道［数学の見方］：局所検査を全体の結論にする追加情報</summary><p>偏微分の等式は、一点のすぐ近くの変化だけを見ています。一周の仕事は離れた点を順につないだ結果です。星形領域では、すべての点へ同じ作り方で線分を引けるので、局所検査を一つの積分公式へまとめられました。</p><p>反例が教えるのは「対称性は役立たない」ではなく、「領域の情報なしには全体を決めない」という限界です。定理の仮定には、関数の滑らかさと領域の形という異なる二種類の情報があります。</p><p class="source-note">出典：本章の星形構成と原点除外平面の直接計算による比較です。</p></details>
+
+<section id="vector-potentials-exercises"><h2>演習：ポテンシャルの構成と条件</h2>
+  <article class="exercise"><h3>1．星形の公式を実際に使う</h3><p>ℝ³ 上の F = (2xy + z, x², x + 2z) について、基点0の線分公式からポテンシャルを求め、勾配を確認してください。</p><details><summary>ヒント1：線分上へ代入する</summary><p>F(tx, ty, tz)·(x, y, z) = 3t²x²y + 2txz + 2tz² です。</p></details><details><summary>ヒント2：t で積分する</summary><p>∫₀¹3t²dt = 1、∫₀¹2tdt = 1。</p></details><details><summary>解答</summary><p>φ = x²y + xz + z²。偏微分は (2xy + z, x², x + 2z) で F に一致します。ℝ³ は0について星形で、F は C¹。成分の交差偏微分もそれぞれ 2x、1、0 で対応する相手と一致し、構成定理の仮定を満たします。</p></details></article>
+  <article class="exercise"><h3>2．穴と反転</h3><p>本章の原点除外平面の場を、半径 R &gt; 0 の円 r(t) = (R cos t, R sin t)、0 ≤ t ≤ 2π で積分してください。向きを逆にするとどうなりますか。</p><details><summary>ヒント1：分母は R²</summary><p>F(r(t)) = (−sin t/R, cos t/R) です。</p></details><details><summary>ヒント2：速度の R と相殺する</summary><p>r′(t) = (−R sin t, R cos t)。内積を取ります。</p></details><details><summary>解答</summary><p>内積は1なので半径によらず2π、逆向きなら−2πです。R = 0 は曲線が場の定義域に入らないので許されません。R を小さくしても一周の積分が消えないことは、原点まで連続に場を拡張できないことと整合します。</p></details></article>
+  <article class="exercise"><h3>3．星形でなければ必ず失敗するか</h3><p>U = ℝ² ∖ {(0, 0)} で F = (2x, 2y) とします。ポテンシャルと閉曲線の積分を求め、「U が星形でないのでポテンシャルがない」という推論を検討してください。</p><details><summary>ヒント1：二乗和を微分する</summary><p>φ = x² + y² は U でも定義されています。</p></details><details><summary>ヒント2：十分条件と必要条件</summary><p>星形構成が使えないことと、別の方法で φ を作れないことは違います。</p></details><details><summary>解答</summary><p>∇φ = (2x, 2y) なのでポテンシャルは存在し、U 内のすべての閉曲線の積分は0です。星形性は本章の構成定理の十分条件で、必要条件ではありません。領域に穴があると対称性だけで結論は出ませんが、すべての場が失敗するわけでもありません。</p></details></article>
+</section>
+<section id="vector-potentials-reflection"><h2>自分の言葉で</h2><ol><li>経路独立性からポテンシャルを定めるとき、開集合と連結性はそれぞれ何を保証しますか。</li><li>線分公式の微分で、C¹ 性、コンパクトな t 区間、偏微分の対称性をどこで使いましたか。</li><li>原点除外平面の反例は、どの局所条件がどの全体的結論を保証しないことを示しますか。</li></ol></section>

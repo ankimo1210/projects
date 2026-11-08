@@ -1,0 +1,76 @@
+<section id="integration-methods-question">
+  <h2>積分の計算法と適用条件</h2>
+  <p>積分の定義を長方形の和から作り、<a href="fundamental-theorem.html">基本定理</a>で原始関数による計算へ結びました。では、原始関数がすぐ見つからないときはどうするでしょう。微分の合成関数・積の公式を逆向きに読むと、積分の形を変える二つの道具が得られます。公式を当てはめる前に、何をひとまとまりと見るかが大切です。</p>
+  <p>前提は<a href="derivatives.html">微分</a>と基本定理です。この章ではまず有限の閉区間で連続な関数を扱い、最後に無限区間や端で発散する場合へ進みます。計算規則と、積分が有限に定まるかという問題を区別しましょう。</p>
+  <p>計算例に先立ち、正の x に対する実数べき xᵖ の定義と、実数 p についての微分公式 (xᵖ)′ = pxᵖ⁻¹ を一時的に借用します。<a href="elementary-functions.html#elementary-functions-logarithm">初等関数の章</a>で xᵖ = exp(p log x) と定め、指数関数・対数関数と連鎖律からこの公式を回収します。その構成は本章の広義積分を使わないので、依存は循環しません。</p>
+</section>
+
+<section id="integration-methods-substitution">
+  <h2>置換積分法</h2>
+  <p><strong>連続微分可能</strong>とは、微分でき、その導関数も連続であることです。微分可能なら元の関数は自動的に連続です。連続微分可能は、さらに導関数まで連続であることを求める、より強い条件です。この章で閉区間についていうときは、内点では通常の微分、両端では片側の微分を考え、導関数が端まで連続につながるものとします。</p>
+  <div class="theorem"><h3>変数と端を一緒に変える</h3><p>φ が [a, b] で連続微分可能で、f が φ([a, b]) を含む区間で連続なら、次の公式が成り立ちます。φ が単調である必要はありません。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msubsup><mo>∫</mo><mi>a</mi><mi>b</mi></msubsup><mi>f</mi><mo>(</mo><mi>φ</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>)</mo><mi>φ</mi><mo>′</mo><mo>(</mo><mi>x</mi><mo>)</mo><mi>d</mi><mi>x</mi><mo>=</mo><msubsup><mo>∫</mo><mrow><mi>φ</mi><mo>(</mo><mi>a</mi><mo>)</mo></mrow><mrow><mi>φ</mi><mo>(</mo><mi>b</mi><mo>)</mo></mrow></msubsup><mi>f</mi><mo>(</mo><mi>u</mi><mo>)</mo><mi>d</mi><mi>u</mi></mrow></math></div></div>
+  <div class="proof"><h3>同じ原始関数を二通りに使う</h3><p>f の原始関数を H とすれば、連鎖律で (H(φ(x)))′ = f(φ(x))φ′(x)。基本定理から左辺は H(φ(b)) − H(φ(a)) となり、右辺も同じ値です。「du = φ′(x)dx」という書き方はこの関係を覚える略記で、極小量を分数のように勝手に動かす根拠ではありません。</p></div>
+  <p>例えば ∫₀¹ 2x(1 + x²)³ dx では、u = 1 + x² と置きます。2x は内側の微分です。端は x = 0 で u = 1、x = 1 で u = 2。よって ∫₁² u³ du = [u⁴/4]₁² = 15/4 です。変数を変えた後も端を 0、1 のままにすると、別の積分を計算してしまいます。</p>
+  <p class="note">この向きの公式は、φ が折り返しても符号つきで往復分が相殺します。一方、逆関数で x を u の式に解き直す方法では、一対一になる区間を選ぶ必要があります。また φ(x) = x² に x &lt; 0 が含まれるとき、√(x²) は x でなく |x| です。</p>
+  <p>端の順序も大切です。例えば x を 0 から 1 まで動かし、u = 1 − x と置くと、u は 1 から 0 へ減ります。微分の因子の負号と、積分の向きを反転する負号が対応します。新しい端をいつも小さい順に並べると決めつけず、元の左端と右端がそれぞれどこへ写るかを書きましょう。</p>
+
+<div class="concept-grid">
+<figure class="concept-figure" id="integration-methods-visual-increasing-endpoints" data-visual="integration-methods-increasing-endpoints">
+  <svg class="concept-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 280" role="img" aria-labelledby="integration-methods-visual-increasing-endpoints-title integration-methods-visual-increasing-endpoints-desc">
+    <title id="integration-methods-visual-increasing-endpoints-title">u=1+x²では、端が0と1から1と2へ移る</title>
+    <desc id="integration-methods-visual-increasing-endpoints-desc">上段のxは0から1へ、下段のuは1から2へ増える。各端点の対応を縦の矢印で結ぶ。</desc>
+    <g fill="var(--ink-2)" font-size="22"><defs><marker id="integration-methods-increasing-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="var(--ink-2)"/></marker></defs><path d="M 90 80 L 290 80" fill="none" stroke="var(--ink-2)" stroke-width="2" marker-end="url(#integration-methods-increasing-arrow)"/><path d="M 90 220 L 290 220" fill="none" stroke="var(--ink-2)" stroke-width="2" marker-end="url(#integration-methods-increasing-arrow)"/><path d="M 90 110 L 90 190" fill="none" stroke="var(--ink-2)" stroke-width="2" marker-end="url(#integration-methods-increasing-arrow)"/><path d="M 290 110 L 290 190" fill="none" stroke="var(--ink-2)" stroke-width="2" marker-end="url(#integration-methods-increasing-arrow)"/><text x="90" y="255" text-anchor="middle">1</text><text x="290" y="255" text-anchor="middle">2</text><text x="25" y="88" text-anchor="start">x</text><text x="25" y="228" text-anchor="start">u</text><text x="90" y="60" text-anchor="middle">0</text><text x="290" y="60" text-anchor="middle">1</text></g>
+  </svg>
+  <figcaption>u = 1 + x²。元の左端 x = 0 は u = 1、右端 x = 1 は u = 2 へ移ります。変換後は新しい変数の端で積分します。</figcaption>
+</figure>
+<figure class="concept-figure" id="integration-methods-visual-decreasing-endpoints" data-visual="integration-methods-decreasing-endpoints">
+  <svg class="concept-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 280" role="img" aria-labelledby="integration-methods-visual-decreasing-endpoints-title integration-methods-visual-decreasing-endpoints-desc">
+    <title id="integration-methods-visual-decreasing-endpoints-title">u=1−xでは、積分の向きも逆になる</title>
+    <desc id="integration-methods-visual-decreasing-endpoints-desc">上段のxが0から1へ増えると、下段のuは1から0へ減る。交差する対応矢印と左向きの下段矢印を示す。</desc>
+    <g fill="var(--ink-2)" font-size="22"><defs><marker id="integration-methods-decreasing-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="var(--ink-2)"/></marker></defs><path d="M 90 80 L 290 80" fill="none" stroke="var(--ink-2)" stroke-width="2" marker-end="url(#integration-methods-decreasing-arrow)"/><path d="M 290 220 L 90 220" fill="none" stroke="var(--ink-2)" stroke-width="2" marker-end="url(#integration-methods-decreasing-arrow)"/><path d="M 90 110 L 290 190" fill="none" stroke="var(--ink-2)" stroke-width="2" marker-end="url(#integration-methods-decreasing-arrow)"/><path d="M 290 110 L 90 190" fill="none" stroke="var(--ink-2)" stroke-width="2" marker-end="url(#integration-methods-decreasing-arrow)"/><text x="90" y="255" text-anchor="middle">0</text><text x="290" y="255" text-anchor="middle">1</text><text x="25" y="88" text-anchor="start">x</text><text x="25" y="228" text-anchor="start">u</text><text x="90" y="60" text-anchor="middle">0</text><text x="290" y="60" text-anchor="middle">1</text></g>
+  </svg>
+  <figcaption>u = 1 − x。x が 0 → 1 と進むと u は 1 → 0 と進みます。微分の因子は −1。端の順序を逆にする操作でも負号が現れるので、両方を対応させます。</figcaption>
+</figure>
+</div>
+</section>
+
+<section id="integration-methods-parts">
+  <h2>部分積分法</h2>
+  <div class="theorem"><h3>積の微分からの公式</h3><p>u、v が [a, b] で連続微分可能なら、次の式が成り立ちます。角括弧は [uv]ₐᵇ = u(b)v(b) − u(a)v(a) を表します。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msubsup><mo>∫</mo><mi>a</mi><mi>b</mi></msubsup><mi>u</mi><mi>v</mi><mo>′</mo><mi>d</mi><mi>x</mi><mo>=</mo><msubsup><mrow><mo>[</mo><mi>u</mi><mi>v</mi><mo>]</mo></mrow><mi>a</mi><mi>b</mi></msubsup><mo>−</mo><msubsup><mo>∫</mo><mi>a</mi><mi>b</mi></msubsup><mi>u</mi><mo>′</mo><mi>v</mi><mi>d</mi><mi>x</mi></mrow></math></div></div>
+  <div class="proof"><h3>積を微分してから集める</h3><p>(uv)′ = u′v + uv′ の両辺を積分すると、基本定理で [uv]ₐᵇ = ∫ₐᵇ u′v dx + ∫ₐᵇ uv′ dx。右の一項を移すだけです。積の積分を、それぞれの積分の積にしてよいという公式ではありません。</p></div>
+  <p>例として I = ∫₀¹ x√(1 + x)dx を計算します。u = x、v′ = √(1 + x) と選べば、u′ = 1、v = (2/3)(1 + x)³ᐟ²。部分積分で I = 4√2/3 − (2/3)∫₀¹(1 + x)³ᐟ²dx。残りは原始関数 (2/5)(1 + x)⁵ᐟ² を使い、I = 4√2/3 − (4/15)(4√2 − 1) = 4(√2 + 1)/15 です。x を微分して単純にする選択が効きました。</p>
+  <p>役の選び方は一通りではありませんが、新しい積分が簡単になるかで判断します。微分した方が複雑になる関数を u に選ぶと、正しい等式でも計算が遠回りになることがあります。部分積分は答えを自動で出す命令ではなく、元の問題を別の積分へ結び付ける等式です。得た原始関数を最後に微分し直せば、符号や係数を独立に確認できます。</p>
+</section>
+
+<section id="integration-methods-improper">
+  <h2>広義積分と端点での収束</h2>
+  <p>∫₁∞ f(x)dx は、まず有限の R で ∫₁ᴿ f(x)dx を計算し、R → ∞ の<strong>有限な極限</strong>があるときに定めます。∫₀¹ f(x)dx で 0 が特異点なら、ε &gt; 0 として ∫ε¹ f(x)dx の ε → 0+ を考えます。これが広義積分です。無限大を式へ直接代入する操作ではありません。</p>
+  <p>実数 p に対する x⁻ᵖ（x &gt; 0）を調べましょう。冒頭で一時借用した実数べきの微分公式により、p ≠ 1 なら原始関数は x¹⁻ᵖ/(1 − p) です。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msubsup><mo>∫</mo><mn>1</mn><mi>∞</mi></msubsup><mfrac><mn>1</mn><msup><mi>x</mi><mi>p</mi></msup></mfrac><mi>d</mi><mi>x</mi><mtext> が収束</mtext><mo>⇔</mo><mi>p</mi><mo>&gt;</mo><mn>1</mn><mo>,</mo><mspace width="1em"/><msubsup><mo>∫</mo><mn>0</mn><mn>1</mn></msubsup><mfrac><mn>1</mn><msup><mi>x</mi><mi>p</mi></msup></mfrac><mi>d</mi><mi>x</mi><mtext> が収束</mtext><mo>⇔</mo><mi>p</mi><mo>&lt;</mo><mn>1</mn></mrow></math></div>
+  <p>無限側では p &gt; 1 のとき R¹⁻ᵖ → 0 となり、値は 1/(p − 1)。p &lt; 1 では R¹⁻ᵖ → ∞ で発散します。0 側では p &lt; 1 のとき ε¹⁻ᵖ → 0 で値は 1/(1 − p)、p &gt; 1 では発散です。同じ関数でも、どちらの端を問題にするかで条件が逆になります。</p>
+  <p>無限側では減る速さが十分かを問い、零の側では発散の強さが積み重ねに耐えるかを問います。グラフが零へ近づくだけでも、グラフが端で無限に高くなるだけでも、収束の判定には足りません。有限の区間で計算してから極限を取る手順が、この二つの直感を正確な条件へ変えています。</p>
+  <p>境界の p = 1 は両側で発散します。無限側では各区間 [2ᵏ, 2ᵏ⁺¹] で 1/x ≥ 1/2ᵏ⁺¹ なので積分は少なくとも 1/2。区間を増やすたび同じ量以上が加わります。0 側も [2⁻ᵏ⁻¹, 2⁻ᵏ] の積分が少なくとも 1/2。対数の公式をまだ使わずに境界を判定できました。</p>
+  <p class="note">内点で発散する場合は、その点の左右の広義積分を別々に定め、両方が有限な場合だけ足します。∫₋₁¹ 1/x dx を左右対称に打ち消して 0 とする操作は、通常の広義積分の収束を意味しません。</p>
+
+<div class="concept-table-wrap" tabindex="0" role="region" aria-label="同じx⁻ᵖでも、調べる端で収束条件が変わる">
+  <table class="concept-table" style="min-width:30rem" data-visual="integration-methods-improper-ends"><caption>広義積分：同じx⁻ᵖでも端で収束が変わる（R→∞、ε→0+）</caption><thead><tr><th scope="col">指数p</th><th scope="col">無限端：1から∞</th><th scope="col">零端：0から1</th></tr></thead><tbody><tr><th scope="row"><span class="table-math">p=2</span></th><td><span class="table-math">∫₁ᴿx⁻²dx=1−1/R → 1</span></td><td><span class="table-math">∫ε¹x⁻²dx=1/ε−1 → ∞</span></td></tr><tr><th scope="row"><span class="table-math">p=1</span></th><td><span class="table-math">∫₁ᴿdx/x=log R → ∞</span></td><td><span class="table-math">∫ε¹dx/x=−log ε → ∞</span></td></tr><tr><th scope="row"><span class="table-math">p=0</span></th><td><span class="table-math">∫₁ᴿ1dx=R−1 → ∞</span></td><td><span class="table-math">∫₀¹1dx=1</span></td></tr><tr><th scope="row"><span class="table-math">一般のp&gt;1</span></th><td>無限端は収束し、値<span class="table-math">1/(p−1)</span>。</td><td>零端は発散。</td></tr><tr><th scope="row"><span class="table-math">一般のp&lt;1</span></th><td>無限端は発散。</td><td>零端は収束し、値<span class="table-math">1/(1−p)</span>。</td></tr></tbody></table>
+</div>
+</section>
+
+<details class="column" id="integration-methods-column">
+  <summary>寄り道［応用］：無限に広い積分区間を、0から1へ折りたたむ</summary>
+  <p>数値積分プログラム QUADPACK の公開ソースには、無限区間を (0, 1) へ変換してから積分する処理があります。式を簡単にするための置換は、手計算を楽にする技巧にとどまらず、計算機が扱う区間そのものを設計する方法でもあるのです。</p>
+  <p>例えば x = a + (1 − t)/t と置くと、t が 1 から 0 へ近づくにつれ、x は a から無限大へ進みます。dx/dt = −1/t² なので、向きを直した積分では f(a + (1 − t)/t)/t² を使います。ソースにも、この入力の読み替えと t² による割り算が現れます。無限遠は端点 t = 0 へ移ったのであり、困難が消えた保証はありません。そこでの収束と、変換後の関数の振る舞いを確かめることが、置換を使いこなす次の一歩です。</p>
+  <p class="source-note">出典：<a href="https://www.netlib.org/quadpack/dqk15i.f">Netlib QUADPACK：dqk15i.f の変数変換</a>。</p>
+</details>
+
+<section id="integration-methods-exercises">
+  <h2>積分公式と広義積分の演習</h2>
+  <article class="exercise"><h3>1．端も置き換える</h3><p>∫₀² 2x(1 + x²)dx を置換積分で求めてください。</p><details><summary>ヒント1：内側を一つの文字にする</summary><p>u = 1 + x² とします。</p></details><details><summary>ヒント2：端を書き直す</summary><p>x = 0、2 は u = 1、5 に対応します。</p></details><details><summary>解答</summary><p>du に対応する因子は 2x dx なので、積分は ∫₁⁵ u du = [u²/2]₁⁵ = (25 − 1)/2 = 12。元の多項式 2x + 2x³ を積分しても 4 + 8 = 12 です。</p></details></article>
+  <article class="exercise"><h3>2．微分する役を選ぶ</h3><p>∫₀¹ x(1 + x)²dx を、u = x とする部分積分で求めてください。</p><details><summary>ヒント1：残りを積分する</summary><p>v′ = (1 + x)² なら v = (1 + x)³/3 です。</p></details><details><summary>ヒント2：境界項を先に計算する</summary><p>[x(1 + x)³/3]₀¹ = 8/3 です。</p></details><details><summary>解答</summary><p>公式から 8/3 − (1/3)∫₀¹(1 + x)³dx = 8/3 − [(1 + x)⁴/12]₀¹ = 8/3 − 15/12 = 17/12。残りの積分の前に付く負号を保つのが要点です。</p></details></article>
+  <article class="exercise"><h3>3．同じべきでも端が違う</h3><p>∫₀¹ x⁻¹ᐟ²dx と ∫₁∞ x⁻¹ᐟ²dx の収束を、有限区間での計算から判定してください。</p><details><summary>ヒント1：原始関数</summary><p>2√x を微分すると x⁻¹ᐟ² です。</p></details><details><summary>ヒント2：別々の極限</summary><p>前者は 2 − 2√ε、後者は 2√R − 2 を調べます。</p></details><details><summary>解答</summary><p>ε → 0+ では 2 − 2√ε → 2 なので前者は収束し、値は 2。R → ∞ では 2√R − 2 → ∞ なので後者は発散します。p = 1/2 は 0 側の p &lt; 1 を満たしますが、無限側の p &gt; 1 は満たしません。</p></details></article>
+</section>
+
+<section id="integration-methods-reflection"><h2>自分の言葉で</h2><ol><li>置換積分と部分積分は、それぞれどの微分公式を逆に読んでいますか。</li><li>広義積分で「収束」と言う前に、どの有限区間の極限を取りますか。</li><li>左右対称の打ち消しだけでは、広義積分の収束を保証できないのはなぜですか。</li></ol></section>

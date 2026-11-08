@@ -1,0 +1,106 @@
+<section id="graph-coloring-question">
+  <h2>頂点彩色と彩色数</h2>
+  <p>架空の発表会で、同じ参加者が聞きたい二つの発表を、同じ時間帯に置かないようにしたいとします。発表を頂点、同時に置けない二つの発表を辺にすれば、各頂点に時間帯の番号を付ける問題になります。隣接する二点だけは、異なる番号にしなければなりません。</p>
+  <p>全てに違う番号を付ければ条件を守れますが、時間帯が多すぎます。二つで足りる条件は何か。必ず使える個数の上限を、近所の情報だけで保証できるか。この二つの問いを考えます。</p>
+</section>
+
+<section id="graph-coloring-definition">
+  <h2>適正彩色と彩色数</h2>
+  <p>この章も有限単純無向グラフを扱います。頂点へ 1、…、k の番号を割り当て、各辺 uv で c(u) ≠ c(v) となるものを<strong>適正な頂点彩色</strong>、または短く彩色と呼びます。実際の色の代わりに番号でもかまいません。同じ番号の頂点どうしには辺がなく、それぞれ一つの組として扱えます。</p>
+  <p>彩色できる最小の色数を<strong>彩色数</strong> χ(G) とします。非空のグラフでは少なくとも 1、孤立点だけなら 1 です。空のグラフには 0 色で足りるとします。辺が一本でもあれば、両端を分けるため 2 色以上が必要です。どれか一つの彩色を見つけることと、色数が最小だと証明することは、別の作業です。</p>
+</section>
+
+<section id="graph-coloring-bipartite">
+  <h2>二部グラフと奇閉路</h2>
+  <p>頂点全体を、内部には辺のない二つの集合 L、R に分けられるグラフを<strong>二部グラフ</strong>と呼びます。片方が空でもかまいません。L を 1、R を 2 とすれば二色で彩色でき、逆に二色の各組を L、R にすれば二部グラフです。「二部」とは、連結成分が二つあるという意味ではありません。</p>
+  <div class="concept-grid">
+    <figure class="concept-figure" id="graph-coloring-visual-even" data-visual="graph-coloring-even">
+      <svg class="concept-svg" viewBox="0 0 360 370" role="img" aria-labelledby="graph-coloring-even-title graph-coloring-even-desc" fill="var(--ink)" font-size="22">
+        <title id="graph-coloring-even-title">長さ4の閉路は二色で交互に彩色できる</title>
+        <desc id="graph-coloring-even-desc">四角形の閉路ABCD。AとCが色1、BとDが色2。各辺の両端は違う色。文字と番号でも区別している。</desc>
+        <path d="M 70 80 H 290 V 280 H 70 Z" fill="none" stroke="var(--ink-3)" stroke-width="4"/>
+        <g fill="var(--surface)" stroke-width="5"><circle cx="70" cy="80" r="31" stroke="var(--series-1)"/><circle cx="290" cy="80" r="31" stroke="var(--series-2)"/><circle cx="290" cy="280" r="31" stroke="var(--series-1)"/><circle cx="70" cy="280" r="31" stroke="var(--series-2)"/></g>
+        <g text-anchor="middle"><text x="70" y="88">A:1</text><text x="290" y="88">B:2</text><text x="290" y="288">C:1</text><text x="70" y="288">D:2</text><text x="180" y="356">偶数回で、元の色へ</text></g>
+      </svg>
+      <figcaption>自作例 C₄。L = {A, C}、R = {B, D} と分けられます。四本の辺を渡るたびに色を変えると、出発した色へ戻ります。</figcaption>
+    </figure>
+    <figure class="concept-figure" id="graph-coloring-visual-odd" data-visual="graph-coloring-odd">
+      <svg class="concept-svg" viewBox="0 0 360 370" role="img" aria-labelledby="graph-coloring-odd-title graph-coloring-odd-desc" fill="var(--ink)" font-size="22">
+        <title id="graph-coloring-odd-title">三角形は二色では最後の辺が衝突する</title>
+        <desc id="graph-coloring-odd-desc">三角形ABCでAを色1とするとBとCはともに色2になり、辺BCの両端が同じ色になる。BCを破線で強調した、二色彩色の失敗例。</desc>
+        <path d="M 180 70 L 70 280 M 180 70 L 290 280" fill="none" stroke="var(--ink-3)" stroke-width="4"/>
+        <path d="M 70 280 H 290" fill="none" stroke="var(--series-1)" stroke-width="5" stroke-dasharray="9 5"/>
+        <g fill="var(--surface)" stroke-width="5"><circle cx="180" cy="70" r="31" stroke="var(--series-1)"/><circle cx="70" cy="280" r="31" stroke="var(--series-2)"/><circle cx="290" cy="280" r="31" stroke="var(--series-2)"/></g>
+        <g text-anchor="middle"><text x="180" y="78">A:1</text><text x="70" y="288">B:2</text><text x="290" y="288">C:2</text><text x="180" y="356">BC の両端が同じ色</text></g>
+      </svg>
+      <figcaption>自作例 C₃ の二色による失敗。A と隣接する B、C はどちらも色 2 にする必要があり、辺 BC の条件を守れません。三色なら全て違う番号にして彩色できます。二つの図の長さに数量の意味はありません。</figcaption>
+    </figure>
+  </div>
+  <div class="theorem"><h3>二部グラフであることと、奇数長の閉路がないことは同値</h3><p>閉路を一つも持たない木や森も含みます。グラフ全体が連結である必要はありません。</p></div>
+  <div class="proof"><h3>必要性：辺を渡るたびに、左右を入れ替える</h3><p>二部グラフの辺は全て L と R の間にあります。L から一歩なら R、二歩なら L と交互に移ります。出発点へ戻る閉路の長さは偶数でなければなりません。従って奇数長の閉路はありません。</p></div>
+  <div class="proof"><h3>十分性：BFS の距離の偶奇で分ける</h3>
+    <p>各連結成分で根を一つ選び、<a href="discrete-trees.html#discrete-trees-bfs">BFS</a>で辺数の最短距離 d(v) と親の木を作ります。d が偶数の点を L、奇数の点を R に入れます。根だけの成分でも問題ありません。</p>
+    <p>辺 uv があれば、根から u までの最短の道に uv を足して v へ行けるので d(v) ≤ d(u) + 1。逆も同じだから、二つの距離の差は高々 1 です。もし u、v の距離の偶奇が同じなら、この二つの整数は等しくなります。</p>
+    <p>親の木で、根から u と v への二つの道が最後に共通する頂点を z とします。z の先の二つの枝は内部で交わりません。その枝二つと辺 uv を合わせると、頂点の繰り返しがない閉路になります。長さは次の通り奇数です。</p>
+    <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>(</mo><mi>d</mi><mo>(</mo><mi>u</mi><mo>)</mo><mo>−</mo><mi>d</mi><mo>(</mo><mi>z</mi><mo>)</mo><mo>)</mo><mo>+</mo><mo>(</mo><mi>d</mi><mo>(</mo><mi>v</mi><mo>)</mo><mo>−</mo><mi>d</mi><mo>(</mo><mi>z</mi><mo>)</mo><mo>)</mo><mo>+</mo><mn>1</mn><mo>=</mo><mn>2</mn><mo>(</mo><mi>d</mi><mo>(</mo><mi>u</mi><mo>)</mo><mo>−</mo><mi>d</mi><mo>(</mo><mi>z</mi><mo>)</mo><mo>)</mo><mo>+</mo><mn>1</mn></mrow></math></div>
+    <p>u、v は異なる同じ層の点なので z は両方より前にあり、閉路の長さは少なくとも 3 です。奇閉路がないという仮定に反します。従って全ての辺は偶数層と奇数層を結び、L、R で二部に分けられます。成分ごとに作った二つの組を、それぞれまとめれば全体でも成立します。</p>
+  </div>
+  <p>「奇数長の閉路がない」は「閉路がない」より弱い条件です。四角形の閉路は二部グラフですが木ではありません。一方、「三角形がない」だけでは足りません。五角形の閉路は三角形を含まなくても奇閉路なので、二色で彩色できません。</p>
+</section>
+
+<section id="graph-coloring-greedy">
+  <h2>貪欲彩色と最大次数による上界</h2>
+  <p>二色で足りない場合にも、使える色数の簡単な保証があります。頂点が一つ以上あるとし、最大次数を Δ = max deg(v) とします。頂点を好きな順番に並べ、既に彩色した隣接点が使っていない最小の正の番号を付けていく方法を<strong>貪欲彩色（greedy coloring）</strong>と呼びます。</p>
+  <div class="theorem"><h3>貪欲彩色は、どんな順番でも Δ + 1 色以下でできる</h3>
+    <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>χ</mi><mo>(</mo><mi>G</mi><mo>)</mo><mo>≤</mo><mi>Δ</mi><mo>+</mo><mn>1</mn></mrow></math></div>
+  </div>
+  <div class="proof"><h3>禁止される色は、隣の点の個数以下</h3><p>今彩色する頂点 v の隣は高々 Δ 個です。既に彩色された隣が使う異なる色の数も高々 Δ。候補を 1、…、Δ + 1 の Δ + 1 個用意すれば、一つは残ります。その色を選べば、既に彩色した隣との衝突はありません。後から彩色する隣も同じ規則で今の v の色を避けるので、最後まで各辺の条件が守られます。これで適正な彩色が一つ作れるため、最小値 χ もその使用色数以下です。</p></div>
+  <p>この定理は<strong>上限</strong>であって、必ず Δ + 1 色必要という意味ではありません。また貪欲法がいつも最小色数を見つけるという保証でもありません。次の道グラフでは、最大次数は 2、最小色数は 2 ですが、順番によって貪欲法は三色を使います。</p>
+  <figure class="concept-figure" id="graph-coloring-visual-greedy" data-visual="graph-coloring-greedy"><svg class="concept-svg" viewBox="0 0 360 380" role="img" aria-labelledby="graph-coloring-greedy-title graph-coloring-greedy-desc"><title id="graph-coloring-greedy-title">同じ道グラフでも、頂点順序で貪欲法の使用色数が変わる</title><desc id="graph-coloring-greedy-desc">四頂点の道を上下に同じ配置で描く。上はv1,v4,v2,v3順で左から1,2,3,1、三色。下はv1,v2,v3,v4順で1,2,1,2、二色。どちらも隣接色は異なり、最大次数2の上界3を守るが、最小色数は二色。</desc><text x="180" y="29" text-anchor="middle" font-size="22" fill="var(--ink)">順序 v₁,v₄,v₂,v₃</text><line x1="45" y1="87" x2="315" y2="87" stroke="var(--ink-3)" stroke-width="3"/><circle cx="45" cy="87" r="22" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><text x="45" y="95" text-anchor="middle" font-size="22" fill="var(--ink)">1</text><text x="45" y="137" text-anchor="middle" font-size="22" fill="var(--ink)">v₁</text><circle cx="135" cy="87" r="22" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><text x="135" y="95" text-anchor="middle" font-size="22" fill="var(--ink)">2</text><text x="135" y="137" text-anchor="middle" font-size="22" fill="var(--ink)">v₂</text><circle cx="225" cy="87" r="22" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><text x="225" y="95" text-anchor="middle" font-size="22" fill="var(--ink)">3</text><text x="225" y="137" text-anchor="middle" font-size="22" fill="var(--ink)">v₃</text><circle cx="315" cy="87" r="22" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><text x="315" y="95" text-anchor="middle" font-size="22" fill="var(--ink)">1</text><text x="315" y="137" text-anchor="middle" font-size="22" fill="var(--ink)">v₄</text><text x="180" y="171" text-anchor="middle" font-size="22" fill="var(--ink)">貪欲法：3色</text><text x="180" y="215" text-anchor="middle" font-size="22" fill="var(--ink)">順序 v₁,v₂,v₃,v₄</text><line x1="45" y1="265" x2="315" y2="265" stroke="var(--ink-3)" stroke-width="3"/><circle cx="45" cy="265" r="22" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><text x="45" y="273" text-anchor="middle" font-size="22" fill="var(--ink)">1</text><text x="45" y="315" text-anchor="middle" font-size="22" fill="var(--ink)">v₁</text><circle cx="135" cy="265" r="22" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><text x="135" y="273" text-anchor="middle" font-size="22" fill="var(--ink)">2</text><text x="135" y="315" text-anchor="middle" font-size="22" fill="var(--ink)">v₂</text><circle cx="225" cy="265" r="22" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><text x="225" y="273" text-anchor="middle" font-size="22" fill="var(--ink)">1</text><text x="225" y="315" text-anchor="middle" font-size="22" fill="var(--ink)">v₃</text><circle cx="315" cy="265" r="22" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><text x="315" y="273" text-anchor="middle" font-size="22" fill="var(--ink)">2</text><text x="315" y="315" text-anchor="middle" font-size="22" fill="var(--ink)">v₄</text><text x="180" y="351" text-anchor="middle" font-size="22" fill="var(--ink)">貪欲法：2色、最小も2</text></svg><figcaption>同じ P₄ を同じ配置で比べます。上の順序は両端が色1を先に取り、最後のv₃が隣の1と2を避けて3。下は左から進み1、2を交互に使えます。辺があるので一色は不可能、下段が二色彩色を実際に与えるので χ(P₄)=2 です。上段の三色も Δ+1=3 の保証内ですが、最小ではありません。</figcaption></figure>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="具体的グラフの彩色数と最大次数による上限の比較">
+    <table class="concept-table" data-visual="graph-coloring-bounds"><caption>必要な最小値と、必ず足りる上限を分けて読む</caption>
+      <thead><tr><th scope="col"><span class="table-math">グラフ</span></th><th scope="col"><span class="table-math">χ(G)</span></th><th scope="col"><span class="table-math">Δ + 1</span></th><th scope="col"><span class="table-math">最小値の理由</span></th></tr></thead>
+      <tbody>
+        <tr><th scope="row"><span class="table-math">四頂点の道</span></th><td>2</td><td>3</td><td>二部で、辺がある。</td></tr>
+        <tr><th scope="row"><span class="table-math">四角形の閉路</span></th><td>2</td><td>3</td><td>交互の二色で足り、辺があるので一色では足りない。</td></tr>
+        <tr><th scope="row"><span class="table-math">三角形</span></th><td>3</td><td>3</td><td>三頂点が互いに隣接するので、三つとも違う色が必要。</td></tr>
+        <tr><th scope="row">全ての二点間に辺がある四頂点</th><td>4</td><td>4</td><td>四頂点を全て異なる色にする必要がある。</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>下限は「これより少なくはできない」理由、上限は「これだけあれば作れる」理由です。二つが一致したときに、最小色数が確定します。三角形なら下限 3 と上限 3 が一致しますが、四頂点の道の上限 3 だけから最小値を 3 とすることはできません。</p>
+</section>
+
+<details class="column" id="graph-coloring-column">
+  <summary>寄り道［自作モデル］：衝突の輪は、三つ組だけでは見えない</summary>
+  <p>架空の五つの発表 A、B、C、D、E に、AB、BC、CD、DE、EA だけの衝突があるとします。三つの発表が全て互いに衝突する組はありません。それでも五本の閉路が奇数長なので、二時間帯では配置できません。A、B、C、D、E を 1、2、1、2、3 とすれば三時間帯で配置でき、最少は 3 です。</p>
+  <p>ここでは発表の長さは同じで、時間帯は互いに重ならず、衝突は二発表ごとの関係だけで決まると仮定しています。発表者の空き時間、部屋の容量、発表ごとの長さは入れていません。彩色で得た番号が現実の時間割になるには、どの条件をモデルへ入れたかを確認する必要があります。</p>
+  <p class="source-note">出典：本章のために作成した発表会の衝突モデル。実際のイベントのデータではありません。</p>
+</details>
+
+<section id="graph-coloring-exercises">
+  <h2>演習：彩色数の下界と上界</h2>
+  <article class="exercise"><h3>1．三角形がなくても、二色では足りない</h3><p>五頂点の閉路 A–B–C–D–E–A の彩色数を求めてください。三色の例と、二色ではできない理由を両方示してください。</p>
+    <details><summary>ヒント1：輪に沿って交互に置く</summary><p>A を 1 にすると、B、C、D、E は二色では順にどうなりますか。</p></details>
+    <details><summary>ヒント2：最後の頂点だけ三色目にする</summary><p>1、2、1、2、3 と付けたとき、最後の辺 EA も確認します。</p></details>
+    <details><summary>解答</summary><p>奇数長の閉路なので二部グラフでなく、二色では不可能です。直接には A から 1、2、1、2、1 と付けると EA が同色になります。一方 1、2、1、2、3 は五本全ての両端を分ける適正彩色です。下限 3 と上限 3 が一致し、彩色数は 3 です。</p></details>
+  </article>
+  <article class="exercise"><h3>2．同じ道に、二つの順番</h3><p>四頂点の道 v₁–v₂–v₃–v₄ を、最小の使用可能色を選ぶ貪欲法で彩色します。順番 v₁、v₂、v₃、v₄ と、順番 v₁、v₄、v₂、v₃ を比較してください。Δ + 1 の上限に反しますか。</p>
+    <details><summary>ヒント1：まだ色のない隣は、今は色を禁止しない</summary><p>二つ目の順番では両端がどちらも最初の色を使えます。</p></details>
+    <details><summary>ヒント2：最後の頂点の、二つの隣の色を見る</summary><p>二つ目の最後は v₃ で、隣は v₂ と v₄ です。</p></details>
+    <details><summary>解答</summary><p>最初の順番では、左から 1、2、1、2 となり二色です。二つ目では、左から 1、2、3、1 となり三色。最大次数は 2 なので Δ + 1 = 3、どちらも上限内です。貪欲法は常に適正彩色を作りますが、最小色数を達成するかは順番によることが、この例で分かります。</p></details>
+  </article>
+  <article class="exercise"><h3>3．同じ層の辺から、奇閉路を取り出す</h3><p>自作の別例で、辺は RA、RB、AC、BD、CD とします。根 R からの BFS の層を求め、同じ偶奇の層を結ぶ辺と、そこからできる奇閉路を挙げてください。</p>
+    <details><summary>ヒント1：R から近い順に並べる</summary><p>R が 0、A と B が 1、C と D が 2 です。</p></details>
+    <details><summary>ヒント2：C と D の親を根までたどる</summary><p>C–A–R と D–B–R の最後の共通点は R です。</p></details>
+    <details><summary>解答</summary><p>層は R=0、A=B=1、C=D=2。同じ層を結ぶ辺は CD です。親の枝 C–A–R–B–D に CD を足すと R–A–C–D–B–R という長さ 5 の閉路になります。従ってこのグラフは二部グラフではありません。</p></details>
+  </article>
+</section>
+
+<section id="graph-coloring-reflection">
+  <h2>自分の言葉で</h2><ol>
+    <li>二部グラフの二つの組と、BFS の距離の偶奇をどう結びましたか。奇閉路があると何が衝突しますか。</li>
+    <li>Δ + 1 は何の上限ですか。貪欲法の使用色数と最小の彩色数は、いつ違いましたか。</li>
+    <li>時間割を彩色で表すとき、頂点・辺・色は何を意味し、どんな条件はまだ表されていませんか。</li>
+  </ol>
+</section>

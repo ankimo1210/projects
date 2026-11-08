@@ -1,0 +1,112 @@
+<section id="numbers-question">
+  <h2>数の体系の拡張</h2>
+  <p>三つあるものから五つ取り去る。物の個数だけを考えるなら、この計算には答えがありません。しかし「今ある量」と「まだ足りない量」を一緒に記録したければ、答えがないままでは困ります。そこで −2 という数を使う。数を増やす動機は、記号を増やすことではなく、これまで書けなかった関係を書けるようにすることです。</p>
+  <p>ただし、新しい答えを好き勝手につけてよいわけではありません。三つ足してから二つ足すのと、五つ足すのとで結果が違うなら、計算をまとめるたびに意味が変わります。<strong>解ける問題を増やしながら、使い慣れた計算のつながりを保つ。</strong>これが、この章で追う数の拡張の方針です。ここでは自然数に 0 を含めます。</p>
+</section>
+
+<section id="numbers-laws">
+  <h2>分配法則と負の数の積</h2>
+  <p>足す順序を交換してよいこと、括弧の位置を変えてよいこと、掛け算を足し算へ分配してよいこと。普段は意識しないこれらの規則が、拡張後の計算を支えます。特に分配法則は、ばらして計算した結果と、まとめて計算した結果が一致するという約束です。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>a</mi><mo>(</mo><mi>b</mi><mo>+</mo><mi>c</mi><mo>)</mo><mo>=</mo><mi>a</mi><mi>b</mi><mo>+</mo><mi>a</mi><mi>c</mi></math></div>
+  <p>整数では、それぞれの数 a に対して、足すと 0 になる数 −a を用意します。すると、引き算は「反対の数を足すこと」として扱えます。−a は単に見た目にマイナスをつけた記号ではなく、a と打ち消し合うという役割で定まる数です。</p>
+  <div class="theorem">
+    <h3>負の数どうしの積が正になる理由</h3>
+    <p>通常の足し算と掛け算を保ち、分配法則を整数でも使うなら、正の a、b に対して次が必要です。</p>
+    <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mo>(</mo><mo>−</mo><mi>a</mi><mo>)</mo><mo>(</mo><mo>−</mo><mi>b</mi><mo>)</mo><mo>=</mo><mi>a</mi><mi>b</mi></math></div>
+  </div>
+  <div class="proof">
+    <h3>短い証明</h3>
+    <p>まず分配法則より a·0 = a(0 + 0) = a·0 + a·0 なので、両辺から a·0 を引くと a·0 = 0 です。次に、ab + a(−b) = a(b + (−b)) = 0。したがって a(−b) は ab を打ち消す数、つまり −(ab) です。同じ議論で、どんな数 t についても (−a)t = −(at) となります。ここへ t = −b を入れると、(−a)(−b) = −(−(ab)) = ab。反対の反対が元に戻るので、結論が出ます。</p>
+  </div>
+  <p>「負どうしは正」は、覚えやすい語呂を選んだ結果ではありません。すでに便利だった規則を保とうとすると、選び方が絞られるのです。一方で、この証明は分配法則を使っています。新しい計算を定義するときには、何を出発点の約束とし、何をそこから導いたのかを区別する必要があります。</p>
+</section>
+
+<section id="numbers-gaps">
+  <h2>方程式と数の体系：有理数・無理数</h2>
+  <p>整数にして引き算が自由になっても、3x = 1 は解けません。分数を加えた有理数なら、0 でない数で割れます。ただし 0 で割ることはできません。0 の逆数を q とすると 0q = 1 が必要ですが、今確かめた 0q = 0 と両立しないからです。「拡張すれば何でもできる」わけではなく、守る約束によって残る制限もあります。</p>
+  <p>次は、一辺が 1 の正方形の対角線です。三平方の定理から、その長さ x は x² = 2 を満たします。この長さを正確に表したいのに、分数では届きません。</p>
+  <div class="proof">
+    <h3>なぜ √2 は分数でないのか</h3>
+    <p>もし √2 = p/q と書けるなら、正の整数 p、q の共通因数をすべて約分しておきます。p² = 2q² なので p² は偶数です。奇数の平方は奇数ですから、p も偶数。p = 2r と置くと q² = 2r² となり、q も偶数です。しかし p、q がともに偶数なら、まだ 2 で約分できてしまいます。最初の約束と矛盾するので、このような分数は存在しません。</p>
+  </div>
+  <p>実数には √2 のような数も含めます。ただ一つの記号を追加するだけでなく、有理数で近づけてもその中にはない「隙間」を埋めることが大切です。どんな意味で隙間がないのかは、<a href="limits.html#limits-completeness">極限の章で、<strong>完備性</strong>という出発点の性質</a>として扱います。小数を何桁も計算できることと、その値が数として存在することは、別の主張なのです。</p>
+
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="数を広げる動機：次節の複素数も含めた、前の範囲では得られなかった解">
+    <table id="numbers-visual-number-extensions" class="concept-table" style="min-width:46rem" data-visual="numbers-visual-number-extensions"><caption>何を解けるように広げ、どの計算規則を保つか</caption><thead><tr><th scope="col">前の範囲と障害</th><th scope="col"><span style="white-space:nowrap">方程式</span></th><th scope="col">拡張後の解を代入</th><th scope="col">残る注意</th></tr></thead><tbody><tr><th scope="row">自然数では不足分を表せない。</th><td><span class="table-math">x+5=3</span></td><td>整数の−2なら <span class="table-math">−2+5=3</span>。</td><td>自然数はここでは0を含む。</td></tr><tr><th scope="row">整数には3の逆数がない。</th><td><span class="table-math">3x=1</span></td><td>有理数1/3なら <span class="table-math">3·(1/3)=1</span>。</td><td>分母0は許さない。</td></tr><tr><th scope="row">分数だけでは対角線の長さへ届かない。</th><td><span class="table-math">x²=2</span></td><td>実数の <span class="table-math">±√2</span> を二乗すると2。</td><td>無理数である理由は本文の約分の矛盾。</td></tr><tr><th scope="row">実数の平方は負にならない。</th><td><span class="table-math">x²=−1</span></td><td>複素数の <span class="table-math">±i</span> を二乗すると−1。</td><td>実数と同じ大小関係は両立しない。</td></tr><tr><th scope="row">同じ分配法則を保つ全範囲。</th><td><span class="table-math">0x=1</span></td><td>解はない。いつでも <span class="table-math">0x=0</span>。</td><td>数を広げても禁止操作が全部なくなるわけではない。</td></tr></tbody></table>
+  </div><p data-reading-note="numbers-visual-number-extensions" class="note">各行で「前の範囲のどこが足りないか」と「新しい数を入れると本当に式が成り立つか」を比べます。最後の行は拡張では解消しない障害です。表は動機と代入の整理で、各数体系の完全な構成や全ての方程式の解法を示してはいません。</p>
+</section>
+
+<section id="numbers-complex">
+  <h2>複素数の演算と複素平面</h2>
+  <p>実数では平方は負にならないので、x² = −1 は解けません。そこで i² = −1 となる新しい単位 i を用意し、a + bi という形の数を考えます。a、b は実数です。二つの実数を一組にしたものに、次の計算を定義したものが<strong>複素数</strong>です。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mi>i</mi><mo>)</mo><mo>+</mo><mo>(</mo><mi>c</mi><mo>+</mo><mi>d</mi><mi>i</mi><mo>)</mo><mo>=</mo><mo>(</mo><mi>a</mi><mo>+</mo><mi>c</mi><mo>)</mo><mo>+</mo><mo>(</mo><mi>b</mi><mo>+</mo><mi>d</mi><mo>)</mo><mi>i</mi></mrow></math></div>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mi>i</mi><mo>)</mo><mo>(</mo><mi>c</mi><mo>+</mo><mi>d</mi><mi>i</mi><mo>)</mo><mo>=</mo><mo>(</mo><mi>a</mi><mi>c</mi><mo>−</mo><mi>b</mi><mi>d</mi><mo>)</mo><mo>+</mo><mo>(</mo><mi>a</mi><mi>d</mi><mo>+</mo><mi>b</mi><mi>c</mi><mo>)</mo><mi>i</mi></mrow></math></div>
+  <p>積の式は、分配して i² を −1 に置き換えた形です。実数 a は a + 0i として含まれ、実数どうしの計算はそのまま残ります。i を掛けると a + bi は −b + ai へ移るので、平面の点 (a, b) で見ると原点を中心に反時計回りへ 90 度回ります。新しい数は、方程式の答えであると同時に、図形を動かす操作にもなりました。</p>
+  <div data-lab="numbers"></div><p data-reading-note="numbers-primary" class="note">n&gt;0では灰の輪が直前、橙の点が現在、青い弧が最後の1回です。nを一つ進めて、向きだけ90°変わり原点からの長さ1が変わらないことを比べます。n=0と4では位置も一致します。図の有限の観察を一般の証明とはせず、直後の i²,i³,i⁴ の計算へ戻って確認してください。</p>
+  <noscript><p class="note">図の操作には JavaScript が必要です。1 に i を順に掛けると、1 → i → −1 → −i → 1 と四回で戻ります。各段階を平面の点として紙に描いてみてください。</p></noscript>
+  <p>図で四回の回転を観察したら、i² = −1、i³ = −i、i⁴ = 1 と計算して確かめてください。図は予想を助け、計算はその予想が定義から出ることを説明します。</p>
+  <p class="note">拡張には代償もあります。複素数全体には、実数と同じ「大小」を、足し算や正の数どうしの掛け算と両立するようにはつけられません。もしつけられたなら、0 でない i か −i のどちらかが正なので、その平方 −1 も正になるはずです。しかし実数の順序では −1 は負です。数直線の順序を保つことと、i を含む計算を保つことを、すべて同時には要求できないのです。</p>
+</section>
+
+<section id="numbers-absolute-value">
+  <h2>複素数の絶対値・距離と三角不等式</h2>
+  <p>複素数全体に実数と同じ大小を付けられなくても、原点からの距離は測れます。複素数 z = a + bi の<strong>絶対値</strong>を、平面の点 (a, b) の原点からの距離として定めます。a、b は実数です。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mo>|</mo><mi>a</mi><mo>+</mo><mi>b</mi><mi>i</mi><mo>|</mo><mo>=</mo><msqrt><msup><mi>a</mi><mn>2</mn></msup><mo>+</mo><msup><mi>b</mi><mn>2</mn></msup></msqrt></math></div>
+  <p>絶対値は非負の実数で、0 になるのは a = b = 0 のときだけです。実数 a の場合には √(a²) = |a| となり、実数の絶対値と一致します。また |z − w| を二つの複素数 z、w の距離と考えれば、複素数についても「どれほど近いか」を実数で比較できます。</p>
+  <div class="theorem">
+    <h3>積の絶対値と、和の絶対値</h3>
+    <p>任意の複素数 z、w について、|zw| = |z||w| と |z + w| ≤ |z| + |w| が成り立ちます。後者は複素数での三角不等式です。</p>
+  </div>
+  <div class="proof">
+    <h3>積についての短い証明</h3>
+    <p>z = a + bi、w = c + di と書きます。積の定義より zw = (ac − bd) + (ad + bc)i なので、|zw|² = (ac − bd)² + (ad + bc)² です。展開すると交差する二項が消え、a²c² + b²d² + a²d² + b²c² = (a² + b²)(c² + d²) = |z|²|w|² となります。両辺の非負の平方根を取れば |zw| = |z||w| です。z や w が 0 の場合も同じ計算が使えます。</p>
+  </div>
+  <div class="proof">
+    <h3>三角不等式の短い証明</h3>
+    <p>同じ実成分を使います。平方を展開すると、(a² + b²)(c² + d²) − (ac + bd)² = (ad − bc)² ≥ 0 です。したがって |ac + bd| ≤ |z||w|、特に ac + bd ≤ |z||w| となります。よって |z + w|² = (a + c)² + (b + d)² = |z|² + |w|² + 2(ac + bd) ≤ (|z| + |w|)²。両辺は非負なので平方根を取り、|z + w| ≤ |z| + |w| を得ます。</p>
+  </div>
+  <p>実数の場合の<a href="inequalities.html#inequalities-triangle">三角不等式</a>と同じく、和の大きさを各項の大きさの和で押さえられます。繰り返し使えば有限個の和にも使えます。これが、<a href="elementary-functions.html">複素指数の級数</a>で、多数の項が打ち消し合う可能性を残したまま、残り全体の誤差を評価するための道具になります。</p>
+
+  <figure class="concept-figure" id="numbers-visual-complex-modulus" data-visual="numbers-visual-complex-modulus"><svg class="concept-svg" viewBox="0 0 360 360" role="img" aria-labelledby="numbers-visual-complex-modulus-title numbers-visual-complex-modulus-desc"><title id="numbers-visual-complex-modulus-title">原点から同じ距離の二点と、その二点間の距離は別</title><desc id="numbers-visual-complex-modulus-desc">横は実部、縦は虚部。両軸は同じ縮尺。z=3+4iとw=−3+4iの原点距離はどちらも5。一方z−w=6なので二点間距離は6。二本の3-4-5の斜辺と同じ高さの水平差を比較。</desc><defs><marker id="numbers-visual-complex-modulus-w" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--series-1)"/></marker><marker id="numbers-visual-complex-modulus-z" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--series-1)"/></marker></defs><text x="180" y="30" font-size="22" fill="var(--ink)" text-anchor="middle">同じ絶対値でも、同じ点ではない</text><line x1="40" y1="240" x2="314" y2="240" stroke="var(--ink-3)" stroke-width="2"/><line x1="180" y1="292" x2="180" y2="85" stroke="var(--ink-3)" stroke-width="2"/><line x1="114" y1="240" x2="114" y2="152" stroke="var(--ink-3)" stroke-width="2" stroke-dasharray="5 5"/><line x1="246" y1="240" x2="246" y2="152" stroke="var(--ink-3)" stroke-width="2" stroke-dasharray="5 5"/><line x1="114" y1="152" x2="246" y2="152" stroke="var(--series-2)" stroke-width="3" stroke-dasharray="5 5"/><path d="M180 240 L114 152" fill="none" stroke="var(--series-1)" stroke-width="3" marker-end="url(#numbers-visual-complex-modulus-w)"/><path d="M180 240 L246 152" fill="none" stroke="var(--series-1)" stroke-width="3" marker-end="url(#numbers-visual-complex-modulus-z)"/><circle cx="114" cy="152" r="5" fill="var(--series-2)"/><circle cx="246" cy="152" r="5" fill="var(--series-1)"/><text x="90" y="142" font-size="22" fill="var(--ink)">w</text><text x="257" y="142" font-size="22" fill="var(--ink)">z</text><text x="125" y="224" font-size="22" fill="var(--ink)">5</text><text x="224" y="225" font-size="22" fill="var(--ink)">5</text><text x="140" y="132" font-size="22" fill="var(--ink)">6</text><text x="264" y="207" font-size="22" fill="var(--ink)">4</text><text x="114" y="273" font-size="22" fill="var(--ink)" text-anchor="middle">−3</text><text x="246" y="273" font-size="22" fill="var(--ink)" text-anchor="middle">3</text><text x="153" y="274" font-size="22" fill="var(--ink)">O</text><text x="323" y="247" font-size="22" fill="var(--ink)">実</text><text x="190" y="96" font-size="22" fill="var(--ink)">虚</text><text x="180" y="317" font-size="22" fill="var(--ink)" text-anchor="middle">|z|=|w|=5</text><text x="180" y="350" font-size="22" fill="var(--ink)" text-anchor="middle">|z−w|=6</text></svg><figcaption>z=3+4i と w=−3+4i は、横の絶対値3・縦4から原点距離がどちらも5です。それでも点は異なり、水平な差 z−w=6 から二点間距離は6。|z|=|w| は同じ数であることを保証せず、近さを測る量は |z−w| です。両軸は等縮尺。この二点の図だけで、複素数全体に大小関係を付けられないことを証明してはいません。</figcaption></figure>
+</section>
+
+<details class="column" id="numbers-column">
+  <summary>寄り道［応用］：コンピュータの「実数」は、実数そのものではない</summary>
+  <p>Python の公式チュートリアルは、0.1 を普通の二進浮動小数点では正確に保存できないと説明しています。十進法で 1/3 が循環するように、二進法では 1/10 が循環するためです。表示が 0.1 でも、内部では近い二進分数が使われています。</p>
+  <p>有限桁の計算では、実数で成り立つ結合法則にも注意が要ります。通常の倍精度の計算で、(10¹⁶ + (−10¹⁶)) + 1 は 1 ですが、10¹⁶ + ((−10¹⁶) + 1) は 0 になります。後者は途中の 1 が丸めで失われるからです。これは実数をさらに広げた世界ではなく、限られた記憶で近似する別の計算規則です。数の範囲と、数を機械に記録する形式を分けると、数学の法則が壊れたように見える理由が分かります。</p>
+  <p class="source-note">出典：<a href="https://docs.python.org/3/tutorial/floatingpoint.html">Python：Floating-Point Arithmetic: Issues and Limitations</a>。</p>
+</details>
+
+<section id="numbers-exercises">
+  <h2>演習：数の拡張と複素数の演算</h2>
+  <article class="exercise">
+    <h3>1．別の掛け算は作れるか</h3>
+    <p>誰かが「(−2)(−3) = −6 と決めたい」と言いました。他の整数の計算と分配法則を保つと、何が起きますか。</p>
+    <details><summary>ヒント1：打ち消す和を使う</summary><p>(−2)(3 + (−3)) を考えてください。</p></details>
+    <details><summary>ヒント2：二通りで計算する</summary><p>括弧の中を先に計算すると 0。分配すると (−2)·3 + (−2)(−3) です。</p></details>
+    <details><summary>解答</summary><p>一方は (−2)·0 = 0、もう一方は −6 + (−6) = −12 となり、一致しません。通常の計算と分配法則を保つなら (−2)(−3) = 6 が必要です。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>2．積と回転を照合する</h3>
+    <p>(2 + i)i と (2 + i)i² を計算し、点 (2, 1) の 90 度、180 度の回転と対応づけてください。</p>
+    <details><summary>ヒント1：i² を置き換える</summary><p>(2 + i)i = 2i + i² です。</p></details>
+    <details><summary>ヒント2：座標を読む</summary><p>a + bi の座標は (a, b)。180 度回すと二つの座標の符号がともに変わります。</p></details>
+    <details><summary>解答</summary><p>(2 + i)i = −1 + 2i なので (−1, 2)、(2 + i)i² = −2 − i なので (−2, −1) です。どちらも原点からの距離は √5 で変わりません。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>3．0 で割る「便利さ」の代金</h3>
+    <p>新しい数 q を加えて 0q = 1 としたいとします。分配法則と通常の引き算を使うと矛盾することを、自分で説明してください。</p>
+    <details><summary>ヒント1：0 を二つに分ける</summary><p>0q = (0 + 0)q を出発点にします。</p></details>
+    <details><summary>ヒント2：両辺から同じ量を引く</summary><p>分配すると 0q = 0q + 0q。片方の 0q を引くと何が残りますか。</p></details>
+    <details><summary>解答</summary><p>引き算により 0 = 0q が出ます。仮定した 0q = 1 と合わせると 0 = 1 です。したがって通常の規則をすべて保ちながら、0 の逆数だけを追加することはできません。</p></details>
+  </article>
+</section>
+
+<section id="numbers-reflection">
+  <h2>自分の言葉で</h2>
+  <ol>
+    <li>整数、有理数、実数、複素数は、それぞれどんな「答えがない」を解消しますか。</li>
+    <li>新しい数の定義と、その定義から得られる定理は、どう違いますか。</li>
+    <li>複素数で得た自由と、その代わりに手放した実数の性質を一つずつ説明してください。</li>
+  </ol>
+</section>

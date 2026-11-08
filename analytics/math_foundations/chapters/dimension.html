@@ -1,0 +1,138 @@
+<section id="dimension-question">
+  <h2>線形独立・生成と次元</h2>
+  <p><a href="rotation.html">回転の章</a>では、平面の二本の基本の矢印から、すべての矢印を作りました。では三本選べば、平面に三つ目の自由な方向を増やせるでしょうか。矢印を何本並べたかと、互いに頼らず動かせる方向がいくつあるかは、区別する必要があります。</p>
+  <p><a href="vector-spaces.html">ベクトル空間と線形写像</a>の足し算と実数倍を使い、ここでは実数を係数とする有限次元の空間を考えます。座標の選び方によらない「必要な本数」を定め、写像によって失われる自由度を数えるのが目標です。</p>
+</section>
+
+<section id="dimension-basis">
+  <h2>基底と座標の一意性</h2>
+  <p>ベクトル v₁, …, vₘ の実数倍を足したものを<strong>線形結合</strong>、その全体を列の<strong>張る空間（span）</strong>と呼びます。空間 V のすべてのベクトルが作れるなら、この列は V を<strong>生成する</strong>といいます。有限本で生成できる空間を有限次元と呼びます。まだ、その本数が一つに決まるとは主張していません。</p>
+  <p>本章では一本も選ばない空の列も認め、<strong>空の和は零ベクトル 0</strong>とします。したがって空の列が張る空間は {0} です。</p>
+  <p>一方、次の等式が、すべての係数を 0 にしたときにしか成立しない列を<strong>一次独立</strong>と呼びます。それ以外は一次従属です。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>a</mi><mn>1</mn></msub><msub><mi>v</mi><mn>1</mn></msub><mo>+</mo><mo>⋯</mo><mo>+</mo><msub><mi>a</mi><mi>m</mi></msub><msub><mi>v</mi><mi>m</mi></msub><mo>=</mo><mn>0</mn><mspace width="1em"/><mo>⇒</mo><mspace width="1em"/><msub><mi>a</mi><mn>1</mn></msub><mo>=</mo><mo>⋯</mo><mo>=</mo><msub><mi>a</mi><mi>m</mi></msub><mo>=</mo><mn>0</mn></mrow></math></div>
+  <p>一次独立な列に零ベクトルは含まれません。零ベクトルの係数だけを 1、ほかを 0 にすれば、全係数が 0 でないのに和が 0 になるからです。空の列は一次独立とします。</p>
+  <p>両方を満たす列が<strong>基底</strong>です。生成は「足りる」、独立は「余らない」という役割を持ちます。平面の (1, 0), (0, 1), (1, 1) は、どの二本も平行ではありません。しかし三本目は最初の二本の和なので従属です。「どの二本も平行でない」は、三本以上の独立性を保証しません。</p>
+  <div class="theorem">
+    <h3>基底であることと、座標が一意に決まること</h3>
+    <p>固定した有限列が V の基底であることと、V の任意のベクトルが、その列の線形結合としてただ一通りに表せることは同値です。</p>
+  </div>
+  <div class="proof">
+    <h3>短い証明</h3>
+    <p>基底なら生成性が表現の存在を保証します。二通りの表現を引くと、係数の差による線形結合が 0 になります。独立性により差はすべて 0 なので、表現は一致します。逆に、すべてのベクトルに唯一の表現があれば生成性は成立します。特に 0 の表現は、全係数が 0 のものしかないため独立です。</p>
+  </div>
+  <p>座標とは、この順序づけた基底に対する係数の列です。<a href="sets-maps.html">存在と一意性</a>を別々の条件で支えるために、基底には二つの要件が必要だったのです。</p>
+  <div class="proof" id="dimension-basis-existence">
+    <h3>有限生成なら、基底が存在する</h3>
+    <p>V の有限生成列を固定し、空の列から始めます。生成列を順に調べ、今の列で作れないベクトルだけを加えます。追加後に和が 0 となる関係があれば、新しいベクトルの係数が非零の場合は、そのベクトルが元の列で作れてしまい矛盾します。その係数が 0 なら元の列の一次独立性により、ほかの係数もすべて 0 です。したがって一次独立性は保たれます。調べ終わると、加えたベクトルはもちろん、見送ったベクトルも最終的な列で作れます。元の生成列の全要素が作れるので、V を生成します。よって得られた列は基底です。</p>
+  </div>
+
+  <div class="concept-grid">
+    <figure class="concept-figure" id="dimension-visual-too-few" data-visual="dimension-visual-too-few"><svg class="concept-svg" viewBox="0 0 360 360" role="img" aria-labelledby="dimension-visual-too-few-title dimension-visual-too-few-desc"><title id="dimension-visual-too-few-title">独立な一本では、第二成分1へ届かない</title><desc id="dimension-visual-too-few-desc">e1だけの倍数は(t,0)。同じ目標v=(1,1)は横軸の外にあり作れない。後続二図と同じ縮尺。</desc><defs><marker id="dimension-visual-too-few-o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--series-1)"/></marker><marker id="dimension-visual-too-few-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--series-2)"/></marker><marker id="dimension-visual-too-few-k" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--ink)"/></marker></defs><text x="180" y="34" font-size="22" fill="var(--ink)" text-anchor="middle">同じ v=(1,1) を作る</text><line x1="35" y1="245" x2="330" y2="245" stroke="var(--ink-3)" stroke-width="2"/><line x1="85" y1="280" x2="85" y2="65" stroke="var(--ink-3)" stroke-width="2"/><text x="61" y="273" font-size="22" fill="var(--ink)">0</text><path d="M85 245 L210 245" fill="none" stroke="var(--series-1)" stroke-width="3" marker-end="url(#dimension-visual-too-few-o)"/><text x="228" y="278" font-size="22" fill="var(--ink)">e₁</text><line x1="210" y1="120" x2="210" y2="241" stroke="var(--grid)" stroke-width="2" stroke-dasharray="5 5"/><circle cx="210" cy="120" r="5" fill="var(--ink)"/><text x="231" y="112" font-size="22" fill="var(--ink)">v</text><text x="180" y="310" font-size="22" fill="var(--ink)" text-anchor="middle">(t,0) では v を作れない</text><text x="180" y="340" font-size="22" fill="var(--ink)" text-anchor="middle">独立 ○　生成 ×</text></svg><figcaption>目標 v=(1,1) の第二成分は1ですが、e₁ の何倍を取っても第二成分は0です。破線の縦のずれは埋まりません。一本が独立であることと、平面全体を作れることは別です。以下の二枚と同じ目標・同縮尺で比較します。</figcaption></figure>
+    <figure class="concept-figure" id="dimension-visual-basis" data-visual="dimension-visual-basis"><svg class="concept-svg" viewBox="0 0 360 360" role="img" aria-labelledby="dimension-visual-basis-title dimension-visual-basis-desc"><title id="dimension-visual-basis-title">基底二本では、同じ目標への係数が一つに決まる</title><desc id="dimension-visual-basis-desc">前図と同じv=(1,1)へe1で横1、e2で縦1と進む。二成分を合わせる係数は1,1に決まる。一般の(x,y)も係数x,yで一意になる。</desc><defs><marker id="dimension-visual-basis-o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--series-1)"/></marker><marker id="dimension-visual-basis-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--series-2)"/></marker><marker id="dimension-visual-basis-k" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--ink)"/></marker></defs><text x="180" y="34" font-size="22" fill="var(--ink)" text-anchor="middle">同じ v=(1,1) を作る</text><line x1="35" y1="245" x2="330" y2="245" stroke="var(--ink-3)" stroke-width="2"/><line x1="85" y1="280" x2="85" y2="65" stroke="var(--ink-3)" stroke-width="2"/><text x="61" y="273" font-size="22" fill="var(--ink)">0</text><path d="M85 245 L210 245" fill="none" stroke="var(--series-1)" stroke-width="3" marker-end="url(#dimension-visual-basis-o)"/><text x="228" y="278" font-size="22" fill="var(--ink)">e₁</text><line x1="210" y1="120" x2="210" y2="241" stroke="var(--grid)" stroke-width="2" stroke-dasharray="5 5"/><circle cx="210" cy="120" r="5" fill="var(--ink)"/><text x="231" y="112" font-size="22" fill="var(--ink)">v</text><path d="M85 245 L85 120" fill="none" stroke="var(--series-2)" stroke-width="3" marker-end="url(#dimension-visual-basis-b)"/><text x="44" y="172" font-size="22" fill="var(--ink)">e₂</text><line x1="85" y1="120" x2="210" y2="120" stroke="var(--grid)" stroke-width="2" stroke-dasharray="5 5"/><path d="M210 245 L210 120" fill="none" stroke="var(--series-2)" stroke-width="3" marker-end="url(#dimension-visual-basis-b)"/><text x="180" y="310" font-size="22" fill="var(--ink)" text-anchor="middle">(1,1)=e₁+e₂</text><text x="180" y="340" font-size="22" fill="var(--ink)" text-anchor="middle">係数 (1,1)：一通り</text></svg><figcaption>横へ e₁、その先から縦へ e₂ と進むと、前図と同じ v に届きます。二つの成分をそれぞれ1にするため、係数は (1,1) に決まります。一般にも ae₁+be₂=(a,b) なので、任意の点 (x,y) に対して係数 a=x,b=y が存在して一意です。一点の成功を集める代わりに、成分の式が全点を保証します。</figcaption></figure>
+    <figure class="concept-figure" id="dimension-visual-redundant" data-visual="dimension-visual-redundant"><svg class="concept-svg" viewBox="0 0 360 360" role="img" aria-labelledby="dimension-visual-redundant-title dimension-visual-redundant-desc"><title id="dimension-visual-redundant-title">三本目を加えると、同じ点に二通りの係数が生まれる</title><desc id="dimension-visual-redundant-desc">v3=e1+e2を加えた三本。目標v=(1,1)へ横と縦の二段階でもv3一本でも届く。係数1,1,0と0,0,1が同じ点を表すため従属。どの二本も非平行なことだけでは十分でない。</desc><defs><marker id="dimension-visual-redundant-o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--series-1)"/></marker><marker id="dimension-visual-redundant-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--series-2)"/></marker><marker id="dimension-visual-redundant-k" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--ink)"/></marker></defs><text x="180" y="34" font-size="22" fill="var(--ink)" text-anchor="middle">同じ v=(1,1) を作る</text><line x1="35" y1="245" x2="330" y2="245" stroke="var(--ink-3)" stroke-width="2"/><line x1="85" y1="280" x2="85" y2="65" stroke="var(--ink-3)" stroke-width="2"/><text x="61" y="273" font-size="22" fill="var(--ink)">0</text><path d="M85 245 L210 245" fill="none" stroke="var(--series-1)" stroke-width="3" marker-end="url(#dimension-visual-redundant-o)"/><text x="228" y="278" font-size="22" fill="var(--ink)">e₁</text><line x1="210" y1="120" x2="210" y2="241" stroke="var(--grid)" stroke-width="2" stroke-dasharray="5 5"/><circle cx="210" cy="120" r="5" fill="var(--ink)"/><text x="231" y="112" font-size="22" fill="var(--ink)">v</text><path d="M85 245 L85 120" fill="none" stroke="var(--series-2)" stroke-width="3" marker-end="url(#dimension-visual-redundant-b)"/><text x="44" y="172" font-size="22" fill="var(--ink)">e₂</text><line x1="85" y1="120" x2="210" y2="120" stroke="var(--grid)" stroke-width="2" stroke-dasharray="5 5"/><path d="M210 245 L210 120" fill="none" stroke="var(--series-2)" stroke-width="3" marker-end="url(#dimension-visual-redundant-b)"/><path d="M85 245 L210 120" fill="none" stroke="var(--ink)" stroke-width="3" marker-end="url(#dimension-visual-redundant-k)"/><text x="129" y="157" font-size="22" fill="var(--ink)">v₃</text><text x="180" y="310" font-size="22" fill="var(--ink)" text-anchor="middle">係数 (1,1,0) と (0,0,1)</text><text x="180" y="340" font-size="22" fill="var(--ink)" text-anchor="middle">同じ v、二通り</text></svg><figcaption>三本目 v₃=e₁+e₂ を加えると、横・縦の二段階と、斜め一本の道が同じ v へ届きます。係数は (1,1,0) と (0,0,1) の二通り。差を取ると e₁+e₂−v₃=0 という非自明な関係が現れ、生成できても独立ではありません。どの二本も非平行でも、三本全体の重複は残ります。</figcaption></figure>
+  </div>
+</section>
+
+<section id="dimension-exchange">
+  <h2>交換定理と次元の不変性</h2>
+  <p>斜めの二本でも平面の基底にできます。それでも必ず二本でしょうか。見た目で数える代わりに、「独立な列は、生成する列より長くできない」と証明します。</p>
+  <div class="theorem">
+    <h3>交換補題の本数の比較</h3>
+    <p>同じ実ベクトル空間 V において、s₁, …, sₘ が V を生成し、u₁, …, uₙ が一次独立なら、n ≤ m です。</p>
+  </div>
+  <div class="proof">
+    <h3>一本ずつ置き換える証明</h3>
+    <p>n = 0 なら結論は成立します。m = 0 なら V = {0} なので、独立な非空の列はありません。以下では m、n ともに正とします。u₁ は生成列の線形結合です。u₁ は 0 でないので、少なくとも一つの係数が 0 ではありません。その係数の s を左辺に解き出せるため、その s を u₁ に置き換えても V を生成します。</p>
+    <p>一般に u₁, …, uₖ と残りの s で生成できたとします。次の uₖ₊₁ をその列で表すと、残りの s の係数の少なくとも一つは非零です。すべて 0 なら、uₖ₊₁ が先の u の結合になり、独立性に反するからです。非零の係数の s を解き出して置き換えます。もし n &gt; m なら、m 回の置換後には u₁, …, uₘ だけで V を生成します。すると uₘ₊₁ もその結合になり矛盾します。よって n ≤ m。</p>
+  </div>
+  <p>有限生成の V には、前節で示したように<a href="#dimension-basis-existence">基底が存在します</a>。二つの基底の本数を p、q とします。一方を独立列、他方を生成列とすれば p ≤ q。役割を逆にすれば q ≤ p です。したがって p = q。この共通の本数を<strong>次元</strong>と呼び、dim V と書けます。名前をつける前に、選び方に依存しないことを確かめたのです。これは<a href="invariants.html">不変量</a>の一例です。</p>
+</section>
+
+<section id="dimension-extension">
+  <h2>基底の拡張定理</h2>
+  <p>有限生成の V で独立な列を一つ選び、V の有限生成列のベクトルを順に調べます。今の列で作れないものだけを加えます。独立性は保たれます。加えたベクトルの係数が非零の従属関係があれば、それを解いて「作れない」はずのベクトルを作れてしまうからです。最後には元の生成列もすべて作れるので、基底になります。これが<strong>基底の拡張</strong>です。</p>
+  <p>前に示した基底の存在証明は、空の列から始める場合です。また、V の<a href="vector-spaces.html#vector-spaces-subspace">部分空間</a> U でも、今の列で作れない U のベクトルを加えていけば基底を得ます。交換補題により独立列の長さは V の有限生成列の長さ以下なので、追加は必ず有限回で止まります。後で核に基底を選べるのは、このためです。</p>
+  <p class="note">{0} の基底は空の列なので、次元は 0 です。本章の本数の議論と次の次元定理は、有限次元という条件のもとで述べています。</p>
+</section>
+
+<section id="dimension-rank-nullity">
+  <h2>核・像と次元定理</h2>
+  <p>線形写像 T: V → W の<strong>核</strong> ker T は 0 に移る入力全体、<strong>像</strong> im T は実際に得られる出力全体です。核は V の、像は W の<a href="vector-spaces.html#vector-spaces-subspace">部分空間</a>です。核の次元を<strong>退化次数</strong>、像の次元を<strong>階数（rank）</strong>と呼びます。</p>
+  <div class="proof">
+    <h3>核と像が部分空間である理由</h3>
+    <p>T(0) = 0 なので核は 0 を含みます。u、v が核に入り、a、b が実数なら T(au + bv) = aT(u) + bT(v) = 0 なので、核は和と実数倍で閉じています。</p>
+    <p>像も T(0) = 0 を含みます。像の要素 y₁ = T(x₁)、y₂ = T(x₂) に対して、ay₁ + by₂ = T(ax₁ + bx₂) は再び像に入るため、像も和と実数倍で閉じています。</p>
+  </div>
+  <div class="theorem">
+    <h3>次元定理</h3>
+    <p>有限次元の実ベクトル空間の間の任意の線形写像 T: V → W について、次が成り立ちます。</p>
+    <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi mathvariant="normal">dim</mi><mi>V</mi><mo>=</mo><mi mathvariant="normal">dim</mi><mo>(</mo><mi mathvariant="normal">ker</mi><mi>T</mi><mo>)</mo><mo>+</mo><mi mathvariant="normal">dim</mi><mo>(</mo><mi mathvariant="normal">im</mi><mi>T</mi><mo>)</mo></mrow></math></div>
+  </div>
+  <div class="proof">
+    <h3>核の基底から出発する証明</h3>
+    <p>前節によって核に基底 k₁, …, kᵣ を選び、それを V の基底 k₁, …, kᵣ, v₁, …, vₛ へ拡張できます。任意の入力をこの基底で表して T を作用させると、k の項は消えます。したがって T(v₁), …, T(vₛ) は像を生成します。</p>
+    <p>これらの像の線形結合が 0 なら、同じ係数で作った v の結合は核に入るので、k の結合でも表せます。両者を引くと V の基底の従属関係になり、全係数は 0 です。よって T(v₁), …, T(vₛ) は独立で、像の基底です。核の次元は r、像の次元は s、V の次元は r + s なので結論が出ます。</p>
+  </div>
+  <p>例えば T(x, y, z) = (x + y, z) では、核は (t, −t, 0) 全体で、基底は (1, −1, 0) の一本です。任意の出力 (a, b) は入力 (a, 0, b) から得られるため、像は ℝ²。階数 2 と退化次数 1 の和は、入力空間の次元 3 です。</p>
+  <p>同じ出力を持つ二つの入力の差は核に入ります。出力に対応する入力 x₀ が一つあれば、その出力を持つ入力全体は x₀ + ker T です。「失われる情報」は、ここでは区別できなくなる入力の方向を意味します。像の次元は、出力欄の数や情報量のビット数とは別物です。基底を変えて座標を書き直しても、空間・核・像の次元は変わりません。次の<a href="determinants.html">行列式の章</a>では、平面がつぶれるかどうかを面積から調べます。</p>
+
+  <div class="concept-grid">
+    <figure class="concept-figure" id="dimension-visual-projection-kernel" data-visual="dimension-visual-projection-kernel">
+      <svg class="concept-svg" viewBox="0 0 360 310" role="img" aria-labelledby="dimension-visual-projection-kernel-title dimension-visual-projection-kernel-desc">
+        <title id="dimension-visual-projection-kernel-title">核の方向の差は出力に現れず、同じ出力の入力が並ぶ</title>
+        <desc id="dimension-visual-projection-kernel-desc">T(x,y)=(x,0)の入力図。核は縦軸。x=2上の(2,2),(2,1),(2,0)は差が核に入り、出力図の同一点(2,0)へ移る。図は平面から平面で本文の三次元例とは異なる。</desc>
+        <line x1="25" y1="250" x2="330" y2="250" stroke="var(--ink-2)" stroke-width="3" /><polygon points="330,250 320.99,254.339 320.99,245.661" fill="var(--ink-2)"/><line x1="95" y1="290" x2="95" y2="25" stroke="var(--series-2)" stroke-width="3" /><polygon points="95,25 99.3388,34.0097 90.6612,34.0097" fill="var(--series-2)"/><text x="80" y="279" text-anchor="middle" fill="var(--ink)" font-size="22" >0</text><text x="137" y="43" text-anchor="middle" fill="var(--ink)" font-size="22" >ker T</text><line x1="235" y1="65" x2="235" y2="275" stroke="var(--series-1)" stroke-width="3" stroke-dasharray="7 5"/><circle cx="235" cy="110" r="4" fill="var(--ink)"/><text x="165" y="90" text-anchor="start" fill="var(--ink)" font-size="22" >(2, 2)</text><circle cx="235" cy="180" r="4" fill="var(--ink)"/><text x="165" y="160" text-anchor="start" fill="var(--ink)" font-size="22" >(2, 1)</text><circle cx="235" cy="250" r="4" fill="var(--ink)"/><text x="165" y="230" text-anchor="start" fill="var(--ink)" font-size="22" >(2, 0)</text><text x="284" y="294" text-anchor="middle" fill="var(--ink)" font-size="22" >x = 2</text>
+      </svg>
+      <figcaption>破線 x=2 上の三つの入力は、縦方向だけ違います。その差はどれも核の方向 (0,y) なので、次の図では同じ出力 (2,0) に重なります。図は T(x,y)=(x,0) の平面の例です。三点だけでなく同じ縦線の全点が重なることは、式に y が現れない理由で確かめます。</figcaption>
+    </figure>
+    <figure class="concept-figure" id="dimension-visual-projection-image" data-visual="dimension-visual-projection-image">
+      <svg class="concept-svg" viewBox="0 0 360 310" role="img" aria-labelledby="dimension-visual-projection-image-title dimension-visual-projection-image-desc">
+        <title id="dimension-visual-projection-image-title">出力先の次元と実際の像の次元は違う</title>
+        <desc id="dimension-visual-projection-image-desc">T(x,y)=(x,0)の出力図。入力のx=2の三点が一点(2,0)へ重なる。像は横軸だけで一次元、核の縦方向一次元と合わせて入力二次元になる。一般定理の証明は基底による。</desc>
+        <line x1="25" y1="250" x2="330" y2="250" stroke="var(--series-1)" stroke-width="3" /><polygon points="330,250 320.99,254.339 320.99,245.661" fill="var(--series-1)"/><line x1="95" y1="290" x2="95" y2="25" stroke="var(--ink-2)" stroke-width="3" /><polygon points="95,25 99.3388,34.0097 90.6612,34.0097" fill="var(--ink-2)"/><text x="80" y="279" text-anchor="middle" fill="var(--ink)" font-size="22" >0</text><text x="263" y="284" text-anchor="middle" fill="var(--ink)" font-size="22" >im T</text><circle cx="235" cy="250" r="4" fill="var(--ink)"/><text x="205" y="230" text-anchor="start" fill="var(--ink)" font-size="22" >(2, 0)</text><text x="220" y="90" text-anchor="middle" fill="var(--ink)" font-size="22" >T(x, y) = (x, 0)</text><text x="225" y="145" text-anchor="middle" fill="var(--ink)" font-size="22" >y の違いが消える</text>
+      </svg>
+      <figcaption>入力図の三点が、こちらの一点 (2,0) に重なります。y の自由度一つは核へ消え、x の自由度一つは横軸の像に残ります。図の T(x,y)=(x,0) では「入力2次元＝核1次元＋像1次元」。出力先は平面でも、実際に届く像は一次元です。本文の ℝ³→ℝ² の例と区別し、一般の次元定理は本文の基底による証明へ戻ります。</figcaption>
+    </figure>
+  </div>
+</section>
+
+<details class="column" id="dimension-column">
+  <summary>寄り道［応用］：三つの色成分を、一つの明るさへ写すと何が消えるか</summary>
+  <p>Web の読みやすさを扱う W3C の WCAG は、sRGB の色から相対輝度を L = 0.2126R + 0.7152G + 0.0722B と計算します。ただし R、G、B は、画面の sRGB 値をそのまま入れるのでなく、仕様の非線形な式で先に線形化した値です。この準備の後で、三つの成分を一つの量へまとめています。</p>
+  <p>この式を実数ベクトル空間 ℝ³ 全体の写像へ延長して見ると、像は1次元で、次元定理から核は2次元です。例えば変化 (0.7152, −0.2126, 0) は L を変えません。同じ相対輝度でも異なる色があり、一個の数だけから三つの色成分へは戻せないのです。実際の色の範囲 [0, 1]³ 自体は、負の実数倍などで外へ出るためベクトル空間ではありません。数学の空間へ広げて失う方向を調べ、現物の範囲へ戻して解釈しています。</p>
+  <p class="source-note">出典：<a href="https://www.w3.org/TR/WCAG22/#dfn-relative-luminance">W3C WCAG 2.2：relative luminance の定義</a>。</p>
+</details>
+
+<section id="dimension-exercises">
+  <h2>演習：基底・核・像</h2>
+  <article class="exercise">
+    <h3>1．三本の矢印の座標は一意か</h3>
+    <p>平面の列 (1, 0), (0, 1), (1, 1) は生成列ですか。基底ですか。(1, 1) の表し方を二通り示してください。</p>
+    <details><summary>ヒント1：最初の二本</summary><p>任意の (x, y) を、最初の二本の実数倍で作れます。</p></details>
+    <details><summary>ヒント2：三本目を使う</summary><p>三本目は、最初の二本を足したものです。</p></details>
+    <details><summary>解答</summary><p>生成列ですが、(1, 0) + (0, 1) − (1, 1) = 0 という非自明な関係があるため独立でなく、基底ではありません。(1, 1) の係数は (1, 1, 0) と (0, 0, 1) の二通りに選べます。生成性だけでは座標の一意性が足りません。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>2．斜めの基底で読む</h3>
+    <p>b₁ = (1, 1)、b₂ = (1, −1) が ℝ² の基底であることを示し、(3, 1) の座標を求めてください。</p>
+    <details><summary>ヒント1：係数と成分</summary><p>係数を x、y とすれば、xb₁ + yb₂ = (x + y, x − y) です。</p></details>
+    <details><summary>ヒント2：任意の出力から解く</summary><p>任意の出力を (p, q) と書き、x + y = p、x − y = q を足す場合と引く場合を考えます。</p></details>
+    <details><summary>解答</summary><p>任意の (p, q) に対し x = (p + q)/2、y = (p − q)/2 が唯一の解です。よって前の同値条件から基底です。(3, 1) の座標は (2, 1)。通常の座標とは違いますが、基底の本数と次元は 2 のままです。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>3．二つの出力欄は、二次元か</h3>
+    <p>S(x, y, z) = (x + y, 2x + 2y) の核と像の基底を求め、次元定理を確かめてください。</p>
+    <details><summary>ヒント1：0 になる条件</summary><p>x + y = 0 だけで両成分が 0 になります。z には制限がありません。</p></details>
+    <details><summary>ヒント2：像の形</summary><p>a = x + y と置くと、出力は (a, 2a) です。</p></details>
+    <details><summary>解答</summary><p>核は (t, −t, z) 全体なので、基底は (1, −1, 0), (0, 0, 1)。像は (a, 2a) 全体で、任意の a は入力 (a, 0, 0) から得られ、基底は (1, 2) です。退化次数 2、階数 1 で、3 = 2 + 1。出力が二成分でも、像は直線で一次元です。</p></details>
+  </article>
+</section>
+
+<section id="dimension-reflection">
+  <h2>自分の言葉で</h2>
+  <ol>
+    <li>生成性と独立性は、座標の存在と一意性をそれぞれどう支えますか。</li>
+    <li>交換補題の置換を続けると、なぜ基底の本数が選び方に依存しないと分かりますか。</li>
+    <li>出力欄の数、像の次元、核の次元は、それぞれ何を数えていますか。</li>
+  </ol>
+</section>

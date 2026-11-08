@@ -1,0 +1,93 @@
+<section id="lagrange-question">
+  <h2>等式制約下の極値問題</h2>
+  <p>円周の上だけを動きながら f(x, y) = x + 2y を大きくしたいとします。平面全体なら勾配 (1, 2) に沿って増やせますが、その方向へ進むと円周から外れるかもしれません。動ける<strong>接線方向</strong>に、増やす余地がなくなるのはどこでしょうか。</p>
+  <p>接線と勾配の直交から Lagrange の乗数方程式を導きます。方程式が与えるのは極値の<strong>候補</strong>です。最大・最小の存在や、候補が実際に最適であることは、別に確かめます。</p>
+</section>
+
+<section id="lagrange-regular-curve">
+  <h2>正則な曲線による制約の表示</h2>
+  <p>開区間 I 上の C¹ 曲線 γ : I → ℝ² を考えます。γ の二成分がともに C¹ で、t₀ ∈ I、γ(t₀) = p、γ′(t₀) ≠ 0 のとき、その点で<strong>正則なパラメータ曲線</strong>と呼びます。速度が非零なので、進む接線方向が定まります。</p>
+  <p>例えば円周は γ(t) = (cos t, sin t)、t ∈ ℝ と書けます。γ′(t) = (−sin t, cos t) の長さは常に 1 なので、全ての点で正則です。t₀ は開区間の内点とし、道の始点・終点だけの片側の極値は、以下の必要条件には含めません。</p>
+</section>
+
+<section id="lagrange-tangent-necessary">
+  <h2>曲線上の極値と接線方向の必要条件</h2>
+  <div class="theorem"><h3>明示された曲線に沿う必要条件</h3><p>γ が t₀ で正則、γ(t₀) = p、f が p の開近傍で定義され p で全微分可能とします。f ∘ γ が t₀ で局所最大または局所最小なら、∇f(p) · γ′(t₀) = 0 です。曲線の像の上での局所極値なら、この仮定を満たします。</p></div>
+  <div class="proof"><h3>一変数の極値に戻す</h3><p>f ∘ γ は一変数の関数です。極値の左右の差商の符号から、その両側微分は 0 です。<a href="gradient.html#gradient-level-tangent">曲線に沿う連鎖律</a>により、その微分は ∇f(p) · γ′(t₀)。従って接線方向の変化率が消えます。曲線の像の局所極値から合成の局所極値が従うのは、γ の連続性によって t が t₀ に近ければ γ(t) も p に近いからです。</p></div>
+</section>
+
+<section id="lagrange-multiplier">
+  <h2>ラグランジュの未定乗数法</h2>
+  <div class="theorem"><h3>与えた正則曲線上の Lagrange の必要条件</h3><p>前節の仮定に加え、g が p で全微分可能、曲線上で g(γ(t)) = c、n = ∇g(p) ≠ 0 とします。このとき、ある実数 λ が存在して次を満たします。</p>
+    <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>∇</mo><mi>f</mi><mo>(</mo><mi>p</mi><mo>)</mo><mo>=</mo><mi>λ</mi><mo>∇</mo><mi>g</mi><mo>(</mo><mi>p</mi><mo>)</mo><mo>,</mo><mspace width="1em"/><mi>g</mi><mo>(</mo><mi>p</mi><mo>)</mo><mo>=</mo><mi>c</mi></mrow></math></div>
+  </div>
+  <div class="proof"><h3>二成分の代数で平行を示す</h3><p>g ∘ γ が一定なので、連鎖律から n · γ′(t₀) = 0。一方 f の極値から ∇f(p) · γ′(t₀) = 0 です。n = (n₁, n₂) ≠ 0 に直交する非零のベクトルは、γ′(t₀) = α(−n₂, n₁)、α ≠ 0 と書けます。例えば n₁ ≠ 0 なら直交式から第一成分を第二成分で表せます。n₁ = 0 なら n₂ ≠ 0 なので第二成分が 0 となり、同じ表現です。</p><p>q = ∇f(p) とすれば、q · (−n₂, n₁) = 0、すなわち q₂n₁ − q₁n₂ = 0。従って q は n の実数倍で、λ = (q · n)/‖n‖² と取れます。q = 0 でも λ = 0 とすれば成立します。q では割りません。ここまでで証明したのは、<strong>与えられた正則曲線に沿う必要条件</strong>です。</p></div>
+  <p>λ を<strong>Lagrange の乗数</strong>と呼びます。制約を書き換えると値も変わります。例えば g を 2g にすれば同じ制約集合でも乗数は半分です。最適点の座標や目的関数値とは別の量です。</p>
+</section>
+
+<section id="lagrange-level-set-borrow">
+  <h2>陰関数定理と正則なレベル集合</h2>
+  <div class="note"><h3>ここだけ未証明で借りる：陰関数定理</h3><p>g が p = (a, b) の近傍で C¹、g(p) = c、gᵧ(p) ≠ 0 なら、ある p 周りの小矩形内のレベル集合 g = c は、一意な C¹ 関数 y = ψ(x) のグラフとして表せます。gₓ(p) ≠ 0 なら x、y を交換します。これは陰関数定理の二変数・一方程式の場合です。グラフの存在・一意性・C¹ 性の完全証明は本章では行いません。</p></div>
+  <p>この借用によって γ(x) = (x, ψ(x)) を取れます。γ′ = (1, ψ′) ≠ 0 なので正則です。「勾配が非零だから曲線がある」という部分は、前節の内積の証明だけでは出てこず、この定理に依存します。</p>
+  <div class="theorem"><h3>借用を含む、一般の正則レベル集合への拡張</h3><p>f、g が p の近傍で C¹、p が制約集合 g = c 上の局所極値、∇g(p) ≠ 0 なら、∇f(p) = λ∇g(p) を満たす実数 λ が存在します。</p></div>
+  <div class="proof"><h3>借りた曲線へ、証明済みの必要条件を適用する</h3><p>非零の ∇g の少なくとも一成分は非零なので、陰関数定理で上記の正則なグラフ曲線を得ます。C¹ から f、g は全微分可能です。制約上の局所極値はこの曲線上でも局所極値なので、前節で証明した必要条件を使えます。</p></div>
+  <p>以下の円周の主例と演習は、円周の明示曲線や直接の不等式で検算でき、この借用を使わなくても読めます。</p>
+</section>
+
+<section id="lagrange-candidates">
+  <h2>乗数方程式と大域的な極値の保証</h2>
+  <p>f = x + 2y、g = x² + y²、制約 g = 1 を考えます。円周上では ∇g = (2x, 2y) ≠ 0。明示した円周は正則なので必要条件を適用できます。</p>
+  <div class="proof"><h3>まず乗数方程式を解く</h3><p>(1, 2) = λ(2x, 2y) と x² + y² = 1 を連立します。λ = 0 は最初の式に矛盾するため、x = 1/(2λ)、y = 1/λ。制約へ戻すと 5/(4λ²) = 1 なので λ = ±√5/2、候補は p = ±(1, 2)/√5。値はそれぞれ ±√5 です。これだけでは、一般に候補が極値であるとも、全体の最大・最小とも結論できません。</p></div>
+  <div class="proof"><h3>別の不等式で全体を保証する</h3><p><a href="gradient.html#gradient-steepest">Cauchy–Schwarz 不等式</a>により、円周全体で |x + 2y| ≤ √5√(x² + y²) = √5。候補で両端を実際に達成するので、最大値 √5 は (1, 2)/√5 で、最小値 −√5 は −(1, 2)/√5 で取ります。値の存在は達成点を示して確認したので、一般の最大最小定理を新たに借りる必要もありません。</p></div>
+  <div data-lab="multivariable-constraint"></div>
+  <noscript><p class="note">実験の操作には JavaScript が必要です。初期 θ = 0 の p = (1, 0) では f = 1、単位接線は (0, 1)、接線方向変化率は 2。最大点 p = (1, 2)/√5 では f = √5、接線方向変化率は 0、乗数 λ = √5/2 です。</p></noscript>
+  <p class="note">任意の円周上の点で q = ∇f、n = ∇g とし、λ<sub>proj</sub> = (q · n)/‖n‖² と置けば、q の法線への射影係数を計算できます。これは常に定義できる係数で、最適点の乗数方程式が解けたことを意味しません。残差 q − λ<sub>proj</sub>n は、単位接線 T = (−y, x) と接線変化率 −y + 2x の積です。残差が厳密に 0 の解析的な候補は本文で求め、浮動小数点の「約 0」だけで極値と判定しません。</p>
+</section>
+
+<section id="lagrange-failures">
+  <h2>乗数法の適用条件と反例</h2>
+  <div class="note"><h3>正則性を落とすと、極値でも方程式を満たさない</h3><p>g = x² + y² = 0 の制約集合は原点だけです。f = x の制約上の最大値も最小値も 0。しかし ∇f(0) = (1, 0)、∇g(0) = 0 なので (1, 0) = λ(0, 0) を満たす λ はありません。∇g ≠ 0 の仮定を欠いており、定理への反例ではありません。一点だけの集合には非零の速度の曲線を置けません。</p></div>
+  <div class="note"><h3>方程式を満たしても、極値とは限らない</h3><p>円周上の f = x³ では、p = (0, 1)、(0, −1) の両方で ∇f = (0, 0)。λ = 0 で乗数方程式を満たします。しかし各 p の近くに (s, ±√(1 − s²)) があり、正負の小さい s に対して f = s³ は正負を取ります。従ってどちらも極値ではありません。円周の正則性を満たしていても、必要条件は十分条件にはなりません。</p></div>
+  <div class="note"><h3>正則な制約でも、最適点が存在するとは限らない</h3><p>g = y = 0 は正則な無限直線ですが、f = x は上にも下にも無界で、最大値も最小値もありません。必要条件が最適点の存在まで保証するわけではありません。不等式制約、端点や角のある制約も別の検査を要し、本章の定理だけでは扱いません。</p></div>
+
+<div class="concept-table-wrap" tabindex="0" role="region" aria-label="乗数方程式の前後で分ける、三つの確認">
+  <table class="concept-table" data-visual="lagrange-three-limits"><caption>乗数方程式の前後で分ける、三つの確認</caption>
+    <thead><tr><th scope="col"><span class="table-math">本文の例</span></th><th scope="col">乗数方程式との関係</th><th scope="col"><span class="table-math">極値の結論</span></th></tr></thead><tbody><tr><th scope="row"><span class="table-math">g = x² + y² = 0</span>、<span class="table-math">f = x</span></th><td><span class="table-math">∇g(0) = 0</span>。必要な正則性を欠き、方程式の解λはない</td><td>制約は原点だけなので、そこで最大かつ最小</td></tr><tr><th scope="row">円周 <span class="table-math">x² + y² = 1</span>、<span class="table-math">f = x³</span>、<span class="table-math">p = (0, ±1)</span></th><td>正則な制約。<span class="table-math">∇f(p) = 0</span> なので <span class="table-math">λ = 0</span> で方程式を満たす</td><td>近くで正負の値を取るため、pは極値でない</td></tr><tr><th scope="row">直線 <span class="table-math">g = y = 0</span>、<span class="table-math">f = x</span></th><td>制約は正則だが、<span class="table-math">∇f = λ∇g</span> を満たす点はない</td><td>上にも下にも無界で、最大も最小もない</td></tr></tbody>
+  </table>
+</div>
+</section>
+
+<details class="column" id="lagrange-column">
+  <summary>寄り道［応用］：発電量の配分で、限界費用がそろう</summary>
+  <p>電力シミュレータ PowerWorld の公式資料は、発電費用 C(P) の出力 P に対する微分を incremental cost（限界費用）として扱います。一定の総出力を複数の発電機へ配分する問題は、微分を使って費用を考える具体的な出番です。以下では自作のモデルから、限界費用と乗数の関係を確かめます。</p>
+  <p>ここからは現実の設備データではなく、本章の仮想モデルです。出力 p₁、p₂ を MW、費用を通貨単位/時として、C₁(p₁) = p₁²、C₂(p₂) = 2p₂²（係数は対応する単位を持つ）、p₁ + p₂ = 3 MW と置きます。目的 C₁ + C₂ の勾配は (2p₁, 4p₂)、制約の勾配は (1, 1)。内部最適点の必要条件は 2p₁ = λ = 4p₂ で、配分は (2, 1)、総費用は 6 です。</p>
+  <p>最小であることは別に、C₁(3 − p₂) + C₂(p₂) = 6 + 3(p₂ − 1)² ≥ 6 で保証できます。片方から他方へ少し出力を移せるとき、その交換による一次の費用差が 0 になるのが「限界費用がそろう」の意味です。現実の容量上下限、送電損失、起動費、運転制約はこのモデルに含めていません。上限に達した発電機まで無条件に同じ微分値になる、という主張ではありません。</p>
+  <p class="source-note">出典：<a href="https://www.powerworld.com/WebHelp/Content/MainDocumentation_HTML/Generator_Cubic_Cost_Display.htm">PowerWorld：Generator Cubic Cost Display（IC 欄の定義）</a>。二台の費用式・配分・最小保証は本章で設定・計算しました。</p>
+</details>
+
+<section id="lagrange-exercises">
+  <h2>ラグランジュ乗数と極値の演習</h2>
+  <article class="exercise"><h3>1．円周上の線形関数</h3><p>x² + y² = 1 上で f = x + 2y の乗数方程式を解き、全体の最大・最小を別に保証してください。</p>
+    <details><summary>ヒント1：正則性から確認する</summary><p>円周では ∇g = (2x, 2y) は非零です。方程式は (1, 2) = λ(2x, 2y)。</p></details>
+    <details><summary>ヒント2：不等式の等号も調べる</summary><p>|(1, 2) · (x, y)| ≤ √5 を使います。</p></details>
+    <details><summary>解答</summary><p>円周は明示された正則曲線で、f、g は C¹ です。λ = 0 は不可能なので x = 1/(2λ)、y = 1/λ。制約から λ² = 5/4、λ = ±√5/2。候補は ±(1, 2)/√5 で値は ±√5。円周全体で Cauchy–Schwarz により |f| ≤ √5、両候補がその上下端を達成するので、最大は √5、最小は −√5 です。方程式の必要条件と不等式による全体保証を分けました。</p></details>
+  </article>
+  <article class="exercise"><h3>2．積の四つの候補</h3><p>同じ円周上で f = xy の全候補と λ を求め、最大・最小を保証してください。</p>
+    <details><summary>ヒント1：軸上も落とさず調べる</summary><p>(y, x) = 2λ(x, y)。x = 0 または y = 0 は成立しますか。</p></details>
+    <details><summary>ヒント2：積の大きさを抑える</summary><p>2|xy| ≤ x² + y² = 1 です。</p></details>
+    <details><summary>解答</summary><p>方程式は y = 2λx、x = 2λy。x = 0 なら最初の式から y = 0 となり制約に矛盾し、y = 0 も同様。両方非零なので代入して 4λ² = 1。λ = 1/2 なら x = y、候補は (1, 1)/√2 と (−1, −1)/√2、値は 1/2。λ = −1/2 なら x = −y、候補は (1, −1)/√2 と (−1, 1)/√2、値は −1/2。全円周で |xy| ≤ 1/2、これらの点で達成するので、最大値 1/2、最小値 −1/2 が保証されます。</p></details>
+  </article>
+  <article class="exercise"><h3>3．一点だけの制約</h3><p>制約 x² + y² = 0、目的 f = x に乗数法の必要条件を使えますか。実際の最大・最小も説明してください。</p>
+    <details><summary>ヒント1：制約集合を先に決める</summary><p>実数の二つの平方の和が 0 になるのはいつですか。</p></details>
+    <details><summary>ヒント2：二つの勾配を比べる</summary><p>原点で ∇f = (1, 0)、∇g = (0, 0) です。</p></details>
+    <details><summary>解答</summary><p>x²、y² はともに非負なので、実行可能点は原点のみ。従って最大値も最小値も 0 です。一方 ∇g(0) = 0 で定理の正則性を欠き、(1, 0) = λ(0, 0) はどんな λ でも成立しません。乗数方程式に解がないことから極値の不存在を結論してはいけません。先に適用条件を確かめる必要があります。</p></details>
+  </article>
+</section>
+
+<section id="lagrange-reflection">
+  <h2>自分の言葉で</h2><ol>
+    <li>制約上の極値で二つの勾配が平行になるのは、どの接線との直交からですか。非零である必要があるのはどのベクトルですか。</li>
+    <li>明示曲線で証明した部分と、陰関数定理から未証明で借りた部分を区別できますか。</li>
+    <li>候補を見つけた後、最大・最小の存在と全体の最適性を何で別に保証できますか。</li>
+  </ol>
+</section>

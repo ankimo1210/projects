@@ -1,0 +1,123 @@
+<section id="discrete-trees-question">
+  <h2>木と全域木</h2>
+  <p>六つの拠点を、互いに連絡できるように結ぶとします。辺を増やせば別の経路もできますが、「つながる」だけが目的なら余分な辺もあるはずです。どこまで減らせるでしょうか。<a href="discrete-graphs.html#discrete-graphs-definition">グラフ</a>の形から、必要な辺の本数を説明します。</p>
+  <p>この章のグラフは<strong>有限・単純・無向</strong>で、木については頂点が<strong>一つ以上</strong>あるとします。「余分がない」を、まず閉路がないという条件で表し、唯一の道や n − 1 本という別の姿へつなぎます。</p>
+</section>
+
+<section id="discrete-trees-definition">
+  <h2>木の定義と道の一意性</h2>
+  <p><strong>木</strong>は、連結で閉路を持たないグラフです。閉路を持たないが、連結とは限らないグラフを<strong>森</strong>と呼びます。木では、辺を一本除くとつながりが切れます。もし除いた辺 uv の両端を別の道で結べたら、その道と uv が閉路を作り、木の条件に反するからです。</p>
+  <figure class="concept-figure" id="discrete-trees-visual-tree" data-visual="discrete-trees-tree">
+    <svg class="concept-svg" viewBox="0 0 360 360" role="img" aria-labelledby="discrete-trees-tree-title discrete-trees-tree-desc" fill="var(--ink)" font-size="22">
+      <title id="discrete-trees-tree-title">六頂点を五本の辺でつなぐ木</title>
+      <desc id="discrete-trees-tree-desc">辺AB、AC、BD、BE、CFの五本。Aを上に置き、BとC、DとEとFへ枝分かれしている。閉路はなく、全頂点がつながる。葉はD、E、F。</desc>
+      <path d="M 180 55 L 95 160 L 45 290 M 95 160 L 155 290 M 180 55 L 275 160 L 300 290" fill="none" stroke="var(--series-1)" stroke-width="4"/>
+      <g fill="var(--surface)" stroke="var(--ink)" stroke-width="2"><circle cx="180" cy="55" r="25"/><circle cx="95" cy="160" r="25"/><circle cx="275" cy="160" r="25"/><circle cx="45" cy="290" r="25"/><circle cx="155" cy="290" r="25"/><circle cx="300" cy="290" r="25"/></g>
+      <g text-anchor="middle"><text x="180" y="63">A</text><text x="95" y="168">B</text><text x="275" y="168">C</text><text x="45" y="298">D</text><text x="155" y="298">E</text><text x="300" y="298">F</text><text x="180" y="347">6 頂点、5 辺</text></g>
+    </svg>
+    <figcaption>自作例 E = {AB, AC, BD, BE, CF}。例えば D から F へは D–B–A–C–F と進みます。上下や線の長さは定義の一部ではありません。</figcaption>
+  </figure>
+  <div class="theorem"><h3>木では、二頂点間の道がただ一つ</h3><p>有限非空グラフが木であることと、異なる任意の二頂点の間にちょうど一つの道があることは同値です。一頂点の木では、異なる二頂点についての条件は自動的に満たされます。</p></div>
+  <div class="proof"><h3>二つの道があれば、行きと帰りで輪ができる</h3><p>木は連結なので、二頂点を結ぶ道が少なくとも一つあります。異なる二本の道があったとします。始点からたどって初めて分かれる頂点を x とし、その先で再びもう一方の道と出会う最初の頂点を y とします。終点では必ず出会うので y は存在します。x から y までの二つの部分は内部の頂点を共有せず、合わせると閉路です。これは木の条件に反します。</p><p>逆にどの二点もただ一つの道で結ばれれば、まず連結です。閉路があれば、その上の二頂点を輪の両側から結ぶ異なる二本の道を作れるので、唯一性に反します。従って閉路はなく、木です。</p></div>
+  <p>一頂点・辺なしのグラフも木です。その頂点から自分への道は長さ 0 とします。一方、空のグラフをここでは木とは呼びません。後の n − 1 の公式でも、n ≥ 1 という条件を保ちます。</p>
+</section>
+
+<section id="discrete-trees-leaves">
+  <h2>木の葉と辺数</h2>
+  <p>次数が 1 の頂点を<strong>葉</strong>と呼びます。上の図の葉は D、E、F です。一頂点だけの木の次数は 0 なので、この定義では葉ではありません。</p>
+  <div class="theorem"><h3>二頂点以上の有限の木には、少なくとも二枚の葉がある</h3></div>
+  <div class="proof"><h3>これ以上延ばせない道の両端を見る</h3><p>有限なので、長さが最大の道を一つ選べます。二頂点以上で連結だから、その長さは少なくとも 1。端点 x の隣接点が道の外にあれば、その点を足して道を延ばせてしまいます。道の中の、直前以外の点と隣接していれば、その辺と道の一部で閉路ができます。従って x の隣接点は直前の一点だけで、次数 1 です。反対側の端点にも同じ議論が使え、異なる二枚の葉を得ます。</p></div>
+  <div class="theorem"><h3>n 頂点の木の辺は n − 1 本</h3>
+    <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>|</mo><mi>E</mi><mo>|</mo><mo>=</mo><mo>|</mo><mi>V</mi><mo>|</mo><mo>−</mo><mn>1</mn><mspace width="1em"/><mo>(</mo><mo>|</mo><mi>V</mi><mo>|</mo><mo>≥</mo><mn>1</mn><mo>)</mo></mrow></math></div>
+  </div>
+  <div class="proof"><h3>葉を一枚取り、帰納法を使う</h3><p>n = 1 なら単純グラフに辺はなく、0 = 1 − 1 です。n ≥ 2 では葉を一枚と、その葉に接する辺を一本取り除きます。残るグラフに閉路は増えません。また残った二頂点を結ぶ元の道は、次数 1 の葉を内部に通れないので、そのまま残ります。従って残りは n − 1 頂点の木です。帰納法で辺は n − 2 本、取り除いた一本を戻して n − 1 本となります。</p></div>
+</section>
+
+<section id="discrete-trees-spanning">
+  <h2>木の同値条件と全域木の存在</h2>
+  <p>n − 1 本だから木、とはまだ言えません。三角形と孤立点一つを並べると、四頂点・三辺ですが、連結でなく閉路もあります。数が一致することと、必要な場所につながっていることは違います。</p>
+  <figure class="concept-figure" id="discrete-trees-visual-counterexample" data-visual="discrete-trees-counterexample">
+    <svg class="concept-svg" viewBox="0 0 360 300" role="img" aria-labelledby="discrete-trees-counterexample-title discrete-trees-counterexample-desc" fill="var(--ink)" font-size="22">
+      <title id="discrete-trees-counterexample-title">四頂点三辺でも木ではない反例</title>
+      <desc id="discrete-trees-counterexample-desc">A、B、Cの三角形と孤立点Z。頂点数4、辺数3でnマイナス1に等しいが、Zには行けず閉路ABCもある。</desc>
+      <path d="M 100 55 L 40 205 H 170 Z" fill="none" stroke="var(--series-1)" stroke-width="4"/>
+      <g fill="var(--surface)" stroke="var(--ink)" stroke-width="2"><circle cx="100" cy="55" r="25"/><circle cx="40" cy="205" r="25"/><circle cx="170" cy="205" r="25"/><circle cx="300" cy="150" r="25"/></g>
+      <g text-anchor="middle"><text x="100" y="63">A</text><text x="40" y="213">B</text><text x="170" y="213">C</text><text x="300" y="158">Z</text><text x="180" y="278">4頂点、3辺でも木ではない</text></g>
+    </svg>
+    <figcaption>辺の本数だけを検査すると通ってしまう自作の反例。Z に接する辺がなく、ABC は閉路です。</figcaption>
+  </figure>
+  <p>頂点を一つ以上持つ有限連結グラフから、全頂点を保ったまま辺の一部を選んで作る木を<strong>全域木</strong>と呼びます。全域は「全ての頂点を含む」という意味です。次の構成で、全域木が必ず作れることを確かめます。</p>
+  <div class="proof"><h3>一つの頂点から、外へ一本ずつ伸ばす</h3><p>一頂点だけを選び、選んだ頂点の集まり S とします。まだ外に頂点があるなら、元のグラフの連結性から、S と外を結ぶ辺が一本はあります。S から外の頂点への道をたどり、初めて S を出る辺を取ればよいのです。その辺と外側の一頂点だけを追加します。新しい点は一本だけで付くので閉路はできず、選んだ部分の連結性も保たれます。</p><p>一回に頂点が一つ増えるため、n − 1 回で全 n 頂点を含む木になります。従って連結グラフの辺数は少なくとも n − 1。もともと辺が n − 1 本なら、構成で選んだ辺が全ての辺なので、元のグラフ自体が木です。</p></div>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="木と反例における連結性、閉路、辺数の比較">
+    <table class="concept-table" data-visual="discrete-trees-characterization"><caption>「連結で n − 1 本」なら木。本数だけでは足りない</caption>
+      <thead><tr><th scope="col"><span class="table-math">グラフ</span></th><th scope="col"><span class="table-math">連結</span></th><th scope="col"><span class="table-math">閉路なし</span></th><th scope="col"><span class="table-math">辺数</span></th></tr></thead>
+      <tbody>
+        <tr><th scope="row"><span class="table-math">最初の六頂点の木</span></th><td>はい</td><td>はい</td><td><span class="table-math">5 = n − 1</span></td></tr>
+        <tr><th scope="row"><span class="table-math">三角形と孤立点</span></th><td>いいえ</td><td>いいえ</td><td><span class="table-math">3 = n − 1</span></td></tr>
+        <tr><th scope="row"><span class="table-math">三角形だけ</span></th><td>はい</td><td>いいえ</td><td><span class="table-math">3 &gt; n − 1</span></td></tr>
+        <tr><th scope="row"><span class="table-math">離れた二本の辺</span></th><td>いいえ</td><td>はい</td><td><span class="table-math">2 &lt; n − 1</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>また、閉路なしで n − 1 本なら連結です。連結成分が c 個なら、各成分は木なので、頂点数を n₁、…、n<sub>c</sub> として辺数は (n₁ − 1) + … + (n<sub>c</sub> − 1) = n − c。本数 n − 1 との比較で c = 1 になります。木の特徴は、「連結」「閉路なし」「n − 1 本」のうち二つから残りを得る形にもまとめられます。</p>
+</section>
+
+<section id="discrete-trees-bfs">
+  <h2>幅優先探索と無重み最短路</h2>
+  <p>全域木の作り方は一つではありません。根 r から、辺を一本で行ける点、二本で初めて行ける点、という順に広げる方法を<strong>幅優先探索（BFS）</strong>と呼びます。ここでいう距離は、通る辺の最少本数です。通路ごとの所要時間は、まだ扱いません。</p>
+  <p>手順を正確にすると、r のラベルを d(r) = 0 として発見済みにし、待ち行列へ入れます。待ち行列は先に入れた点を先に取り出す仕組みです。先頭の u を取り出し、未発見の隣接点 v を全て d(v) = d(u) + 1 として発見済みにし、親を u と記録して末尾へ入れます。空になるまで繰り返します。発見した時点で印を付けるので、同じ点を重ねて追加しません。</p>
+  <figure class="concept-figure" id="discrete-trees-visual-bfs" data-visual="discrete-trees-bfs">
+    <svg class="concept-svg" viewBox="0 0 360 490" role="img" aria-labelledby="discrete-trees-bfs-title discrete-trees-bfs-desc" fill="var(--ink)" font-size="22">
+      <title id="discrete-trees-bfs-title">AからのBFSの四つの層と親の辺</title>
+      <desc id="discrete-trees-bfs-desc">辺AB、BC、AD、BE、CF、DE、EFの無重みグラフ。Aが0層、BとDが1層、CとEが2層、Fが3層。親の辺AB、AD、BC、BE、CFを実線、選ばないDEとEFを破線で描く。</desc>
+      <g stroke="var(--rule)" stroke-width="2"><path d="M 70 65 H 335 M 70 165 H 335 M 70 265 H 335 M 70 365 H 335"/></g>
+      <g text-anchor="middle"><text x="30" y="73">0</text><text x="30" y="173">1</text><text x="30" y="273">2</text><text x="30" y="373">3</text></g>
+      <path d="M 200 65 L 125 165 L 125 265 L 200 365 M 200 65 L 285 165 M 125 165 L 285 265" fill="none" stroke="var(--series-1)" stroke-width="4"/>
+      <path d="M 285 165 V 265 L 200 365" fill="none" stroke="var(--series-2)" stroke-width="3" stroke-dasharray="8 5"/>
+      <g fill="var(--surface)" stroke="var(--ink)" stroke-width="2"><circle cx="200" cy="65" r="25"/><circle cx="125" cy="165" r="25"/><circle cx="285" cy="165" r="25"/><circle cx="125" cy="265" r="25"/><circle cx="285" cy="265" r="25"/><circle cx="200" cy="365" r="25"/></g>
+      <g text-anchor="middle"><text x="200" y="73">A</text><text x="125" y="173">B</text><text x="285" y="173">D</text><text x="125" y="273">C</text><text x="285" y="273">E</text><text x="200" y="373">F</text><text x="180" y="425">数字：Aからの最短辺数</text><text x="180" y="463">実線：親の辺／破線：非採用辺</text></g>
+    </svg>
+    <figcaption>自作の七辺の例。根 A の隣を B、D の順に調べ、B から C、E の順に発見する場合です。F の親は C。調べる順番で E が親になることもありますが、F の距離 3 は変わりません。高さは層を示し、辺の長さは距離を表しません。</figcaption>
+  </figure>
+  <div class="proof"><h3>待ち行列の層が逆転しないことから、最短性へ</h3>
+    <p>待ち行列のラベルは小さい順に並び、先頭が k なら、中には k と k + 1 の層だけがあります。初めは 0 だけなので成立します。k の点を取り出すと、新しく入る点は全て k + 1 で末尾に並びます。k がなくなって初めて k + 1 が先頭になるので、この性質が保たれます。</p>
+    <p>親をたどるとラベルが一つずつ減って根へ至ります。従って、発見した v には長さ d(v) の道があります。また辺 uv について、u を処理する時点で v が未発見なら d(v) = d(u) + 1。発見済みなら、既に処理された点のラベルは d(u) 以下、待ち行列の点は d(u) + 1 以下なので、やはり d(v) ≤ d(u) + 1 です。</p>
+    <p>根から v への任意の道 r = v₀、v₁、…、vₖ = v にこの不等式を順に使うと、d(v) ≤ k。つまりどの道も d(v) 本より短くできません。親の道はちょうど d(v) 本なので最短です。根から行ける点が未発見のまま残ることもありません。そうなら根からそこへの道上に、処理済みの点から未発見の点へ出る最初の辺があり、処理時に発見していたはずだからです。</p>
+    <p>親の辺だけを残すと、根以外の各点が一本ずつ親を持ち、根までつながります。ラベルが下がる親の列で構成され、各点を新しく一つずつ付け足した形なので閉路はありません。従って根の連結成分の全域木です。元のグラフが非連結なら、他成分の点は未発見のまま。未発見点を根にして繰り返せば全域の森を作れます。</p>
+  </div>
+  <p>同じ層の内部の順番や、複数ある最短の道のどれを親で記録するかは変えられます。一方、辺の本数の最小値は変わりません。辺に異なる時間を付けたときの最短路は、<a href="shortest-paths.html#shortest-paths-dijkstra">次章</a>で別の確定規則を使います。</p>
+</section>
+
+<details class="column" id="discrete-trees-column">
+  <summary>寄り道［自作モデル］：配線を減らすと、代わりの道も消える</summary>
+  <p>架空の六拠点ネットワークで、全拠点を結ぶためのケーブル本数だけを減らすなら、五本の全域木が達成できます。しかしどの一本が切れても、木は二つの部分に分かれます。閉路の辺なら残りの輪で迂回できますが、木にはその輪がありません。</p>
+  <p>「本数が最少」と「一本切れても通信できる」は異なる設計目標です。また本数が同じ五本でも、一本ごとの長さが違えば総延長は違います。本章は辺数と連結性の話で、総延長を最少にする全域木の選択までは解いていません。何を節約するかによって、次に必要な数学も変わります。</p>
+  <p class="source-note">出典：本章のための自作配線モデル。実際の通信規格・信頼性設計の説明ではありません。</p>
+</details>
+
+<section id="discrete-trees-exercises">
+  <h2>演習：木とBFS</h2>
+  <article class="exercise"><h3>1．二種類の「余分がない」</h3><p>連結な七頂点のグラフに辺が六本あります。これは木ですか。また、七頂点・六辺という情報だけならどうですか。</p>
+    <details><summary>ヒント1：全域木に必要な辺数</summary><p>連結なら六本の辺を選んで全域木を作れます。</p></details>
+    <details><summary>ヒント2：連結性を外した反例</summary><p>六頂点の閉路と孤立点一つを並べてください。</p></details>
+    <details><summary>解答</summary><p>連結で六辺なら木です。全域木も六辺で、余分な辺が残らないからです。本数だけでは不十分。六頂点を輪につないだ六辺の閉路と孤立点一つは、七頂点・六辺ですが、連結でなく木ではありません。</p></details>
+  </article>
+  <article class="exercise"><h3>2．葉を消してもよい理由</h3><p>最初の六頂点の木から葉 E を除きます。残る辺と葉を挙げ、連結性が失われない理由を説明してください。一頂点の木にも葉が二枚あると言えますか。</p>
+    <details><summary>ヒント1：葉に接する一本だけが消える</summary><p>消える辺は BE です。残った各頂点の次数を数えます。</p></details>
+    <details><summary>ヒント2：道の内部には二本の辺が必要</summary><p>次数 1 の頂点を、他の二点を結ぶ道の途中には使えません。</p></details>
+    <details><summary>解答</summary><p>残る辺は AB、AC、BD、CF、葉は D と F です。残る二点間の元の道は E を内部に含まないので、そのまま使えます。一頂点の木は次数 0 で葉はありません。二枚の葉の定理には「二頂点以上」という条件が必要です。</p></details>
+  </article>
+  <article class="exercise"><h3>3．親が違っても、距離は同じ</h3><p>BFS の図の七辺のグラフで、F の親を E にした全域木の辺を書き、A–F の最短の辺数を答えてください。A から二本の辺で F へ行けない理由も示してください。</p>
+    <details><summary>ヒント1：各点に、ひとつ前の層の親を置く</summary><p>B、D の親は A、C、E の親は B としてかまいません。</p></details>
+    <details><summary>ヒント2：二本で着くなら、最初の隣の点から F へ辺がある</summary><p>A の隣は B と D ですが、BF も DF もありません。</p></details>
+    <details><summary>解答</summary><p>辺 AB、AD、BC、BE、EF が一例で、A–B–E–F は三本です。一本なら AF が必要ですがありません。二本なら A の隣の B または D から F への辺が必要ですが、どちらもありません。従って最小は 3。親を C から E に変えても最短の辺数は同じです。</p></details>
+  </article>
+</section>
+
+<section id="discrete-trees-reflection">
+  <h2>自分の言葉で</h2><ol>
+    <li>閉路がないことと、二頂点間の道がただ一つであることを、どう結びましたか。</li>
+    <li>n − 1 本という本数に、どの条件を足せば木だと言えますか。孤立点がある反例も説明できますか。</li>
+    <li>BFS の親と層は何を記録しますか。異なる重みがあるとき、辺数の最短性だけでは足りないのはなぜですか。</li>
+  </ol>
+</section>

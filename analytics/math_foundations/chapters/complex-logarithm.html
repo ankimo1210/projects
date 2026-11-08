@@ -1,0 +1,77 @@
+<section id="complex-logarithm-question">
+  <h2>指数関数の周期性と対数</h2>
+  <p>実数の指数関数は単調なので、正の数から対数を一つに決められました。複素数の指数は回転も表します。一周分の角度を加えても同じ点へ戻るなら、指数を逆にたどるとき、その一周をどこへ記録すればよいでしょう。</p>
+  <p class="note">前提は<a href="complex-plane.html#complex-plane-polar">極形式と偏角</a>、<a href="complex-differentiation.html#complex-differentiation-cr">CRと実全微分の十分条件</a>、<a href="elementary-functions.html#elementary-functions-exponential">実の指数関数</a>と<a href="elementary-functions.html#elementary-functions-logarithm">実の対数</a>です。複素冪級数の項別微分は、まだ使いません。</p>
+</section>
+
+<section id="complex-logarithm-exponential">
+  <h2>複素指数関数の定義と性質</h2>
+  <p>z = x + iy に対し、<strong>複素指数関数</strong>を次で定義します。右辺の指数、cos、sin は既に知っている実関数です。記号 eᶻ も同じ意味で使います。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>exp</mi><mo>(</mo><mi>x</mi><mo>+</mo><mi>i</mi><mi>y</mi><mo>)</mo><mo>=</mo><msup><mi>e</mi><mi>x</mi></msup><mo>(</mo><mi>cos</mi><mi>y</mi><mo>+</mo><mi>i</mi><mi>sin</mi><mi>y</mi><mo>)</mo></mrow></math></div>
+  <p>実部 x が長さ eˣ、虚部 y が角度を決めます。|exp z| = eˣ &gt; 0 なので指数関数の値は0になりません。実指数の加法性と三角関数の加法定理から exp(z + w) = exp z exp w。特に exp(−z) は exp z の逆数です。</p>
+  <div class="proof"><h3>定義から正則性を確かめる</h3><p>u = eˣ cos y、v = eˣ sin y とすると、uₓ = eˣ cos y = vᵧ、uᵧ = −eˣ sin y = −vₓ です。四つの偏導関数は連続なので、CRの十分条件を全平面で使えます。したがって exp は全平面で正則で、(exp z)′ = uₓ + ivₓ = exp z。複素指数の微分を、未証明の級数操作から導いていません。</p></div>
+  <p>exp z = exp w となる条件は、exp(z − w) = 1 です。絶対値から Re(z − w) = 0、単位円の座標から Im(z − w) = 2πk（k は整数）と分かります。つまり z − w = 2πik。指数関数の周期は、逆関数を平面全体で一つにできない原因です。</p>
+  <figure class="concept-figure" id="complex-logarithm-visual-period" data-visual="complex-logarithm-period">
+    <svg class="concept-svg" viewBox="0 0 360 320" role="img" aria-labelledby="complex-logarithm-period-title complex-logarithm-period-desc">
+      <title id="complex-logarithm-period-title">指数関数は一周分を見分けない</title><desc id="complex-logarithm-period-desc">入力0、2πi、マイナス2πiにそれぞれ矢印があり、すべて出力1へ移る。対応の図であり座標の縮尺は持たない。</desc>
+      <text x="64" y="36" text-anchor="middle" font-size="22" fill="var(--ink)">入力 z</text><text x="277" y="36" text-anchor="middle" font-size="22" fill="var(--ink)">exp z</text>
+      <text x="58" y="101" font-size="22" fill="var(--ink)">0</text><line x1="124" y1="93" x2="236" y2="93" stroke="var(--series-1)" stroke-width="3"/><polygon points="236,93 224,87 224,99" fill="var(--series-1)"/><text x="270" y="101" font-size="22" fill="var(--ink)">1</text>
+      <text x="42" y="177" font-size="22" fill="var(--ink)">2πi</text><line x1="124" y1="169" x2="236" y2="169" stroke="var(--series-2)" stroke-width="3"/><polygon points="236,169 224,163 224,175" fill="var(--series-2)"/><text x="270" y="177" font-size="22" fill="var(--ink)">1</text>
+      <text x="29" y="253" font-size="22" fill="var(--ink)">−2πi</text><line x1="124" y1="245" x2="236" y2="245" stroke="var(--ink-2)" stroke-width="3" stroke-dasharray="7 4"/><polygon points="236,245 224,239 224,251" fill="var(--ink-2)"/><text x="270" y="253" font-size="22" fill="var(--ink)">1</text>
+      <text x="180" y="301" text-anchor="middle" font-size="22" fill="var(--ink)">差が 2πi の整数倍なら同じ像</text>
+    </svg><figcaption>出力の点1だけを見ても、入力が何周分違ったかは復元できません。一つの逆関数を作るには、入力側の角度の範囲を選びます。</figcaption>
+  </figure>
+</section>
+
+<section id="complex-logarithm-trigonometry">
+  <h2>複素三角関数</h2>
+  <p>複素数を角度に入れた cos、sin は、実の単位円だけでは定義できません。そこで、実数では成り立つ指数の組合せを、そのまま複素数での定義にします。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>cos</mi><mi>z</mi><mo>=</mo><mfrac><mrow><msup><mi>e</mi><mrow><mi>i</mi><mi>z</mi></mrow></msup><mo>+</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>i</mi><mi>z</mi></mrow></msup></mrow><mn>2</mn></mfrac><mo>,</mo><mspace width="1em"/><mi>sin</mi><mi>z</mi><mo>=</mo><mfrac><mrow><msup><mi>e</mi><mrow><mi>i</mi><mi>z</mi></mrow></msup><mo>−</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>i</mi><mi>z</mi></mrow></msup></mrow><mrow><mn>2</mn><mi>i</mi></mrow></mfrac></mrow></math></div>
+  <div class="proof"><h3>実数への一致と微分を確認する</h3><p>実数 t では exp(it) = cos t + i sin t、exp(−it) = cos t − i sin t なので、和と差は従来の実三角関数を返します。複素数でも指数関数の合成・和・定数倍は正則です。連鎖律で (exp(iz))′ = i exp(iz)、(exp(−iz))′ = −i exp(−iz)。定義を微分すれば (cos z)′ = −sin z、(sin z)′ = cos z です。</p></div>
+  <p>公式が似ていても、実数での値域まで同じではありません。t &gt; 0 に対し sin(it) = i(eᵗ − e⁻ᵗ)/2 なので、その絶対値は t とともに限りなく増えます。「sinの絶対値は1以下」は実数の入力での性質です。定義を拡張したとき、どの性質が残るかは改めて確かめます。</p>
+</section>
+
+<section id="complex-logarithm-principal">
+  <h2>主値対数と分枝切断</h2>
+  <p>z ≠ 0 を r(cos θ + i sin θ) と書くと、exp w = z の解は w = ln r + i(θ + 2πk) です。ここで ln は正の実数の自然対数です。この解たちから、点 z ごとに連続につながる一つを選んだ関数を<strong>対数の枝</strong>と呼びます。</p>
+  <div class="theorem"><h3>この本の主値対数の約束</h3><p>D = ℂ ∖ (−∞, 0]、すなわち0を含む負の実軸を除いた開集合で、Arg z を (−π, π) にある唯一の偏角とします。<strong>主値対数</strong>を Log z = ln|z| + i Arg z と定めます。切断上の0と負の実数では、Arg も Log もこの定義では未定義です。±π のどちらかを切断上だけ付け足す約束は使いません。</p></div>
+  <p>この定義で exp(Log z) = z が成立します。逆に Log(exp w) = w は常に成り立つわけではありません。例えば w = 2πi なら exp w = 1、Log 1 = 0 です。−π &lt; Im w &lt; π の帯に制限すれば、指数と主値対数は互いの逆になります。</p>
+  <figure class="concept-figure" id="complex-logarithm-visual-cut" data-visual="complex-logarithm-cut">
+    <svg class="concept-svg" viewBox="0 0 360 370" role="img" aria-labelledby="complex-logarithm-cut-title complex-logarithm-cut-desc">
+      <title id="complex-logarithm-cut-title">負の実軸を挟む偏角の違い</title><desc id="complex-logarithm-cut-desc">半径1の円を横縦が同じ縮尺で描く。負の実軸を破線の切断とし、150度の点Pプラスとマイナス150度の点Pマイナスを示す。上から切断へ近づく偏角はπ、下からはマイナスπへ近づくが、切断上は定義しない。</desc>
+      <circle cx="180" cy="180" r="90" fill="none" stroke="var(--grid)" stroke-width="2"/><line x1="32" y1="180" x2="323" y2="180" stroke="var(--grid)" stroke-width="2"/><line x1="180" y1="55" x2="180" y2="298" stroke="var(--grid)" stroke-width="2"/>
+      <line x1="26" y1="180" x2="180" y2="180" stroke="var(--series-2)" stroke-width="5" stroke-dasharray="9 5"/>
+      <line x1="180" y1="180" x2="102.058" y2="135" stroke="var(--series-1)" stroke-width="3"/><line x1="180" y1="180" x2="102.058" y2="225" stroke="var(--ink-2)" stroke-width="3"/>
+      <circle cx="102.058" cy="135" r="5" fill="var(--series-1)"/><circle cx="102.058" cy="225" r="5" fill="var(--ink-2)"/><circle cx="180" cy="180" r="5" fill="var(--surface)" stroke="var(--series-2)" stroke-width="2"/>
+      <text x="62" y="106" font-size="22" fill="var(--ink)">P₊</text><text x="51" y="263" font-size="22" fill="var(--ink)">P₋</text><text x="33" y="164" font-size="22" fill="var(--ink)">切断</text><text x="191" y="207" font-size="22" fill="var(--ink)">0</text><text x="276" y="207" font-size="22" fill="var(--ink)">1</text>
+      <text x="180" y="326" text-anchor="middle" font-size="22" fill="var(--ink)">上側 → π　下側 → −π</text><text x="180" y="358" text-anchor="middle" font-size="22" fill="var(--ink)">両軸は同じ縮尺</text>
+    </svg><figcaption>P₊ の偏角は150°=5π/6、P₋ は−150°=−5π/6 です。両点を負の実軸に近づけると、入力の距離は0へ向かう一方、主値の虚部の差は2πへ向かいます。切断上ではどちらの値も主値として代入しません。二点は一例で、枝の連続性は切断を除いた定義域内で読む必要があります。</figcaption>
+  </figure>
+  <div class="proof"><h3>角度を取り出す実関数を準備する</h3><p>実の区間 (−π/2, π/2) で tan θ = sin θ/cos θ と定めます。この区間では cos θ &gt; 0。商の微分則から tan′ θ = (cos² θ + sin² θ)/cos² θ = 1 + tan² θ &gt; 0 なので、平均値の定理により厳密に増加します。端へ近づくと sin θ はそれぞれ −1、1へ、cos θ は正の側から0へ近づくため、tan θ の極限はそれぞれ −∞、+∞。連続性と中間値の定理により、この tan は区間から ℝ への全単射です。その逆関数を arctan : ℝ → (−π/2, π/2) と定めます。</p><p>逆関数の連続性も確認します。t₀ = tan θ₀ とし、θ₀ ± ε が区間内にあるほど小さい ε &gt; 0 を取ります。tan(θ₀ − ε) &lt; t₀ &lt; tan(θ₀ + ε) なので、t を t₀ に十分近づけるとこの二つの値の間に入ります。単調性より θ₀ − ε &lt; arctan t &lt; θ₀ + ε。したがって t → t₀ なら θ = arctan t → θ₀ です。</p><p>t ≠ t₀ なら単射性から θ ≠ θ₀ なので、逆関数の差商を次のように書けます。分母側の差商は既に微分可能な tan のものです。θ → θ₀ を使うと、その極限は 1 + tan² θ₀ = 1 + t₀² &gt; 0 となり、逆数の極限も取れます。</p>
+    <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mfrac><mrow><mi>arctan</mi><mi>t</mi><mo>−</mo><mi>arctan</mi><msub><mi>t</mi><mn>0</mn></msub></mrow><mrow><mi>t</mi><mo>−</mo><msub><mi>t</mi><mn>0</mn></msub></mrow></mfrac><mo>=</mo><mfrac><mn>1</mn><mfrac><mrow><mi>tan</mi><mi>θ</mi><mo>−</mo><mi>tan</mi><msub><mi>θ</mi><mn>0</mn></msub></mrow><mrow><mi>θ</mi><mo>−</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow></mfrac></mfrac><mo>→</mo><mfrac><mn>1</mn><mrow><mn>1</mn><mo>+</mo><msubsup><mi>t</mi><mn>0</mn><mn>2</mn></msubsup></mrow></mfrac></mrow></math></div>
+    <p>これで arctan の微分可能性と (arctan t)′ = 1/(1 + t²) が示せました。この導関数は連続なので、arctan は実 C¹ です。逆関数が微分できることを先に仮定してはいません。</p>
+  </div>
+  <div class="proof"><h3>局所的な角度から、Logの微分を導く</h3><p>D の各点では角度 θ を連続に選べます。具体的には x ≠ 0 の近くなら arctan(y/x) に一定の π の整数倍を足し、x = 0、y ≠ 0 の近くなら arctan(−x/y) に一定の ±π/2 を足せます。切断を避けた小近傍で、これが Arg と一致します。上で導いた arctan の微分式から、θₓ = −y/(x² + y²)、θᵧ = x/(x² + y²) です。</p><p>u = ln r = (1/2)ln(x² + y²) とすると uₓ = x/(x² + y²)、uᵧ = y/(x² + y²)。これらも角度の偏導関数も小近傍で連続です。CRの十分条件が成立するので、Log は D で正則です。導関数は次になります。</p>
+    <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msup><mi>Log</mi><mo>′</mo></msup><mi>z</mi><mo>=</mo><mfrac><mi>x</mi><mrow><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><msup><mi>y</mi><mn>2</mn></msup></mrow></mfrac><mo>−</mo><mi>i</mi><mfrac><mi>y</mi><mrow><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><msup><mi>y</mi><mn>2</mn></msup></mrow></mfrac><mo>=</mo><mfrac><mn>1</mn><mi>z</mi></mfrac></mrow></math></div>
+  </div>
+  <p class="note">ここで必要なのは小近傍での実 C¹ の角度です。切断を避けた各小近傍で arctan を使うことで得られ、平面全体で一つの角度を選べると仮定したわけではありません。</p>
+</section>
+
+<section id="complex-logarithm-lift">
+  <h2>経路に沿う偏角と対数の多価性</h2>
+  <p>円に沿って z(t) = r exp(it) と動くなら、ln r + it は t とともに連続で、指数を取ると z(t) です。これは<strong>道に沿って持ち上げた角度</strong>を使う値です。t = 0 と t = 2π は同じ点 z = r ですが、この値は 2πi 違います。したがって、円上の点だけで値が決まる一つの関数とは区別します。</p>
+  <div data-lab="complex-log"></div><p data-reading-note="complex-log-history">円上の同じ点と、下の二つの虚部の高さを対応づけます。±180°では主値は切断上で未定義、±360°では点は出発点へ戻っても追跡値の虚部だけが±2π残ります。経路の履歴を持つ値は、穿孔平面全体の各点へ一価で連続な対数を定めたものではありません。</p>
+  <noscript><p class="note">実験の操作にはJavaScriptが必要です。r = 1 で角度を 0°、180°、360° と進めると、道に沿う値は0、πi、2πi。主値Logは0、未定義、0です。180°と−180°はどちらも切断上です。r = 2 なら、定義できる各値の実部へ ln 2 を足します。道の値は角度の記録を含み、点だけの主値とは異なります。</p></noscript>
+  <div class="proof"><h3>原点を除く平面全体では、連続な対数も作れない</h3><p>連続な L : ℂ ∖ {0} → ℂ があり、exp(L(z)) = z を満たすと仮定します。単位円上で指数の逆像の形を使うと、L(exp(it)) = i(t + 2πk(t))、k(t) は整数です。左辺と t が連続なので k(t) も [0, 2π] で連続。連続な実関数が異なる整数を取れば中間値の定理で非整数も取るため、k は一定です。</p><p>すると t = 2π と t = 0 の値の差は2πi。しかし exp(2πi) = exp(0) = 1 だから、同じ関数 L の値は等しいはずです。矛盾により、この L は存在しません。特に、平面全体から原点だけを除いた集合で正則な対数はありません。</p></div>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="指数と対数の定義域の比較"><table class="concept-table" style="min-width:48rem" data-visual="complex-logarithm-domains"><caption>同じ点に戻ったとき、何を値として保持しているか</caption><thead><tr><th scope="col">対象</th><th scope="col">具体的な入力と値</th><th scope="col">許す範囲</th><th scope="col">判断</th></tr></thead><tbody><tr><th scope="row">exp</th><td>exp0=exp(2πi)=1。</td><td>全複素平面。</td><td>同じ出力から巻数は復元できず、一対一でない。</td></tr><tr><th scope="row">主値 Log</th><td>Log1=0。Log(−1) は未定義。</td><td>ℂ∖(−∞,0]。偏角は −π&lt;Arg&lt;π。</td><td>切断を除けば一価正則で、exp(Logz)=z。微分は1/z。</td></tr><tr><th scope="row">経路に沿う値</th><td>r=1、θ=0と2πで点はともに1。値は0と2πi。</td><td>円をたどる実パラメータθを保持。</td><td>点だけでなく道の履歴に依存。一周の値を同じ点の主値とは呼ばない。</td></tr><tr><th scope="row">ℂ∖{0} 全体の連続な逆L</th><td>一周して同じ1へ戻ることと、偏角の2πの増分が衝突。</td><td>切断を入れない穿孔平面。</td><td>expL(z)=z を満たす連続な一価のLは作れない。理由は本文の一周の議論。</td></tr></tbody></table></div>
+  <p>主値でも Log(zw) = Log z + Log w を無条件に使えません。z = w = exp(3πi/4) なら、右辺は 3πi/2、積は −i なので左辺は −πi/2 です。どれも切断外ですが、差は2πi。指数を取ると一致することと、選んだ枝の値が一致することは別です。次章ではこの一周分の違いを、積分で測ります。</p>
+</section>
+
+<details class="column" id="complex-logarithm-column"><summary>寄り道［自作モデル］：平方根も、切れ目の選択を受け継ぐ</summary><p>主値対数の定義域 D で S(z) = exp((1/2)Log z) と置きます。指数の加法性から S(z)² = z、連鎖律から S′(z) = S(z)/(2z) = 1/(2S(z)) です。0を除いているため分母は0になりません。これが一つの正則な平方根の枝です。</p><p>円を一周する道で角度を連続に追うと、半分の角度は π だけ変わり、平方根の符号が逆になります。同じ点へ戻ったときの値を一つに定めるには、対数と同じく定義域を選ぶ必要があります。実数の正の平方根を複素数へ延長すると、単なる符号の選択が道の問題になります。</p><p class="source-note">出典：本章の主値対数と指数関数から作った数学的構成です。一般の多価関数の理論は前提にしていません。</p></details>
+
+<section id="complex-logarithm-exercises"><h2>演習：指数・対数と定義域</h2>
+  <article class="exercise"><h3>1．主値と逆像を分ける</h3><p>Log(−i) を求め、exp w = −i を満たす w をすべて挙げてください。Log(−1) はこの章で定義されていますか。</p><details><summary>ヒント1：主値の角度</summary><p>−i の偏角で (−π, π) に入るものは −π/2 です。</p></details><details><summary>ヒント2：周期と切断</summary><p>指数の逆像には2πiの整数倍を足せます。負の実軸は主値の定義域から除いています。</p></details><details><summary>解答</summary><p>Log(−i) = −πi/2、逆像は w = i(−π/2 + 2πk)、k はすべての整数です。−1は切断上なので Log(−1) は未定義です。ただし exp w = −1 の解は i(π + 2πk) として存在します。</p></details></article>
+  <article class="exercise"><h3>2．複素三角関数の値域</h3><p>cos(it) を実指数で表し、t &gt; 0 のとき1より大きいことを示してください。</p><details><summary>ヒント1：iを二回掛ける</summary><p>i(it) = −t、−i(it) = t です。</p></details><details><summary>ヒント2：1との差の符号</summary><p>eᵗ + e⁻ᵗ − 2 = (exp(t/2) − exp(−t/2))² を使います。</p></details><details><summary>解答</summary><p>cos(it) = (eᵗ + e⁻ᵗ)/2。1との差は (exp(t/2) − exp(−t/2))²/2 で、t &gt; 0 なら正です。複素入力でのcosは、実入力での値域 [−1, 1] に制限されません。</p></details></article>
+  <article class="exercise"><h3>3．同じ点と、一周の記録</h3><p>z(t) = 2exp(it)、0 ≤ t ≤ 2π とします。道に沿う値 ln 2 + it と主値 Log z(t) を、t = 0、π、2π で比較してください。</p><details><summary>ヒント1：道の値は連続</summary><p>t をそのまま虚部に使います。</p></details><details><summary>ヒント2：主値の入力を確認する</summary><p>t = π で点は −2、端点ではどちらも2です。</p></details><details><summary>解答</summary><p>道に沿う値は順に ln 2、ln 2 + πi、ln 2 + 2πi。主値は順に ln 2、未定義、ln 2 です。道の端点の値は2πi違いますが、主値は同じ点2で同じ値を返します。切断点を主値の連続な通過点とみなすことはできません。</p></details></article>
+</section>
+<section id="complex-logarithm-reflection"><h2>自分の言葉で</h2><ol><li>複素指数関数の正則性を、実関数とCRからどう導きましたか。</li><li>主値Logが切断上で未定義であることと、指数の逆像が存在することは、なぜ両立しますか。</li><li>円に沿って連続に追った対数の値が、円上の点だけの関数にならないのはなぜですか。</li></ol></section>

@@ -1,0 +1,63 @@
+<section id="vector-surfaces-question">
+  <h2>曲面積と投影面積</h2>
+  <p>曲線では一つのパラメータ方向の伸びを測りました。曲面には二つの方向があり、小さな座標の長方形は空間内の平行四辺形へ変わります。その面積は、横から見れば短く見えるという投影の都合に左右されない量であるはずです。</p>
+  <p class="note">復習は<a href="vector-fields.html#vector-fields-products">外積と面積</a>、<a href="total-derivative.html">全微分と連鎖律</a>、<a href="double-integrals.html">二重積分</a>、<a href="change-of-variables.html#change-of-variables-theorem">変数変換定理</a>です。</p>
+</section>
+
+<section id="vector-surfaces-patch">
+  <h2>曲面のパラメータ表示と正則性</h2>
+  <p>座標領域 D ⊂ ℝ² から空間への写像 r(u, v) = (x(u, v), y(u, v), z(u, v)) を<strong>パラメータ表示</strong>と呼びます。本章で積分する正則な曲面片では、D は閉かつ有界な Jordan 可測領域で、境界は有限個の区分 C¹ 曲線からなるとします。r は D を含む開近傍で C¹、D 上で rᵤ × rᵥ ≠ 0 とし、D の内部では単射とします。境界の継ぎ目での重複は有限本の曲線に限り、重複度も有限とします。</p>
+  <p>rᵤ、rᵥ は二つの接方向です。外積が非零という条件は、その二方向が一次独立で、局所的に面を張ることを保証します。r(u, v) = (u, 0, 0) は空間への C¹ 写像ですが、二方向目が潰れているので、この意味の曲面片ではありません。</p>
+  <p>複数の曲面片を合わせるときは、各片の内部の像が面積を持つ部分で重ならず、重複が有限本の境界曲線に限られる有限分割を使い、各片の積分を足します。面積0の曲線の重複は値を変えません。一般の滑らかな曲面上の区分 C¹ 曲線が面積0であるという事実は、正則座標上で曲線を細い帯で覆う標準的な性質として使います。</p>
+</section>
+
+<section id="vector-surfaces-area">
+  <h2>外積による曲面積・スカラー面積分</h2>
+  <p>小さな座標変化の像は、全微分により rᵤΔu と rᵥΔv を辺とする平行四辺形に近づきます。その面積は ‖rᵤ × rᵥ‖ΔuΔv です。これをもとに、曲面積と連続なスカラー関数 f の面積分を次で定めます。曲がった面の幾何的な面積がこの式に一致する一般定理の完全証明は、本章の範囲外です。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>Area</mi><mo>(</mo><mi>S</mi><mo>)</mo><mo>:=</mo><msub><mo>∬</mo><mi>D</mi></msub><mo>‖</mo><msub><mi>r</mi><mi>u</mi></msub><mo>×</mo><msub><mi>r</mi><mi>v</mi></msub><mo>‖</mo><mi>du</mi><mi>dv</mi><mo>,</mo><mspace width="1em"/><msub><mo>∬</mo><mi>S</mi></msub><mi>f</mi><mi>dS</mi><mo>:=</mo><msub><mo>∬</mo><mi>D</mi></msub><mi>f</mi><mo>(</mo><mi>r</mi><mo>)</mo><mo>‖</mo><msub><mi>r</mi><mi>u</mi></msub><mo>×</mo><msub><mi>r</mi><mi>v</mi></msub><mo>‖</mo><mi>du</mi><mi>dv</mi></mrow></math></div>
+  <p>例えば r(u, v) = (u, v, u)、0 ≤ u, v ≤ 1 では、rᵤ = (1, 0, 1)、rᵥ = (0, 1, 0)、rᵤ × rᵥ = (−1, 0, 1)。曲面積は √2 です。一方、xy 平面への投影は単位正方形で面積1。同じ「面積」という名前でも、測る面が違います。</p>
+  <figure class="concept-figure" id="vector-surfaces-visual-tilt" data-visual="vector-surfaces-tilt">
+    <svg class="concept-svg" viewBox="0 0 360 360" role="img" aria-labelledby="vector-surfaces-tilt-title vector-surfaces-tilt-desc">
+      <title id="vector-surfaces-tilt-title">傾いた面と投影面は、辺の長さが違う</title><desc id="vector-surfaces-tilt-desc">左はxy投影の一辺1、1の正方形。右は曲面z=xを面内で展開した長方形で、一辺ルート2と1。両方とも実際の長さを同じ縮尺で描く。透視図ではなく、各面を正面から比較する図。</desc>
+      <rect x="45" y="115" width="70" height="70" fill="var(--series-1)" fill-opacity="0.12" stroke="var(--series-1)" stroke-width="3"/>
+      <rect x="200" y="115" width="98.994949" height="70" fill="var(--series-2)" fill-opacity="0.12" stroke="var(--series-2)" stroke-width="3"/>
+      <g fill="var(--ink)" font-size="22"><text x="80" y="78" text-anchor="middle">xy 投影</text><text x="250" y="78" text-anchor="middle">曲面内</text><text x="80" y="217" text-anchor="middle">1</text><text x="250" y="217" text-anchor="middle">√2</text><text x="21" y="158">1</text><text x="174" y="158">1</text><text x="80" y="271" text-anchor="middle">面積 1</text><text x="250" y="271" text-anchor="middle">面積 √2</text><text x="180" y="327" text-anchor="middle">実際の長さを同じ縮尺で比較</text></g>
+    </svg><figcaption>r(u, v) = (u, v, u) は、二つの接方向が直交する平面です。右図は面をその面内の座標で正面から見た実際の長さ、左図は xy 投影です。空間の透視図の見かけの面積を測ってはいません。</figcaption>
+  </figure>
+  <p>一般のグラフ r(u, v) = (u, v, g(u, v)) なら rᵤ × rᵥ = (−gᵤ, −gᵥ, 1) なので、dS = √(1 + gᵤ² + gᵥ²)du dv。傾きが大きいほど、同じ投影面積に対する曲面積は大きくなります。</p>
+</section>
+
+<section id="vector-surfaces-coordinates">
+  <h2>曲面の座標変換と面積の不変性</h2>
+  <p>T(s, t) = (u(s, t), v(s, t)) が、座標領域 E を D へ一対一に移す C¹ 座標変換で、近傍でも逆写像を持ち det DT ≠ 0 とします。η = r ∘ T と置きます。<a href="change-of-variables.html#change-of-variables-theorem">二重積分の変数変換定理</a>を使える Jordan 可測領域と連続な被積分関数を考えます。</p>
+  <div class="proof"><h3>二方向の連鎖律を、外積へ入れる</h3><p>ηₛ = rᵤuₛ + rᵥvₛ、ηₜ = rᵤuₜ + rᵥvₜ。外積の双線形性、同じベクトル同士の外積0、順序交換の負号を使うと次になります。</p>
+    <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>η</mi><mi>s</mi></msub><mo>×</mo><msub><mi>η</mi><mi>t</mi></msub><mo>=</mo><mo>(</mo><msub><mi>u</mi><mi>s</mi></msub><msub><mi>v</mi><mi>t</mi></msub><mo>−</mo><msub><mi>v</mi><mi>s</mi></msub><msub><mi>u</mi><mi>t</mi></msub><mo>)</mo><mo>(</mo><msub><mi>r</mi><mi>u</mi></msub><mo>×</mo><msub><mi>r</mi><mi>v</mi></msub><mo>)</mo><mo>=</mo><mi>det</mi><mi>DT</mi><mo>·</mo><mo>(</mo><msub><mi>r</mi><mi>u</mi></msub><mo>×</mo><msub><mi>r</mi><mi>v</mi></msub><mo>)</mo></mrow></math></div>
+    <p>右辺の r の偏微分は T(s, t) で評価します。長さを取ると |det DT| が出ます。従って ∫∫E f(η)‖ηₛ × ηₜ‖ds dt に変数変換定理を使えば、∫∫D f(r)‖rᵤ × rᵥ‖du dv と一致します。座標の刻み方や向きを替えても、同じ面を同じ回数覆えばスカラー面積分は変わりません。</p></div>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="曲面積と投影面積と重複計数の比較"><table class="concept-table" data-visual="vector-surfaces-conditions"><caption>面積を正しく数えるための三つの区別</caption><thead><tr><th scope="col">条件・量</th><th scope="col">保証すること</th><th scope="col">保証しないこと</th></tr></thead><tbody><tr><th scope="row"><span class="table-math">rᵤ × rᵥ ≠ 0</span></th><td>二方向が局所的に面を張ります。</td><td>離れた座標点の重複は防ぎません。</td></tr><tr><th scope="row">内部の単射性</th><td>同じ面の内部を一度数えます。</td><td>複数片を無条件に重ねて足せるわけではありません。</td></tr><tr><th scope="row">曲面積</th><td>空間内の長さで面積を測ります。</td><td>固定平面への投影面積とは限りません。</td></tr><tr><th scope="row">スカラー面積分</th><td>座標の向きの反転でも不変です。</td><td>法線の向きは次章で別に選びます。</td></tr></tbody></table></div>
+  <p class="note">r(u, v) = (cos u, sin u, v)、0 ≤ u ≤ 4π、0 ≤ v ≤ 1 は外積の長さが常に1ですが、円柱の側面を二度覆います。積分は4πとなり、一度だけ覆うときの2πの二倍です。正則性だけで単射性を置き換えることはできません。</p>
+</section>
+
+<section id="vector-surfaces-sphere">
+  <h2>球面座標の極と継ぎ目</h2>
+  <p>半径 R &gt; 0 の球で r(θ, φ) = (R sin θ cos φ, R sin θ sin φ, R cos θ) とすると、‖rθ × rφ‖ = R² sin θ です。0 &lt; θ &lt; π、0 &lt; φ &lt; 2π の内部では正則かつ単射ですが、θ = 0、π では外積が0、φ = 0 と 2π は同じ継ぎ目です。閉じた座標矩形全体を、前の正則な一片の定義にそのまま入れることはできません。</p>
+  <figure class="concept-figure" id="vector-surfaces-visual-sphere" data-visual="vector-surfaces-sphere">
+    <svg class="concept-svg" viewBox="0 0 360 360" role="img" aria-labelledby="vector-surfaces-sphere-title vector-surfaces-sphere-desc">
+      <title id="vector-surfaces-sphere-title">球面座標で潰れる辺と重なる辺</title><desc id="vector-surfaces-sphere-desc">横が方位角φの0から2π、縦が極角θの0からπの座標矩形。上辺全体は北極N、下辺全体は南極Sへ写る。左右の辺は同じ継ぎ目へ写る。角度軸の図で、球そのものの縮尺は表していない。</desc>
+      <rect x="75" y="85" width="210" height="180" fill="var(--series-1)" fill-opacity="0.08" stroke="var(--ink-2)" stroke-width="2"/>
+      <path d="M 75 85 L 285 85" stroke="var(--series-1)" stroke-width="5"/><path d="M 75 265 L 285 265" stroke="var(--series-2)" stroke-width="5"/>
+      <path d="M 75 85 L 75 265" stroke="var(--ink)" stroke-width="3" stroke-dasharray="6 5"/><path d="M 285 85 L 285 265" stroke="var(--ink)" stroke-width="3" stroke-dasharray="6 5"/>
+      <g fill="var(--ink)" font-size="22"><text x="180" y="55" text-anchor="middle">上辺すべて → N</text><text x="180" y="300" text-anchor="middle">下辺すべて → S</text><text x="39" y="92">0</text><text x="39" y="270">π</text><text x="75" y="335" text-anchor="middle">0</text><text x="285" y="335" text-anchor="middle">2π</text><text x="179" y="173" text-anchor="middle">左右は</text><text x="179" y="205" text-anchor="middle">同じ継ぎ目</text></g>
+    </svg><figcaption>横は φ、縦は下向きに θ が増える座標図で、両軸の角度縮尺は異なります。上辺・下辺の退化は境界の単なる有限重複ではなく、外積が0になる座標の特異性です。</figcaption>
+  </figure>
+  <p>球全体は、例えば立方体の六面の方向を球へ正規化する六つの正則片で扱えます。x が正で最も大きい部分には r(u, v) = R(1, u, v)/√(1 + u² + v²)、−1 ≤ u, v ≤ 1 を使い、他の五面も同様にします。各片は近傍で C¹、接方向は独立で、内部は一度だけ覆い、境界の重なりだけを共有します。</p>
+  <p>球面座標で計算するときは、まず ε ≤ θ ≤ π − ε、δ ≤ φ ≤ 2π − δ に制限し、正則片として積分します。欠けた極の帽子は、グラフ z = ±√(R² − x² − y²) を使うと、各面積が πR²sin²ε/cos ε 以下（0 &lt; ε &lt; π/2）。継ぎ目の細帯は、角度を −δ ≤ φ ≤ δ とずらした正則表示で極を除いて覆え、面積は 2πR²δ 以下です。これらは0へ縮むので、極と継ぎ目を除いた積分の極限が球全体の面積になります。積分は 2R²(2π − 2δ)cos ε で、極限は 4πR² です。</p>
+</section>
+
+<details class="column" id="vector-surfaces-column"><summary>寄り道［数学の見方］：地図の不具合と、面そのものの不具合</summary><p>球の北極でも、球面そのものに角や穴はありません。球面座標で全方位角が一つの点へ集まるため、選んだ地図の一方向が潰れただけです。北極付近で z を x、y の関数にすれば、外積の消えない別の地図を使えます。</p><p>一つの座標が使えないことを対象そのものの特異性と混同しないために、曲面を複数の正則片で扱います。ただし重なった片の面積をそのまま足すと二重計数になります。</p><p class="source-note">出典：本章の球面座標とグラフ表示の直接比較です。</p></details>
+
+<section id="vector-surfaces-exercises"><h2>演習：曲面の正則性と重複</h2>
+  <article class="exercise"><h3>1．平面の面積と投影</h3><p>r(u, v) = (u, v, 2u − v)、0 ≤ u, v ≤ 1 の曲面積と xy 投影面積を求めてください。</p><details><summary>ヒント1：二方向を微分する</summary><p>rᵤ = (1, 0, 2)、rᵥ = (0, 1, −1)。</p></details><details><summary>ヒント2：外積の長さ</summary><p>rᵤ × rᵥ = (−2, 1, 1) です。</p></details><details><summary>解答</summary><p>外積の長さは √6 で一定、座標領域の面積は1なので曲面積は √6。xy 投影面積は1です。r は第一・第二成分から座標が決まり単射で、外積はどこでも非零です。</p></details></article>
+  <article class="exercise"><h3>2．座標の単位を替える</h3><p>前問と同じ面を η(s, t) = (2s, t, 4s − t)、0 ≤ s ≤ 1/2、0 ≤ t ≤ 1 と表します。面積が一致することを直接確かめてください。</p><details><summary>ヒント1：外積を計算する</summary><p>ηₛ = (2, 0, 4)、ηₜ = (0, 1, −1)。</p></details><details><summary>ヒント2：座標領域の幅も替わる</summary><p>外積の長さは前問の二倍ですが、s の幅は半分です。</p></details><details><summary>解答</summary><p>ηₛ × ηₜ = (−4, 2, 2)、長さ2√6。領域の面積1/2を掛けて √6 です。変換 T(s, t) = (2s, t) の行列式2が外積に掛かり、座標領域の縮小と対応します。</p></details></article>
+  <article class="exercise"><h3>3．正則なら一度だけ覆うか</h3><p>r(u, v) = (cos u, sin u, v)、0 ≤ u ≤ 4π、0 ≤ v ≤ 1 の外積の長さと面積積分を求め、一枚の円柱側面の面積と違う理由を説明してください。</p><details><summary>ヒント1：接方向</summary><p>rᵤ = (−sin u, cos u, 0)、rᵥ = (0, 0, 1)。</p></details><details><summary>ヒント2：u と u + 2π</summary><p>両者は同じ空間の点へ写ります。</p></details><details><summary>解答</summary><p>外積は (cos u, sin u, 0)、長さ1なので積分は4πです。一度だけ覆う円柱側面は2π。内部で r(u, v) = r(u + 2π, v) となるため単射性を欠き、同じ面を二重に数えています。外積が非零という局所条件だけでは防げません。</p></details></article>
+</section>
+<section id="vector-surfaces-reflection"><h2>自分の言葉で</h2><ol><li>外積の長さが面積要素に現れる理由を、二つの接方向から説明できますか。</li><li>座標変換の行列式の符号は、曲面積の式でどう扱われますか。</li><li>球の極、継ぎ目、二重被覆は、それぞれどの仮定に関わる別の問題ですか。</li></ol></section>

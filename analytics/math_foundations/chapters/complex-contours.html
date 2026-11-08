@@ -1,0 +1,83 @@
+<section id="complex-contours-question">
+  <h2>複素線積分と積分路</h2>
+  <p>実の積分では、小さな横幅 dx に関数の値を掛けて足しました。複素平面の道では、横にも縦にも動きます。その小さな移動 dz を複素数として掛けて足すと、終点だけで決まる量と、道の回り方を覚えている量が現れます。両者をどう見分ければよいでしょう。</p>
+  <p class="note">前提は<a href="integration.html">実の定積分</a>、<a href="fundamental-theorem.html">微積分の基本定理</a>、<a href="complex-differentiation.html#complex-differentiation-definition">複素微分</a>、<a href="complex-logarithm.html#complex-logarithm-principal">主値対数の定義域</a>です。この章ではCauchyの定理、GreenやStokesの定理を使いません。</p>
+</section>
+
+<section id="complex-contours-definition">
+  <h2>曲線のパラメータ表示と線積分</h2>
+  <p><strong>区分 C¹ 曲線</strong>とは、閉区間 [α, β] から平面への連続な写像 γ で、区間を有限個に分ければ各部分で C¹ になるものです。各部分の導関数は端まで連続に延長できるとします。折れ線の角で微分がなくても構いません。γ(α) が始点、γ(β) が終点で、等しければ閉曲線です。同じ点を何度通るかも、曲線のデータに含めます。</p>
+  <p>f が曲線の像で連続なら、<strong>複素線積分</strong>を次で定めます。各 C¹ 部分で積分し、その値を足します。複素数値関数の実パラメータによる積分は、実部と虚部の実積分を別々に行うという意味です。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mo>∫</mo><mi>γ</mi></msub><mi>f</mi><mo>(</mo><mi>z</mi><mo>)</mo><mi>d</mi><mi>z</mi><mo>=</mo><msubsup><mo>∫</mo><mi>α</mi><mi>β</mi></msubsup><mi>f</mi><mo>(</mo><mi>γ</mi><mo>(</mo><mi>t</mi><mo>)</mo><mo>)</mo><msup><mi>γ</mi><mo>′</mo></msup><mo>(</mo><mi>t</mi><mo>)</mo><mi>d</mi><mi>t</mi></mrow></math></div>
+  <p>γ = x + iy、f(γ) = u + iv と書けば、掛け算から次の二成分になります。u、v も道に沿った t の関数です。fをただ時間で足す ∫f(γ(t))dt とは異なり、γ′ を掛けることで道の移動そのものを数えます。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mo>∫</mo><mi>γ</mi></msub><mi>f</mi><mi>d</mi><mi>z</mi><mo>=</mo><mo>∫</mo><mo>(</mo><mi>u</mi><msup><mi>x</mi><mo>′</mo></msup><mo>−</mo><mi>v</mi><msup><mi>y</mi><mo>′</mo></msup><mo>)</mo><mi>d</mi><mi>t</mi><mo>+</mo><mi>i</mi><mo>∫</mo><mo>(</mo><mi>v</mi><msup><mi>x</mi><mo>′</mo></msup><mo>+</mo><mi>u</mi><msup><mi>y</mi><mo>′</mo></msup><mo>)</mo><mi>d</mi><mi>t</mi></mrow></math></div>
+  <p>例えば線分 γ(t) = a + t(b − a)、0 ≤ t ≤ 1 なら、dz = (b − a)dt。定数 f = c の積分は c(b − a) です。向きと長さが b − a に含まれています。道に沿っての移動量を数える定義から、実積分の線形性により ∫γ(Af + Bg)dz = A∫γf dz + B∫γg dz（A、B は複素定数）が従います。</p>
+</section>
+
+<section id="complex-contours-orientation">
+  <h2>再パラメータ化・向きの反転・連結</h2>
+  <p>η(s) = γ(φ(s)) とし、φ が新しい区間から [α, β] への増加 C¹ 全単射で、φ′ &gt; 0 とします。連鎖律で η′(s) = γ′(φ(s))φ′(s)。実積分の置換 t = φ(s) を二成分に使えば、∫η f dz = ∫γ f dz です。区分ごとにこの条件を満たす場合も同様です。ここでは、この条件を満たす向きの保存された再パラメータ化を扱います。</p>
+  <p>逆向き −γ は t ↦ γ(α + β − t)。導関数に負号が付き、置換すると ∫<sub>−γ</sub>f dz = −∫γf dz になります。また、γ₁ の終点と γ₂ の始点が一致するとき、続けてたどる道 γ₁ * γ₂ の積分は二つの積分の和です。一周を二回たどるなら二倍であり、像の図形が同じというだけで同じ積分とはいえません。</p>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="道の操作と積分の変化"><table class="concept-table" style="min-width:48rem" data-visual="complex-contours-operations"><caption>同じ被積分関数 z̄ で、操作と積分値を対応づける</caption><thead><tr><th scope="col">操作</th><th scope="col">パラメータ表示・道</th><th scope="col">∫ z̄ dz</th><th scope="col">何が保たれたか</th></tr></thead><tbody><tr><th scope="row">基準の直線</th><td>γ(t)=t(1+i), 0≤t≤1。</td><td>1。</td><td>始点0、終点1+i。</td></tr><tr><th scope="row">速さだけを変更</th><td>γ(s)=(s/2)(1+i), 0≤s≤2。</td><td>1。</td><td>同じ道・同じ向き。速度は半分、区間は二倍。</td></tr><tr><th scope="row">向きの反転</th><td>γ(t)=(1−t)(1+i), 0≤t≤1。</td><td>−1。</td><td>同じ道を逆にたどり、符号が反転。</td></tr><tr><th scope="row">連結して別の道</th><td>0→1→1+i の二線分。</td><td>1/2+(1/2+i)=1+i。</td><td>同じ端点でも道が違えば値は変わる。連結では二積分を足す。</td></tr></tbody></table></div><p data-reading-note="complex-contours-operations">速さの行は向きを保つ滑らかな再パラメータ化です。別の道の行では被積分関数は同じ共役のままです。「速さを変える」と「道を変える」を同一視しないでください。経路独立性には原始関数の存在などの別の理由が必要です。</p>
+</section>
+
+<section id="complex-contours-ml">
+  <h2>ML評価と積分の上界</h2>
+  <p>曲線の長さを L(γ) = ∫<sub>α</sub><sup>β</sup>|γ′(t)|dt と定めます。角のある場合は部分ごとの和です。曲線上で |f| ≤ M なら、積分の絶対値は M と長さの積以下になります。これを<strong>ML評価</strong>と呼びます。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>|</mo><msub><mo>∫</mo><mi>γ</mi></msub><mi>f</mi><mo>(</mo><mi>z</mi><mo>)</mo><mi>d</mi><mi>z</mi><mo>|</mo><mo>≤</mo><msubsup><mo>∫</mo><mi>α</mi><mi>β</mi></msubsup><mo>|</mo><mi>f</mi><mo>(</mo><mi>γ</mi><mo>(</mo><mi>t</mi><mo>)</mo><mo>)</mo><mo>|</mo><mo>|</mo><msup><mi>γ</mi><mo>′</mo></msup><mo>(</mo><mi>t</mi><mo>)</mo><mo>|</mo><mi>d</mi><mi>t</mi><mo>≤</mo><mi>M</mi><mi>L</mi><mo>(</mo><mi>γ</mi><mo>)</mo></mrow></math></div>
+  <div class="proof"><h3>複素積分の三角不等式を、実部へ戻す</h3><p>区分連続な g(t) の積分を I とします。I = 0 なら |I| ≤ ∫|g| は明らかです。I ≠ 0 なら c = Ī/|I| と置けば |c| = 1、cI = |I|。したがって |I| = Re(cI) = ∫Re(cg(t))dt ≤ ∫|g(t)|dt です。g = f(γ)γ′ を代入し、曲線上での上限 M を使えばML評価になります。複素数を大小で比較したのでなく、その実部を比較しました。</p></div>
+  <p>例えば半径 R の円の長さは 2πR。円上で |f| ≤ 3 なら、積分の絶対値は 6πR 以下です。これは上界であり、積分の正確な値とは限りません。細かい打ち消し合いがあれば実際の値はもっと小さくなります。後の章では、小円を縮めるときの誤差をこの評価で消します。</p>
+</section>
+
+<section id="complex-contours-primitive">
+  <h2>原始関数と経路独立性</h2>
+  <p>開集合 U 上で F が正則で、F′ = f となるとき、F を f の<strong>原始関数</strong>と呼びます。ここでは f は連続とします。曲線 γ の像が U に含まれれば、実の微積分の基本定理が、道に沿って使えます。</p>
+  <div class="theorem"><h3>曲線に沿う基本定理</h3><div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mo>∫</mo><mi>γ</mi></msub><mi>f</mi><mo>(</mo><mi>z</mi><mo>)</mo><mi>d</mi><mi>z</mi><mo>=</mo><mi>F</mi><mo>(</mo><mi>γ</mi><mo>(</mo><mi>β</mi><mo>)</mo><mo>)</mo><mo>−</mo><mi>F</mi><mo>(</mo><mi>γ</mi><mo>(</mo><mi>α</mi><mo>)</mo><mo>)</mo></mrow></math></div></div>
+  <div class="proof"><h3>実パラメータに沿って微分する</h3><p>各 C¹ 部分で、複素微分が表す実全微分と実の連鎖律から dF(γ(t))/dt = F′(γ(t))γ′(t) = f(γ(t))γ′(t)。右辺は連続です。実部と虚部へ実の基本定理を使い、部分区間の端点の差を足します。途中の端点の F の値は打ち消し合い、最初と最後だけが残ります。</p></div>
+  <p>したがって、同じ開集合に原始関数があれば、同じ端点を結ぶどの区分 C¹ 曲線でも積分は同じで、閉曲線の積分は0です。例えば f(z) = z² は F(z) = z³/3 を全平面に持ちます。0から1 + iへの積分は、どんな道でも (1 + i)³/3 = (−2 + 2i)/3 です。</p>
+  <p>一般の連続関数では道が重要です。f(z) = z̄ を0から1 + iへ積分すると、直線と折れ線で次の違いが出ます。</p>
+  <figure class="concept-figure" id="complex-contours-visual-paths" data-visual="complex-contours-paths">
+    <svg class="concept-svg" viewBox="0 0 360 400" role="img" aria-labelledby="complex-contours-paths-title complex-contours-paths-desc">
+      <title id="complex-contours-paths-title">同じ端点でも共役の積分は道で変わる</title><desc id="complex-contours-paths-desc">横軸と縦軸は同じ縮尺。原点から1へ右に進み1足すiへ上がる実線の折れ線と、原点から1足すiへ直接進む破線。共役の積分は折れ線で1足すi、直線で1となる。</desc>
+      <line x1="45" y1="260" x2="316" y2="260" stroke="var(--grid)" stroke-width="2"/><line x1="80" y1="292" x2="80" y2="45" stroke="var(--grid)" stroke-width="2"/>
+      <path d="M80 260 L260 260 L260 80" fill="none" stroke="var(--series-1)" stroke-width="4"/><polygon points="179,260 167,254 167,266" fill="var(--series-1)"/><polygon points="260,166 254,178 266,178" fill="var(--series-1)"/>
+      <line x1="80" y1="260" x2="260" y2="80" stroke="var(--series-2)" stroke-width="3" stroke-dasharray="7 5"/><polygon points="181,159 168,163 177,172" fill="var(--series-2)"/>
+      <circle cx="80" cy="260" r="4" fill="var(--ink)"/><circle cx="260" cy="80" r="4" fill="var(--ink)"/>
+      <text x="57" y="288" font-size="22" fill="var(--ink)">0</text><text x="253" y="289" font-size="22" fill="var(--ink)">1</text><text x="246" y="53" font-size="22" fill="var(--ink)">1 + i</text><text x="117" y="120" font-size="22" fill="var(--ink)">直線</text><text x="276" y="187" font-size="22" fill="var(--ink)">折線</text>
+      <text x="180" y="327" text-anchor="middle" font-size="22" fill="var(--ink)">両軸は同じ縮尺</text><text x="180" y="372" text-anchor="middle" font-size="22" fill="var(--ink)">∫ z̄ dz：直線1、折線1 + i</text>
+    </svg><figcaption>色に加え、実線と破線で二本の道を区別します。同じ端点だけでは積分は決まりません。</figcaption>
+  </figure>
+  <div class="proof"><h3>二本の道を、定義どおりに計算する</h3><p>直線 γ(t) = (1 + i)t、0 ≤ t ≤ 1 では、γ̄γ′ = (1 − i)t(1 + i) = 2t なので積分は1です。折れ線の横の部分は γ₁(t) = t で積分が ∫₀¹t dt = 1/2。縦は γ₂(t) = 1 + it、γ̄₂γ′₂ = (1 − it)i = t + i なので1/2 + i。和は1 + iです。折れ線を進み直線を逆に戻る閉曲線の積分はiになり、全平面で z̄ の原始関数が存在しないことも分かります。</p></div>
+</section>
+
+<section id="complex-contours-circle">
+  <h2>円周積分と負一乗の核</h2>
+  <p>a を中心とする半径 R &gt; 0 の円を、反時計回りに一周する曲線 C : γ(t) = a + Rexp(it)、0 ≤ t ≤ 2π とします。円の中心 a は曲線上にありません。f(z) = 1/(z − a) は曲線上で連続なので、積分を定義できます。</p>
+  <figure class="concept-figure" id="complex-contours-visual-circle" data-visual="complex-contours-circle">
+    <svg class="concept-svg" viewBox="0 0 360 365" role="img" aria-labelledby="complex-contours-circle-title complex-contours-circle-desc">
+      <title id="complex-contours-circle-title">反時計回りの円と接ベクトル</title><desc id="complex-contours-circle-desc">図は半径Rが1の場合で、横縦は同じ縮尺。中心aから右のa足す1が始点。そこで接ベクトルはiで上向き。円の上端の左向き矢印も反時計回りを示す。</desc>
+      <circle cx="180" cy="185" r="90" fill="none" stroke="var(--series-1)" stroke-width="3"/><path d="M270 185 A90 90 0 0 0 180 95" fill="none" stroke="var(--series-1)" stroke-width="4"/><polygon points="180,95 193,89 193,101" fill="var(--series-1)"/>
+      <line x1="180" y1="185" x2="270" y2="185" stroke="var(--ink-2)" stroke-width="2" stroke-dasharray="6 4"/>
+      <line x1="270" y1="185" x2="270" y2="95" stroke="var(--series-2)" stroke-width="3"/><polygon points="270,95 264,108 276,108" fill="var(--series-2)"/><circle cx="180" cy="185" r="5" fill="var(--ink)"/><circle cx="270" cy="185" r="5" fill="var(--ink)"/>
+      <text x="156" y="215" font-size="22" fill="var(--ink)">a</text><text x="211" y="177" font-size="22" fill="var(--ink)">1</text><text x="271" y="215" font-size="22" fill="var(--ink)">a + 1</text><text x="284" y="126" font-size="22" fill="var(--ink)">i</text>
+      <text x="180" y="50" text-anchor="middle" font-size="22" fill="var(--ink)">正方向：反時計回り</text><text x="180" y="317" text-anchor="middle" font-size="22" fill="var(--ink)">図は R = 1</text><text x="180" y="349" text-anchor="middle" font-size="22" fill="var(--ink)">両軸は同じ縮尺</text>
+    </svg><figcaption>図は R=1 です。始点 a+1 で上向きの接ベクトル i を見てから、一般の γ(t)=a+Reⁱᵗ と γ′(t)=iReⁱᵗ を比べます。1/(ζ−a) の分母の R と、dζ の接速度の R が相殺し、一周の積分は半径によらず2πiになります。反時計回りの向きと、半径・速度の役割を別々に確認します。</figcaption>
+  </figure>
+  <div class="proof"><h3>分母と接ベクトルを、直接約分する</h3><p>γ′(t) = iRexp(it) なので、f(γ(t))γ′(t) = i。したがって積分は ∫₀²π i dt = 2πi です。半径 R には依存しません。時計回りなら向きの反転により −2πi、同じ向きに二周すれば4πiです。</p></div>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mo>∮</mo><mi>C</mi></msub><mfrac><mrow><mi>d</mi><mi>z</mi></mrow><mrow><mi>z</mi><mo>−</mo><mi>a</mi></mrow></mfrac><mo>=</mo><mn>2</mn><mi>π</mi><mi>i</mi></mrow></math></div>
+  <p>この結果を、ほかの整数べきと並べます。次の C は上で定めた反時計回りの円です。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mo>∮</mo><mi>C</mi></msub><msup><mrow><mo>(</mo><mi>z</mi><mo>−</mo><mi>a</mi><mo>)</mo></mrow><mi>k</mi></msup><mi>d</mi><mi>z</mi><mo>=</mo><mo>{</mo><mtable columnalign="left"><mtr><mtd><mn>2</mn><mi>π</mi><mi>i</mi></mtd><mtd><mi>k</mi><mo>=</mo><mo>−</mo><mn>1</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mi>k</mi><mo>∈</mo><mi>ℤ</mi><mo>,</mo><mspace width="0.3em"/><mi>k</mi><mo>≠</mo><mo>−</mo><mn>1</mn></mtd></mtr></mtable></mrow></math></div>
+  <p>k ≠ −1 の場合は、F(z) = (z − a)ᵏ⁺¹/(k + 1) が原始関数です。負の整数べきでも、a を除いた開集合上では通常の商の微分則で確かめられます。円は閉じているので基本定理から積分は0。k = −1 だけはこの式で割れず、一周の積分が残ります。ここでは整数べきだけを使い、枝の必要な一般の複素べきは使っていません。</p>
+  <p class="note">1/(z − a) は a を除けば正則ですが、ℂ ∖ {a} 全体で原始関数を持ちません。持てば閉曲線の積分が0となり、2πiという直接計算に反するからです。特に a = 0 では、前章の主値Logは切断した領域で原始関数になりますが、原点を一周する円全体はその領域に入りません。Log′ = 1/z を、切断をまたぐ円に適用することはできません。</p>
+  <p>さらに、ℂ ∖ {0} に正則な対数 L があると仮定すれば、exp L(z) = z を微分して exp L(z)L′(z) = 1、つまり L′(z) = 1/z になります。これは上の積分と矛盾します。前章の連続な角度の議論と、この積分の議論は、同じ一周の障害を別々に捉えています。</p>
+  <p>閉曲線で積分が0になるのは、どの条件のもとでしょうか。正則性に加え、道と定義域の形を確かめる必要があります。次の<a href="cauchy-theorem.html">Cauchyの定理</a>で、この問いを小さな三角形から調べます。</p>
+</section>
+
+<details class="column" id="complex-contours-column"><summary>寄り道［自作モデル］：長方形の面積が、虚部に現れる</summary><p>原点、b、b + ih、ih を順に進む反時計回りの長方形を考えます。b、h は正の実数です。下辺の ∫z̄ dz は b²/2、右辺は h²/2 + ibh、上辺は −b²/2 + ibh、左辺は −h²/2 と、各線分を実パラメータで計算できます。</p><p>和は2ibh、つまり虚部は面積 bh の2倍です。実部は各辺どうしで打ち消し合います。これはこの長方形についての直接計算であり、一般の領域の面積公式を証明したわけではありません。複素積分が道の囲む量を覚えることを、四本の実積分だけで観察できます。</p><p class="source-note">出典：本章の積分の定義に基づく自作の長方形モデルです。Greenの定理など一般の面積定理は用いていません。</p></details>
+
+<section id="complex-contours-exercises"><h2>演習：複素線積分</h2>
+  <article class="exercise"><h3>1．同じ線分を、違う速さで進む</h3><p>γ(t) = (1 + i)t、0 ≤ t ≤ 1 と η(s) = (1 + i)(s + s²)/2、0 ≤ s ≤ 1 で、∫z dz を計算し、同じ値になることを確かめてください。</p><details><summary>ヒント1：共通の原始関数</summary><p>F(z) = z²/2 は全平面で z の原始関数です。</p></details><details><summary>ヒント2：再パラメータ化</summary><p>φ(s) = (s + s²)/2 は端点を保ち、φ′ = (1 + 2s)/2 &gt; 0 です。</p></details><details><summary>解答</summary><p>どちらも0から1 + iへ進み、積分は ((1 + i)² − 0)/2 = i です。直接には γ で被積分関数は2it、ηで2iφ(s)φ′(s) となり、それぞれの積分もiです。向きを保つ速さの変更なので一致します。</p></details></article>
+  <article class="exercise"><h3>2．ML評価と正確な値</h3><p>線分0から1 + iに沿う ∫z dz の絶対値を、M = √2、L = √2 を用いて評価し、正確な値と比べてください。</p><details><summary>ヒント1：線分上の絶対値</summary><p>z = (1 + i)t、0 ≤ t ≤ 1 なので |z| = √2t ≤ √2 です。</p></details><details><summary>ヒント2：積分の値と上界</summary><p>前問の積分はiです。その絶対値と ML を比較します。</p></details><details><summary>解答</summary><p>ML評価は |∫z dz| ≤ (√2)(√2) = 2。正確な値はiで、その絶対値は1なので評価を満たします。さらに ∫₀¹|γ(t)||γ′(t)|dt = ∫₀¹2t dt = 1 まで計算すれば鋭い評価ですが、MLは最大値だけで簡単に得られる上界です。</p></details></article>
+  <article class="exercise"><h3>3．一周と原始関数</h3><p>|z − 2| = 3 を時計回りに一周するとき、∮dz/(z − 2) と ∮dz/(z − 2)² を求めてください。二つ目の原始関数も挙げてください。</p><details><summary>ヒント1：反時計回りとの関係</summary><p>一つ目は反時計回りなら2πiです。向きを反転します。</p></details><details><summary>ヒント2：負の整数べき</summary><p>−1/(z − 2) の導関数を調べます。</p></details><details><summary>解答</summary><p>一つ目は −2πi。二つ目は F(z) = −1/(z − 2) という原始関数が ℂ ∖ {2} にあるため0です。どちらの関数も中心2では未定義ですが、円上では連続です。中心に特異点があるだけで、すべての閉曲線積分が非零になるわけではありません。</p></details></article>
+</section>
+<section id="complex-contours-reflection"><h2>自分の言葉で</h2><ol><li>複素積分で γ′(t) を掛けることは、速さと向きに対してどんな役割を持ちますか。</li><li>原始関数があると閉曲線の積分が0になることを、実の基本定理から説明できますか。</li><li>1/z が原点以外で正則であっても、原点を除く平面全体で原始関数を持てないのはなぜですか。</li></ol></section>

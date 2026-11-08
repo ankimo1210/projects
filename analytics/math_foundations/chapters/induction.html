@@ -1,0 +1,87 @@
+<section id="induction-question">
+  <h2>数学的帰納法と有限の観察</h2>
+  <p>1 から n までの和を Sₙ とすると、S₁ = 1、S₂ = 3、S₃ = 6、S₄ = 10 です。Sₙ = n(n + 1)/2 という式を予想したとしましょう。いくつか代入して確かめても、<a href="observation.html">有限の観察</a>だけでは、すべての n を説明できません。しかし n の場合から n + 1 の場合へ、いつでも進めるならどうでしょうか。</p>
+  <p><strong>数学的帰納法</strong>は、最初の一段と、次へ進む共通の仕組みによって、整数上の無限個の主張を示します。日常の「いくつかの例から一般化する」という意味の帰納とは違い、論理的な証明法です。使えるのは、自然数が最初から一段ずつ進んで尽くされるという構造を持つからです。</p>
+</section>
+
+<section id="induction-principle">
+  <h2>数学的帰納法の原理と最小反例</h2>
+  <div class="theorem">
+    <h3>数学的帰納法の原理</h3>
+    <p>整数 n ≥ n₀ に対する命題 P(n) を考えます。P(n₀) が真であり、すべての整数 k ≥ n₀ に対して P(k) ⇒ P(k + 1) が成り立つなら、すべての整数 n ≥ n₀ で P(n) は真です。</p>
+  </div>
+  <p>最初の確認を<strong>基底</strong>、P(k) から P(k + 1) へ進む部分を<strong>帰納段階</strong>と呼びます。帰納段階では P(k) を一時的に仮定してよく、これを帰納法の仮定と呼びます。ただし k は特定の一個ではなく、範囲内の任意の整数です。仮定してよいのは P(k) であり、これから示す P(k + 1) ではありません。</p>
+  <div class="proof">
+    <h3>なぜこの仕組みでよいのか</h3>
+    <p>ここでは、空でない正の整数の集合には最小要素があるという性質を前提にします。添字を n − n₀ + 1 と読み替えれば、n ≥ n₀ の範囲でもこの最小性が使えます。もし P が偽となる n があれば、その中で最小のものを m とします。基底から m ≠ n₀ なので m &gt; n₀ です。m − 1 は範囲内で m より小さいため P(m − 1) は真。帰納段階により P(m) も真となり、矛盾します。偽となる最初の場所が存在できないので、すべてで成り立ちます。</p>
+  </div>
+  <p>出発点だけでは、その先に届きません。次へ進む橋だけでは、そもそもどこから進めるかが分かりません。二つの条件は役割が異なり、片方を省くことはできません。</p>
+
+  <figure class="concept-figure" id="induction-visual-chain" data-visual="induction-visual-chain"><svg class="concept-svg" viewBox="0 0 360 360" role="img" aria-labelledby="induction-visual-chain-title induction-visual-chain-desc"><title id="induction-visual-chain-title">基底と帰納段階の欠落を三つの命題で比較する</title><desc id="induction-visual-chain-desc">n=1から4を三段で比較。和の公式は全箱真。P(n):n≥2はP(1)だけ偽だが全てのP(k)⇒P(k+1)は真。P(n):n≤2は基底真でも2から3の含意が偽で橋に×を置く。四点の絵だけで無限の命題を証明しない。</desc><defs><marker id="induction-visual-chain-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--ink-3)"/></marker></defs><text x="180" y="30" font-size="22" fill="var(--ink)" text-anchor="middle">基底と帰納段階を、別々に点検</text><text x="180" y="72" font-size="22" fill="var(--ink)" text-anchor="middle">和の公式：両条件が成立</text><rect x="18" y="87" width="54" height="40" rx="5" fill="var(--accent-wash)" stroke="var(--series-1)" stroke-width="2"/><text x="45" y="115" font-size="22" fill="var(--ink)" text-anchor="middle">1:真</text><rect x="108" y="87" width="54" height="40" rx="5" fill="var(--accent-wash)" stroke="var(--series-1)" stroke-width="2"/><text x="135" y="115" font-size="22" fill="var(--ink)" text-anchor="middle">2:真</text><rect x="198" y="87" width="54" height="40" rx="5" fill="var(--accent-wash)" stroke="var(--series-1)" stroke-width="2"/><text x="225" y="115" font-size="22" fill="var(--ink)" text-anchor="middle">3:真</text><rect x="288" y="87" width="54" height="40" rx="5" fill="var(--accent-wash)" stroke="var(--series-1)" stroke-width="2"/><text x="315" y="115" font-size="22" fill="var(--ink)" text-anchor="middle">4:真</text><path d="M76 107 L104 107" fill="none" stroke="var(--ink-3)" stroke-width="2" marker-end="url(#induction-visual-chain-arrow)"/><path d="M166 107 L194 107" fill="none" stroke="var(--ink-3)" stroke-width="2" marker-end="url(#induction-visual-chain-arrow)"/><path d="M256 107 L284 107" fill="none" stroke="var(--ink-3)" stroke-width="2" marker-end="url(#induction-visual-chain-arrow)"/><text x="180" y="169" font-size="22" fill="var(--ink)" text-anchor="middle">P(n): n≥2　基底だけが偽</text><rect x="18" y="184" width="54" height="40" rx="5" fill="var(--surface)" stroke="var(--series-2)" stroke-width="2" stroke-dasharray="4 3"/><text x="45" y="212" font-size="22" fill="var(--ink)" text-anchor="middle">1:偽</text><rect x="108" y="184" width="54" height="40" rx="5" fill="var(--accent-wash)" stroke="var(--series-1)" stroke-width="2"/><text x="135" y="212" font-size="22" fill="var(--ink)" text-anchor="middle">2:真</text><rect x="198" y="184" width="54" height="40" rx="5" fill="var(--accent-wash)" stroke="var(--series-1)" stroke-width="2"/><text x="225" y="212" font-size="22" fill="var(--ink)" text-anchor="middle">3:真</text><rect x="288" y="184" width="54" height="40" rx="5" fill="var(--accent-wash)" stroke="var(--series-1)" stroke-width="2"/><text x="315" y="212" font-size="22" fill="var(--ink)" text-anchor="middle">4:真</text><path d="M76 204 L104 204" fill="none" stroke="var(--ink-3)" stroke-width="2" marker-end="url(#induction-visual-chain-arrow)"/><path d="M166 204 L194 204" fill="none" stroke="var(--ink-3)" stroke-width="2" marker-end="url(#induction-visual-chain-arrow)"/><path d="M256 204 L284 204" fill="none" stroke="var(--ink-3)" stroke-width="2" marker-end="url(#induction-visual-chain-arrow)"/><text x="180" y="266" font-size="22" fill="var(--ink)" text-anchor="middle">P(n): n≤2　2→3で橋切れ</text><rect x="18" y="281" width="54" height="40" rx="5" fill="var(--accent-wash)" stroke="var(--series-1)" stroke-width="2"/><text x="45" y="309" font-size="22" fill="var(--ink)" text-anchor="middle">1:真</text><rect x="108" y="281" width="54" height="40" rx="5" fill="var(--accent-wash)" stroke="var(--series-1)" stroke-width="2"/><text x="135" y="309" font-size="22" fill="var(--ink)" text-anchor="middle">2:真</text><rect x="198" y="281" width="54" height="40" rx="5" fill="var(--surface)" stroke="var(--series-2)" stroke-width="2" stroke-dasharray="4 3"/><text x="225" y="309" font-size="22" fill="var(--ink)" text-anchor="middle">3:偽</text><rect x="288" y="281" width="54" height="40" rx="5" fill="var(--surface)" stroke="var(--series-2)" stroke-width="2" stroke-dasharray="4 3"/><text x="315" y="309" font-size="22" fill="var(--ink)" text-anchor="middle">4:偽</text><path d="M76 301 L104 301" fill="none" stroke="var(--ink-3)" stroke-width="2" marker-end="url(#induction-visual-chain-arrow)"/><line x1="166" y1="301" x2="194" y2="301" stroke="var(--ink-3)" stroke-width="2" stroke-dasharray="5 5"/><line x1="176" y1="293" x2="184" y2="309" stroke="var(--series-2)" stroke-width="3"/><line x1="176" y1="309" x2="184" y2="293" stroke="var(--series-2)" stroke-width="3"/><path d="M256 301 L284 301" fill="none" stroke="var(--ink-3)" stroke-width="2" marker-end="url(#induction-visual-chain-arrow)"/><text x="180" y="350" font-size="22" fill="var(--ink)" text-anchor="middle">各箱は n=1,2,3,4 の P(n)</text></svg><figcaption>箱の数字は n、真/偽は P(n) の値です。二段目の n≥2 は、どの帰納段階の含意も真なのに基底が偽。三段目の n≤2 は基底が真でも 2→3 の含意が偽です。二つの条件を別々に点検してください。上段の和の公式は次節で基底と任意の帰納段階を証明します。この有限の鎖の図だけで全ての n を証明したのではありません。</figcaption></figure>
+</section>
+
+<section id="induction-sum">
+  <h2>自然数の和の公式と帰納法</h2>
+  <div class="proof">
+    <h3>1 + 2 + ⋯ + n = n(n + 1)/2 の証明</h3>
+    <p>n = 1 では左辺も右辺も 1 で、基底は成立します。次に k ≥ 1 とし、1 + 2 + ⋯ + k = k(k + 1)/2 を仮定します。次の和はこれに k + 1 を足したものなので、1 + 2 + ⋯ + k + (k + 1) = k(k + 1)/2 + (k + 1) = (k + 1)(k + 2)/2 です。これは n = k + 1 のときの公式そのものです。したがって帰納法により、すべての整数 n ≥ 1 で公式が成り立ちます。</p>
+  </div>
+  <p>この証明では、n = k + 1 の式がどんな形かを先に見ておくと、計算の目標が明確になります。k を k + 1 に置き換えるので、二つ目の因子も k + 1 ではなく k + 2 に変わります。文字を機械的に一つ足すのでなく、「次の場合の主張をまるごと書く」と誤りが減ります。</p>
+</section>
+
+<section id="induction-recurrence">
+  <h2>漸化式と一般項の帰納法による確認</h2>
+  <p>a₀ = 1、aₙ₊₁ = 2aₙ + 1 と定めた数列を考えます。このように前の値を使って次の値を定める関係を<strong>漸化式</strong>と呼びます。最初から計算すると 1、3、7、15 と続き、aₙ = 2ⁿ⁺¹ − 1 が予想できます。添字が 0 から始まっていることに注意しましょう。</p>
+  <div class="proof">
+    <h3>漸化式から公式を確かめる</h3>
+    <p>n = 0 では 2¹ − 1 = 1 = a₀ です。aₖ = 2ᵏ⁺¹ − 1 と仮定すると、定義の漸化式より aₖ₊₁ = 2(2ᵏ⁺¹ − 1) + 1 = 2ᵏ⁺² − 1 です。これは k + 1 の場合の式なので、すべての整数 n ≥ 0 で予想した公式が成り立ちます。</p>
+  </div>
+  <p>公式を発見する段階では、表を作ったり、aₙ + 1 に注目したりしてかまいません。証明の段階では、初期値と漸化式に合うことを確認します。発見の方法を、証明に必要な順番と無理に一致させる必要はありません。後の<a href="series.html">級数</a>でも、まず有限の部分和についてこのような式を示してから、その極限を調べます。</p>
+</section>
+
+<section id="induction-pitfalls">
+  <h2>帰納法の基底・帰納段階と成立範囲</h2>
+  <p>「すべての n ≥ 1 で 2ⁿ ≥ n²」と言い、n = 1 を確かめた後で、「2ᵏ⁺¹ = 2·2ᵏ ≥ 2k² ≥ (k + 1)²」と続けたらどうでしょう。最後の不等式は常に真ではありません。k = 2 では 8 ≥ 9 となって失敗します。実際、元の主張も n = 3 で偽です。帰納法の形式をなぞるだけでは、その中の計算は保証されません。</p>
+  <p>この主張は範囲を n ≥ 4 に直せば証明できます。基底は 2⁴ = 4²。k ≥ 4 なら 2k² − (k + 1)² = (k − 1)² − 2 ≥ 7 &gt; 0 なので、先ほどの帰納段階が正当になります。反例を見つけた後、どの範囲なら同じ考えが働くかを調べることも、数学の前進です。</p>
+</section>
+
+<details class="column" id="induction-column">
+  <summary>寄り道［応用］：巨大なべき乗を、二進法で少しずつ作る</summary>
+  <p>プログラミング言語 Go の多倍長整数の実装には、指数を二進法で一桁ずつ読み、平方し、必要なら元の数を一回掛ける計算が現れます。例えば 13 は二進法で 1101。a の指数を 1 → 3 → 6 → 13 と進めれば、a¹³ を作れます。毎回 a を一個ずつ掛けるより、途中の結果を大きく再利用できます。</p>
+  <p>正しさの核は短い帰納法です。読み終えた桁の値が p、計算結果が aᵖ だとします。次の桁 b が 0 か 1 なら、新しい指数は 2p + b。平方して、b = 1 のときだけ a を掛けると、結果はちょうど a²ᵖ⁺ᵇ になります。最初の一桁も合うので、何桁進んでも意味が保たれます。帰納法は無限の公式だけでなく、繰り返す手順を信頼する理由にもなるのです。</p>
+  <p class="source-note">出典：<a href="https://go.dev/src/math/big/nat.go#L748">Go：math/big/nat.go、指数の各ビットを処理する実装</a>。</p>
+</details>
+
+<section id="induction-exercises">
+  <h2>演習：帰納法の適用と検証</h2>
+  <article class="exercise">
+    <h3>1．奇数を足すと平方になる</h3>
+    <p>すべての整数 n ≥ 1 について、1 + 3 + ⋯ + (2n − 1) = n² を帰納法で示してください。</p>
+    <details><summary>ヒント1：次に足す数を指定する</summary><p>n = k + 1 で最後に加える奇数は 2k + 1 です。</p></details>
+    <details><summary>ヒント2：平方の展開を使う</summary><p>帰納法の仮定を入れると k² + 2k + 1 が現れます。</p></details>
+    <details><summary>解答</summary><p>n = 1 では 1 = 1²。k の場合を仮定すると、次の和は k² + (2k + 1) = (k + 1)² です。基底と帰納段階が示せたので、すべての n ≥ 1 で成り立ちます。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>2．初期値も忘れずに</h3>
+    <p>b₀ = 0、bₙ₊₁ = bₙ + 2n + 1 とします。bₙ = n² がすべての整数 n ≥ 0 で成り立つことを示してください。</p>
+    <details><summary>ヒント1：0 から始める</summary><p>最初の主張は b₀ = 0² です。</p></details>
+    <details><summary>ヒント2：定義と仮定を順に使う</summary><p>bₖ₊₁ = bₖ + 2k + 1 に bₖ = k² を入れます。</p></details>
+    <details><summary>解答</summary><p>b₀ = 0 = 0² で基底が成立します。bₖ = k² と仮定すれば bₖ₊₁ = k² + 2k + 1 = (k + 1)²。よって帰納法から公式が成り立ちます。これは最初の n 個の奇数を足す関係を、漸化式で書いたものです。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>3．到達できない整数を見つける</h3>
+    <p>P(1) と「すべての k ≥ 1 で P(k) ⇒ P(k + 2)」だけから、すべての n ≥ 1 で P(n) と言えるでしょうか。言えないなら反例となる性質を挙げてください。</p>
+    <details><summary>ヒント1：出発点から並べる</summary><p>1 の次は 3、その次は 5 です。2 へは進めますか。</p></details>
+    <details><summary>ヒント2：奇数だけで成り立つ性質を使う</summary><p>P(n) を「n は奇数」とした場合に、二つの条件を調べます。</p></details>
+    <details><summary>解答</summary><p>言えません。P(n) を「n は奇数」とすると P(1) は真で、奇数に 2 を足せば奇数なので推移条件も真です。しかし P(2) は偽です。すべてに届けるには、P(2) の確認も必要です。</p></details>
+  </article>
+</section>
+
+<section id="induction-reflection">
+  <h2>自分の言葉で</h2>
+  <ol>
+    <li>帰納法の基底と帰納段階は、それぞれ何を保証しますか。</li>
+    <li>帰納法の仮定を使うことは、結論を先に仮定する循環論法とどう違いますか。</li>
+    <li>一つ反例があった主張を、範囲を変えて正しい定理に直すには何を調べますか。</li>
+  </ol>
+</section>

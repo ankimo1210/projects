@@ -1,0 +1,125 @@
+<section id="shortest-paths-question">
+  <h2>重み付きグラフの最短路</h2>
+  <p>ある場所から別の場所まで、通る通路の本数を最少にしたいなら、<a href="discrete-trees.html#discrete-trees-bfs">幅優先探索</a>が使えました。では各通路の時間が違ったらどうでしょう。三本の通路を通る候補が二つあっても、合計 5 分と 7 分では選び方が変わります。</p>
+  <p>候補を見つけるたびに距離を短くするだけでは、「もう短くならない」瞬間が分かりません。この章では、<strong>辺の重みが全て非負</strong>という条件から、距離を一つずつ確定できる理由を説明します。</p>
+</section>
+
+<section id="shortest-paths-weights">
+  <h2>道の重みと最短距離</h2>
+  <p>有限単純無向グラフの各辺 uv に、有限の実数 w(uv) ≥ 0 を付けます。これを<strong>重み</strong>と呼びます。無向なので w(uv) = w(vu)。道や歩道の<strong>重み</strong>は、通った辺の重みの合計です。重みの単位は一つのモデル内でそろえます。この章の自作例では「分」としますが、図の線の長さは時間を表しません。</p>
+  <figure class="concept-figure" id="shortest-paths-visual-weighted" data-visual="shortest-paths-weighted">
+    <svg class="concept-svg" viewBox="0 0 360 345" role="img" aria-labelledby="shortest-paths-weighted-title shortest-paths-weighted-desc" fill="var(--ink)" font-size="22">
+      <title id="shortest-paths-weighted-title">AからFへ合計5分で進む非負重みのグラフ</title>
+      <desc id="shortest-paths-weighted-desc">六頂点A、B、C、D、E、F。辺と重みはABが2、BCが2、ADが5、BEが1、CFが3、DEが1、EFが2。太い実線のA、B、E、Fが重み5の最短路。線の長さは重みと無関係。</desc>
+      <path d="M 180 40 L 305 70 V 240 M 50 70 V 240 L 180 275" fill="none" stroke="var(--ink-3)" stroke-width="3"/>
+      <path d="M 50 70 L 180 40 V 275 L 305 240" fill="none" stroke="var(--series-1)" stroke-width="6"/>
+      <g fill="var(--surface)" stroke="var(--ink)" stroke-width="2"><circle cx="50" cy="70" r="24"/><circle cx="180" cy="40" r="24"/><circle cx="305" cy="70" r="24"/><circle cx="50" cy="240" r="24"/><circle cx="180" cy="275" r="24"/><circle cx="305" cy="240" r="24"/></g>
+      <g text-anchor="middle"><text x="50" y="78">A</text><text x="180" y="48">B</text><text x="305" y="78">C</text><text x="50" y="248">D</text><text x="180" y="283">E</text><text x="305" y="248">F</text><text x="110" y="34">2</text><text x="250" y="34">2</text><text x="21" y="164">5</text><text x="209" y="164">1</text><text x="337" y="164">3</text><text x="108" y="290">1</text><text x="260" y="301">2</text><text x="180" y="337">A–B–E–F：5 分</text></g>
+    </svg>
+    <figcaption>自作の六頂点・七辺のモデル。A–B–E–F は 2 + 1 + 2 = 5 分、A–B–C–F は 2 + 2 + 3 = 7 分。辺数はどちらも三本ですが、重みが違います。図の太い実線が前者です。</figcaption>
+  </figure>
+  <p>始点 s から v への道があるとき、道の重みの最小値を<strong>最短距離</strong> δ(v) とします。道がなければ δ(v) = ∞ と記録します。∞ は「とても長い有限の時間」でも 0 でもなく、<strong>到達不能</strong>の記号です。自分への長さ 0 の道の重みは 0 なので δ(s) = 0 です。</p>
+  <div class="proof"><h3>歩道を許しても、非負なら最小値は変わらない</h3><p>頂点を再訪する歩道から、同じ頂点の二回の出現の間を取り除きます。その部分の辺の重みは全て非負なので、取り除いても合計は増えません。有限回で道になります。有限グラフの道には頂点の繰り返しがないため、候補は有限個。到達可能ならその中に最小値があり、歩道全体の最小値とも等しくなります。重み 0 の周回を除いても合計が変わらないことはありますが、道への整理は可能です。</p></div>
+</section>
+
+<section id="shortest-paths-relaxation">
+  <h2>緩和による暫定距離の更新</h2>
+  <p>最短距離そのもの δ(v) と、計算途中の<strong>暫定距離</strong> d(v) を区別します。初めは d(s) = 0、他は ∞。有限の d(v) は、実際に見つけた経路の重みなので、真の最小値より小さくはありません。</p>
+  <p>u へ d(u) で行けて、辺 uv があるなら、v へ d(u) + w(uv) で行く候補ができます。今の値より小さければ更新します。この操作が<strong>緩和</strong>です。名前は条件を弱める意味ではなく、暫定的な上限を短い方へ下げる操作を指しています。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>d</mi><mo>(</mo><mi>v</mi><mo>)</mo><mo>←</mo><mi>min</mi><mo>{</mo><mi>d</mi><mo>(</mo><mi>v</mi><mo>)</mo><mo>,</mo><mspace width="0.4em"/><mi>d</mi><mo>(</mo><mi>u</mi><mo>)</mo><mo>+</mo><mi>w</mi><mo>(</mo><mi>u</mi><mi>v</mi><mo>)</mo><mo>}</mo></mrow></math></div>
+  <p>短くなったときは v の<strong>親</strong>を u にします。後で終点から親をたどれば、見つけた経路を復元できます。同じ値の候補では、今の親を変えない規則にします。同じ最短距離を実現する道が複数ある場合も、一つを記録すれば十分だからです。</p>
+</section>
+
+<section id="shortest-paths-dijkstra">
+  <h2>ダイクストラ法と確定距離</h2>
+  <p><strong>Dijkstra 法</strong>では、確定した頂点の集合 S を空から始め、次の操作を繰り返します。</p>
+  <ol>
+    <li>S の外で d が最小の頂点 u を選ぶ。同距離ならどれを先に選んでもよい。</li>
+    <li>その最小値が ∞ なら終了する。有限なら u を S に入れて確定する。</li>
+    <li>u から未確定の隣接点 v への辺を全て緩和する。値が厳密に小さくなったときだけ親を u にする。</li>
+  </ol>
+  <p>以下の表では同距離ならアルファベット順で選びます。始点 A の確定後は B が 2、D が 5。B の確定で E が 3 と分かるので、D より先に E を選び、D の候補を 4 へ下げます。「一度候補に出た」ことは「確定した」ことではありません。</p>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="六頂点の例におけるDijkstra法の確定順と緩和">
+    <table class="concept-table" data-visual="shortest-paths-trace"><caption>通常例：確定順は A、B、E、C、D、F</caption>
+      <thead><tr><th scope="col"><span class="table-math">新たに確定</span></th><th scope="col"><span class="table-math">確定距離</span></th><th scope="col">未確定の点への更新・比較</th></tr></thead>
+      <tbody>
+        <tr><th scope="row"><span class="table-math">A</span></th><td><span class="table-math">0</span></td><td>B を 2、D を 5 にする。</td></tr>
+        <tr><th scope="row"><span class="table-math">B</span></th><td><span class="table-math">2</span></td><td>C を 4、E を 3 にする。</td></tr>
+        <tr><th scope="row"><span class="table-math">E</span></th><td><span class="table-math">3</span></td><td>D を 4 に短縮、F を 5 にする。</td></tr>
+        <tr><th scope="row"><span class="table-math">C</span></th><td><span class="table-math">4</span></td><td>F への候補は 7。今の 5 を保つ。</td></tr>
+        <tr><th scope="row"><span class="table-math">D</span></th><td><span class="table-math">4</span></td><td>隣の A、E は確定済み。更新なし。</td></tr>
+        <tr><th scope="row"><span class="table-math">F</span></th><td><span class="table-math">5</span></td><td>全頂点が確定。親をたどると F、E、B、A。</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="theorem"><h3>確定した距離は、真の最短距離</h3><p>有限グラフで全ての辺の重みが非負なら、この手順で確定する各頂点 v の値は d(v) = δ(v) です。終了時、確定されていない点は始点から到達不能です。</p></div>
+  <div class="proof"><h3>最短の道が、確定集合の境界を越える場所を見る</h3>
+    <p>保つ性質は、<strong>確定集合 S の各点の d は真の最短距離であり、有限の暫定値は実際の経路の重みである</strong>ことです。最初に選ぶのは s で、全重みが非負だから δ(s) = 0。s の確定は正しい出発点です。緩和で作る値も、既にある経路に一本の辺を足したものなので、常に δ(v) ≤ d(v) です。</p>
+    <p>次に未確定で有限の d が最小の u を選びます。s から u への最短の道を一つ取り、その道で S の外へ最初に出る点を y、その直前を x とします。s は S にあるので x が存在します。帰納法で d(x) = δ(x)。x を確定した時に xy を緩和したので、d(y) は、最短の道の s–y 部分の重み以下です。実際、δ(x) はその s–x 部分の重み以下だからです。</p>
+    <p>y から u までの残りの辺も非負なので、s–y 部分の重みは道全体の重み δ(u) 以下です。一方、u は未確定の中で最小なので d(u) ≤ d(y)。従って次のはさみうちになります。</p>
+    <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>δ</mi><mo>(</mo><mi>u</mi><mo>)</mo><mo>≤</mo><mi>d</mi><mo>(</mo><mi>u</mi><mo>)</mo><mo>≤</mo><mi>d</mi><mo>(</mo><mi>y</mi><mo>)</mo><mo>≤</mo><mi>δ</mi><mo>(</mo><mi>u</mi><mo>)</mo></mrow></math></div>
+    <p>全てが等しく、u も正しく確定できます。ここでは残りが「正」である必要はなく、「非負」で十分です。0 重みや同距離があっても議論は保たれます。</p>
+    <p>最小の暫定値が ∞ なのに到達可能な未確定点があれば、そこへの道が S を最初に出る辺の先は、確定時の緩和で有限になっていたはずです。矛盾なので残る点は到達不能。各回で頂点を一つ確定するため、有限回で終了します。</p>
+  </div>
+  <p>親の記録も有限回で始点へ戻れます。未確定点に親を付けるのは、その親を確定したときだけです。従って最終的に有限距離の点の親をたどると、確定順が厳密に前へ戻ります。0 重みで距離が等しくても、親同士の輪はできません。到達不能な点には親も経路も作りません。</p>
+</section>
+
+<section id="shortest-paths-lab">
+  <h2>ダイクストラ法の実行状態と親の記録</h2>
+  <p>実験は上の六頂点のモデルを使います。「通常」「0 重み・同距離」「到達不能」を切り替え、初期状態から一つずつ確定する様子を調べてください。始点は A、終点は F です。通常例で D の候補が 5 から 4 へ下がる前後と、0 重みの場合に同距離の点が並ぶ場面を比べましょう。</p>
+  <div data-lab="discrete-shortest"></div>
+  <noscript><p>操作には JavaScript が必要です。通常例の辺は AB=2、BC=2、AD=5、BE=1、CF=3、DE=1、EF=2。全て非負で、A から F の最短路は A–B–E–F、合計 5、距離は A=0、B=2、C=4、D=4、E=3、F=5 です。0 の重みも許されます。F に接する辺を全て除いた場合は F が到達不能で、距離は ∞、経路はありません。負の重みを含む入力には、この手順の保証はありません。</p></noscript>
+  <p class="note">同じ距離を実現する道が複数あると、親や確定順の一部は変わることがあります。距離の正しさと、選ばれた一本の経路の見た目は別です。また有限個の操作例を観察しただけで全入力への正しさが分かるわけではなく、その保証は上の不変量に基づきます。</p>
+</section>
+
+<section id="shortest-paths-negative">
+  <h2>負重みの辺に対する反例</h2>
+  <p>非負性を使ったのは、最短の道の途中までの重みが、全体の重み以下だとする一歩です。後半に負の辺があると、その先で急に合計が下がり、今いちばん近い点でも確定できません。</p>
+  <p>失敗を小さく切り出すため、ここだけ<strong>矢印の向きにしか進めない有向グラフ</strong>を自作します。S→U が 2、S→V が 5、V→U が −4。矢印の逆向きには進めません。この入力は、本章の実験が受け付ける無向・非負グラフの範囲外です。</p>
+  <figure class="concept-figure" id="shortest-paths-visual-negative" data-visual="shortest-paths-negative">
+    <svg class="concept-svg" viewBox="0 0 360 320" role="img" aria-labelledby="shortest-paths-negative-title shortest-paths-negative-desc" fill="var(--ink)" font-size="22">
+      <title id="shortest-paths-negative-title">負の有向辺が、早すぎる確定を壊す反例</title>
+      <desc id="shortest-paths-negative-desc">有向辺SからUの重み2、SからVの重み5、VからUの重みマイナス4。Uを距離2で先に確定すると、後のS、V、Uという重み1の道を見逃す。矢印の向きだけに進める、実験の適用外の例。</desc>
+      <defs><marker id="shortest-paths-negative-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="var(--series-1)"/></marker></defs>
+      <g fill="none" stroke="var(--series-1)" stroke-width="3" marker-end="url(#shortest-paths-negative-arrow)"><path d="M 86 70 H 262"/><path d="M 76 92 L 166 218"/><path d="M 194 218 L 276 93"/></g>
+      <g fill="var(--surface)" stroke="var(--ink)" stroke-width="2"><circle cx="60" cy="70" r="25"/><circle cx="290" cy="70" r="25"/><circle cx="180" cy="240" r="25"/></g>
+      <g text-anchor="middle"><text x="60" y="78">S</text><text x="290" y="78">U</text><text x="180" y="248">V</text><text x="180" y="47">2</text><text x="80" y="172">5</text><text x="282" y="172">−4</text><text x="180" y="305">S–V–U：5 − 4 = 1</text></g>
+    </svg>
+    <figcaption>適用条件を外した有向の反例。S の次に暫定距離 2 の U を確定すると誤りです。最短路は S–V–U で 1。この図に有向閉路はなく、負の閉路による問題とは別に、確定規則自体が破れています。</figcaption>
+  </figure>
+  <p>元の<strong>無向</strong>グラフで負の辺 uv を許すと、さらに別の問題があります。u–v–u と往復する歩道の重みは 2w(uv) &lt; 0。始点からその辺へ到達できるなら、往復を何度も挿入して重みをいくらでも下げられます。その辺から行ける終点への歩道には最小値がありません。これは単純グラフの「長さ 3 以上の閉路」ではなく、同じ辺を往復する負の<strong>閉じた歩道</strong>です。道だけに候補を制限すれば有限の最小値はありますが、歩道との同値性も Dijkstra の証明も失われます。本章では負重みを入力から除きます。</p>
+</section>
+
+<details class="column" id="shortest-paths-column">
+  <summary>寄り道［自作モデル］：何を「近い」と呼ぶかで、手順が変わる</summary>
+  <p>同じ七辺のモデルで、通路を通るたびに一回の検査が必要なら、検査回数の最少化には BFS が使えます。A–B–C–F も A–B–E–F も三本で、辺数の意味では最短です。しかし移動時間を最少にしたいなら、前者は 7 分、後者は 5 分なので同等ではありません。</p>
+  <p>辺の全重みが同じ正の数 c なら、道の重みは辺数の c 倍なので、二つの最少化は一致します。全て 0 なら到達可能な全ての道が重み 0 です。目的を言葉で決めてから重みを付けることが、アルゴリズムを選ぶ最初の一歩になります。</p>
+  <p class="source-note">出典：本章の六頂点の自作移動・検査モデル。現実の経路案内の仕様についての主張ではありません。</p>
+</details>
+
+<section id="shortest-paths-exercises">
+  <h2>演習：最短路と非負条件</h2>
+  <article class="exercise"><h3>1．早く見つけた候補が、最短とは限らない</h3><p>通常例で A、B を確定した直後、D の暫定距離は 5 です。次に E を確定したとき、D の値と親はどうなりますか。A–D の直接の辺を見つけた時点で 5 を確定してはいけない理由も説明してください。</p>
+    <details><summary>ヒント1：E の確定距離は 3</summary><p>辺 ED の重みは 1 です。</p></details>
+    <details><summary>ヒント2：候補より小さい未確定点が残っている</summary><p>D より E が先に選ばれます。</p></details>
+    <details><summary>解答</summary><p>候補は 3 + 1 = 4 なので d(D) は 5 から 4 に下がり、親は A から E に変わります。経路は A–B–E–D です。直接の辺による候補 5 は最短距離への上限にすぎません。未確定の E の値 3 が小さく、そこを経由して短縮される可能性が残っていました。</p></details>
+  </article>
+  <article class="exercise"><h3>2．0 と到達不能を区別する</h3><p>自作の別例として、三頂点 A、B、C に AB=0、BC=2、AC=2 を付けます。A からの距離と、C への最短の道を全て挙げてください。さらに孤立点 Z を足すと、その距離と親はどうなりますか。</p>
+    <details><summary>ヒント1：辺の数ではなく重みの合計</summary><p>A–C と A–B–C の重みを比較します。</p></details>
+    <details><summary>ヒント2：0 分の道は、存在する道</summary><p>道のない Z とは区別します。</p></details>
+    <details><summary>解答</summary><p>δ(A)=0、δ(B)=0、δ(C)=2。C への最短の道は A–C と A–B–C の二つです。Dijkstra 法はどちらか一つを親で記録すれば十分。Z は到達不能なので δ(Z)=∞、親はなく、経路もありません。距離 0 の B は到達可能なので、この二つを同じ表示にはできません。</p></details>
+  </article>
+  <article class="exercise"><h3>3．負の辺で、どの一歩が破れるか</h3><p>有向の反例 S→U=2、S→V=5、V→U=−4 で、Dijkstra の確定が失敗する様子と、非負性を使う証明の一歩を説明してください。この図には負の有向閉路がありますか。</p>
+    <details><summary>ヒント1：最初の緩和後に選ばれる点</summary><p>U の候補 2 が V の候補 5 より小さいので、U を先に確定します。</p></details>
+    <details><summary>ヒント2：途中までの重みと全体の重み</summary><p>S–V の 5 は、S–V–U の 1 以下でしょうか。</p></details>
+    <details><summary>解答</summary><p>U を 2 で確定しても、後で S–V–U という重み 1 の道が見つかります。証明の「最短の道の途中までの重みは、全体の重み以下」が 5 ≤ 1 となって破れます。矢印をたどって戻る道がないので、有向閉路自体がありません。負の閉路がないことだけでは、この確定規則を正当化できません。</p></details>
+  </article>
+</section>
+
+<section id="shortest-paths-reflection">
+  <h2>自分の言葉で</h2><ol>
+    <li>真の最短距離、有限の暫定距離、∞ はそれぞれ何を意味しますか。</li>
+    <li>最小の暫定値を確定する証明で、非負性はどこに必要でしたか。0 重みでもよいのはなぜですか。</li>
+    <li>BFS と Dijkstra 法は、それぞれ何を最小にし、どんな辺の条件で使えますか。</li>
+  </ol>
+</section>

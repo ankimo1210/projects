@@ -1,0 +1,107 @@
+<section id="determinants-question">
+  <h2>行列式と面積・向き</h2>
+  <p><a href="rotation.html">回転の章</a>では長さを保つ変換を見ました。今度は、正方形を横へ引き伸ばしたり、斜めにずらしたりします。辺の長さが変わっても面積は同じかもしれません。逆に、二本の辺が重なれば、面積は消えます。この違いを、行列の四つの成分からどう読み取ればよいでしょう。</p>
+  <p>対象は実数の 2 × 2 行列と、それが表す原点を保つ線形変換です。横軸は右、縦軸は上を正とします。<a href="vector-spaces.html">線形写像の章</a>で見たように、基本の矢印 e₁ = (1, 0)、e₂ = (0, 1) の行き先は、行列の<strong>列</strong>に入ります。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>A</mi><mo>=</mo><mo>(</mo><mtable><mtr><mtd><mi>a</mi></mtd><mtd><mi>b</mi></mtd></mtr><mtr><mtd><mi>c</mi></mtd><mtd><mi>d</mi></mtd></mtr></mtable><mo>)</mo><mo>,</mo><mspace width="1em"/><mi>u</mi><mo>=</mo><mi>A</mi><msub><mi>e</mi><mn>1</mn></msub><mo>=</mo><mo>(</mo><mi>a</mi><mo>,</mo><mi>c</mi><mo>)</mo><mo>,</mo><mspace width="1em"/><mi>v</mi><mo>=</mo><mi>A</mi><msub><mi>e</mi><mn>2</mn></msub><mo>=</mo><mo>(</mo><mi>b</mi><mo>,</mo><mi>d</mi><mo>)</mo></mrow></math></div>
+  <p>単位正方形の四頂点は 0、e₁、e₁ + e₂、e₂。線形性から、像は 0、u、u + v、v を頂点とする平行四辺形です。成分を行ごとに a、b、c、d と読む順序と、列の矢印 (a, c)、(b, d) を混同しないようにしましょう。</p>
+</section>
+
+<section id="determinants-definition">
+  <h2>二次行列式の定義と符号付き面積</h2>
+  <p>通常の面積は負になりません。しかし、鏡に映して裏返したことも記録したいので、順序付きの二本 u、v に<strong>符号付き面積</strong> D(u, v) を割り当てます。まず計算を次の三つの約束で定め、そのあと通常の面積との関係を確かめます。</p>
+  <ol>
+    <li>片方を固定すれば、もう片方の足し算と実数倍を保つ。これが二本それぞれについての線形性、つまり多重線形性です。</li>
+    <li>同じ矢印を二本入れると D(w, w) = 0。これを交代性と呼びます。</li>
+    <li>基本の二本では D(e₁, e₂) = 1。これが単位と正の向きを決める規格化です。</li>
+  </ol>
+  <p>交代性を u + v に使い、線形性で展開すると、0 = D(u, v) + D(v, u)。したがって二本を交換すると符号が逆になります。u = ae₁ + ce₂、v = be₁ + de₂ を代入すれば、同じ矢印を組にする項は消えます。</p>
+  <div class="proof">
+    <h3>三つの約束から公式を出す</h3>
+    <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>D</mi><mo>(</mo><mi>u</mi><mo>,</mo><mi>v</mi><mo>)</mo><mo>=</mo><mi>a</mi><mi>d</mi><mi>D</mi><mo>(</mo><msub><mi>e</mi><mn>1</mn></msub><mo>,</mo><msub><mi>e</mi><mn>2</mn></msub><mo>)</mo><mo>+</mo><mi>c</mi><mi>b</mi><mi>D</mi><mo>(</mo><msub><mi>e</mi><mn>2</mn></msub><mo>,</mo><msub><mi>e</mi><mn>1</mn></msub><mo>)</mo><mo>=</mo><mi>a</mi><mi>d</mi><mo>−</mo><mi>b</mi><mi>c</mi></mrow></math></div>
+    <p>逆に ad − bc は、(a, c) を固定すれば (b, d) の和と実数倍を保ち、(b, d) を固定すれば (a, c) の和と実数倍を保ちます。u = v なら ac − ac = 0、u = e₁、v = e₂ なら 1·1 − 0·0 = 1 です。三つの約束をすべて満たすので、この約束に合う量は存在し、しかも一つに定まります。これを行列 A の<strong>行列式</strong>と呼び、det A と書きます。</p>
+  </div>
+  <p>本当に面積でしょうか。ここでは平面の<strong>内積</strong>を (x₁, x₂)·(y₁, y₂) = x₁y₁ + x₂y₂ と定めます。単位矢印 n の方向への v の符号付き正射影成分が v·n であるという高校幾何の公式と、面積 = 底辺 × 高さの公式を使います。u ≠ 0 のとき、底辺の長さは √(a² + c²)。u を反時計回りに直角に向けた単位矢印は n = (−c, a)/√(a² + c²) です。符号付きの高さは v·n = (ad − bc)/√(a² + c²) なので、底辺と掛けると ad − bc、通常の面積はその絶対値になります。u = 0 なら面積も行列式も 0 です。</p>
+  <p class="note">正負は二本を読む順序と向きの約束を含みます。固定した順序 (e₁, e₂) に対して、独立な二本では u から v が反時計回りに 180 度未満なら正、時計回りに 180 度未満なら負です。鏡映 (x, y) → (−x, y) の行列式は −1。面積を保っても向きは反転します。「負の面積がある」のではなく、面積と向きを一緒に記録しているのです。</p>
+
+  <div class="concept-grid">
+    <figure class="concept-figure" id="determinants-visual-positive" data-visual="determinants-visual-positive"><svg class="concept-svg" viewBox="0 0 360 360" role="img" aria-labelledby="determinants-visual-positive-title determinants-visual-positive-desc"><title id="determinants-visual-positive-title">同じ底辺と高さでも、形や長さは変えられる</title><desc id="determinants-visual-positive-desc">せん断u=(1,0),v=(1,1)。破線の元の単位正方形と塗りの平行四辺形は底辺1と高さ1が同じ。境界順序0,u,u+v,v,0は反時計回りでdet1。vの長さはルート2へ変わる。</desc><defs><marker id="determinants-visual-positive-walk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--ink)"/></marker></defs><text x="180" y="34" font-size="22" fill="var(--ink)" text-anchor="middle">形は変わるが、面積は1</text><polygon points="145,238 225,238 225,158 145,158" fill="none" stroke="var(--ink-3)" stroke-width="2" stroke-dasharray="5 5"/><polygon points="145,238 225,238 305,158 225,158" fill="var(--accent-wash)" stroke="none"/><path d="M145 238 L225 238" fill="none" stroke="var(--ink)" stroke-width="2.5" marker-end="url(#determinants-visual-positive-walk)"/><path d="M225 238 L305 158" fill="none" stroke="var(--ink)" stroke-width="2.5" marker-end="url(#determinants-visual-positive-walk)"/><path d="M305 158 L225 158" fill="none" stroke="var(--ink)" stroke-width="2.5" marker-end="url(#determinants-visual-positive-walk)"/><path d="M225 158 L145 238" fill="none" stroke="var(--ink)" stroke-width="2.5" marker-end="url(#determinants-visual-positive-walk)"/><circle cx="145" cy="238" r="4" fill="var(--ink)"/><circle cx="225" cy="238" r="4" fill="var(--ink)"/><circle cx="305" cy="158" r="4" fill="var(--ink)"/><circle cx="225" cy="158" r="4" fill="var(--ink)"/><text x="128" y="266" font-size="22" fill="var(--ink)">0</text><text x="216" y="267" font-size="22" fill="var(--ink)">u</text><text x="215" y="142" font-size="22" fill="var(--ink)">v</text><text x="288" y="132" font-size="22" fill="var(--ink)" text-anchor="middle">u+v</text><line x1="305" y1="162" x2="305" y2="237" stroke="var(--series-2)" stroke-width="2" stroke-dasharray="5 5"/><text x="318" y="206" font-size="22" fill="var(--ink)">1</text><text x="185" y="277" font-size="22" fill="var(--ink)" text-anchor="middle">1</text><text x="180" y="310" font-size="22" fill="var(--ink)" text-anchor="middle">破線：元の単位正方形</text><text x="180" y="340" font-size="22" fill="var(--ink)" text-anchor="middle">det=1、面積=1</text></svg><figcaption>破線の正方形と塗りの像は、底辺も高さも1です。v=(1,1) の長さは√2へ変わっても、面積は1のまま。矢印は列ベクトル自体の向きではなく、境界を 0→u→u+v→v→0 とたどる順序で、反時計回りが det=1 に対応します。面積保存だけで回転や長さの保存とは言えません。</figcaption></figure>
+    <figure class="concept-figure" id="determinants-visual-negative" data-visual="determinants-visual-negative"><svg class="concept-svg" viewBox="0 0 360 360" role="img" aria-labelledby="determinants-visual-negative-title determinants-visual-negative-desc"><title id="determinants-visual-negative-title">境界をたどる順序が反転し、面積の符号だけが変わる</title><desc id="determinants-visual-negative-desc">鏡映u=(-1,0),v=(0,1)。同じ単位正方形の像は左側へ裏返る。矢印で境界0,u,u+v,v,0をたどると時計回り。面積1のままdetは-1。</desc><defs><marker id="determinants-visual-negative-walk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--ink)"/></marker></defs><text x="180" y="34" font-size="22" fill="var(--ink)" text-anchor="middle">同じ面積1、向きは逆</text><polygon points="145,238 225,238 225,158 145,158" fill="none" stroke="var(--ink-3)" stroke-width="2" stroke-dasharray="5 5"/><polygon points="145,238 65,238 65,158 145,158" fill="var(--accent-wash)" stroke="none"/><path d="M145 238 L65 238" fill="none" stroke="var(--ink)" stroke-width="2.5" marker-end="url(#determinants-visual-negative-walk)"/><path d="M65 238 L65 158" fill="none" stroke="var(--ink)" stroke-width="2.5" marker-end="url(#determinants-visual-negative-walk)"/><path d="M65 158 L145 158" fill="none" stroke="var(--ink)" stroke-width="2.5" marker-end="url(#determinants-visual-negative-walk)"/><path d="M145 158 L145 238" fill="none" stroke="var(--ink)" stroke-width="2.5" marker-end="url(#determinants-visual-negative-walk)"/><circle cx="145" cy="238" r="4" fill="var(--ink)"/><circle cx="65" cy="238" r="4" fill="var(--ink)"/><circle cx="65" cy="158" r="4" fill="var(--ink)"/><circle cx="145" cy="158" r="4" fill="var(--ink)"/><text x="128" y="266" font-size="22" fill="var(--ink)">0</text><text x="56" y="267" font-size="22" fill="var(--ink)">u</text><text x="135" y="142" font-size="22" fill="var(--ink)">v</text><text x="65" y="132" font-size="22" fill="var(--ink)" text-anchor="middle">u+v</text><text x="180" y="310" font-size="22" fill="var(--ink)" text-anchor="middle">破線：元の単位正方形</text><text x="180" y="340" font-size="22" fill="var(--ink)" text-anchor="middle">det=−1、面積=1</text></svg><figcaption>同じ境界順序 0→u→u+v→v→0 を矢印で追うと、こちらは時計回りです。前図と同じ面積1でも、det=−1 と符号だけが変わります。破線の正方形を右から左へ鏡映した例です。矢印は境界の順序を示し、二枚は同縮尺です。</figcaption></figure>
+    <figure class="concept-figure" id="determinants-visual-zero" data-visual="determinants-visual-zero"><svg class="concept-svg" viewBox="0 0 360 360" role="img" aria-labelledby="determinants-visual-zero-title determinants-visual-zero-desc"><title id="determinants-visual-zero-title">零でない方向が消えても、残る方向はある</title><desc id="determinants-visual-zero-desc">u=(1,0),v=(0,0)では単位正方形の像は線分。0とe2の二入力は0へ重なり、e1方向は残る。det0は全てが一点への像という意味ではない。</desc><defs><marker id="determinants-visual-zero-walk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--ink)"/></marker></defs><text x="180" y="34" font-size="22" fill="var(--ink)" text-anchor="middle">高さ0、別の入力が重なる</text><polygon points="145,238 225,238 225,158 145,158" fill="none" stroke="var(--ink-3)" stroke-width="2" stroke-dasharray="5 5"/><line x1="145" y1="238" x2="225" y2="238" stroke="var(--series-1)" stroke-width="5"/><circle cx="145" cy="238" r="6" fill="var(--series-2)"/><circle cx="225" cy="238" r="6" fill="var(--series-1)"/><text x="228" y="268" font-size="22" fill="var(--ink)">u</text><text x="117" y="275" font-size="22" fill="var(--ink)" text-anchor="middle">v=0</text><text x="180" y="310" font-size="22" fill="var(--ink)" text-anchor="middle">A0=Ae₂=0</text><text x="180" y="340" font-size="22" fill="var(--ink)" text-anchor="middle">det=0、像は線分</text></svg><figcaption>高さが0になって単位正方形は線分へつぶれます。A0=Ae₂=0 と、異なる入力が同じ出力へ重なる一方、e₁ の行き先 u=(1,0) は残ります。det=0 は可逆性の失敗を示しますが、像が必ず一点とは限りません。この図は像が一次元の例で、三枚は同縮尺です。</figcaption></figure>
+  </div>
+</section>
+
+<section id="determinants-lab">
+  <h2>せん断・鏡映と面積の変化</h2>
+  <p>四つのスライダーは行列の上段 a、b、下段 c、d に対応します。最初は a = d = 1、b = 0.5、c = 0。列の矢印と、単位正方形の像を追ってください。表示される det A は符号付きの値、|det A| は像の面積です。</p>
+  <div data-lab="determinants"></div><p data-reading-note="determinants-boundary">まず元の破線の正方形と、変換後の塗った図形の広さを比較します。各状態で格子一目盛は1、表示範囲は図形に合わせて自動調整します。破線と像の面積比を読み、異なる状態の画素面積を直接比べないでください。次に境界を 0→u→u+v→v→0 の順にたどり、向きを保つ例と反転する例を比べてください。行列式0では回る向きを付けず、どの入力方向が線分や点へ重なったかを読みます。スライダーの有限例を一般の面積公式の証明とはせず、二次元の証明と積の公式は本文へ戻って確認します。</p>
+  <noscript><p class="note">図の操作には JavaScript が必要です。紙で u = (1, 0)、v = (0.5, 1) を描けば、底辺 1、高さ 1 の平行四辺形ができます。v の横成分を 2 にしても高さは 1 なので、面積は変わりません。</p></noscript>
+  <p>初期値から b だけを動かすと、上辺が横へずれる<strong>せん断</strong>になります。行列式は 1 のままでも、v の長さや二本のなす角は変わります。次に c = b = 0 にし、a、d を変えて、面積倍率が |ad| になることを確かめてください。例を選ぶと現在の行列が切り替わります。横反転と、二本の列が重なる場合を比べて、符号の変化と面積が 0 になる違いを見ましょう。</p>
+</section>
+
+<section id="determinants-zero">
+  <h2>行列式の零と可逆性</h2>
+  <div class="theorem">
+    <h3>2 × 2 行列で同じことをいう三条件</h3>
+    <p>det A ≠ 0、二本の列が一次独立、A に逆行列がある、の三つは同値です。逆行列があるとは、変換を前後どちらからも元に戻せる行列があることです。</p>
+  </div>
+  <div class="proof">
+    <h3>つぶれる場合と、戻せる場合を分ける</h3>
+    <p>列が従属なら、一方が 0、または一方が他方の実数倍です。交代性と線形性から D(u, v) = 0 となります。逆に ad − bc = 0 とします。u = 0 なら従属。u ≠ 0 で a ≠ 0 なら d = cb/a より v = (b/a)u です。a = 0 なら c ≠ 0 で、bc = 0 より b = 0、したがって v = (d/c)u。どの場合も従属です。</p>
+    <p>従属なら、同時には 0 でない係数 x、y で xu + yv = 0 と書けます。A は非零の入力 (x, y) と入力 0 を同じ 0 へ移すため、元に戻せません。一方、Δ = ad − bc ≠ 0 なら、次の行列との積を両順序で計算すると単位行列になります。</p>
+    <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msup><mi>A</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo>=</mo><mfrac><mn>1</mn><mi>Δ</mi></mfrac><mo>(</mo><mtable><mtr><mtd><mi>d</mi></mtd><mtd><mo>−</mo><mi>b</mi></mtd></mtr><mtr><mtd><mo>−</mo><mi>c</mi></mtd><mtd><mi>a</mi></mtd></mtr></mtable><mo>)</mo></mrow></math></div>
+  </div>
+  <p><a href="dimension.html">次元の章</a>の言葉では、行列式が 0 のとき、像の次元は 2 より小さくなります。面積が 0 でも、図形のすべてが一点になるとは限りません。線分に押しつぶされる場合もあります。</p>
+</section>
+
+<section id="determinants-product">
+  <h2>行列式の積の公式と基底変換</h2>
+  <p>先に B、次に A を作用させる合成は AB です。その行列式は det(AB) = det A det B となります。「面積倍率だから」と考えるのは自然ですが、一般の平行四辺形にも同じ倍率が働くことを、先に確かめる必要があります。</p>
+  <div class="proof">
+    <h3>二本の展開をもう一度使う</h3>
+    <p>F(s, t) = D(As, At) と置きます。A の線形性から F は二本それぞれについて線形で、F(s, s) = 0 です。また F(e₁, e₂) = det A。先ほどと同じ基本の二本への展開により、F(s, t) = det A · D(s, t) が出ます。ここで s、t を B の二本の列にすると、As、At は AB の列なので、求める積の式になります。A や B がつぶれる場合にも、この計算はそのまま有効です。</p>
+  </div>
+  <p>これで、どの平行四辺形も面積が |det A| 倍になることが分かりました。向きの反転を二度続ければ符号は正に戻ります。なお、図形の二本を読む順序の交換と、同じ変換の基底の取り替えは別の操作です。入力と出力に同じ別の基底を用いる場合、表す行列は変わっても変換の行列式は変わりません。</p>
+  <p>旧基底での行列を A、新基底での行列を A<sub>new</sub> とし、新基底の座標を旧基底の座標へ直す行列を P とします。新座標 x で表した同じ入力を、先に旧座標へ直してから写すと A(Px)、先に写してから旧座標へ直すと P(A<sub>new</sub>x) です。すべての x で一致するので AP = PA<sub>new</sub>。逆向きの座標変換もあるため P は逆行列を持ち、A<sub>new</sub> = P⁻¹AP となります。det(P⁻¹)det P = det I = 1 と積の公式から、det A<sub>new</sub> = det(P⁻¹)det A det P = det A です。</p>
+  <p>実数 n 次元では、n 本それぞれへの線形性、二本が同じなら 0、標準基底の順序で 1、という規則へ拡張します。これが正方行列の行列式です。絶対値は n 次元の体積、符号は向きを担います。ただし、体積との対応や積の性質を一般次元で証明するには、n 本への展開などを別途示す必要があります。二次元の図だけで、その証明が済んだわけではありません。</p>
+</section>
+
+<details class="column" id="determinants-column">
+  <summary>寄り道［応用］：地図の1画素は、何平方メートルなのか</summary>
+  <p>地理画像を扱う GDAL の Geotransform は、画像の横位置 p、行位置 q を、X = GT(0) + p·GT(1) + q·GT(2)、Y = GT(3) + p·GT(4) + q·GT(5) で地図の座標へ写します。原点をずらす項と、二本の画素軸の行き先を指定する項からなる、実際のアフィン変換です。</p>
+  <p>投影平面上の1画素は単位正方形の像なので、面積は |GT(1)·GT(5) − GT(2)·GT(4)| です。座標単位がメートルなら平方メートルになります。北が上の典型例では、画像の行は下へ増える一方、地図のYは上へ増えるため GT(5) が負です。横の係数が正なら行列式も負ですが、これは向きの反転で、負の面積ではありません。地表上の実面積まで求めるには、投影の歪みも考える必要があります。式の符号と、測る面積の意味を一緒に確認しましょう。</p>
+  <p class="source-note">出典：<a href="https://gdal.org/en/stable/tutorials/geotransforms_tut.html">GDAL：Geotransform Tutorial</a>。</p>
+</details>
+
+<section id="determinants-exercises">
+  <h2>演習：行列式の計算と幾何</h2>
+  <article class="exercise">
+    <h3>1．面積を保てば回転か</h3>
+    <p>上段 (1, 2)、下段 (0, 1) の行列の行列式を求めてください。長さを保つ変換でもありますか。</p>
+    <details><summary>ヒント1：列を読む</summary><p>e₂ の像は (2, 1) です。</p></details>
+    <details><summary>ヒント2：長さを比較する</summary><p>e₂ の長さは 1、像の長さは √(2² + 1²) です。</p></details>
+    <details><summary>解答</summary><p>行列式は 1·1 − 2·0 = 1、面積は保ちます。しかし e₂ の像は長さ √5 なので、長さは保ちません。面積の保存だけでは回転とはいえません。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>2．負の符号は何を表すか</h3>
+    <p>横を −2 倍、縦を 3 倍する対角行列について、行列式、面積倍率、向きの変化を求めてください。</p>
+    <details><summary>ヒント1：対角以外は 0</summary><p>a = −2、d = 3、b = c = 0 です。</p></details>
+    <details><summary>ヒント2：面積は非負</summary><p>符号付きの値と、その絶対値を分けます。</p></details>
+    <details><summary>解答</summary><p>行列式は −6、面積は 6 倍、向きは反転します。横方向の反転と、横に 2 倍・縦に 3 倍する伸縮を合わせた変換です。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>3．戻せない理由を、二通りで</h3>
+    <p>二本の列が u = (1, 2)、v = (3, 6) の行列について、行列式と、0 へ移る非零の入力を求めてください。</p>
+    <details><summary>ヒント1：行へ並べ直す</summary><p>上段は (1, 3)、下段は (2, 6) です。列と行の並びを区別します。</p></details>
+    <details><summary>ヒント2：列の関係を使う</summary><p>v = 3u なので、3u − v を考えます。</p></details>
+    <details><summary>解答</summary><p>行列式は 1·6 − 3·2 = 0。入力 (3, −1) は 3u − v = 0 へ移ります。0 とこの入力を区別できず、逆変換は作れません。像は直線上にあり、面積は 0 です。</p></details>
+  </article>
+</section>
+
+<section id="determinants-reflection">
+  <h2>自分の言葉で</h2>
+  <ol>
+    <li>ad − bc の引き算は、三つの約束のうち何から生まれますか。</li>
+    <li>行列式 1、−1、0 の変換は、面積と向きについてそれぞれ何を伝えますか。長さについても同じことがいえますか。</li>
+    <li>行列式が 0 であることと、変換を戻せないことは、二本の列を通じてどうつながりますか。</li>
+  </ol>
+</section>

@@ -1,0 +1,92 @@
+<section id="modular-arithmetic-question">
+  <h2>整数の合同と剰余</h2>
+  <p>八つの位置に 0 から 7 の番号を付け、8 へ進んだら 0 へ戻るとします。11 は位置 3、19 も位置 3 を表します。番号そのものを覚えず、8 で割った余りだけを残して足算や掛算をしても、最後の位置は正しく分かるでしょうか。掛けた数を後から割って、元の位置へ戻せるでしょうか。</p>
+  <p>この章では、<a href="discrete-relations.html">同じ余りによる同値関係</a>に、計算の規則を載せます。足すことと掛けることはいつでも整合しますが、逆に戻せる掛算には条件があります。その境界を、<a href="invariants.html#invariants-euclid">ユークリッドの互除法</a>と最大公約数で説明します。</p>
+</section>
+
+<section id="modular-arithmetic-congruence">
+  <h2>合同の定義</h2>
+  <p>m ≥ 2 を整数として固定し、<strong>法</strong>と呼びます。整数 a、b の差が m の倍数であるとき、a と b は法 m で<strong>合同</strong>で、a ≡ b (mod m) と書きます。m が a − b を割り切ることを m ∣ (a − b) とも書きます。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>a</mi><mo>≡</mo><mi>b</mi><mspace width="0.5em"/><mo>(</mo><mi mathvariant="normal">mod</mi><mspace width="0.3em"/><mi>m</mi><mo>)</mo><mo>⇔</mo><mi>a</mi><mo>−</mo><mi>b</mi><mo>=</mo><mi>k</mi><mi>m</mi><mspace width="0.5em"/><mo>(</mo><mi>k</mi><mo>∈</mo><mi>ℤ</mi><mo>)</mo></mrow></math></div>
+  <p>整数の割り算 a = qm + r、0 ≤ r &lt; m における r を、a の法 m での代表の余りとして使います。負数でも範囲は同じです。たとえば −1 = (−1)×8 + 7 なので −1 ≡ 7 (mod 8) です。余りを負にする約束とは区別します。</p>
+  <div class="proof"><h3>同じ余りと合同は一致する</h3><p>a = qm + r、b = pm + s と書きます。同じ余りなら a − b = (q − p)m で合同です。逆に合同なら r − s も m の倍数ですが、−m &lt; r − s &lt; m なので、その範囲の m の倍数は 0 だけです。従って r = s です。この一意な余りで、整数全体を m 個の同値類に分けられます。</p></div>
+</section>
+
+<section id="modular-arithmetic-operations">
+  <h2>合同式の加法と乗法</h2>
+  <p>a ≡ b、c ≡ d が同じ法 m で成り立つとします。このとき a + c ≡ b + d、ac ≡ bd です。従って大きな数の計算を始める前や途中で余りへ置き換えても、最後の余りは変わりません。</p>
+  <div class="proof"><h3>差に m が残ることを確かめる</h3><p>a − b = km、c − d = ℓm とします。和の差は (a + c) − (b + d) = (k + ℓ)m です。積についても次の形にすれば m の倍数だと分かります。</p><div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>a</mi><mi>c</mi><mo>−</mo><mi>b</mi><mi>d</mi><mo>=</mo><mo>(</mo><mi>a</mi><mo>−</mo><mi>b</mi><mo>)</mo><mi>c</mi><mo>+</mo><mi>b</mi><mo>(</mo><mi>c</mi><mo>−</mo><mi>d</mi><mo>)</mo><mo>=</mo><mi>m</mi><mo>(</mo><mi>k</mi><mi>c</mi><mo>+</mo><mi>b</mi><mi>ℓ</mi><mo>)</mo></mrow></math></div><p>引算も差の符号を変えれば同様です。繰り返し掛ける非負整数乗でも、この性質を一段ずつ使えます。</p></div>
+  <p>たとえば 17×19 の余りを法 8 で求めるなら、17 ≡ 1、19 ≡ 3 から積は 3 と合同です。実際に 323 = 40×8 + 3 です。この計算で元の整数の値が等しいと主張しているわけではありません。同じなのは差を 8 の倍数として捨てた後の情報です。</p>
+</section>
+
+<section id="modular-arithmetic-multiplication">
+  <h2>剰余類上の乗算写像と逆元</h2>
+  <p>法 m で a を掛ける写像を、余りの集合 {0, …, m − 1} から同じ集合へ考えます。法 8 で 3 を掛けると、八つの入力は八つの異なる出力へ移ります。2 を掛けると、0 と 4 など別の入力が同じ出力へ重なります。</p>
+  <div class="concept-grid">
+    <figure class="concept-figure" id="modular-arithmetic-visual-unit" data-visual="modular-arithmetic-unit">
+      <svg class="concept-svg" viewBox="0 0 360 510" role="img" aria-labelledby="modular-arithmetic-unit-title modular-arithmetic-unit-desc">
+        <title id="modular-arithmetic-unit-title">法八で三を掛けると、八つの余りが一度ずつ出る</title>
+        <desc id="modular-arithmetic-unit-desc">入力0から7を順に三倍して八で割った余りは0、3、6、1、4、7、2、5。出力は八種類すべて異なる。もう一度三を掛けると元の入力へ戻る。</desc>
+        <g text-anchor="middle"><text x="74" y="30">x</text><text x="279" y="30">3x mod 8</text><text x="74" y="81">0</text><text x="279" y="81">0</text><text x="74" y="136">1</text><text x="279" y="136">3</text><text x="74" y="191">2</text><text x="279" y="191">6</text><text x="74" y="246">3</text><text x="279" y="246">1</text><text x="74" y="301">4</text><text x="279" y="301">4</text><text x="74" y="356">5</text><text x="279" y="356">7</text><text x="74" y="411">6</text><text x="279" y="411">2</text><text x="74" y="466">7</text><text x="279" y="466">5</text></g>
+        <path d="M 126 73 H 221 M 212 66 L 221 73 L 212 80 M 126 128 H 221 M 212 121 L 221 128 L 212 135 M 126 183 H 221 M 212 176 L 221 183 L 212 190 M 126 238 H 221 M 212 231 L 221 238 L 212 245 M 126 293 H 221 M 212 286 L 221 293 L 212 300 M 126 348 H 221 M 212 341 L 221 348 L 212 355 M 126 403 H 221 M 212 396 L 221 403 L 212 410 M 126 458 H 221 M 212 451 L 221 458 L 212 465" fill="none" stroke="var(--series-1)" stroke-width="3"/>
+      </svg>
+      <figcaption>法 8 の 3 倍写像は全単射です。3×3 ≡ 1 なので、3 をもう一度掛けると戻ります。この意味で 3 の逆元は 3 です。</figcaption>
+    </figure>
+    <figure class="concept-figure" id="modular-arithmetic-visual-nonunit" data-visual="modular-arithmetic-nonunit">
+      <svg class="concept-svg" viewBox="0 0 360 510" role="img" aria-labelledby="modular-arithmetic-nonunit-title modular-arithmetic-nonunit-desc">
+        <title id="modular-arithmetic-nonunit-title">法八で二を掛けると、出力が重なり奇数へ届かない</title>
+        <desc id="modular-arithmetic-nonunit-desc">入力0から7を順に二倍して八で割った余りは0、2、4、6、0、2、4、6。各出力は二回ずつ現れ、1、3、5、7は出力されないので二の逆元はない。</desc>
+        <g text-anchor="middle"><text x="74" y="30">x</text><text x="279" y="30">2x mod 8</text><text x="74" y="81">0</text><text x="279" y="81">0</text><text x="74" y="136">1</text><text x="279" y="136">2</text><text x="74" y="191">2</text><text x="279" y="191">4</text><text x="74" y="246">3</text><text x="279" y="246">6</text><text x="74" y="301">4</text><text x="279" y="301">0</text><text x="74" y="356">5</text><text x="279" y="356">2</text><text x="74" y="411">6</text><text x="279" y="411">4</text><text x="74" y="466">7</text><text x="279" y="466">6</text></g>
+        <path d="M 126 73 H 221 M 212 66 L 221 73 L 212 80 M 126 128 H 221 M 212 121 L 221 128 L 212 135 M 126 183 H 221 M 212 176 L 221 183 L 212 190 M 126 238 H 221 M 212 231 L 221 238 L 212 245 M 126 293 H 221 M 212 286 L 221 293 L 212 300 M 126 348 H 221 M 212 341 L 221 348 L 212 355 M 126 403 H 221 M 212 396 L 221 403 L 212 410 M 126 458 H 221 M 212 451 L 221 458 L 212 465" fill="none" stroke="var(--series-2)" stroke-width="3"/>
+      </svg>
+      <figcaption>法 8 の 2 倍写像は単射でも全射でもありません。2b ≡ 1 を満たす整数 b がないため、元へ戻す掛算は作れません。</figcaption>
+    </figure>
+  </div>
+  <p>ab ≡ 1 (mod m) を満たす b を、a の法 m での<strong>逆元</strong>と呼びます。逆元を掛けることが合同計算での割算に当たります。整数で a ≠ 0 だからというだけでは、逆元の存在は保証されません。</p>
+  <div data-lab="discrete-modular"></div>
+  <noscript><p>操作図には JavaScript が必要です。上の静的図では、m = 8、a = 3 は八つの余りを一度ずつ並べ替え、逆元は 3 です。a = 2 は出力が 0、2、4、6 に重なり、逆元はありません。JavaScript 無効でもこの比較と本文は読めます。</p></noscript>
+</section>
+
+<section id="modular-arithmetic-bezout">
+  <h2>Bézoutの等式とユークリッドの互除法</h2>
+  <p>整数 a と正の整数 m の<strong>最大公約数</strong> gcd(a, m) は、|a| と m をともに割り切る正の整数のうち最大のものです。gcd(0, m) = m とします。最大公約数が 1 の二数を<strong>互いに素</strong>といいます。</p>
+  <p>互除法では u = qv + r、0 ≤ r &lt; v のたび、組 (u, v) を (v, r) に替えます。u、v の共通約数は v、u − qv = r も割り、逆も成り立つので、共通約数は変わりません。正の余りは厳密に減るため、最後の零でない余りに到達し、それが最大公約数です。</p>
+  <div class="theorem"><h3>Bézout の等式</h3><p>ある整数 s、t を選んで、最大公約数を次の形に表せます。</p><div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi mathvariant="normal">gcd</mi><mo>(</mo><mi>a</mi><mo>,</mo><mi>m</mi><mo>)</mo><mo>=</mo><mi>s</mi><mi>a</mi><mo>+</mo><mi>t</mi><mi>m</mi></mrow></math></div></div>
+  <div class="proof"><h3>隣り合う二数の組について帰納法を使う</h3><p>まず a &gt; 0 とします。互除法の出発点の組 (a, m) は、それぞれ 1a + 0m、0a + 1m という整数係数の和です。ある段の組 (u, v) の両方が a、m の整数係数の和だと仮定します。次の組 (v, u − qv) では、第一成分はそのまま、第二成分も二つの整数係数の和の整数倍と差なので、やはり同じ形です。従って組を更新する回数についての帰納法により、各段の両成分がこの形になり、最後の零でない余りも sa + tm と書けます。</p><p>具体的な係数は、割り算の式を逆にたどって代入すれば求められます。a = 0 なら 0a + 1m = m。a &lt; 0 なら |a| = −a に対して得た係数の符号を変えればよいので、すべての場合を含みます。</p></div>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="26と11の互除法と逆代入">
+    <table class="concept-table" id="modular-arithmetic-visual-euclid" data-visual="modular-arithmetic-euclid">
+      <caption>26 と 11：余り 1 まで進み、その式を逆に代入する</caption>
+      <thead><tr><th scope="col"><span class="table-math">段階</span></th><th scope="col"><span class="table-math">計算</span></th><th scope="col"><span class="table-math">確認すること</span></th></tr></thead>
+      <tbody><tr><th scope="row"><span class="table-math">割り算1</span></th><td><span class="table-math">26 = 2×11 + 4</span></td><td>最大公約数を変えず、余りを小さくする。</td></tr><tr><th scope="row"><span class="table-math">割り算2</span></th><td><span class="table-math">11 = 2×4 + 3</span></td><td>同じ置換を続ける。</td></tr><tr><th scope="row"><span class="table-math">割り算3</span></th><td><span class="table-math">4 = 3 + 1</span></td><td>次は 3 = 3×1 + 0 なので最大公約数は 1。</td></tr><tr><th scope="row"><span class="table-math">逆代入1</span></th><td><span class="table-math">1 = 4 − 3 = 3×4 − 11</span></td><td>3 = 11 − 2×4 を代入する。</td></tr><tr><th scope="row"><span class="table-math">逆代入2</span></th><td><span class="table-math">1 = 3×26 − 7×11</span></td><td>4 = 26 − 2×11 を代入する。</td></tr></tbody>
+    </table>
+  </div>
+  <p>最後の等式を法 26 で見ると (−7)×11 ≡ 1 です。従って 11 の逆元は −7 と合同な 19 です。実際に 11×19 = 209 = 8×26 + 1 と確かめられます。互除法は最大公約数を得るだけでなく、元へ戻す掛算を具体的に作ります。</p>
+</section>
+
+<section id="modular-arithmetic-inverses">
+  <h2>逆元と合同式の消去</h2>
+  <div class="theorem"><h3>逆元があるための必要十分条件</h3><p>法 m ≥ 2 において、a の逆元が存在することと gcd(a, m) = 1 は同値です。逆元の代表は、0 以上 m 未満の範囲で一つに決まります。</p></div>
+  <div class="proof"><h3>共通約数は 1 を割り切れるか</h3><p>逆元 b があれば ab ≡ 1、すなわち ab − km = 1 となる整数 k があります。a、m の共通約数は左辺を割るので 1 も割り、最大公約数は 1 です。逆に gcd(a, m) = 1 なら、Bézout の等式 1 = sa + tm を法 m で読んで sa ≡ 1。従って s が逆元です。</p><p>b、c がともに逆元なら、b ≡ b(ac) ≡ (ba)c ≡ c です。同じ法の合同は掛算で保たれることを使いました。従って二つは同じ余りであり、その範囲の代表は一つです。</p></div>
+  <p>gcd(a, m) = 1 なら、ax ≡ ay (mod m) の両辺に逆元 b を掛けて x ≡ y と<strong>消去</strong>できます。また任意の出力 y に対し x ≡ by が ax ≡ y を満たすので、a 倍写像は全単射です。逆に、a 倍写像が全単射なら出力 1 に届くため逆元があり、やはり互いに素です。</p>
+  <p class="note">法 8 では 2×1 ≡ 2×5 ですが、1 ≢ 5 です。共通の 2 を勝手に消せません。2 と 8 の最大公約数は 2 で、2 倍によって元の区別が失われているからです。同じく 2x ≡ 2 の解は x ≡ 1 と x ≡ 5 の二つです。実数での非零数による割算を、そのまま合同へ持ち込まないようにします。</p>
+  <p>0 の逆元はありません。gcd(0, m) = m ≥ 2 であり、0 を何倍しても 1 に届かないためです。また逆元の有無は法にも依存します。2 は法 8 では逆元を持ちませんが、法 5 では 2×3 ≡ 1 なので逆元が 3 になります。</p>
+</section>
+
+<details class="column" id="modular-arithmetic-column">
+  <summary>寄り道［自作モデル］：番号の変換を何度も重ねる</summary>
+  <p>八つの番号を f(x) ≡ 3x + 1 (mod 8) で付け替えるモデルを考えます。出力 y からは x ≡ 3(y − 1) と戻せます。3 の逆元が 3 だからです。途中で余りだけに直しても、掛算と足算の保存によりこの戻し方は変わりません。</p>
+  <p>同じ変換を二回行うと f(f(x)) ≡ 3(3x + 1) + 1 ≡ x + 4 です。さらに二回行えば x + 8 ≡ x に戻ります。一回で元に戻るとは限らない変換でも、合成を式で整理すると全体の動きを短く説明できます。</p>
+  <p class="source-note">出典：本章のために作成した有限の番号変換モデル。外部の通信方式や暗号方式についての主張ではありません。</p>
+</details>
+
+<section id="modular-arithmetic-exercises">
+  <h2>演習：合同式と逆元</h2>
+  <article class="exercise"><h3>1．負数でも、余りの範囲をそろえる</h3><p>法 5 で、−17 の 0 以上 5 未満の代表を求めてください。その代表を使い、(−17)×12 の余りも求めてください。</p><details><summary>ヒント1：負の商を選ぶ</summary><p>−17 = (−4)×5 + r と書きます。</p></details><details><summary>ヒント2：積の各因子を余りへ替える</summary><p>12 の余りも先に求めます。</p></details><details><summary>解答</summary><p>−17 = (−4)×5 + 3 なので代表は 3。12 ≡ 2 から積は 3×2 = 6 ≡ 1 (mod 5) です。実際に −204 = (−41)×5 + 1 となり一致します。</p></details></article>
+  <article class="exercise"><h3>2．互除法から逆元を作る</h3><p>17 と 7 の互除法を行い、1 を二数の整数係数の和で表してください。それを使って法 17 での 7 の逆元を求めてください。</p><details><summary>ヒント1：余りは 3、次は 1</summary><p>17 = 2×7 + 3、7 = 2×3 + 1 と進みます。</p></details><details><summary>ヒント2：1 の式から逆に代入する</summary><p>1 = 7 − 2×3 の 3 を、17 − 2×7 に置き換えます。</p></details><details><summary>解答</summary><p>次の段は 3 = 3×1 + 0 なので最大公約数は 1。逆に代入すると 1 = 7 − 2(17 − 2×7) = 5×7 − 2×17 です。従って法 17 での 7 の逆元は 5。7×5 = 35 = 2×17 + 1 と検算できます。</p></details></article>
+  <article class="exercise"><h3>3．同じ法でも、掛ける数で違う</h3><p>法 8 で、3x ≡ 5、2x ≡ 5、2x ≡ 2 の解を、それぞれ 0 ≤ x &lt; 8 の範囲で求めてください。</p><details><summary>ヒント1：3 は逆元を持つ</summary><p>両辺に 3 を掛けると、3 倍を元へ戻せます。</p></details><details><summary>ヒント2：2 倍の出力は偶数の余りだけ</summary><p>上の静的図の出力列で、5 と 2 を探します。</p></details><details><summary>解答</summary><p>3x ≡ 5 は x ≡ 3×5 ≡ 7 なので x = 7 の一つです。2x ≡ 5 は偶数と奇数の差が 8 の倍数にならず、解がありません。2x ≡ 2 は x = 1、5 の二つです。2 に逆元がないので、一律に割って一解を得ることはできません。</p></details></article>
+</section>
+
+<section id="modular-arithmetic-reflection">
+  <h2>自分の言葉で</h2>
+  <ol><li>整数を余りへ置き換えて掛けても、最後の合同が保たれることを、差の式から説明できますか。</li><li>互除法を逆にたどることが、なぜ逆元を作る方法になるのでしょうか。</li><li>ax ≡ ay から a を消す条件と、a 倍写像がすべての余りを並べ替える条件は、どう結びつきますか。</li></ol>
+</section>

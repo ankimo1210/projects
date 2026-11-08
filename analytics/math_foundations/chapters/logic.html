@@ -1,0 +1,89 @@
+<section id="logic-question">
+  <h2>命題と条件</h2>
+  <p>「どの人にも、好きな本が一冊ある」と「ある一冊の本を、どの人も好きだ」は違います。前者では人ごとに本を選び直せますが、後者では全員に共通する一冊が必要です。数学でも、使う言葉の順番が、用意すべき答えを変えます。計算を始める前に、その文章が何を要求しているかを読めるようになりましょう。</p>
+  <p>真か偽かが定まる文章を<strong>命題</strong>と呼びます。「3 は奇数だ」は命題です。一方「x は奇数だ」は、x の範囲や値を決めなければ真偽が定まりません。文字を含む条件を P(x) と書き、対象を一つ入れたときの命題だと考えます。この章では、整数と実数の通常の計算を使います。数の種類は<a href="numbers.html">数の拡張</a>でも整理します。</p>
+</section>
+
+<section id="logic-quantifiers">
+  <h2>全称量化・存在量化と量化の順序</h2>
+  <p><strong>全称</strong>の「すべての x で P(x)」を ∀x P(x)、<strong>存在</strong>の「ある x で P(x)」を ∃x P(x) と書きます。存在という言葉は、ちょうど一つという意味ではありません。一つ以上あれば十分です。また「すべて」と言うときには、すべての整数なのか、すべての正の実数なのか、必ず範囲を指定します。</p>
+  <div class="theorem">
+    <h3>選び直せる数と、固定しなければならない数</h3>
+    <p>実数について「∀x ∃y：y &gt; x」は真ですが、「∃y ∀x：y &gt; x」は偽です。どちらも x、y は実数を動きます。</p>
+  </div>
+  <div class="proof">
+    <h3>短い証明</h3>
+    <p>前者では x がどの実数でも、その x に応じて y = x + 1 を選べば y &gt; x です。後者が真だとすると、一つの実数 y がすべての実数 x より大きくなります。しかし x = y を選ぶと y &gt; y が必要になり、これは成り立ちません。したがって後者を満たす y はありません。</p>
+  </div>
+  <p>記号を左から読むと、どこまで値に依存してよいかが見えます。∀x の後に ∃y があるなら、y は x を見て決められます。∃y が先なら、その後どんな x が来ても同じ y で対応しなければなりません。この依存関係は、後の<a href="limits.html">極限の定義</a>で、小さい誤差の要求に応じてどこから先を見るかを選ぶときにも現れます。</p>
+
+  <div class="concept-grid">
+    <figure class="concept-figure" id="logic-visual-dependent-choice" data-visual="logic-visual-dependent-choice"><svg class="concept-svg" viewBox="0 0 360 360" role="img" aria-labelledby="logic-visual-dependent-choice-title logic-visual-dependent-choice-desc"><title id="logic-visual-dependent-choice-title">入力に依存してyを選べる量化順序</title><desc id="logic-visual-dependent-choice-desc">全て同じ縮尺の数直線。x=-2,0,3の塗点ごとにy=x+1の白丸を右へ1置く。一般式y−x=1&gt;0が、どの実数xにも同じ選び方が使える理由。</desc><defs><marker id="logic-visual-dependent-choice-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--series-2)"/></marker></defs><text x="180" y="30" font-size="22" fill="var(--ink)" text-anchor="middle">入力ごとに、yを選び直す</text><text x="180" y="65" font-size="22" fill="var(--ink)" text-anchor="middle">y=x+1 ⇒ y−x=1&gt;0</text><line x1="30" y1="118" x2="330" y2="118" stroke="var(--ink-3)" stroke-width="2"/><line x1="120" y1="113" x2="120" y2="123" stroke="var(--ink-3)" stroke-width="2"/><path d="M60 118 L90 118" fill="none" stroke="var(--series-2)" stroke-width="3" marker-end="url(#logic-visual-dependent-choice-arrow)"/><circle cx="60" cy="118" r="5" fill="var(--series-1)"/><circle cx="90" cy="118" r="7" fill="var(--surface)" stroke="var(--series-2)" stroke-width="3"/><text x="60" y="99" font-size="22" fill="var(--ink)" text-anchor="middle">-2</text><text x="90" y="99" font-size="22" fill="var(--ink)" text-anchor="middle">-1</text><line x1="30" y1="205" x2="330" y2="205" stroke="var(--ink-3)" stroke-width="2"/><line x1="120" y1="200" x2="120" y2="210" stroke="var(--ink-3)" stroke-width="2"/><path d="M120 205 L150 205" fill="none" stroke="var(--series-2)" stroke-width="3" marker-end="url(#logic-visual-dependent-choice-arrow)"/><circle cx="120" cy="205" r="5" fill="var(--series-1)"/><circle cx="150" cy="205" r="7" fill="var(--surface)" stroke="var(--series-2)" stroke-width="3"/><text x="120" y="186" font-size="22" fill="var(--ink)" text-anchor="middle">0</text><text x="150" y="186" font-size="22" fill="var(--ink)" text-anchor="middle">1</text><line x1="30" y1="292" x2="330" y2="292" stroke="var(--ink-3)" stroke-width="2"/><line x1="120" y1="287" x2="120" y2="297" stroke="var(--ink-3)" stroke-width="2"/><path d="M210 292 L240 292" fill="none" stroke="var(--series-2)" stroke-width="3" marker-end="url(#logic-visual-dependent-choice-arrow)"/><circle cx="210" cy="292" r="5" fill="var(--series-1)"/><circle cx="240" cy="292" r="7" fill="var(--surface)" stroke="var(--series-2)" stroke-width="3"/><text x="210" y="273" font-size="22" fill="var(--ink)" text-anchor="middle">3</text><text x="240" y="273" font-size="22" fill="var(--ink)" text-anchor="middle">4</text><text x="180" y="346" font-size="22" fill="var(--ink)" text-anchor="middle">● 入力x　○ 選ぶy　右へ1</text></svg><figcaption>まず塗点 x を受け取り、その右1の白丸 y=x+1 を選びます。三組を比べると入力に合わせて y が動くことが分かります。三例の観察自体では全称を証明できませんが、一般式 y−x=1&gt;0 が全ての実数 x へ同じ方法を使える根拠です。各数直線は同じ縮尺です。</figcaption></figure>
+    <figure class="concept-figure" id="logic-visual-fixed-choice" data-visual="logic-visual-fixed-choice"><svg class="concept-svg" viewBox="0 0 360 360" role="img" aria-labelledby="logic-visual-fixed-choice-title logic-visual-fixed-choice-desc"><title id="logic-visual-fixed-choice-title">固定値に同じ入力を返すと厳密不等号が失敗する</title><desc id="logic-visual-fixed-choice-desc">先に固定したy=-1,1,4に対し、後から同じ値のxを選ぶ。白丸yと塗点xは各行で重なり、y−x=0なのでy&gt;xは偽。三候補だけでなく任意の実数yに同じ反例x=yが使える。</desc><text x="180" y="30" font-size="22" fill="var(--ink)" text-anchor="middle">固定した y には、x=y を返す</text><text x="180" y="65" font-size="22" fill="var(--ink)" text-anchor="middle">y−x=0、y&gt;x は偽</text><line x1="30" y1="118" x2="330" y2="118" stroke="var(--ink-3)" stroke-width="2"/><line x1="120" y1="113" x2="120" y2="123" stroke="var(--ink-3)" stroke-width="2"/><circle cx="90" cy="118" r="9" fill="var(--surface)" stroke="var(--series-2)" stroke-width="3"/><circle cx="90" cy="118" r="4" fill="var(--series-1)"/><text x="90" y="98" font-size="22" fill="var(--ink)" text-anchor="middle">x=y=-1</text><line x1="30" y1="205" x2="330" y2="205" stroke="var(--ink-3)" stroke-width="2"/><line x1="120" y1="200" x2="120" y2="210" stroke="var(--ink-3)" stroke-width="2"/><circle cx="150" cy="205" r="9" fill="var(--surface)" stroke="var(--series-2)" stroke-width="3"/><circle cx="150" cy="205" r="4" fill="var(--series-1)"/><text x="150" y="185" font-size="22" fill="var(--ink)" text-anchor="middle">x=y=1</text><line x1="30" y1="292" x2="330" y2="292" stroke="var(--ink-3)" stroke-width="2"/><line x1="120" y1="287" x2="120" y2="297" stroke="var(--ink-3)" stroke-width="2"/><circle cx="240" cy="292" r="9" fill="var(--surface)" stroke="var(--series-2)" stroke-width="3"/><circle cx="240" cy="292" r="4" fill="var(--series-1)"/><text x="240" y="272" font-size="22" fill="var(--ink)" text-anchor="middle">x=y=4</text><text x="180" y="346" font-size="22" fill="var(--ink)" text-anchor="middle">二点が重なり、厳密な &gt; は失敗</text></svg><figcaption>今度は y が先に固定されます。その値へ x=y を返すと二点が重なり、どの行でも y&gt;x は偽です。ここで大切なのは候補を三つ試した数ではなく、任意の固定 y に使える同じ反例の作り方です。図はその作戦の三つの実例で、各数直線は前図と同じ縮尺です。</figcaption></figure>
+  </div>
+</section>
+
+<section id="logic-negation">
+  <h2>命題と量化命題の否定</h2>
+  <p>P の<strong>否定</strong>とは、P が真なら偽、偽なら真になる命題です。「すべての対象が P を満たす」の否定は、「P を満たさない対象が少なくとも一つある」です。「どれも P を満たさない」ではありません。<a href="observation.html">観察と反例</a>で、一つの反例が全称命題を崩せたのは、この仕組みによります。</p>
+  <p>同様に「ある対象が P を満たす」の否定は、「どの対象も P を満たさない」です。量化記号をまたいで否定を中へ入れると、∀ と ∃ が入れ替わります。たとえば「∀x ∃y：y &gt; x」の否定は、「∃x ∀y：y ≤ x」です。最後の不等号にも注意しましょう。y &gt; x が成り立たない範囲には、等しい場合も含まれます。</p>
+  <p>条件を組み合わせる「P かつ Q」の否定は「P でない、または Q でない」です。「P または Q」の否定は「P でも Q でもない」です。数学での「または」は、特に断らなければ両方が真の場合も含みます。整数が「2 の倍数、または 3 の倍数」であると言うとき、6 を除外する意図はありません。</p>
+</section>
+
+<section id="logic-implication">
+  <h2>含意・必要条件・十分条件</h2>
+  <p><strong>含意</strong> P ⇒ Q は、「P が成り立つのに Q が成り立たない場合はない」という主張です。P が偽の場合について、Q が真か偽かを指定していません。「整数 n が 4 の倍数なら n は偶数」は、n = 4k と書けば n = 2(2k) だから真です。しかし偶数すべてが 4 の倍数とは限らず、n = 2 が反例です。矢印を逆にした Q ⇒ P は<strong>逆</strong>といい、別の主張です。</p>
+  <p>P ⇒ Q が成り立つとき、P は Q の<strong>十分条件</strong>、Q は P の<strong>必要条件</strong>です。4 の倍数であることは偶数であるために十分で、偶数であることは 4 の倍数であるために必要です。「十分」はそれだけで結論まで届くこと、「必要」は欠けると前提を満たせないこと、と読むと向きが見えます。両方向が成り立つときは同値 P ⇔ Q と書き、必要十分条件と呼びます。</p>
+  <p>含意の否定は「P かつ Q でない」です。「P ならば Q でない」ではありません。たとえば「すべての実数 x で、x² = 1 なら x = 1」を否定するには、x² = 1 と x ≠ 1 を同時に満たす x を示します。x = −1 がそれです。前提を満たさない x = 0 を選んでも、反例にはなりません。</p>
+  <p class="note">日常の「ならば」には原因や時間の順序を感じることがありますが、数学の含意が述べるのは条件の関係です。また全体が真でも、前提を満たす対象が存在するとは限りません。「x² = −1 である実数 x なら x = 0」という含意は、前提を満たす実数がないため反例を持ちません。解の存在を主張したいなら、存在は別に示す必要があります。</p>
+
+  <figure class="concept-figure" id="logic-visual-implication" data-visual="logic-visual-implication">
+      <svg class="concept-svg" viewBox="0 0 360 325" role="img" aria-labelledby="logic-visual-implication-title logic-visual-implication-desc">
+        <title id="logic-visual-implication-title">4の倍数は偶数の中に入る</title>
+        <desc id="logic-visual-implication-desc">整数全体Uの中に偶数の集合Qがあり、その中に4の倍数の集合Pがある。4はPの要素、2はQの要素だがPには入らず、3はQにも入らない。</desc>
+        <rect x="15" y="20" width="330" height="285" rx="8" fill="none" stroke="var(--rule)" stroke-width="2" /><text x="32" y="51" text-anchor="start" fill="var(--ink)" font-size="22" >U：整数全体</text><ellipse cx="185" cy="180" rx="140" ry="105" fill="none" stroke="var(--series-1)" stroke-width="2.5" /><text x="195" y="108" text-anchor="middle" fill="var(--ink)" font-size="22" >Q：偶数</text><ellipse cx="165" cy="194" rx="78" ry="55" fill="none" stroke="var(--series-2)" stroke-width="2.5" /><text x="165" y="177" text-anchor="middle" fill="var(--ink)" font-size="22" >P：4の倍数</text><circle cx="145" cy="215" r="4" fill="var(--ink)"/><text x="158" y="222" text-anchor="start" fill="var(--ink)" font-size="22" >4</text><circle cx="282" cy="198" r="4" fill="var(--ink)"/><text x="295" y="205" text-anchor="start" fill="var(--ink)" font-size="22" >2</text><circle cx="45" cy="90" r="4" fill="var(--ink)"/><text x="58" y="97" text-anchor="start" fill="var(--ink)" font-size="22" >3</text>
+      </svg>
+      <figcaption>整数 k に対して 4k=2(2k) であり、4の倍数は必ず偶数なので P⊆Q です。P は Q の十分条件、Q は P の必要条件です。内側 P のどの点も Q に入る向きに読みます。一方、2 は Q にあって P にないので、逆 Q⇒P は成り立ちません。囲みは整数集合の模式図で面積は個数ではなく、包含の一般的な根拠は三点の確認ではなく上の式です。</figcaption>
+    </figure>
+</section>
+
+<details class="column" id="logic-column">
+  <summary>寄り道［応用］：データベースにも「すべて」と「ある」がある</summary>
+  <p>実際のデータベース PostgreSQL には、複数の値との比較をまとめる ALL と ANY があります。数 x が一覧のすべてより大きいなら ALL、一つでも大きい相手があれば ANY が真です。例えば一覧が 10 と 20、x が 15 なら、前者は偽、後者は真になります。数式の量化が、検索条件の意味を決めているのです。</p>
+  <p>面白いのは空の一覧です。仕様では ALL は真、ANY は偽。「反例が一つもない」と「満たす相手が一つある」は、対象が空のときにはっきり分かれます。ここでは欠損値 NULL を含まない通常の数を考えました。NULL が入る SQL には「不明」という別の結果もあり、数学の二値の真偽をそのまま移す前に、対象と規則を確認する必要があります。</p>
+  <p class="source-note">出典：<a href="https://www.postgresql.org/docs/current/functions-comparisons.html">PostgreSQL：Row and Array Comparisons</a>。</p>
+</details>
+
+<section id="logic-exercises">
+  <h2>演習：量化と必要十分条件</h2>
+  <article class="exercise">
+    <h3>1．量化記号のある文を否定する</h3>
+    <p>x、M は実数とします。「すべての x に対して、x &lt; M となる M がある」の否定を、記号を使わずに述べてください。</p>
+    <details><summary>ヒント1：外側から否定する</summary><p>「すべての x」の否定では、「ある x」が現れます。</p></details>
+    <details><summary>ヒント2：等しい場合を忘れない</summary><p>「ある M で x &lt; M」の否定は「すべての M で x ≥ M」です。</p></details>
+    <details><summary>解答</summary><p>「ある実数 x が存在し、すべての実数 M に対して x ≥ M である」です。この否定文自体は偽です。どんな候補 x に対しても M = x + 1 を選べば成立しないからです。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>2．必要条件と十分条件</h3>
+    <p>実数 x について、x &gt; 2 は x² &gt; 4 の必要条件、十分条件のどちらですか。逆向きも成り立つか確かめてください。</p>
+    <details><summary>ヒント1：正の数を掛ける</summary><p>x &gt; 2 なら x は正です。両辺を二乗したときの大小を考えます。</p></details>
+    <details><summary>ヒント2：逆では負の数を試す</summary><p>x = −3 は x² &gt; 4 を満たしますか。</p></details>
+    <details><summary>解答</summary><p>x &gt; 2 なら x² &gt; 4 なので十分条件です。しかし x = −3 では x² = 9 &gt; 4 でも x &gt; 2 でないため、必要条件ではありません。範囲を x ≥ 0 に限定すれば逆も成り立ち、必要十分条件になります。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>3．反例になっているか</h3>
+    <p>「整数 n で、n が 6 の倍数なら n は 4 の倍数だ」に対し、n = 4、6、12 のどれが反例ですか。</p>
+    <details><summary>ヒント1：前提を満たすか調べる</summary><p>反例には、まず 6 の倍数であることが必要です。</p></details>
+    <details><summary>ヒント2：結論は失敗している必要がある</summary><p>6 の倍数の候補のうち、4 の倍数でないものを探します。</p></details>
+    <details><summary>解答</summary><p>n = 6 だけが反例です。4 は前提を満たしません。12 は前提と結論を両方満たします。一つの命題を崩すには、前提が真で結論が偽となる同じ対象を選ぶ必要があります。</p></details>
+  </article>
+</section>
+
+<section id="logic-reflection">
+  <h2>自分の言葉で</h2>
+  <ol>
+    <li>∀x ∃y と ∃y ∀x では、y を選ぶ自由がどう違いますか。</li>
+    <li>「すべて正しい」の否定を、「すべて誤り」としてはいけないのはなぜですか。</li>
+    <li>十分条件と必要条件を、矢印を一本描いて説明してください。</li>
+  </ol>
+</section>

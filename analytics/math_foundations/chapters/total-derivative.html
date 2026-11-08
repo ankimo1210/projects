@@ -1,0 +1,123 @@
+<section id="total-derivative-question">
+  <h2>全微分と線形近似</h2>
+  <p>二つの入力を (a, b) から (a + h, b + k) へ動かしたとき、出力の変化を fₓ(a, b)h + fᵧ(a, b)k で予測したくなります。横の傾きと縦の傾きを足す、ごく自然な一次式です。しかし、<a href="partial-derivatives.html#partial-derivatives-counterexample">偏微分二つの存在だけでは連続性さえ保証されません</a>。この予測を正当化するには、何が必要でしょうか。</p>
+  <p><a href="derivatives.html#derivatives-definition">一変数の微分</a>は、直線近似の余りが入力のずれより速く消えることでした。ここでは入力の大きさを距離で測り、<a href="vector-spaces.html#vector-spaces-linear">線形写像</a>を近似の主役にします。</p>
+</section>
+
+<section id="total-derivative-definition">
+  <h2>全微分可能性と剰余の定義</h2>
+  <p>開集合 U ⊂ ℝ² 上の f : U → ℝ と p = (a, b) ∈ U を考えます。増分を v = (h, k)、長さを r = ‖v‖ とします。開性により、十分小さい v では p + v ∈ U です。</p>
+  <div class="theorem"><h3>全微分可能性の定義</h3><p>線形写像 L : ℝ² → ℝ があり、次のように書けるとき、f は p で<strong>全微分可能</strong>といいます。L を全微分 Df(p) と書きます。</p>
+    <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>f</mi><mo>(</mo><mi>p</mi><mo>+</mo><mi>v</mi><mo>)</mo><mo>=</mo><mi>f</mi><mo>(</mo><mi>p</mi><mo>)</mo><mo>+</mo><mi>L</mi><mo>(</mo><mi>v</mi><mo>)</mo><mo>+</mo><mi>R</mi><mo>(</mo><mi>v</mi><mo>)</mo><mo>,</mo><mspace width="1em"/><munder><mi>lim</mi><mrow><mi>v</mi><mo>→</mo><mn>0</mn><mo>,</mo><mi>v</mi><mo>≠</mo><mn>0</mn></mrow></munder><mfrac><mrow><mo>|</mo><mi>R</mi><mo>(</mo><mi>v</mi><mo>)</mo><mo>|</mo></mrow><mrow><mo>‖</mo><mi>v</mi><mo>‖</mo></mrow></mfrac><mo>=</mo><mn>0</mn></mrow></math></div>
+  </div>
+  <p>つまり、任意の ε &gt; 0 に対し、十分小さいすべての非零の v で |R(v)| ≤ ε‖v‖ とできます。厳密不等号を使う極限の定義とも、ε を半分にして選び直せば同じ条件です。v = 0 では R(0) = 0 ですが、比 0/0 は定義しません。</p>
+  <p>候補 L を決めるだけでなく、どの方向からでも余りが距離と比べて無視できることが要点です。グラフを近似する一次式 z = f(p) + L(x − a, y − b) が、この意味での<strong>接平面</strong>です。有限個の切り口で接して見えるだけでは、この条件を満たしたことになりません。</p>
+</section>
+
+<section id="total-derivative-necessary">
+  <h2>全微分可能性から従う偏微分と連続性</h2>
+  <div class="theorem"><h3>全微分の係数・一意性・連続性</h3><p>f が p で全微分可能なら、二つの偏微分が存在し、Df(p)(h, k) = fₓ(p)h + fᵧ(p)k です。従って全微分は一意です。また f は p で連続です。</p></div>
+  <div class="proof"><h3>軸で係数を取り出し、全点で評価する</h3>
+    <p>線形性から L(h, k) = hL(1, 0) + kL(0, 1) です。v = (h, 0)、h ≠ 0 を定義へ代入して h で割ると、横の差の商は L(1, 0) + R(h, 0)/h。後ろの絶対値は |R(h, 0)|/|h| → 0 なので、fₓ(p) = L(1, 0) です。同様に fᵧ(p) = L(0, 1)。二つの係数は f から決まるので、L の選び方も一つです。</p>
+    <p>C = |fₓ(p)| + |fᵧ(p)| と置くと、<a href="multivariable-limits.html#multivariable-limits-distance">座標と距離の比較</a>により |L(v)| ≤ C‖v‖。余りの条件から、十分小さい非零の v で |R(v)| ≤ ‖v‖ とできます。従って |f(p + v) − f(p)| ≤ (C + 1)‖v‖ → 0。v = 0 でも差は 0 なので、連続性が従います。</p>
+  </div>
+  <p>逆向きに、連続で二つの偏微分があれば十分でしょうか。原点以外で G(x, y) = x²y/(x² + y²)、G(0, 0) = 0 とした例が、これも否定します。</p>
+  <div class="proof"><h3>連続で偏微分もある G が、全微分できない理由</h3>
+    <p>前二章から、G は原点で連続で、Gₓ(0, 0) = Gᵧ(0, 0) = 0 です。全微分があるなら、いま示した必要条件により L = 0 しかありません。しかし t ≠ 0 では G(t, t) = t/2 なので、次の比は消えません。</p>
+    <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mfrac><mrow><mo>|</mo><mi>G</mi><mo>(</mo><mi>t</mi><mo>,</mo><mi>t</mi><mo>)</mo><mo>−</mo><mn>0</mn><mo>−</mo><mn>0</mn><mo>|</mo></mrow><mrow><mo>‖</mo><mo>(</mo><mi>t</mi><mo>,</mo><mi>t</mi><mo>)</mo><mo>‖</mo></mrow></mfrac><mo>=</mo><mfrac><mrow><mo>|</mo><mi>t</mi><mo>|</mo><mo>/</mo><mn>2</mn></mrow><mrow><msqrt><mn>2</mn></msqrt><mo>|</mo><mi>t</mi><mo>|</mo></mrow></mfrac><mo>=</mo><mfrac><mn>1</mn><mrow><mn>2</mn><msqrt><mn>2</mn></msqrt></mrow></mfrac></mrow></math></div>
+    <p>従って G は原点で全微分できません。出力そのものは 0 へ近づいても、その誤差は入力の距離に比べて小さくならないのです。</p>
+  </div>
+</section>
+
+<section id="total-derivative-c1">
+  <h2>偏導関数の連続性と全微分可能性</h2>
+  <p>G で足りなかった条件を思い出すと、<a href="partial-derivatives.html#partial-derivatives-partial-continuity">Gᵧ は原点で不連続</a>でした。偏微分の値が近くでも安定していれば、横と縦を順に動かして、二つの変化を一つの一次式へまとめられます。</p>
+  <div class="theorem"><h3>C¹ なら全微分可能</h3><p>p を含む開集合 W で fₓ、fᵧ が存在し、W 上で連続であるとします。この性質を W 上で<strong>C¹ 級</strong>と呼びます。このとき f は p で全微分可能で、Df(p)(h, k) = fₓ(p)h + fᵧ(p)k です。これは十分条件であり、必要条件だとは主張していません。</p></div>
+  <div class="proof"><h3>二つの短い線分で、平均値の定理を使う</h3>
+    <p>W の開性から、p を中心とする半径 d &gt; 0 の円板を W 内に取ります。η &gt; 0 を固定します。二つの偏導関数の p での連続性から、ある δ &gt; 0 を d 以下に選び、‖q − p‖ &lt; δ なら |fₓ(q) − fₓ(p)| &lt; η と |fᵧ(q) − fᵧ(p)| &lt; η を同時に成立させられます。</p>
+    <p>0 &lt; r = √(h² + k²) &lt; δ とします。増分を、x = a での縦の変化と、高さ b + k での横の変化に分けます。</p>
+    <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>f</mi><mo>(</mo><mi>a</mi><mo>+</mo><mi>h</mi><mo>,</mo><mi>b</mi><mo>+</mo><mi>k</mi><mo>)</mo><mo>−</mo><mi>f</mi><mo>(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo>)</mo><mo>=</mo><mo>[</mo><mi>f</mi><mo>(</mo><mi>a</mi><mo>+</mo><mi>h</mi><mo>,</mo><mi>b</mi><mo>+</mo><mi>k</mi><mo>)</mo><mo>−</mo><mi>f</mi><mo>(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo>+</mo><mi>k</mi><mo>)</mo><mo>]</mo><mo>+</mo><mo>[</mo><mi>f</mi><mo>(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo>+</mo><mi>k</mi><mo>)</mo><mo>−</mo><mi>f</mi><mo>(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo>)</mo><mo>]</mo></mrow></math></div>
+    <p>横の線分の点 (a + θh, b + k) は 0 ≤ θ ≤ 1 で p からの距離が r 以下、縦の線分の点 (a, b + θk) も距離が |k| 以下です。従って両線分は円板内にあります。偏微分の存在は、対応する一変数の切り口の微分可能性を意味し、その切り口での連続性も保証します。線分の端点も W の内点なので端点を含めて連続であり、<a href="mean-value.html#mean-value-theorem">一変数の平均値の定理</a>の条件を満たします。</p>
+    <p>h ≠ 0 なら、横の差は fₓ(a + θh, b + k)h（ある 0 &lt; θ &lt; 1）です。k ≠ 0 なら、縦の差は fᵧ(a, b + θ′k)k（ある 0 &lt; θ′ &lt; 1）です。負の h、k でも、端点を昇順にした区間に定理を使い、差の向きを戻せば同じ式になります。h = 0 または k = 0 の項は最初から 0 とし、長さ 0 の区間へ平均値の定理を適用しません。</p>
+    <p>そこで fₓ(p)h + fᵧ(p)k を引いた余り R(v) は、非零の各成分について係数の差が η 未満だから、次を満たします。零の成分の項は 0 です。</p>
+    <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>|</mo><mi>R</mi><mo>(</mo><mi>v</mi><mo>)</mo><mo>|</mo><mo>≤</mo><mi>η</mi><mo>(</mo><mo>|</mo><mi>h</mi><mo>|</mo><mo>+</mo><mo>|</mo><mi>k</mi><mo>|</mo><mo>)</mo><mo>≤</mo><msqrt><mn>2</mn></msqrt><mi>η</mi><mi>r</mi></mrow></math></div>
+    <p>任意の ε &gt; 0 に対して η = ε/(2√2) とすれば、0 &lt; r &lt; δ で |R(v)|/r ≤ ε/2 &lt; ε。従って全微分可能です。二変数の連続性を先に仮定したのではなく、切り口の微分と偏導関数の連続性から余りを直接評価しました。</p>
+  </div>
+  <p>p 以外の近くの点でも偏微分が存在するのは、平均値の定理で途中の傾きを使うためです。実際、この点 p の結論に必要な連続性は fₓ、fᵧ の p での連続性だけです。C¹ はそれを開集合の各点で使える、便利なまとめ方です。</p>
+
+<figure class="concept-figure" id="total-derivative-visual-mvt-path" data-visual="total-derivative-mvt-path"><svg class="concept-svg" viewBox="0 0 360 300" role="img" aria-labelledby="total-derivative-visual-mvt-path-title total-derivative-visual-mvt-path-desc"><title id="total-derivative-visual-mvt-path-title">全微分の証明でたどる二線分</title><desc id="total-derivative-visual-mvt-path-desc">pから縦にk、次に横にhだけ進む折れ線。途中の点もpから距離r以下なので、同じ円板内で二つの一変数平均値の定理を使える。</desc><circle cx="170" cy="142" r="100" style="fill:var(--surface-2);stroke:var(--grid);stroke-width:2"/><line x1="170" y1="142" x2="246" y2="83" style="stroke:var(--ink-3);stroke-width:2;stroke-dasharray:5 5;"/><line x1="170" y1="142" x2="170" y2="83" style="stroke:var(--series-2);stroke-width:3;"/><polygon points="170,83 166,93 174,93" style="fill:var(--series-2);fill-opacity:1;stroke:var(--series-2);stroke-width:2"/><line x1="170" y1="83" x2="246" y2="83" style="stroke:var(--series-1);stroke-width:3;"/><polygon points="246,83 236,79 236,87" style="fill:var(--series-1);fill-opacity:1;stroke:var(--series-1);stroke-width:2"/><circle cx="170" cy="142" r="4" style="fill:var(--ink);stroke:var(--ink-2);stroke-width:2"/><circle cx="170" cy="83" r="4" style="fill:var(--ink);stroke:var(--ink-2);stroke-width:2"/><circle cx="246" cy="83" r="4" style="fill:var(--ink);stroke:var(--ink-2);stroke-width:2"/><text x="158" y="173" text-anchor="end" style="fill:var(--ink)">p=(a,b)</text><text x="130" y="40" text-anchor="end" style="fill:var(--ink)">(a,b+k)</text><text x="280" y="70" text-anchor="middle" style="fill:var(--ink)">p+v</text><text x="205" y="108" text-anchor="middle" style="fill:var(--ink)">h</text><text x="150" y="114" text-anchor="end" style="fill:var(--ink)">k</text><text x="180" y="277" text-anchor="middle" style="fill:var(--ink)">r &lt; δ：二線分とも円板内</text></svg><figcaption>図は h,k&gt;0 の模式例です。縦に k、横に h と分け、それぞれの途中の傾きを使います。本文の評価は負や0の成分も含みます。</figcaption></figure>
+</section>
+
+<section id="total-derivative-quadratic">
+  <h2>二次関数の線形近似と誤差評価</h2>
+  <p>P(x, y) = x² + xy + y² の偏導関数は Pₓ = 2x + y、Pᵧ = x + 2y で、<a href="partial-derivatives.html#partial-derivatives-polynomial">連続性も確認済み</a>です。C¹ の定理から全微分可能ですが、この例では余りを正確に取り出すこともできます。</p>
+  <div class="proof"><h3>展開して、誤差を距離の二乗で抑える</h3><p>p = (a, b)、v = (h, k) として展開すると、P(p + v) = P(p) + (2a + b)h + (a + 2b)k + R(v)、R(v) = h² + hk + k² です。R = (h + k/2)² + 3k²/4 ≥ 0 であり、|hk| ≤ r²/2 から次の上限を得ます。</p>
+    <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mn>0</mn><mo>≤</mo><mi>R</mi><mo>(</mo><mi>v</mi><mo>)</mo><mo>≤</mo><mfrac><mn>3</mn><mn>2</mn></mfrac><msup><mi>r</mi><mn>2</mn></msup><mo>,</mo><mspace width="1em"/><mn>0</mn><mo>&lt;</mo><mi>r</mi><mo>⇒</mo><mfrac><mrow><mo>|</mo><mi>R</mi><mo>(</mo><mi>v</mi><mo>)</mo><mo>|</mo></mrow><mi>r</mi></mfrac><mo>≤</mo><mfrac><mn>3</mn><mn>2</mn></mfrac><mi>r</mi><mo>→</mo><mn>0</mn></mrow></math></div>
+  </div>
+  <p>例えば基準点 (1, 1) なら P = 3、係数は (3, 3) なので、接平面は z = 3 + 3h + 3k（h = x − 1、k = y − 1）。増分 (0.1, −0.2) の一次予測は 2.7、正確値 P(1.1, 0.8) は 2.73 で、余りは 0.03 です。理論上限は (3/2)(0.1² + 0.2²) = 0.075 なので、この誤差を確かに覆っています。</p>
+  <div data-lab="multivariable-linear"></div>
+  <noscript><p class="note">実験の操作には JavaScript が必要です。基準点 (1, 1)、増分 (0.1, −0.2) では一次予測 2.7、正確値 2.73、余り 0.03 です。増分全体を ρ = 1/2 倍すると、余りは 1/4 倍の 0.0075、距離は 1/2 倍になるので、正規化誤差 |R|/‖v‖ は 1/2 倍です。零増分で余りは 0 ですが、正規化誤差の比は未定義です。</p></noscript>
+  <p class="note">第一図は接平面と曲面の、選んだ増分方向の切り口です。一つの切り口の一致だけで全微分は証明できません。この例を全方向で保証するのは上の不等式です。増分全体を ρ 倍すると、余りは ρ² 倍、非零の増分の正規化誤差は |ρ| 倍になります。</p>
+</section>
+
+<section id="total-derivative-linear-map-bound">
+  <h2>ベクトル値関数の全微分と行列による評価</h2>
+  <p>座標を変換する写像 Φ : U ⊂ ℝ² → ℝ² では、出力も二成分です。開集合の点 p で、線形写像 A : ℝ² → ℝ² により Φ(p + v) = Φ(p) + Av + E(v)、‖E(v)‖/‖v‖ → 0 と書けることを、同じく全微分可能と定義します。A = DΦ(p) です。E(0) = 0 とし、比は v ≠ 0 のときだけ考えます。</p>
+  <p>この条件は、二つの成分 Φ₁、Φ₂ がそれぞれ全微分可能であることと同値です。ベクトルの余りからは |Eᵢ| ≤ ‖E‖ により各成分の条件が出ます。逆に、二つの余りの比が 0 へ近づけば、‖E‖ ≤ |E₁| + |E₂| によりベクトルの比も 0 へ近づきます。各行に前節の係数の議論を使うと、微分は次の行列です。これを<strong>Jacobian 行列</strong>と呼びます。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>D</mi><mi>Φ</mi><mo>(</mo><mi>p</mi><mo>)</mo><mo>=</mo><mo>[</mo><mtable><mtr><mtd><msub><mi>Φ</mi><mrow><mn>1</mn><mi>x</mi></mrow></msub><mo>(</mo><mi>p</mi><mo>)</mo></mtd><mtd><msub><mi>Φ</mi><mrow><mn>1</mn><mi>y</mi></mrow></msub><mo>(</mo><mi>p</mi><mo>)</mo></mtd></mtr><mtr><mtd><msub><mi>Φ</mi><mrow><mn>2</mn><mi>x</mi></mrow></msub><mo>(</mo><mi>p</mi><mo>)</mo></mtd><mtd><msub><mi>Φ</mi><mrow><mn>2</mn><mi>y</mi></mrow></msub><mo>(</mo><mi>p</mi><mo>)</mo></mtd></mtr></mtable><mo>]</mo></mrow></math></div>
+  <div class="theorem"><h3>固定した線形写像は、長さを一定倍以下にしか増やさない</h3><p>2 × 2 行列 A = (aᵢⱼ) に対し、C<sub>A</sub> = |a₁₁| + |a₁₂| + |a₂₁| + |a₂₂| とすれば、‖Av‖ ≤ C<sub>A</sub>‖v‖ です。行ベクトル B = (b₁, b₂) でも、|Bw| ≤ C<sub>B</sub>‖w‖、C<sub>B</sub> = |b₁| + |b₂| です。</p></div>
+  <div class="proof"><h3>成分ごとの三角不等式で足りる</h3><p>v = (h, k) とすると ‖Av‖ ≤ |a₁₁h + a₁₂k| + |a₂₁h + a₂₂k| ≤ (|a₁₁| + |a₂₁|)|h| + (|a₁₂| + |a₂₂|)|k| ≤ C<sub>A</sub>‖v‖。B も |b₁h + b₂k| ≤ (|b₁| + |b₂|)‖v‖ です。最良の定数を求める必要はなく、有限の定数が一つあれば十分です。</p></div>
+  <p>この評価と余りの条件により、ベクトル値の全微分可能性からも連続性が従います。実際、十分小さい v で ‖E(v)‖ ≤ ‖v‖ なら、‖Φ(p + v) − Φ(p)‖ ≤ (C<sub>A</sub> + 1)‖v‖ → 0 です。これで次の合成の内側の増分も、小さくなると分かります。</p>
+</section>
+
+<section id="total-derivative-chain">
+  <h2>全微分の連鎖律</h2>
+  <p>座標変換 Φ の後で量 g を計算すると、内側の変化を外側へ伝える必要があります。一変数で二つの変化率を掛けた<a href="derivatives.html#derivatives-rules">連鎖律</a>は、ここでは線形写像の合成になります。</p>
+  <div class="theorem"><h3>全微分の連鎖律</h3><p>U、V を ℝ² の開集合、p ∈ U、Φ : U → ℝ²、q = Φ(p) ∈ V、g : V → ℝ とします。Φ が p で全微分可能、g が q で全微分可能で、p のある開近傍を Φ が V に写すと仮定します。このとき合成 g ∘ Φ は p で全微分可能で、D(g ∘ Φ)(p) = Dg(q)DΦ(p) です。</p></div>
+  <div class="proof"><h3>二つの余りを、元の入力の距離で比べる</h3>
+    <p>A = DΦ(p)、B = Dg(q) とし、Φ(p + v) = q + Av + E(v)、g(q + w) = g(q) + Bw + s(w) と書きます。‖E(v)‖/‖v‖ → 0、|s(w)|/‖w‖ → 0 です。E(0) = 0、s(0) = 0 とします。定義域の条件により、十分小さい v なら両式に代入できます。</p>
+    <p>w = Φ(p + v) − q = Av + E(v) と置きます。十分小さい v では ‖E(v)‖ ≤ ‖v‖ なので、前節の評価により ‖w‖ ≤ (C<sub>A</sub> + 1)‖v‖。K = C<sub>A</sub> + 1 と書けば K ≥ 1 で、w → 0 も従います。代入すると次の等式です。</p>
+    <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>g</mi><mo>(</mo><mi>Φ</mi><mo>(</mo><mi>p</mi><mo>+</mo><mi>v</mi><mo>)</mo><mo>)</mo><mo>=</mo><mi>g</mi><mo>(</mo><mi>q</mi><mo>)</mo><mo>+</mo><mi>B</mi><mi>A</mi><mi>v</mi><mo>+</mo><mi>B</mi><mi>E</mi><mo>(</mo><mi>v</mi><mo>)</mo><mo>+</mo><mi>s</mi><mo>(</mo><mi>w</mi><mo>)</mo></mrow></math></div>
+    <p>余りの第一項は |BE(v)|/‖v‖ ≤ C<sub>B</sub>‖E(v)‖/‖v‖ → 0。第二項は、任意の η &gt; 0 に対し、十分小さい非零の w で |s(w)| ≤ η‖w‖ とできます。w = 0 でも s(0) = 0 なので、この不等式はそのまま成立します。従って十分小さい非零の v では |s(w)|/‖v‖ ≤ ηK です。η を任意に小さく選べるので、この比も 0 へ近づきます。</p>
+    <p>二項の和も距離で割って 0 へ消えるため、合成の全微分は BA です。途中で ‖w‖ による割り算を全 v に要求しなかったので、v ≠ 0 でも w = 0 になる場合を落としていません。</p>
+  </div>
+  <p>p の近傍を V へ写す条件は、合成をそこで定義するためです。ここでは Φ の連続性と V の開性からも得られます。q を中心とする円板を V に取り、Φ(p + v) がその円板に入るよう v を小さくすればよいからです。明記しておくと、定義域を無視した公式の適用を防げます。</p>
+  <p>行列 BA の順序は、まず入力に A を作用させ、次に B を作用させる順です。<a href="vector-spaces.html#vector-spaces-composition">線形写像の合成と行列の積</a>が、そのまま近似をつなぐ道具になりました。C¹ は各写像の全微分可能性を保証する一つの方法ですが、連鎖律の仮定自体は各点での全微分可能性です。</p>
+
+<p class="note" data-reading-note="total-derivative-chain-maps">表の自作例：Φ(u,v)=(u+v,u−v)、g(x,y)=x²+y²、p=(1,0)、増分η=(1/10,1/5)。q=Φ(p)=(1,1)から、先に内側の増分、次に外側の一次変化を追います。正確にはg(Φ(p+η))=5/2、g(Φ(p))=2で、増分1/2と一次予測2/5との差1/10を残します。</p><div class="concept-table-wrap" tabindex="0" role="region" aria-label="二段の近似を合成する"><table class="concept-table" style="min-width:30rem" data-visual="total-derivative-chain-maps"><caption>連鎖律の順序を、二段のずれと剰余で検算する</caption><thead><tr><th scope="col">段階</th><th scope="col">入力と線形写像</th><th scope="col">一次の予測と正確値</th></tr></thead><tbody><tr><th scope="row">内側Φ</th><td><span class="table-math">η=(1/10,1/5)</span>に2×2行列<span class="table-math">A=[[1,1],[1,−1]]</span>を作用。</td><td><span class="table-math">w=Aη=(3/10,−1/10)</span>。このΦは線形で余り0。</td></tr><tr><th scope="row">外側g</th><td><span class="table-math">q=(1,1)</span>で1×2行列<span class="table-math">B=(2,2)</span>をwへ作用。</td><td><span class="table-math">Bw=2/5</span>が一次の増分。正確なgの増分は<span class="table-math">1/2</span>。</td></tr><tr><th scope="row">合成<span class="table-math">g∘Φ</span></th><td>元の増分ηへ<span class="table-math">BA=(4,0)</span>を作用。</td><td>予測<span class="table-math">BAη=2/5</span>、正確値との差<span class="table-math">1/10</span>は二次の余り。</td></tr><tr><th scope="row">順序の検査</th><td><span class="table-math">(1×2)(2×2)=1×2</span></td><td>まずA、その次B。<span class="table-math">AB</span>はこの寸法では掛けられない。</td></tr></tbody></table></div><p class="note">表は一次の項の流れです。余りが距離に比べて消えることは、本文の評価で保証します。</p>
+</section>
+
+<details class="column" id="total-derivative-column">
+  <summary>寄り道［応用］：レンズで曲がる格子を、局所的な行列で読む</summary>
+  <p>OpenCV のカメラ校正の公式資料は、半径方向のレンズ歪みを x、y に同じ係数 1 + k₁r² + k₂r⁴ + k₃r⁶ を掛けるモデルで表します。ここでは正規化した座標で r² = x² + y² とし、k₁ = κ、k₂ = k₃ = 0、接線方向の歪みも 0 にした簡単な場合を取り出します。</p>
+  <p>T(x, y) = (x(1 + κ(x² + y²)), y(1 + κ(x² + y²))) の微分は、第一行が (1 + κ(3x² + y²), 2κxy)、第二行が (2κxy, 1 + κ(x² + 3y²)) です。多項式なので成分は C¹ で、ここまでの定理を適用できます。κ = 0.1、p = (1, 0) では T(p) = (1.1, 0)、DT(p) は対角成分 1.3 と 1.1、ほかは 0 の行列になります。</p>
+  <p>従って p のごく近くの小さい格子の増分 (h, k) は、一次近似では (1.3h, 1.1k) に変わります。二方向で伸び方が違うのは、点自体を中心から移す係数 1.1 だけでは見えません。これが Jacobian を調べる意味です。T はこのモデルで歪ませる向きの写像であり、補正には対応する座標関係を逆にたどる処理が必要です。この行列一つで遠くの画素まで正確に補正できる、という主張ではありません。</p>
+  <p class="source-note">出典：<a href="https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html">OpenCV：Camera Calibration（Basics・Undistortion）</a>、<a href="https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html">Camera Calibration and 3D Reconstruction（正規化座標・undistortPoints）</a>。簡略化したモデルの微分と数値例は本章で計算しました。</p>
+</details>
+
+<section id="total-derivative-exercises">
+  <h2>全微分と剰余評価の演習</h2>
+  <article class="exercise"><h3>1．連続な G は、全微分できるか</h3><p>G(x, y) = x²y/(x² + y²)（原点以外）、G(0, 0) = 0 が、原点で全微分できないことを示してください。</p>
+    <details><summary>ヒント1：線形写像の候補を絞る</summary><p>二つの偏微分は原点で 0 です。全微分が存在するなら、係数は何になりますか。</p></details>
+    <details><summary>ヒント2：対角線で比を調べる</summary><p>G(t, t) = t/2、‖(t, t)‖ = √2|t| です。</p></details>
+    <details><summary>解答</summary><p>原点の二つの偏微分が 0 なので、全微分があるなら L(h, k) = 0。従って余りは G(h, k) そのものです。t ≠ 0 で |G(t, t)|/‖(t, t)‖ = (|t|/2)/(√2|t|) = 1/(2√2) となり、t → 0 でも 0 に近づきません。全微分の定義に反するため全微分できません。G 自体が連続であることとは矛盾しません。</p></details>
+  </article>
+  <article class="exercise"><h3>2．接平面は、どれくらい正確か</h3><p>P(x, y) = x² + xy + y² の (1, 1) での接平面と余りを求め、増分 (0.1, −0.2) の一次予測・正確値・誤差上限を比べてください。増分全体を ρ 倍するとどうなりますか。</p>
+    <details><summary>ヒント1：値と二つの係数</summary><p>P(1, 1) = 3、Pₓ(1, 1) = Pᵧ(1, 1) = 3 です。</p></details>
+    <details><summary>ヒント2：二次の項が余る</summary><p>余りは h² + hk + k²。|hk| ≤ (h² + k²)/2 を使えます。</p></details>
+    <details><summary>解答</summary><p>h = x − 1、k = y − 1 として接平面は z = 3 + 3h + 3k（すなわち z = 3x + 3y − 3）。余り R = h² + hk + k² は非負で、3(h² + k²)/2 以下です。指定増分では一次予測 3 + 0.3 − 0.6 = 2.7、余り 0.01 − 0.02 + 0.04 = 0.03、正確値 2.73。上限は 3(0.05)/2 = 0.075 です。距離は √0.05、正規化誤差は 0.03/√0.05。ρ 倍の増分では余りが 0.03ρ²、距離が |ρ|√0.05 なので、ρ ≠ 0 で正規化誤差は |ρ| · 0.03/√0.05 です。ρ → 0 で 0 へ近づきますが、ρ = 0 の比そのものは未定義です。</p></details>
+  </article>
+  <article class="exercise"><h3>3．連鎖律を、直接の計算と照合する</h3><p>Φ(u, v) = (u² + v, uv)、g(x, y) = x² + y とします。g ∘ Φ の全微分を連鎖律で求め、直接展開して照合してください。(u, v) = (1, 2) での係数も求めてください。</p>
+    <details><summary>ヒント1：行と列の役割をそろえる</summary><p>DΦ の第一行は (2u, 1)、第二行は (v, u)。Dg(x, y) は行ベクトル (2x, 1) です。</p></details>
+    <details><summary>ヒント2：外側は Φ(u, v) で評価する</summary><p>Dg(Φ(u, v)) = (2(u² + v), 1) です。直接には合成を (u² + v)² + uv と書けます。</p></details>
+    <details><summary>解答</summary><p>DΦ の成分は 2u、1、v、u、Dg の成分は 2x、1 です。座標のずれは距離以下なので、各成分の変化は距離の 2 倍以下となり、すべて連続です。よって両写像は開集合 ℝ² 上で C¹、合成の定義域の条件も満たします。連鎖律の積 Dg(Φ)DΦ を取ると、行ベクトル (4u(u² + v) + v, 2(u² + v) + u) です。直接に (u² + v)² + uv を u、v でそれぞれ微分しても同じ二成分が出ます。(1, 2) では u² + v = 3 なので (14, 7)。従ってそこでの増分 (h, k) に対する全微分は 14h + 7k です。</p></details>
+  </article>
+</section>
+
+<section id="total-derivative-reflection">
+  <h2>自分の言葉で</h2><ol>
+    <li>偏微分を定める二つの極限と、全微分を定める一つの誤差条件は、何が違いますか。</li>
+    <li>C¹ の十分条件の証明で、一変数の平均値の定理をどこに使いましたか。零の成分はどう扱いましたか。</li>
+    <li>連鎖律で v ≠ 0 なのに内側の増分 w = 0 となっても、余りの評価が成立するのはなぜですか。</li>
+  </ol>
+</section>

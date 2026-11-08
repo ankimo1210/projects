@@ -1,0 +1,89 @@
+<section id="discrete-counting-question">
+  <h2>全単射と組合せ的証明</h2>
+  <p>委員を二人選ぶ方法と、委員の一人に印を付ける方法を数えるとします。先に二人を選んでから印を付けても、先に印を付ける人を決めて相方を選んでも、完成した対象は同じです。計算式が違って見えても、同じ集まりを数えているなら値は等しくなります。</p>
+  <p>この章では、<strong>直接一つずつ並べる代わりに、対応と重複度を調べる</strong>方法を使います。対象の同一視は<a href="discrete-relations.html">同値関係</a>、全単射の定義は<a href="sets-maps.html">写像</a>につながります。順列・組合せの公式を使う場面では、<a href="counting-probability.html">場合の数の復習</a>も参照できます。確率の知識は必要ありません。</p>
+</section>
+
+<section id="discrete-counting-bijection">
+  <h2>全単射による個数の比較</h2>
+  <p>有限集合 A の要素数を |A| と書きます。A から B への全単射があれば、各要素を重複も余りもなく一対一に組にできるため、|A| = |B| です。どんな対応かを示すときは、戻す操作も示すと「漏れなく、重ならず」をまとめて確認できます。</p>
+  <p>たとえば n 個の位置それぞれに 0 か 1 を置いた列を、その位置集合 {1, …, n} の部分集合へ送ります。1 を置いた位置だけを集めればよいのです。逆に部分集合が与えられたら、入る位置を 1、入らない位置を 0 にします。二つの操作は互いに戻るので全単射です。各位置の二通りの選択から列は 2ⁿ 個あり、従って部分集合も 2ⁿ 個です。n = 0 なら空の列と空集合が一つずつ対応します。</p>
+  <figure class="concept-figure" id="discrete-counting-visual-bijection" data-visual="discrete-counting-bijection">
+    <svg class="concept-svg" viewBox="0 0 360 380" role="img" aria-labelledby="discrete-counting-bijection-title discrete-counting-bijection-desc">
+      <title id="discrete-counting-bijection-title">二桁の0と1の列と二要素集合の部分集合の全単射</title>
+      <desc id="discrete-counting-bijection-desc">左の列00、10、01、11が、右の空集合、aのみ、bのみ、aとbの集合にそれぞれ一対一に対応する。1がある位置の文字だけを集める。</desc>
+      <g text-anchor="middle"><text x="75" y="33">位置 a, b</text><text x="278" y="33">選んだ集合</text><text x="75" y="100">00</text><text x="278" y="100">∅</text><text x="75" y="180">10</text><text x="278" y="180">{a}</text><text x="75" y="260">01</text><text x="278" y="260">{b}</text><text x="75" y="340">11</text><text x="278" y="340">{a, b}</text></g>
+      <path d="M 130 92 H 213 M 204 85 L 213 92 L 204 99 M 130 172 H 213 M 204 165 L 213 172 L 204 179 M 130 252 H 213 M 204 245 L 213 252 L 204 259 M 130 332 H 213 M 204 325 L 213 332 L 204 339" fill="none" stroke="var(--series-1)" stroke-width="3"/>
+    </svg>
+    <figcaption>二位置での具体例。1 の位置を集める操作と、集合から列へ戻す操作が両方向に定まります。有限例の列挙に加え、本文の戻す規則が一般の n を扱います。</figcaption>
+  </figure>
+  <p>同じく n 個から k 個を選ぶ集合と、選ばなかった n − k 個の集合は、補集合を取る全単射で対応します。n 個から k 個を順序を区別せず選ぶ数を二項係数 C(n, k) と書けば、C(n, k) = C(n, n − k) です。ここで n、k は整数、0 ≤ k ≤ n。C(n, 0) = C(n, n) = 1 です。</p>
+</section>
+
+<section id="discrete-counting-fibers">
+  <h2>重複計数と等しい原像の個数</h2>
+  <p>有限集合の全射 f：A → B があり、B のどの要素にも A の要素がちょうど r 個ずつ対応するとします。r は正の整数です。A を出力ごとに分けると、互いに重ならない |B| 個の箱に r 個ずつ入るので、次が成り立ちます。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>|</mo><mi>A</mi><mo>|</mo><mo>=</mo><mi>r</mi><mo>|</mo><mi>B</mi><mo>|</mo><mo>,</mo><mspace width="1em"/><mo>|</mo><mi>B</mi><mo>|</mo><mo>=</mo><mfrac><mrow><mo>|</mo><mi>A</mi><mo>|</mo></mrow><mi>r</mi></mfrac></mrow></math></div>
+  <p>異なる二人を順番に選んでから順序を忘れるなら、どの二人組にも二順序が対応するため、2 で割れます。しかし二桁の 0・1 の列から「1 の個数」だけを残す操作では、箱の大きさがそろいません。</p>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="同じ個数の1を持つ二桁列の重複度">
+    <table class="concept-table" id="discrete-counting-visual-unequal" data-visual="discrete-counting-unequal">
+      <caption>情報を忘れても、すべての出力が同じ回数現れるとは限らない</caption>
+      <thead><tr><th scope="col"><span class="table-math">残す出力</span></th><th scope="col"><span class="table-math">元の列</span></th><th scope="col"><span class="table-math">対応する個数</span></th></tr></thead>
+      <tbody><tr><th scope="row"><span class="table-math">1 の個数 = 0</span></th><td><span class="table-math">00</span></td><td><span class="table-math">1</span></td></tr><tr><th scope="row"><span class="table-math">1 の個数 = 1</span></th><td><span class="table-math">01, 10</span></td><td><span class="table-math">2</span></td></tr><tr><th scope="row"><span class="table-math">1 の個数 = 2</span></th><td><span class="table-math">11</span></td><td><span class="table-math">1</span></td></tr></tbody>
+    </table>
+  </div>
+  <p>元の四列を、一律に 2 で割って出力が二つとするのは誤りです。出力は 0、1、2 の三つで、対応する個数は 1、2、1 です。一般には箱ごとの個数を足せますが、一つの r で割れるのは、すべての箱が同じ大きさのときです。</p>
+</section>
+
+<section id="discrete-counting-double">
+  <h2>二重計数</h2>
+  <p>n 人から k 人の委員会 S を選び、その中の一人 s を代表にします。数えるのは<strong>組 (S, s) で、s ∈ S</strong>という一つの集まりです。n、k は 1 ≤ k ≤ n とします。</p>
+  <div class="theorem"><h3>代表付き委員会の二重計数</h3><div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>k</mi><mi>C</mi><mo>(</mo><mi>n</mi><mo>,</mo><mi>k</mi><mo>)</mo><mo>=</mo><mi>n</mi><mi>C</mi><mo>(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo>,</mo><mi>k</mi><mo>−</mo><mn>1</mn><mo>)</mo></mrow></math></div></div>
+  <div class="proof"><h3>先に選ぶものを変える</h3><p>先に S を選べば C(n, k) 通りで、そのどれにも代表の選び方が k 通りあります。従って左辺です。先に代表 s を決めれば n 通りで、残る n − 1 人から他の委員 k − 1 人を選ぶので右辺です。どちらも同じ (S, s) を一度ずつ数えており、式は等しくなります。k = 1 でも残りを零人選ぶ一通りが入り、両辺 n です。</p></div>
+  <figure class="concept-figure" id="discrete-counting-visual-incidence" data-visual="discrete-counting-incidence">
+    <svg class="concept-svg" viewBox="0 0 360 350" role="img" aria-labelledby="discrete-counting-incidence-title discrete-counting-incidence-desc">
+      <title id="discrete-counting-incidence-title">三人から二人の委員会と代表を選ぶ六つの組</title>
+      <desc id="discrete-counting-incidence-desc">列は委員会AB、AC、BC、行は代表A、B、C。委員会にその人が含まれる六つのセルに丸がある。各列に二つ、各行に二つあり、どちら向きに足しても六つ。</desc>
+      <path d="M 92 80 H 335 M 92 153 H 335 M 92 226 H 335 M 92 299 H 335 M 92 80 V 299 M 173 80 V 299 M 254 80 V 299 M 335 80 V 299" fill="none" stroke="var(--rule)" stroke-width="2"/>
+      <g text-anchor="middle"><text x="132" y="52">AB</text><text x="213" y="52">AC</text><text x="294" y="52">BC</text><text x="49" y="124">A</text><text x="49" y="197">B</text><text x="49" y="270">C</text><text x="132" y="124">○</text><text x="213" y="124">○</text><text x="132" y="197">○</text><text x="294" y="197">○</text><text x="213" y="270">○</text><text x="294" y="270">○</text><text x="180" y="337">列でも行でも、合計 6</text></g>
+    </svg>
+    <figcaption>n = 3、k = 2 の所属表です。丸一個が (委員会, 代表) の一組。列では委員会3通り×代表2通り、行では代表3通り×残りの委員2通りで、どちらも6組です。一般の証明でも、まず丸に相当する対象を固定します。</figcaption>
+  </figure>
+  <p>二重計数の「二重」は、各対象を二回ずつ数えて答えを倍にするという意味ではありません。同じ対象全体を別々の二方法で一回ずつ数え、二つの式を等しいと置く方法です。式を変形する前に、両辺が何の個数か説明できることが大切です。</p>
+</section>
+
+<section id="discrete-counting-pigeonhole">
+  <h2>鳩ノ巣原理</h2>
+  <p>m 個の箱に N 個の物を一つずつ入れます。m ≥ 1、q ≥ 0 は整数です。N &gt; qm なら、少なくとも一つの箱に q + 1 個以上入ります。これが<strong>鳩ノ巣原理</strong>の容量を使った形です。箱は空でもよく、割当て方が偏っていてもかまいません。</p>
+  <div class="proof"><h3>どの箱も容量以下だと仮定する</h3><p>すべての箱に高々 q 個しかないなら、合計は高々 qm 個です。N &gt; qm に反します。従って少なくとも一箱は q 個を超え、個数は整数なので q + 1 個以上です。N = qm では、各箱にちょうど q 個ずつ置けるため、この結論は保証できません。</p></div>
+  <figure class="concept-figure" id="discrete-counting-visual-capacity" data-visual="discrete-counting-capacity">
+    <svg class="concept-svg" viewBox="0 0 360 310" role="img" aria-labelledby="discrete-counting-capacity-title discrete-counting-capacity-desc">
+      <title id="discrete-counting-capacity-title">三箱に二個ずつの容量では七個を収められない</title>
+      <desc id="discrete-counting-capacity-desc">三つの箱に二個ずつ丸を描き、合計六個の容量を示す。下には七個目の丸と、どこかの箱に三個以上と記す。七個目を置く箱は指定していない。</desc>
+      <g fill="none" stroke="var(--series-1)" stroke-width="2.5"><rect x="18" y="52" width="96" height="115" rx="10"/><rect x="132" y="52" width="96" height="115" rx="10"/><rect x="246" y="52" width="96" height="115" rx="10"/></g>
+      <g fill="var(--surface)" stroke="var(--ink)" stroke-width="2"><circle cx="66" cy="86" r="12"/><circle cx="66" cy="133" r="12"/><circle cx="180" cy="86" r="12"/><circle cx="180" cy="133" r="12"/><circle cx="294" cy="86" r="12"/><circle cx="294" cy="133" r="12"/><circle cx="56" cy="218" r="12"/></g>
+      <g text-anchor="middle"><text x="180" y="31">3 箱 × 2 個 = 6 個</text><text x="193" y="226">もう一つ置くと？</text><text x="180" y="282">どこかに 3 個以上</text></g>
+    </svg>
+    <figcaption>これは上限からの背理法の図です。七個の実際の配置を仮定せず、「すべて二個以下」は不可能だと示します。どの箱が多いかまでは決まりません。</figcaption>
+  </figure>
+  <p>たとえば整数を五つ選べば、4 で割った余りの四箱のどこかに二つ入ります。その二数の差は 4 の倍数です。数が大きくても負でも、余りが 0、1、2、3 のどれかになることだけを使います。<a href="modular-arithmetic.html">合同</a>は、この同じ余りという情報を計算にも使える形へ進めます。</p>
+</section>
+
+<details class="column" id="discrete-counting-column">
+  <summary>寄り道［自作モデル］：接頭語を増やしても、衝突は消えない</summary>
+  <p>五つの異なる項目に、0 と 1 だけを使う長さ 2 の識別札を付けます。札は 00、01、10、11 の四通りなので、少なくとも二項目が同じ札になります。すべての札の前に同じ文字 A を足して A00 などとしても、種類は四つのままで、衝突は残ります。</p>
+  <p>必要なのは見た目の文字数を増やすことではなく、区別できる出力の種類を増やすことです。長さ 3 の二進列なら八通りあり、五項目に異なる札を付けることは可能になります。ただし八種類あるという容量だけで、任意の付け方が重複を避けるとはいえません。存在と、実際の割当ての性質は別に確認します。</p>
+  <p class="source-note">出典：本章のために作成した有限の識別札モデル。実際の識別方式や製品についての主張ではありません。</p>
+</details>
+
+<section id="discrete-counting-exercises">
+  <h2>演習：組合せ的計数</h2>
+  <article class="exercise"><h3>1．補集合による全単射</h3><p>七人から二人を選ぶ数と、七人から五人を選ぶ数が等しい理由を、階乗を計算せずに説明してください。</p><details><summary>ヒント1：選ばなかった人を集める</summary><p>二人を選んだら、残りは何人でしょうか。</p></details><details><summary>ヒント2：同じ操作で元へ戻れるか</summary><p>補集合を二回取った集合を考えます。</p></details><details><summary>解答</summary><p>二人の集合 S に、選ばなかった五人の集合を対応させます。五人の集合からは、選ばなかった二人を集めれば S に戻ります。互いに逆の対応なので全単射であり、C(7, 2) = C(7, 5) です。</p></details></article>
+  <article class="exercise"><h3>2．代表付き三人委員会</h3><p>六人から三人の委員会と代表一人を選びます。先に委員会を選ぶ方法と先に代表を選ぶ方法で数え、二つの式を確かめてください。C(6, 3) = 20、C(5, 2) = 10 は使ってかまいません。</p><details><summary>ヒント1：代表は委員の中にいる</summary><p>委員会が決まった後の代表の選択肢は三人です。</p></details><details><summary>ヒント2：代表を決めたら、残りは二人</summary><p>すでに代表として選んだ人は、残りの候補から除きます。</p></details><details><summary>解答</summary><p>委員会を先に選ぶと 3C(6, 3) = 3×20 = 60 通り。代表を先に選ぶと 6C(5, 2) = 6×10 = 60 通りです。いずれも代表が明示された三人委員会を一度ずつ数えています。</p></details></article>
+  <article class="exercise"><h3>3．境界を一つ越える意味</h3><p>四箱に十三個の物を入れたとき、どこかに四個以上あることを証明してください。十二個では同じことを必ずいえるでしょうか。</p><details><summary>ヒント1：全箱が三個以下なら</summary><p>箱の容量を合計します。</p></details><details><summary>ヒント2：十二個を均等に置く</summary><p>一箱あたり三個にすると反例になりますか。</p></details><details><summary>解答</summary><p>すべて三個以下なら合計は高々 4×3 = 12 個で、十三個に反します。従ってどこかに四個以上あります。十二個の場合は各箱に三個ずつ置けるので、四個以上の箱は保証できません。結論には 13 &gt; 12 という厳密な不等号が必要です。</p></details></article>
+</section>
+
+<section id="discrete-counting-reflection">
+  <h2>自分の言葉で</h2>
+  <ol><li>全単射を示すとき、戻す操作を作ると何を確認できますか。</li><li>重複を割算で除く方法で、すべての出力の対応個数が同じである必要はなぜありますか。</li><li>二重計数と鳩ノ巣原理では、対象を具体的に列挙せず、何を固定して結論を出しましたか。</li></ol>
+</section>

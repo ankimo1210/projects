@@ -1,0 +1,1012 @@
+{
+  "books": [
+    {
+      "id": "foundations",
+      "title": "数学の言葉と証明",
+      "description": "見つけた規則を、確かな理由へ。数学を読むための言葉を整えます。"
+    },
+    {
+      "id": "calculus",
+      "title": "微分積分Ⅰ",
+      "description": "極限から変化と蓄積へ。計算の手順を支える定理をたどります。"
+    },
+    {
+      "id": "connections",
+      "title": "線形代数への橋",
+      "description": "回転から公理・次元・行列式へ。空間と変換を見る言葉を整えます。"
+    },
+    {
+      "id": "linear-core",
+      "title": "線形代数",
+      "description": "連立一次方程式から直交射影・固有値・特異値分解へ。空間と変換の構造を学ぶ10章。"
+    },
+    {
+      "id": "multivariable",
+      "title": "微分積分Ⅱ",
+      "description": "二変数の極限・偏微分・全微分から、勾配・極値・制約付き最適化・二重積分・変数変換まで。条件と幾何の意味をたどる8章。"
+    },
+    {
+      "id": "probability",
+      "title": "確率の基礎",
+      "description": "場合の数から、条件付き確率・独立・分布・期待値・ばらつきへ。不確実さの規則と頻度の意味をたどる10章。"
+    },
+    {
+      "id": "discrete",
+      "title": "離散数学",
+      "description": "同じものをまとめ、数え、つながりを調べる。整数・漸化式・グラフから、手順の正しさと条件をたどる10章。"
+    },
+    {
+      "id": "complex",
+      "title": "複素解析入門",
+      "description": "平面の微分から、境界・級数・留数へ。複素数で考えると見えてくる強い規則と、積分へのつながりをたどる10章。"
+    },
+    {
+      "id": "vector",
+      "title": "ベクトル解析",
+      "description": "場と曲線から、面・流束・境界の定理へ。局所の変化と空間全体の関係を、向きと条件からたどる10章。"
+    },
+    {
+      "id": "numerical",
+      "title": "数値解析",
+      "description": "近似した答えを、どこまで信用できるか。誤差・条件・収束と安定性から、計算を確かめる10章。"
+    },
+    {
+      "id": "optimization",
+      "title": "最適化",
+      "description": "何を最良と呼び、どう確かめるか。凸性・反復法・制約・双対性から、計算と最適性の証拠を結ぶ10章。"
+    }
+  ],
+  "chapters": [
+    {
+      "slug": "observation",
+      "book": "foundations",
+      "number": "01",
+      "title": "数学的な観察・予想と反例",
+      "question": "次も同じになると、なぜ言えるのか。",
+      "topics": "観察・予想・証明",
+      "duration": "15–25分"
+    },
+    {
+      "slug": "logic",
+      "book": "foundations",
+      "number": "02",
+      "title": "命題・量化と必要十分条件",
+      "question": "同じ言葉でも、順番が変わると何が違うのか。",
+      "topics": "命題・量化・必要十分条件",
+      "duration": "15–25分"
+    },
+    {
+      "slug": "sets-maps",
+      "book": "foundations",
+      "number": "03",
+      "title": "集合と写像",
+      "question": "入力と出力を分けると、何が整理できるのか。",
+      "topics": "集合・写像・単射と全射",
+      "duration": "15–25分",
+      "subtitle": "対応で見る、存在と一意性"
+    },
+    {
+      "slug": "proofs",
+      "book": "foundations",
+      "number": "04",
+      "title": "直接証明・対偶・背理法",
+      "question": "どうすれば、自分以外にも確かめられるのか。",
+      "topics": "直接証明・対偶・背理法",
+      "duration": "15–25分"
+    },
+    {
+      "slug": "induction",
+      "book": "foundations",
+      "number": "05",
+      "title": "数学的帰納法と再帰",
+      "question": "確かめる回数を増やす以外に、何ができるのか。",
+      "topics": "帰納法・再帰・漸化式",
+      "duration": "15–25分"
+    },
+    {
+      "slug": "invariants",
+      "book": "foundations",
+      "number": "06",
+      "title": "不変量とユークリッドの互除法",
+      "question": "いくら動かしても不可能なことを、どう示すのか。",
+      "topics": "不変量・偶奇・互除法",
+      "duration": "15–25分"
+    },
+    {
+      "slug": "inequalities",
+      "book": "foundations",
+      "number": "07",
+      "title": "不等式と誤差評価",
+      "question": "正確な値を知らずに、どこまで分かるのか。",
+      "topics": "三角不等式・相加相乗・評価",
+      "duration": "15–25分"
+    },
+    {
+      "slug": "numbers",
+      "book": "foundations",
+      "number": "08",
+      "title": "数の体系と複素数",
+      "question": "なぜ、負の数どうしを掛けると正になるのか。",
+      "topics": "数の拡張・分配法則・複素数",
+      "duration": "20–35分",
+      "lab": "numbers"
+    },
+    {
+      "slug": "limits",
+      "book": "calculus",
+      "number": "01",
+      "title": "実数と数列・関数の極限",
+      "question": "どこまで計算すれば、十分に近いと言えるのか。",
+      "topics": "実数・数列・極限",
+      "duration": "20–35分",
+      "subtitle": "近づくことを、約束にする"
+    },
+    {
+      "slug": "continuity",
+      "book": "calculus",
+      "number": "02",
+      "title": "連続関数と中間値の定理",
+      "question": "二分法で区間を縮めた先に、本当に解はあるのか。",
+      "topics": "実数・連続性・中間値の定理",
+      "duration": "20–35分",
+      "lab": "continuity"
+    },
+    {
+      "slug": "derivatives",
+      "book": "calculus",
+      "number": "03",
+      "title": "微分係数・導関数と連鎖律",
+      "question": "瞬間の変化を、どう数で表すのか。",
+      "topics": "微分・局所線形近似・連鎖律",
+      "duration": "20–35分",
+      "lab": "derivatives",
+      "subtitle": "曲線のそばに、直線を置く"
+    },
+    {
+      "slug": "mean-value",
+      "book": "calculus",
+      "number": "04",
+      "title": "平均値の定理と関数の増減",
+      "question": "微分係数の符号だけで、なぜ増減が分かるのか。",
+      "topics": "Rolle・平均値の定理・単調性",
+      "duration": "15–25分"
+    },
+    {
+      "slug": "approximation",
+      "book": "calculus",
+      "number": "05",
+      "title": "一次・二次近似の誤差評価とニュートン法",
+      "question": "接線で代用して、どれくらい間違えるのか。",
+      "topics": "誤差・Taylor近似・Newton法",
+      "duration": "15–25分"
+    },
+    {
+      "slug": "integration",
+      "book": "calculus",
+      "number": "06",
+      "title": "リーマン積分と可積分性",
+      "question": "面積を足し算として、どう定義するのか。",
+      "topics": "Riemann和・可積分性・区分求積",
+      "duration": "20–35分",
+      "lab": "integration",
+      "subtitle": "小さく分けて、蓄積を測る"
+    },
+    {
+      "slug": "fundamental-theorem",
+      "book": "calculus",
+      "number": "07",
+      "title": "微分積分学の基本定理",
+      "question": "別々に定義した微分と積分が、なぜ逆になるのか。",
+      "topics": "微積分の基本定理・原始関数",
+      "duration": "15–25分",
+      "subtitle": "変化と蓄積が、つながるとき"
+    },
+    {
+      "slug": "integration-methods",
+      "book": "calculus",
+      "number": "08",
+      "title": "置換積分・部分積分と広義積分",
+      "question": "置換と部分積分の式は、どこから来るのか。",
+      "topics": "置換・部分積分・広義積分",
+      "duration": "15–25分"
+    },
+    {
+      "slug": "series",
+      "book": "calculus",
+      "number": "09",
+      "title": "無限級数と収束",
+      "question": "有限の部分和から、何が言えて何が言えないのか。",
+      "topics": "級数・幾何級数・絶対収束",
+      "duration": "15–25分",
+      "lab": "series"
+    },
+    {
+      "slug": "taylor",
+      "book": "calculus",
+      "number": "10",
+      "title": "テイラーの定理とべき級数",
+      "question": "近くで似ていることと、無限級数で一致することは同じか。",
+      "topics": "Taylor定理・剰余・収束半径",
+      "duration": "15–25分"
+    },
+    {
+      "slug": "elementary-functions",
+      "book": "calculus",
+      "number": "11",
+      "title": "べき級数と指数・対数・三角関数",
+      "question": "なぜこれらの関数が、何度も現れるのか。",
+      "topics": "冪級数・指数・対数・三角関数",
+      "duration": "25–40分"
+    },
+    {
+      "slug": "rotation",
+      "book": "connections",
+      "number": "01",
+      "title": "平面の回転と行列・複素数",
+      "question": "角度の足し算と、数の掛け算はどう結び付くのか。",
+      "topics": "三角関数・行列・複素数",
+      "duration": "15–25分",
+      "lab": "rotation"
+    },
+    {
+      "slug": "vector-spaces",
+      "book": "connections",
+      "number": "02",
+      "title": "ベクトル空間と線形写像",
+      "question": "なぜ多項式や関数も、ベクトルとして扱えるのか。",
+      "topics": "ベクトル空間・線形写像・行列表現",
+      "duration": "20–30分"
+    },
+    {
+      "slug": "dimension",
+      "book": "connections",
+      "number": "03",
+      "title": "基底・次元と次元定理",
+      "question": "基底を選び直しても、座標の本数が変わらないのはなぜか。",
+      "topics": "生成・独立・交換補題・次元定理",
+      "duration": "20–35分"
+    },
+    {
+      "slug": "determinants",
+      "book": "connections",
+      "number": "04",
+      "title": "2次の行列式と面積・可逆性",
+      "question": "ただ一つの数で、変換の何が分かるのか。",
+      "topics": "符号付き面積・向き・可逆性",
+      "duration": "20–30分",
+      "lab": "determinants"
+    },
+    {
+      "slug": "linear-systems",
+      "book": "linear-core",
+      "number": "01",
+      "title": "連立一次方程式と行列表現",
+      "question": "同じ条件を、列の組合せと行の式で見ると何が分かるか。",
+      "topics": "連立方程式・行列表現・解の分類",
+      "duration": "25–45分"
+    },
+    {
+      "slug": "linear-elimination",
+      "book": "linear-core",
+      "number": "02",
+      "title": "基本行操作とガウスの消去法",
+      "question": "消去法は、なぜ元の問題と同じ答えを保つのか。",
+      "topics": "行基本操作・ピボット・自由変数",
+      "duration": "25–45分",
+      "lab": "linear-core-map"
+    },
+    {
+      "slug": "linear-kernel-image",
+      "book": "linear-core",
+      "number": "03",
+      "title": "連立一次方程式の一般解と核・像・階数",
+      "question": "解の自由度と、作れる出力の数はどう結び付くか。",
+      "topics": "核・像・階数・次元定理",
+      "duration": "25–45分"
+    },
+    {
+      "slug": "linear-basis-change",
+      "book": "linear-core",
+      "number": "04",
+      "title": "基底変換と相似変換",
+      "question": "同じ操作を違う行列で表すとき、何が変わらず残るか。",
+      "topics": "基底変換・相似・行列表現",
+      "duration": "25–45分"
+    },
+    {
+      "slug": "linear-orthogonality",
+      "book": "linear-core",
+      "number": "05",
+      "title": "内積・正規直交化とQR分解",
+      "question": "垂直な方向を選ぶと、長さと計算はなぜ簡単になるか。",
+      "topics": "内積・Cauchy–Schwarz・Gram–Schmidt・QR",
+      "duration": "25–45分"
+    },
+    {
+      "slug": "linear-least-squares",
+      "book": "linear-core",
+      "number": "06",
+      "title": "直交射影と最小二乗法",
+      "question": "ぴったり合わない観測から、何を一意に決められるか。",
+      "topics": "直交射影・正規方程式・最小二乗",
+      "duration": "30–50分",
+      "lab": "linear-core-least-squares"
+    },
+    {
+      "slug": "linear-eigenvalues",
+      "book": "linear-core",
+      "number": "07",
+      "title": "固有値・固有ベクトルと固有空間",
+      "question": "固有値の符号と大きさは、反復のどこを説明するか。",
+      "topics": "固有値・固有ベクトル・反復",
+      "duration": "25–45分"
+    },
+    {
+      "slug": "linear-diagonalization",
+      "book": "linear-core",
+      "number": "08",
+      "title": "行列の対角化と累乗",
+      "question": "別々の伸縮へ分けられる条件と、分けられない例は何か。",
+      "topics": "対角化・独立な固有ベクトル・重複固有値",
+      "duration": "25–45分"
+    },
+    {
+      "slug": "linear-symmetric",
+      "book": "linear-core",
+      "number": "09",
+      "title": "実対称行列の直交対角化と二次形式",
+      "question": "実対称行列では、なぜ直交する方向に分けて考えられるか。",
+      "topics": "スペクトル定理・二次形式・正定値",
+      "duration": "30–50分",
+      "lab": "linear-core-spectral"
+    },
+    {
+      "slug": "linear-svd",
+      "book": "linear-core",
+      "number": "10",
+      "title": "特異値分解と低ランク近似",
+      "question": "固有ベクトルが足りない変換も、どう分解して圧縮するか。",
+      "topics": "特異値分解・零特異値・低ランク近似",
+      "duration": "30–50分"
+    },
+    {
+      "slug": "multivariable-limits",
+      "book": "multivariable",
+      "number": "01",
+      "title": "多変数関数の極限と連続性",
+      "question": "二つの入力が近づくとき、何を約束すればよいのか。",
+      "topics": "距離・全方向の極限・経路と評価",
+      "duration": "25–40分",
+      "lab": "multivariable-paths"
+    },
+    {
+      "slug": "partial-derivatives",
+      "book": "multivariable",
+      "number": "02",
+      "title": "偏微分と偏導関数",
+      "question": "一つずつ動かせば、全体の変化も分かるのか。",
+      "topics": "偏微分・連続性・切り口の限界",
+      "duration": "20–35分"
+    },
+    {
+      "slug": "total-derivative",
+      "book": "multivariable",
+      "number": "03",
+      "title": "全微分と連鎖律",
+      "question": "二つの入力の変化を、一つの予測にまとめられるか。",
+      "topics": "全微分・接平面・C¹十分条件・連鎖律",
+      "duration": "30–45分",
+      "lab": "multivariable-linear"
+    },
+    {
+      "slug": "gradient",
+      "book": "multivariable",
+      "number": "04",
+      "title": "方向微分と勾配",
+      "question": "進む方向を選べるなら、どちらへ向かえばよいのか。",
+      "topics": "方向微分・勾配・等高線",
+      "duration": "25–40分",
+      "lab": "multivariable-compass"
+    },
+    {
+      "slug": "hessian-extrema",
+      "book": "multivariable",
+      "number": "05",
+      "title": "ヘッセ行列と多変数関数の極値",
+      "question": "一次の変化が消えたとき、山・谷・峠をどう見分けるか。",
+      "topics": "二次近似・Hessian・局所極値",
+      "duration": "35–50分",
+      "lab": "multivariable-curvature",
+      "subtitle": "水平な接平面の、その先"
+    },
+    {
+      "slug": "lagrange",
+      "book": "multivariable",
+      "number": "06",
+      "title": "等式制約とラグランジュの未定乗数法",
+      "question": "自由に動けないとき、勾配は何を教えるのか。",
+      "topics": "正則曲線・乗数の必要条件・候補と保証",
+      "duration": "30–45分",
+      "lab": "multivariable-constraint"
+    },
+    {
+      "slug": "double-integrals",
+      "book": "multivariable",
+      "number": "07",
+      "title": "二重積分と累次積分",
+      "question": "面の上に分布した量を、どう集めて測るのか。",
+      "duration": "35–50分",
+      "lab": "multivariable-double-integral"
+    },
+    {
+      "slug": "change-of-variables",
+      "book": "multivariable",
+      "number": "08",
+      "title": "重積分の変数変換とヤコビアン",
+      "question": "計算しやすい座標に移るとき、何を掛ければよいのか。",
+      "duration": "35–50分",
+      "lab": "multivariable-polar"
+    },
+    {
+      "slug": "probability-models",
+      "book": "probability",
+      "number": "01",
+      "title": "標本空間・事象と確率の公理",
+      "question": "何が起こるか分からないとき、何を決めておけば計算できるのか。",
+      "topics": "標本空間・事象・確率の公理",
+      "duration": "25–40分"
+    },
+    {
+      "slug": "counting-probability",
+      "book": "probability",
+      "number": "02",
+      "title": "順列・組合せと確率",
+      "question": "順序を数える場合と数えない場合は、どう区別するのか。",
+      "topics": "積の法則・順列・組合せ",
+      "duration": "25–40分"
+    },
+    {
+      "slug": "conditional-probability",
+      "book": "probability",
+      "number": "03",
+      "title": "条件付き確率とベイズの定理",
+      "question": "警報が出たという情報で、不良品である確率はどう変わるのか。",
+      "topics": "条件付き確率・全確率・Bayes",
+      "duration": "25–40分",
+      "lab": "probability-bayes"
+    },
+    {
+      "slug": "independence",
+      "book": "probability",
+      "number": "04",
+      "title": "事象の独立と相互独立",
+      "question": "一方を知っても、もう一方の確率が変わらないのはどんな関係か。",
+      "topics": "独立・排反・相互独立",
+      "duration": "25–40分",
+      "lab": "probability-independence"
+    },
+    {
+      "slug": "random-variables",
+      "book": "probability",
+      "number": "05",
+      "title": "離散確率変数と確率分布",
+      "question": "同じ実験から、何を数として取り出すのか。",
+      "topics": "確率変数・PMF・CDF・二項分布",
+      "duration": "25–40分",
+      "lab": "probability-binomial"
+    },
+    {
+      "slug": "probability-density",
+      "book": "probability",
+      "number": "06",
+      "title": "連続確率変数と確率密度関数",
+      "question": "一点の確率が0なのに、どこかには現れるのはなぜか。",
+      "topics": "密度・累積分布・一様分布・指数分布",
+      "duration": "25–40分",
+      "lab": "probability-density"
+    },
+    {
+      "slug": "expectation",
+      "book": "probability",
+      "number": "07",
+      "title": "期待値とその線形性",
+      "question": "一度も出ない値が、なぜ平均を表せるのか。",
+      "topics": "期待値・線形性・指示変数",
+      "duration": "25–40分"
+    },
+    {
+      "slug": "variance",
+      "book": "probability",
+      "number": "08",
+      "title": "分散・標準偏差と確率不等式",
+      "question": "平均が同じでも、何が違うのか。",
+      "topics": "分散・標準偏差・確率不等式",
+      "duration": "25–40分"
+    },
+    {
+      "slug": "joint-distributions",
+      "book": "probability",
+      "number": "09",
+      "title": "同時分布・条件付き分布と共分散",
+      "question": "別々の分布が分かれば、二つの関係も分かるのか。",
+      "topics": "同時分布・条件付分布・共分散",
+      "duration": "25–40分"
+    },
+    {
+      "slug": "law-of-large-numbers",
+      "book": "probability",
+      "number": "10",
+      "title": "確率収束と弱大数の法則",
+      "question": "確率の規則と、数えた頻度はどうつながるのか。",
+      "topics": "標本平均・確率収束・弱大数の法則",
+      "duration": "25–40分",
+      "lab": "probability-lln"
+    },
+    {
+      "slug": "discrete-relations",
+      "book": "discrete",
+      "number": "01",
+      "title": "二項関係・同値関係と同値類",
+      "question": "違うものを同じ組に入れるとき、何を守ればよいのか。",
+      "topics": "二項関係・同値関係・同値類・分割",
+      "duration": "25–45分"
+    },
+    {
+      "slug": "discrete-orders",
+      "book": "discrete",
+      "number": "02",
+      "title": "半順序とハッセ図",
+      "question": "先に済ませる条件だけで、作業の並びを決められるか。",
+      "topics": "半順序・Hasse図・DAG・トポロジカル順序",
+      "duration": "25–45分"
+    },
+    {
+      "slug": "discrete-counting",
+      "book": "discrete",
+      "number": "03",
+      "title": "全単射・二重計数と鳩ノ巣原理",
+      "question": "一つずつ並べずに、個数が同じだと説明できるか。",
+      "topics": "全単射・二重計数・鳩ノ巣原理",
+      "duration": "25–45分"
+    },
+    {
+      "slug": "inclusion-exclusion",
+      "book": "discrete",
+      "number": "04",
+      "title": "包除原理",
+      "question": "同じものを何度も数えた分を、どう直すのか。",
+      "topics": "包除原理・指示関数・禁止位置",
+      "duration": "25–45分"
+    },
+    {
+      "slug": "modular-arithmetic",
+      "book": "discrete",
+      "number": "05",
+      "title": "整数の合同と剰余計算",
+      "question": "数の一部を忘れても、どこまで計算を続けられるか。",
+      "topics": "合同・Bézout・逆元・消去条件",
+      "duration": "25–45分",
+      "lab": "discrete-modular"
+    },
+    {
+      "slug": "recurrence-relations",
+      "book": "discrete",
+      "number": "06",
+      "title": "漸化式と動的計画法",
+      "question": "一つ前と二つ前の答えで、全体は決まるのか。",
+      "topics": "初期値・漸化式・帰納法・動的計画法",
+      "duration": "30–50分",
+      "lab": "discrete-recurrence"
+    },
+    {
+      "slug": "discrete-graphs",
+      "book": "discrete",
+      "number": "07",
+      "title": "グラフ・次数と連結性",
+      "question": "配置を変えても残る、つながりの性質とは何か。",
+      "topics": "グラフ・次数・連結・Eulerの道",
+      "duration": "25–45分"
+    },
+    {
+      "slug": "discrete-trees",
+      "book": "discrete",
+      "number": "08",
+      "title": "木・全域木と幅優先探索",
+      "question": "どこへも行けて、回り道がない形には何が成り立つか。",
+      "topics": "木・唯一の道・全域木・幅優先探索",
+      "duration": "25–45分"
+    },
+    {
+      "slug": "shortest-paths",
+      "book": "discrete",
+      "number": "09",
+      "title": "最短路とダイクストラ法",
+      "question": "近そうな頂点を選ぶだけで、最短を保証できるのか。",
+      "topics": "重み・緩和・Dijkstra・非負性",
+      "duration": "30–50分",
+      "lab": "discrete-shortest"
+    },
+    {
+      "slug": "graph-coloring",
+      "book": "discrete",
+      "number": "10",
+      "title": "グラフの彩色と二部グラフ",
+      "question": "ぶつかる組を分けるには、何色あれば足りるのか。",
+      "topics": "頂点彩色・二部性・奇閉路・貪欲法",
+      "duration": "25–45分"
+    },
+    {
+      "slug": "complex-plane",
+      "book": "complex",
+      "number": "01",
+      "title": "複素平面と複素関数",
+      "question": "掛け算を回転や拡大と読むと、何が見えるのか。",
+      "topics": "複素平面・極形式・写像・領域と極限",
+      "duration": "25–45分"
+    },
+    {
+      "slug": "complex-differentiation",
+      "book": "complex",
+      "number": "02",
+      "title": "複素微分と正則関数",
+      "question": "近づく向きを変えても、一つの微分で説明できるか。",
+      "topics": "複素微分・正則性・Cauchy–Riemann方程式",
+      "duration": "25–45分",
+      "lab": "complex-difference"
+    },
+    {
+      "slug": "complex-logarithm",
+      "book": "complex",
+      "number": "03",
+      "title": "複素指数関数と対数の分枝",
+      "question": "同じ点へ戻ったのに、角度の記録が違うのはなぜか。",
+      "topics": "複素指数・対数・主値・分枝",
+      "duration": "25–45分",
+      "lab": "complex-log"
+    },
+    {
+      "slug": "complex-contours",
+      "book": "complex",
+      "number": "04",
+      "title": "複素線積分と原始関数",
+      "question": "経路を変えると、積分の何が変わるのか。",
+      "topics": "経路積分・向き・ML評価・原始関数",
+      "duration": "25–45分"
+    },
+    {
+      "slug": "cauchy-theorem",
+      "book": "complex",
+      "number": "05",
+      "title": "コーシーの積分定理",
+      "question": "内側の小さな境界を足すと、何が残るのか。",
+      "topics": "Goursat・凸領域・Cauchyの定理・穴",
+      "duration": "30–50分"
+    },
+    {
+      "slug": "cauchy-formula",
+      "book": "complex",
+      "number": "06",
+      "title": "コーシーの積分公式",
+      "question": "境界の値だけで、内側の微分まで決まるのか。",
+      "topics": "Cauchyの積分公式・高階微分・評価・Liouville",
+      "duration": "30–50分"
+    },
+    {
+      "slug": "complex-taylor",
+      "book": "complex",
+      "number": "07",
+      "title": "正則関数のテイラー展開",
+      "question": "正則という条件は、どれほど多くを約束するのか。",
+      "topics": "Taylor展開・一様な剰余・零点・一致定理",
+      "duration": "30–50分"
+    },
+    {
+      "slug": "laurent-singularities",
+      "book": "complex",
+      "number": "08",
+      "title": "ローラン展開と孤立特異点",
+      "question": "中心が使えないときも、級数で記録できるか。",
+      "topics": "Laurent展開・可除特異点・極・真性特異点",
+      "duration": "30–50分"
+    },
+    {
+      "slug": "complex-residues",
+      "book": "complex",
+      "number": "09",
+      "title": "留数と留数定理",
+      "question": "たくさんの項の中で、積分に残るのはどれか。",
+      "topics": "留数・単純極・有限特異点・向き",
+      "duration": "25–45分",
+      "lab": "complex-residue",
+      "subtitle": "一周で残る、一つの係数"
+    },
+    {
+      "slug": "complex-real-integrals",
+      "book": "complex",
+      "number": "10",
+      "title": "留数定理の実積分への応用",
+      "question": "実数の問題に複素数の道を足すと、なぜ解きやすくなるのか。",
+      "topics": "半円輪郭・円弧評価・広義積分・既存教材への接続",
+      "duration": "30–50分"
+    },
+    {
+      "slug": "vector-fields",
+      "book": "vector",
+      "number": "01",
+      "title": "ベクトル場と三次元のベクトル演算",
+      "question": "場所ごとの向きと大きさを、どう表すか。",
+      "topics": "3次元の内積・外積・ベクトル場",
+      "duration": "25–45分"
+    },
+    {
+      "slug": "vector-curves",
+      "book": "vector",
+      "number": "02",
+      "title": "曲線のパラメータ表示と弧長",
+      "question": "同じ道を違う速さで通ると、何が変わるか。",
+      "topics": "区分C¹・接線・弧長・スカラー線積分",
+      "duration": "25–45分"
+    },
+    {
+      "slug": "vector-line-integrals",
+      "book": "vector",
+      "number": "03",
+      "title": "ベクトル場の線積分",
+      "question": "始点と終点が同じなら、仕事も同じか。",
+      "topics": "線積分・向き・再パラメータ化・仕事",
+      "duration": "25–45分",
+      "lab": "vector-work"
+    },
+    {
+      "slug": "vector-potentials",
+      "book": "vector",
+      "number": "04",
+      "title": "ポテンシャルと経路独立性",
+      "question": "場を一つの関数の変化として読める条件は何か。",
+      "topics": "勾配・経路独立・星形領域・穴",
+      "duration": "30–50分"
+    },
+    {
+      "slug": "vector-green",
+      "book": "vector",
+      "number": "05",
+      "title": "グリーンの定理",
+      "question": "内部の小さな巡りを足すと、何が残るか。",
+      "topics": "Green・矩形の証明・一般境界・穴",
+      "duration": "30–50分"
+    },
+    {
+      "slug": "vector-div-curl",
+      "book": "vector",
+      "number": "06",
+      "title": "ベクトル場の発散と回転",
+      "question": "場そのものと、湧き出しや回転はどう違うか。",
+      "topics": "div・curl・局所の意味・C²の恒等式",
+      "duration": "25–45分"
+    },
+    {
+      "slug": "vector-surfaces",
+      "book": "vector",
+      "number": "07",
+      "title": "曲面のパラメータ表示と面積",
+      "question": "曲がった面の小片を、何で重み付けするか。",
+      "topics": "正則patch・外積・面積・向き",
+      "duration": "30–50分"
+    },
+    {
+      "slug": "vector-flux",
+      "book": "vector",
+      "number": "08",
+      "title": "面積分と流束",
+      "question": "広い面なら、通り抜ける量も大きいか。",
+      "topics": "面積分・法線・流束・投影",
+      "duration": "25–45分",
+      "lab": "vector-flux"
+    },
+    {
+      "slug": "vector-gauss",
+      "book": "vector",
+      "number": "09",
+      "title": "三重積分とガウスの発散定理",
+      "question": "閉じた境界の流出は、内部の何を数えるか。",
+      "topics": "三重積分・Gauss・箱の証明・特異点",
+      "duration": "30–50分"
+    },
+    {
+      "slug": "vector-stokes",
+      "book": "vector",
+      "number": "10",
+      "title": "ストークスの定理",
+      "question": "境界を保って面を変えると、何が保たれるか。",
+      "topics": "Stokes・誘導境界・曲面とcurl",
+      "duration": "30–50分",
+      "lab": "vector-stokes"
+    },
+    {
+      "slug": "numerical-errors",
+      "book": "numerical",
+      "number": "01",
+      "title": "数値誤差と浮動小数点数",
+      "question": "近い答えを、どんな物差しで比べるか。",
+      "topics": "絶対誤差・相対誤差・誤差の分解",
+      "duration": "25–45分"
+    },
+    {
+      "slug": "numerical-conditioning",
+      "book": "numerical",
+      "number": "02",
+      "title": "条件数と前進誤差・後退誤差",
+      "question": "入力の小さな違いは、答えをどれだけ変えるか。",
+      "topics": "条件数・前進誤差・後退誤差",
+      "duration": "25–45分"
+    },
+    {
+      "slug": "numerical-bisection",
+      "book": "numerical",
+      "number": "03",
+      "title": "二分法と誤差保証",
+      "question": "根をまだ知らずに、誤差を保証できるか。",
+      "topics": "中間値・符号区間・停止条件",
+      "duration": "25–45分",
+      "lab": "numerical-root"
+    },
+    {
+      "slug": "numerical-newton",
+      "book": "numerical",
+      "number": "04",
+      "title": "非線形方程式のニュートン法",
+      "question": "速い反復は、いつ根へ向かうか。",
+      "topics": "接線・局所収束・周期と停止",
+      "duration": "30–50分"
+    },
+    {
+      "slug": "numerical-linear-systems",
+      "book": "numerical",
+      "number": "05",
+      "title": "連立一次方程式の消去法と残差",
+      "question": "式によく合う答えなら、真の解にも近いか。",
+      "topics": "消去法・pivot・残差・条件",
+      "duration": "30–50分"
+    },
+    {
+      "slug": "numerical-interpolation",
+      "book": "numerical",
+      "number": "06",
+      "title": "多項式補間と補間誤差",
+      "question": "点をすべて通れば、間もよく近似するか。",
+      "topics": "Lagrange補間・一意性・誤差",
+      "duration": "25–45分"
+    },
+    {
+      "slug": "numerical-differentiation",
+      "book": "numerical",
+      "number": "07",
+      "title": "数値微分と丸め誤差",
+      "question": "刻みを小さくし続ければ、微分は正確になるか。",
+      "topics": "前進差分・中心差分・桁落ち",
+      "duration": "30–50分",
+      "lab": "numerical-difference"
+    },
+    {
+      "slug": "numerical-quadrature",
+      "book": "numerical",
+      "number": "08",
+      "title": "数値積分と誤差評価",
+      "question": "細かい分割の答えを、どう保証するか。",
+      "topics": "台形則・中点則・誤差上界",
+      "duration": "30–50分"
+    },
+    {
+      "slug": "numerical-ode",
+      "book": "numerical",
+      "number": "09",
+      "title": "オイラー法の収束性と安定性",
+      "question": "減るはずの量が、計算ではなぜ増えるか。",
+      "topics": "初期値問題・Euler法・安定領域",
+      "duration": "30–50分",
+      "lab": "numerical-ode"
+    },
+    {
+      "slug": "numerical-reliability",
+      "book": "numerical",
+      "number": "10",
+      "title": "残差・刻み比較・独立検算による検証",
+      "question": "何を確かめれば、数値の主張を採用できるか。",
+      "topics": "残差・刻み比較・独立検算",
+      "duration": "25–45分"
+    },
+    {
+      "slug": "optimization-problems",
+      "book": "optimization",
+      "number": "01",
+      "title": "最適化問題と最適解の存在",
+      "question": "小さい値を作れることと、最小値があることは同じか。",
+      "topics": "目的関数・実行可能集合・min/inf・存在と一意性",
+      "duration": "25–45分"
+    },
+    {
+      "slug": "optimization-convexity",
+      "book": "optimization",
+      "number": "02",
+      "title": "凸集合と凸関数",
+      "question": "近くで最良なら、全体でも最良と言えるか。",
+      "topics": "凸集合・凸関数・一次条件・局所と大域",
+      "duration": "25–45分"
+    },
+    {
+      "slug": "optimization-optimality",
+      "book": "optimization",
+      "number": "03",
+      "title": "制約なし最適化の必要条件と十分条件",
+      "question": "勾配0なら、答えと呼べるか。",
+      "topics": "内点停留・Hessian・退化・境界",
+      "duration": "25–45分"
+    },
+    {
+      "slug": "optimization-gradient",
+      "book": "optimization",
+      "number": "04",
+      "title": "勾配法と下降補題",
+      "question": "下り方向へ進めば、どれだけ進んでもよいか。",
+      "topics": "下降補題・Lsmooth・step・収縮・有限反復",
+      "duration": "30–50分",
+      "lab": "opt-gradient"
+    },
+    {
+      "slug": "optimization-newton",
+      "book": "optimization",
+      "number": "05",
+      "title": "最適化のニュートン法と直線探索",
+      "question": "曲率を使う一歩は、いつ下りになるか。",
+      "topics": "二次モデル・正定値・不定値・Armijo",
+      "duration": "30–50分"
+    },
+    {
+      "slug": "optimization-scaling",
+      "book": "optimization",
+      "number": "06",
+      "title": "変数の尺度変換と前処理",
+      "question": "同じ最小点なのに、なぜ谷を往復するのか。",
+      "topics": "曲率比・座標変換・前処理・計量",
+      "duration": "25–45分"
+    },
+    {
+      "slug": "optimization-projections",
+      "book": "optimization",
+      "number": "07",
+      "title": "凸集合への射影と射影勾配法",
+      "question": "外へ出た点を、どこへ戻せばよいか。",
+      "topics": "射影・変分不等式・非拡大性・射影勾配",
+      "duration": "30–50分",
+      "lab": "opt-projection"
+    },
+    {
+      "slug": "optimization-lagrange",
+      "book": "optimization",
+      "number": "08",
+      "title": "等式制約付き最適化とラグランジュ関数",
+      "question": "動ける方向が限られると、勾配0は何に変わるか。",
+      "topics": "Lagrangian・正則性・接線・候補と大域",
+      "duration": "25–45分"
+    },
+    {
+      "slug": "optimization-kkt",
+      "book": "optimization",
+      "number": "09",
+      "title": "不等式制約とKKT条件",
+      "question": "境界で止まる最小点を、どんな式で確かめるか。",
+      "topics": "KKT条件・有効制約・相補性・凸十分性",
+      "duration": "30–50分",
+      "lab": "opt-kkt"
+    },
+    {
+      "slug": "optimization-duality",
+      "book": "optimization",
+      "number": "10",
+      "title": "ラグランジュ双対性と最適値の評価",
+      "question": "答えを知らずに、これ以上よくならないと言えるか。",
+      "topics": "双対関数・弱双対性・ギャップ・直接計算",
+      "duration": "30–50分"
+    }
+  ]
+}

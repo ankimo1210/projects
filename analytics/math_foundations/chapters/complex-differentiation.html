@@ -1,0 +1,75 @@
+<section id="complex-differentiation-question">
+  <h2>複素微分と方向の独立性</h2>
+  <p>実数の微分では、右からでも左からでも同じ差商へ近づくことを求めました。複素数では、横、縦、斜め、さらに曲がった道からも原点へ近づけます。それでも一つの数が変化率を表せるなら、平面の変換はどれほど制限されるのでしょう。</p>
+  <p class="note">前提は<a href="complex-plane.html#complex-plane-neighborhood">複素極限と開集合</a>、<a href="total-derivative.html#total-derivative-linear-map-bound">二成分の実全微分</a>です。偏微分の存在と、全微分可能性を区別して使います。</p>
+</section>
+
+<section id="complex-differentiation-definition">
+  <h2>複素導関数の定義</h2>
+  <p>開集合 U ⊂ ℂ、a ∈ U、関数 f : U → ℂ を考えます。次の極限が複素数として存在するとき、f は a で<strong>複素微分可能</strong>といい、極限を f′(a) と書きます。h は実数に限らず、十分小さいすべての非零複素数を動きます。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msup><mi>f</mi><mo>′</mo></msup><mo>(</mo><mi>a</mi><mo>)</mo><mo>=</mo><munder><mi>lim</mi><mrow><mi>h</mi><mo>→</mo><mn>0</mn><mo>,</mo><mi>h</mi><mo>≠</mo><mn>0</mn></mrow></munder><mfrac><mrow><mi>f</mi><mo>(</mo><mi>a</mi><mo>+</mo><mi>h</mi><mo>)</mo><mo>−</mo><mi>f</mi><mo>(</mo><mi>a</mi><mo>)</mo></mrow><mi>h</mi></mfrac></mrow></math></div>
+  <p>c = f′(a) とすると、これは f(a + h) = f(a) + ch + R(h)、|R(h)|/|h| → 0 と同じ条件です。実際、差商から c を引いたものが R(h)/h で、その絶対値は |R(h)|/|h| です。複素微分は、一次近似が<strong>一つの複素数を掛ける操作</strong>になるという条件なのです。この余りの式から連続性も従います。</p>
+  <div class="proof"><h3>二乗では、方向によらない誤差が残る</h3><p>f(z) = z² なら、h ≠ 0 で ((a + h)² − a²)/h = 2a + h。どの方向から h → 0 としても、2a との距離はちょうど |h| なので0へ行き、f′(a) = 2a です。有限の差商は 2a と同じではありません。誤差を評価できたことで、全方向の極限が保証されました。</p></div>
+  <div data-lab="complex-difference"></div><p data-reading-note="complex-difference-limits">θだけを変え、選んだ方向の差商を示す丸の値を比べます。四角は実方向、三角は虚方向の差商の基準値で、θに依りません。縮尺は表示する値に応じて変わるので、画面上の位置だけでなく数値欄でも確かめてください。z² なら微分の輪との距離は h、共役なら h を減らしても方向差が残ります。図は有限の刻みの比較であり、全方向の極限の証明は差商の式で行います。一点で微分できることと、その近傍で正則なことも表の条件で分けてください。</p>
+  <noscript><p class="note">JavaScriptなしでも次の比較ができます。a = 1、h = 0.1 なら二乗の差商は2.1、h = 0.1i なら2 + 0.1iで、両方とも h → 0 で2へ近づきます。共役の差商は実の h で1、純虚数の h で−1のままです。|z|² は a = 0 なら差商が h̄ なので、どの方向でも0へ近づきます。有限の値と極限を区別してください。</p></noscript>
+</section>
+
+<section id="complex-differentiation-matrix">
+  <h2>複素微分と実線形写像</h2>
+  <p>c = α + iβ を掛けると、c(h + ik) = (αh − βk) + i(βh + αk) です。実二成分での行列は次の特別な形になります。一般の実行列の四つの成分が、二つの実数 α、β で決まります。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>h</mi><mo>+</mo><mi>i</mi><mi>k</mi><mo>↦</mo><mi>c</mi><mo>(</mo><mi>h</mi><mo>+</mo><mi>i</mi><mi>k</mi><mo>)</mo><mspace width="1em"/><mo>↔</mo><mspace width="1em"/><mo>[</mo><mtable><mtr><mtd><mi>α</mi></mtd><mtd><mo>−</mo><mi>β</mi></mtd></mtr><mtr><mtd><mi>β</mi></mtd><mtd><mi>α</mi></mtd></mtr></mtable><mo>]</mo></mrow></math></div>
+  <p>c ≠ 0 なら、一次近似は全方向を同じ倍率 |c| で拡大し、同じ角度だけ回します。c = 0 では一次の項は全部0となり、この一次近似に回転角や角度保存を割り当てられません。二乗も a = 0 ではこの場合です。</p>
+  <figure class="concept-figure" id="complex-differentiation-visual-matrix" data-visual="complex-differentiation-matrix">
+    <svg class="concept-svg" viewBox="0 0 360 360" role="img" aria-labelledby="complex-differentiation-matrix-title complex-differentiation-matrix-desc">
+      <title id="complex-differentiation-matrix-title">1足すiを掛ける一次近似</title><desc id="complex-differentiation-matrix-desc">同じ座標平面で、破線は入力の基本矢印1とi、実線はそれぞれの出力1足すiとマイナス1足すi。横軸と縦軸は同じ縮尺。出力二本は長さルート2で直交する。</desc>
+      <line x1="36" y1="220" x2="324" y2="220" stroke="var(--grid)" stroke-width="2"/><line x1="180" y1="300" x2="180" y2="55" stroke="var(--grid)" stroke-width="2"/>
+      <line x1="180" y1="220" x2="260" y2="220" stroke="var(--ink-2)" stroke-width="3" stroke-dasharray="6 4"/><polygon points="260,220 249,215 249,225" fill="var(--ink-2)"/>
+      <line x1="180" y1="220" x2="180" y2="140" stroke="var(--ink-2)" stroke-width="3" stroke-dasharray="6 4"/><polygon points="180,140 175,151 185,151" fill="var(--ink-2)"/>
+      <line x1="180" y1="220" x2="260" y2="140" stroke="var(--series-1)" stroke-width="4"/><polygon points="260,140 247,144 256,153" fill="var(--series-1)"/>
+      <line x1="180" y1="220" x2="100" y2="140" stroke="var(--series-2)" stroke-width="4"/><polygon points="100,140 104,153 113,144" fill="var(--series-2)"/>
+      <text x="268" y="247" font-size="22" fill="var(--ink)">1</text><text x="190" y="137" font-size="22" fill="var(--ink)">i</text><text x="243" y="115" font-size="22" fill="var(--ink)">1 + i</text><text x="57" y="115" font-size="22" fill="var(--ink)">−1 + i</text><text x="155" y="247" font-size="22" fill="var(--ink)">0</text>
+      <text x="180" y="305" text-anchor="middle" font-size="22" fill="var(--ink)">破線：入力　実線：出力</text><text x="180" y="341" text-anchor="middle" font-size="22" fill="var(--ink)">両軸は同じ縮尺</text>
+    </svg><figcaption>破線の入力1と i をそれぞれ追うと、出力は c=1+i と ci=−1+i です。第2列は第1列をさらに90°回した向きになり、二本の長さはともに√2、直角のままです。複素数一つを掛ける近似は横と縦を別々の倍率で伸ばせないことが、この二列の関係に現れます。図は c=1+i の例で、一般の列の条件は本文の実行列で示します。</figcaption>
+  </figure>
+  <p>f = u + iv と書き、u、v を (x, y) の実関数と見ます。複素微分可能なら、余りの式そのものが実全微分を与えます。したがって Du、Dv の行列は上の形になり、次の<strong>Cauchy–Riemannの関係式（CR）</strong>が必要です。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>u</mi><mi>x</mi></msub><mo>=</mo><msub><mi>v</mi><mi>y</mi></msub><mo>,</mo><mspace width="2em"/><msub><mi>u</mi><mi>y</mi></msub><mo>=</mo><mo>−</mo><msub><mi>v</mi><mi>x</mi></msub><mo>,</mo><mspace width="2em"/><msup><mi>f</mi><mo>′</mo></msup><mo>=</mo><msub><mi>u</mi><mi>x</mi></msub><mo>+</mo><mi>i</mi><msub><mi>v</mi><mi>x</mi></msub></mrow></math></div>
+  <p>二本の軸だけで必要性を確認することもできます。実の h では差商は uₓ + ivₓ へ、h = it では vᵧ − iuᵧ へ近づきます。同じ数になるには上の二式が必要です。ただし、この確認だけでは全方向の極限の存在を示していません。</p>
+</section>
+
+<section id="complex-differentiation-cr">
+  <h2>コーシー・リーマン方程式と実全微分</h2>
+  <div class="theorem"><h3>CRが十分になる条件</h3><p>u、v が a で実全微分可能であるとします。このとき f = u + iv が a で複素微分可能であることと、a でCRを満たすことは同値です。特に、u、v が a の開近傍で C¹ なら実全微分可能性が保証されるので、CRを確かめれば十分です。</p></div>
+  <div class="proof"><h3>行列の形を、余りの式へ戻す</h3><p>必要性は前節で示しました。逆向きでは、実全微分可能性から f(a + h) − f(a) = Ah + R(h)、|R(h)|/|h| → 0 と書けます。ここで h を実二成分のベクトルと同一視しています。CRにより A は前節の行列なので、Ah は c h、c = uₓ(a) + ivₓ(a) です。h ≠ 0 で割れば差商は c + R(h)/h。後者の絶対値は0へ近づくので、複素微分が存在します。</p></div>
+  <p>C¹ とは、近傍で偏微分が存在し、連続であるという便利な十分条件です。複素微分の定義に、導関数の連続性を最初から要求しているわけではありません。<a href="total-derivative.html#total-derivative-c1">偏導関数の連続性から全微分を得る議論</a>を使っています。</p>
+  <p class="note">点での偏微分とCRだけでは不十分です。原点以外で G(x, y) = x²y/(x² + y²)、G(0, 0) = 0 とし、f = G + 0i を考えます。二軸上では G = 0 なので、原点の四つの偏微分はすべて0でCRを満たします。しかし h = t(1 + i) なら f(h)/h = (t/2)/(t(1 + i)) = (1 − i)/4。実軸では0です。極限は存在しません。|G(x, y)| ≤ |y| なので連続ではありますが、原点で実全微分できないことが抜けていたのです。</p>
+  <figure class="concept-figure" id="complex-differentiation-visual-paths" data-visual="complex-differentiation-cr-paths">
+    <svg class="concept-svg" viewBox="0 0 360 385" role="img" aria-labelledby="complex-differentiation-paths-title complex-differentiation-paths-desc">
+      <title id="complex-differentiation-paths-title">CRを満たす点でも斜めの差商が異なる</title><desc id="complex-differentiation-paths-desc">原点へ進む実軸、虚軸、対角線の三つの道。横軸と縦軸は同じ縮尺。関数Gの差商は二軸では0だが、対角線yイコールxでは1マイナスiを4で割った定数となる。</desc>
+      <line x1="40" y1="190" x2="320" y2="190" stroke="var(--grid)" stroke-width="2"/><line x1="180" y1="50" x2="180" y2="275" stroke="var(--grid)" stroke-width="2"/>
+      <line x1="300" y1="190" x2="198" y2="190" stroke="var(--series-1)" stroke-width="4"/><polygon points="198,190 210,184 210,196" fill="var(--series-1)"/>
+      <line x1="180" y1="70" x2="180" y2="172" stroke="var(--series-1)" stroke-width="4"/><polygon points="180,172 174,160 186,160" fill="var(--series-1)"/>
+      <line x1="260" y1="110" x2="194" y2="176" stroke="var(--series-2)" stroke-width="4" stroke-dasharray="7 4"/><polygon points="194,176 198,162 208,172" fill="var(--series-2)"/>
+      <text x="282" y="224" font-size="22" fill="var(--ink)">実軸</text><text x="111" y="69" font-size="22" fill="var(--ink)">虚軸</text><text x="257" y="91" font-size="22" fill="var(--ink)">y = x</text><text x="152" y="219" font-size="22" fill="var(--ink)">0</text>
+      <text x="180" y="297" text-anchor="middle" font-size="22" fill="var(--ink)">二軸の差商：0</text><text x="180" y="332" text-anchor="middle" font-size="22" fill="var(--ink)">斜め：(1 − i)/4</text><text x="180" y="369" text-anchor="middle" font-size="22" fill="var(--ink)">両軸は同じ縮尺</text>
+    </svg><figcaption>三本の経路は反例を発見するための図です。実際に極限が異なることは、本文の正確な代入計算で確かめています。</figcaption>
+  </figure>
+</section>
+
+<section id="complex-differentiation-holomorphic">
+  <h2>一点の複素微分可能性と正則性</h2>
+  <p>開集合 U の<strong>すべての点</strong>で複素微分可能なとき、f は U で<strong>正則</strong>といいます。「a で正則」という場合も、a を含むある開近傍で正則という意味で使います。一点だけで微分できるという主張より強い条件です。</p>
+  <p>共役 f(z) = z̄ では、どの a でも差商は h̄/h。実の h では1、純虚数の h では−1なので、どこでも複素微分できません。鏡映という実の線形変換は存在しますが、その行列は対角成分が1、−1で、複素数を掛ける形ではありません。</p>
+  <p>一方、f(z) = |z|² = x² + y² は、uₓ = 2x、uᵧ = 2y、vₓ = vᵧ = 0。成分は C¹ なのでCRが成り立つ原点だけで微分可能です。実際、a = 0 の差商は |h|²/h = h̄ → 0 です。しかし原点を含むどんな開円板にも非零の点があるため、原点のどの近傍でも正則ではありません。</p>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="実微分と複素微分と正則の比較"><table class="concept-table" style="min-width:48rem" data-visual="complex-differentiation-comparison"><caption>条件が似ていても、差商と成立する場所を別々に調べる</caption><thead><tr><th scope="col">関数</th><th scope="col">実全微分</th><th scope="col">CRの検査</th><th scope="col">複素微分と正則性</th></tr></thead><tbody><tr><th scope="row">z²</th><td>全ての点で存在。</td><td>u=x²−y²,v=2xy はCRを満たす。</td><td>f′(z)=2z。平面全体で正則。</td></tr><tr><th scope="row">z̄</th><td>実行列 diag(1,−1) が全ての点で存在。</td><td>uₓ=1 と vᵧ=−1 が違う。</td><td>0°の差商1と90°の差商−1が異なり、どの点でも複素微分不可。</td></tr><tr><th scope="row">|z|²</th><td>u=x²+y²,v=0 なので全ての点で存在。</td><td>CRは x=y=0 のときだけ。</td><td>原点の差商は δ̄→0。原点だけで微分可能だが、どの開近傍でも正則でない。</td></tr><tr><th scope="row">G+0i、原点</th><td>存在しない。二軸上0でも、斜めに一次のずれが残る。</td><td>四つの偏微分は0で、原点のCRは成立。</td><td>二軸の差商0、斜め(1−i)/4。CRだけでは保証できない。</td></tr></tbody></table></div><p data-reading-note="complex-differentiation-conditions">「実全微分＋CR」が一点での複素微分を保証します。表の G は本文で定義した x²y/(x²+y²) の反例です。正則性を言うには、その点だけでなく開集合内の全ての点で複素微分できることが必要です。式を一つ代入する検査と、成立する点の範囲の検査を分けてください。</p>
+  <p>和・積の微分則も、実微分と同じ差商の分解から得られます。積では f、g の微分可能性による連続性を使って (fg)′ = f′g + fg′、g(a) ≠ 0 では (f/g)′ = (f′g − fg′)/g² です。合成では実全微分の連鎖律を使うと二つの複素乗算が合成され、(g ∘ f)′(a) = g′(f(a))f′(a)。合成先の開集合に f(a) が入り、その近くで合成が定義できることが必要です。</p>
+  <p>これで多項式は全平面、有理関数は分母が0でない開集合で正則と分かります。次章では同じ基準で、指数関数と対数を作ります。局所でできる逆操作が平面全体でできるか、という定義域の問題も現れます。</p>
+</section>
+
+<details class="column" id="complex-differentiation-column"><summary>寄り道［自作モデル］：円を楕円にする拡大は、複素数一つで書けるか</summary><p>T(x, y) = (2x, y) という横だけ2倍のモデルを考えます。実線形であり、余りは0です。しかし複素微分できるなら、入力1の出力2から掛ける数は2と決まります。その数をiへ掛けると2iになるはずなのに、Tの出力はiです。一つの掛け算では二つの方向を同時に説明できません。</p><p>実微分は一般の行列を許し、複素微分は回転と一様な拡大の形を要求します。複素微分の条件が強いことは、この小さな矛盾からも見えます。後の<a href="cauchy-formula.html">境界から内部を取り出す公式</a>は、この強い条件が生む性質です。</p><p class="source-note">出典：本章で定めた線形モデルの直接計算です。実在する物体の変形則を仮定したものではありません。</p></details>
+
+<section id="complex-differentiation-exercises"><h2>演習：複素微分と正則性</h2>
+  <article class="exercise"><h3>1．三乗の全方向の微分</h3><p>f(z) = z³ の導関数を、差商と誤差の評価から求めてください。</p><details><summary>ヒント1：差を展開する</summary><p>(a + h)³ − a³ = 3a²h + 3ah² + h³ です。</p></details><details><summary>ヒント2：方向を使わずに上限を取る</summary><p>差商と 3a² の差の絶対値を、|h| だけで抑えます。</p></details><details><summary>解答</summary><p>差商は 3a² + 3ah + h²。誤差は |3ah + h²| ≤ 3|a||h| + |h|² → 0 なので、どの方向でも f′(a) = 3a² です。全平面で複素微分可能なため正則です。</p></details></article>
+  <article class="exercise"><h3>2．CRと行列が一致するか</h3><p>f(x + iy) = (x² − y²) + i(2xy) についてCRを確かめ、a = 1 + i での実微分行列と複素導関数を求めてください。</p><details><summary>ヒント1：四つの偏微分</summary><p>uₓ = 2x、uᵧ = −2y、vₓ = 2y、vᵧ = 2x です。</p></details><details><summary>ヒント2：実全微分の根拠</summary><p>四つの偏導関数は連続です。a では x = y = 1 を代入します。</p></details><details><summary>解答</summary><p>全平面で成分は C¹、uₓ = vᵧ、uᵧ = −vₓ なので正則です。a で行列の第一行は (2, −2)、第二行は (2, 2)。これは 2 + 2i を掛ける行列であり、f′(a) = 2 + 2i = 2a と一致します。</p></details></article>
+  <article class="exercise"><h3>3．一点で微分できれば十分か</h3><p>f(z) = |z|² の原点での導関数を直接求め、原点で正則といえない理由を説明してください。</p><details><summary>ヒント1：非零の増分で割る</summary><p>|h|² = h h̄ を使えば、差商は簡単になります。</p></details><details><summary>ヒント2：近傍内の非零の点</summary><p>原点のどんな開円板にも、x ≠ 0 の実数の点が入ります。その点でCRを調べます。</p></details><details><summary>解答</summary><p>原点では差商が h̄ なので f′(0) = 0。一方、非零実数 x では uₓ = 2x ≠ 0 = vᵧ でCRに反し、微分できません。原点のどの開近傍にもこのような点があるため、原点を含む開集合で正則にはなりません。</p></details></article>
+</section>
+<section id="complex-differentiation-reflection"><h2>自分の言葉で</h2><ol><li>複素微分が存在すると、実全微分の行列はなぜ特別な形になりますか。</li><li>CRの必要性と十分性では、実全微分可能性をどこで使いますか。</li><li>|z|² の原点での微分と、原点の近傍での正則性は、何をそれぞれ要求していますか。</li></ol></section>

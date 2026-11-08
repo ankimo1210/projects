@@ -1,0 +1,133 @@
+<section id="limits-question">
+  <h2>実数と極限の考え方</h2>
+  <p>数列 1、1/2、1/3、… は 0 に近づきそうです。しかし、どの項も 0 ではありません。「いつか 0 になる」とは違う意味で、どうすれば近づくことを言い切れるでしょうか。最初の千項を見ても、その先で突然大きくなる数列とは区別できません。必要なのは、観察した項の数ではなく、どんな精度の要求にも答えられる規則です。</p>
+  <p><a href="numbers.html">数の世界</a>では有理数の隙間を実数で埋めました。この章では実数が持つ完備性を出発点として借り、極限を定義します。実数そのものの構成は行いません。数列は、正の整数 n ごとに実数 aₙ を一つ対応させる<a href="sets-maps.html">写像</a>です。添字 n は項の番号で、時刻とは限りません。</p>
+</section>
+
+<section id="limits-completeness">
+  <h2>実数の完備性と上限</h2>
+  <div class="theorem">
+    <h3>最小上界性：この教材で採る完備性の公理</h3>
+    <p>空でなく上に有界な実数の集合には、最小の上界が存在します。集合のすべての数以上の数を上界といい、そのうち最も小さいものを上限、または sup と書きます。この性質を実数の完備性として採用します。実数の構成による証明は行いません。以下では通常の四則・順序の法則とこの公理から議論を進め、別の形の完備性を独立の公理にはしません。</p>
+  </div>
+  <div class="proof">
+    <h3>自然数が上に有界でないことを導く</h3>
+    <p>もし自然数全体に上限 L があれば、L − 1 は上界でないので、n &gt; L − 1 となる自然数 n が存在します。すると自然数 n + 1 は L より大きく、L が上界であることに矛盾します。したがって、どんな実数よりも大きい自然数を選べます。これがアルキメデス性です。</p>
+  </div>
+  <p>下に有界な集合の最大の下界を下限 inf と呼びます。これは各数の符号を変えた集合の上限に、再び負号を付ければ得られます。上限・下限は集合に属するとは限りません。例えば (0, 1) の上限は 1 ですが、1 はその集合の要素でありません。</p>
+</section>
+
+<section id="limits-definition">
+  <h2>数列の極限とε–N定義</h2>
+  <p>数列 aₙ が実数 L に収束するとは、どんな正の許容誤差 ε を指定されても、ある正の整数 N を選ぶと、N 番目以降の<strong>すべての項</strong>が L から距離 ε 未満に入ることです。これを aₙ → L、または lim aₙ = L と書きます。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>∀</mo><mi>ε</mi><mo>&gt;</mo><mn>0</mn><mspace width="1em"/><mo>∃</mo><mi>N</mi><mo>∈</mo><mi>ℕ</mi><mspace width="1em"/><mo>∀</mo><mi>n</mi><mo>≥</mo><mi>N</mi><mo>:</mo><mspace width="0.5em"/><mo>|</mo><msub><mi>a</mi><mi>n</mi></msub><mo>−</mo><mi>L</mi><mo>|</mo><mo>&lt;</mo><mi>ε</mi></mrow></math></div>
+  <p>ここでは ℕ = {1, 2, …} とします。N は ε に応じて変えてよく、最小である必要もありません。一方、N を選んだ後に現れる n に合わせて N を選び直すことはできません。この<a href="logic.html">量化の順番</a>が、「ときどき近い」と「以後ずっと近い」を分けます。最初の有限個の項がどうであっても、収束の結論は変わりません。</p>
+  <div class="proof">
+    <h3>1/n → 0 の証明</h3>
+    <p>ε &gt; 0 を任意に与えます。先ほど導いたアルキメデス性により、N &gt; 1/ε を満たす整数 N を選べます。n ≥ N なら |1/n − 0| = 1/n ≤ 1/N &lt; ε。これで、すべての正の ε に対して開始位置を作れました。例えば ε = 0.001 なら N = 1001 が使えます。N = 1000 では最初の差が ε と等しく、厳密な「未満」の条件を満たしません。</p>
+  </div>
+  <p class="note">計算機の整数型には上限があります。数学の自然数について証明した性質を、そのまま機械の仕様と混同してはいけません。</p>
+
+<figure class="concept-figure" id="limits-visual-epsilon-tail" data-visual="limits-epsilon-tail">
+  <svg class="concept-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 310" role="img" aria-labelledby="limits-visual-epsilon-tail-title limits-visual-epsilon-tail-desc">
+    <title id="limits-visual-epsilon-tail-title">εの帯と、以後すべてが入る開始位置</title>
+    <desc id="limits-visual-epsilon-tail-desc">数列1/nの最初の12項。高さ1/4は帯の境界で、n=4の項は境界上、nが5以上の項は帯の内側にある。</desc>
+    <g fill="var(--ink-2)" font-size="22"><rect x="50" y="210" width="280" height="50" fill="var(--series-1)" fill-opacity="0.12"/><path d="M 50 210 L 330 210" fill="none" stroke="var(--series-2)" stroke-width="2" stroke-dasharray="6 5"/><path d="M 162 40 L 162 260" fill="none" stroke="var(--rule)" stroke-width="2" stroke-dasharray="5 5"/><path d="M 40 260 L 340 260" fill="none" stroke="var(--ink-2)" stroke-width="2"/><path d="M 50 275 L 50 35" fill="none" stroke="var(--ink-2)" stroke-width="2"/><circle cx="74" cy="60" r="5" fill="var(--series-1)" stroke="var(--series-1)" stroke-width="2"/><circle cx="96" cy="160" r="5" fill="var(--series-1)" stroke="var(--series-1)" stroke-width="2"/><circle cx="118" cy="193.333" r="5" fill="var(--series-1)" stroke="var(--series-1)" stroke-width="2"/><circle cx="140" cy="210" r="5" fill="var(--surface)" stroke="var(--series-2)" stroke-width="2"/><circle cx="162" cy="220" r="5" fill="var(--series-1)" stroke="var(--series-1)" stroke-width="2"/><circle cx="184" cy="226.667" r="5" fill="var(--series-1)" stroke="var(--series-1)" stroke-width="2"/><circle cx="206" cy="231.429" r="5" fill="var(--series-1)" stroke="var(--series-1)" stroke-width="2"/><circle cx="228" cy="235" r="5" fill="var(--series-1)" stroke="var(--series-1)" stroke-width="2"/><circle cx="250" cy="237.778" r="5" fill="var(--series-1)" stroke="var(--series-1)" stroke-width="2"/><circle cx="272" cy="240" r="5" fill="var(--series-1)" stroke="var(--series-1)" stroke-width="2"/><circle cx="294" cy="241.818" r="5" fill="var(--series-1)" stroke="var(--series-1)" stroke-width="2"/><circle cx="316" cy="243.333" r="5" fill="var(--series-1)" stroke="var(--series-1)" stroke-width="2"/><text x="10" y="217" text-anchor="start">1/4</text><text x="26" y="267" text-anchor="start">0</text><text x="337" y="291" text-anchor="middle">n</text><text x="162" y="293" text-anchor="middle">5</text><text x="182" y="53" text-anchor="start">N = 5</text></g>
+  </svg>
+  <figcaption>ε = 1/4 の例では N = 5 が使えます。丸い輪で示す第4項は境界上なので「未満」を満たしません。図は有限項ですが、本文の 1/n ≤ 1/N &lt; ε が以後の全項を保証します。</figcaption>
+</figure>
+</section>
+
+<section id="limits-algebra">
+  <h2>極限の一意性と四則演算</h2>
+  <div class="theorem">
+    <h3>和と積の極限</h3>
+    <p>実数列 aₙ → A、bₙ → B とすると、aₙ + bₙ → A + B、aₙbₙ → AB です。どちらも有限の実数への収束を仮定しています。</p>
+  </div>
+  <div class="proof">
+    <h3>誤差を分ける</h3>
+    <p>和では、二つの差をそれぞれ ε/2 未満にする開始位置を取り、大きい方を N とします。<a href="inequalities.html">三角不等式</a>から、和の差は二つの差の和以下なので ε 未満です。積ではまず、十分先で |aₙ − A| &lt; 1 とし、|aₙ| ≤ |A| + 1 に抑えます。次の分解が使えます。</p>
+    <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>|</mo><msub><mi>a</mi><mi>n</mi></msub><msub><mi>b</mi><mi>n</mi></msub><mo>−</mo><mi>A</mi><mi>B</mi><mo>|</mo><mo>≤</mo><mo>|</mo><msub><mi>a</mi><mi>n</mi></msub><mo>|</mo><mo>|</mo><msub><mi>b</mi><mi>n</mi></msub><mo>−</mo><mi>B</mi><mo>|</mo><mo>+</mo><mo>|</mo><mi>B</mi><mo>|</mo><mo>|</mo><msub><mi>a</mi><mi>n</mi></msub><mo>−</mo><mi>A</mi><mo>|</mo></mrow></math></div>
+    <p>|bₙ − B| &lt; ε/{2(|A| + 1)}、|aₙ − A| &lt; ε/{2(|B| + 1)} をともに満たすところまで進めば、右辺は ε 未満です。積の証明では、差だけでなく掛け算する相手の大きさも抑える必要がありました。</p>
+  </div>
+  <p>極限は一つに決まります。異なる二つの候補 A、B があれば、ε = |A − B|/3 を選び、十分先の同じ項から両方への距離を ε 未満にします。すると |A − B| &lt; 2|A − B|/3 となり矛盾します。したがって「その極限」と呼んでよいのです。</p>
+  <div class="proof">
+    <h3>商・順序・挟み撃ちも確かめる</h3>
+    <p>B ≠ 0 なら、十分先では |bₙ − B| &lt; |B|/2 より |bₙ| &gt; |B|/2。したがって |1/bₙ − 1/B| ≤ 2|bₙ − B|/|B|² → 0 です。積の法則と合わせて aₙ/bₙ → A/B を得ます。分母の極限が 0 の場合には、この結論を使えません。</p>
+    <p>十分先で aₙ ≤ bₙ なら A ≤ B です。もし A &gt; B なら、二つの誤差を (A − B)/3 未満にすると aₙ &gt; bₙ となり矛盾します。特に aₙ ≤ cₙ ≤ bₙ で両端が同じ L へ収束すれば、十分先の cₙ も L ± ε の中に入り、cₙ → L。これが挟み撃ちです。</p>
+  </div>
+</section>
+
+<section id="limits-monotone">
+  <h2>単調有界数列の収束</h2>
+  <p>値が増え続け、しかも上限を越えない数列は、どこかへ落ち着きそうです。この「どこか」を保証する部分は、計算規則だけでは得られません。</p>
+  <div class="theorem">
+    <h3>単調有界数列の収束</h3>
+    <p>実数列が単調増加、つまり aₙ ≤ aₙ₊₁ で、ある実数 M に対し全項が aₙ ≤ M を満たすなら、有限の実数に収束します。単調減少で下に有界の場合も同様です。</p>
+  </div>
+  <div class="proof">
+    <h3>完備性を使う箇所</h3>
+    <p><a href="#limits-completeness">最小上界性</a>により、項の集合の上限 L が存在します。ε &gt; 0 に対し、L − ε は上界でないため aₙ &gt; L − ε となる項 aₙ が存在します。単調性からその先の全項は L − ε より大きく、上界の定義から L 以下です。したがって L へ収束します。減少の場合は項の符号を変えて同じ証明を使います。</p>
+  </div>
+  <p>条件を一つずつ外してみます。aₙ = n は増加しますが上に有界でなく、有限の実数へ収束しません。aₙ = (−1)ⁿ は −1 と 1 の間に収まりますが、二つの値を往復するため収束しません。有界という条件だけでも、単調という条件だけでも足りないのです。</p>
+</section>
+
+<section id="limits-cauchy">
+  <h2>Cauchy列と完備性</h2>
+  <div class="theorem"><h3>実数列の Cauchy 判定</h3><p>数列が Cauchy 列であるとは、任意の ε &gt; 0 に対し、ある N 以降のすべての m、n で |aₘ − aₙ| &lt; ε となることです。実数列が有限の実数へ収束することと、Cauchy 列であることは同値です。</p></div>
+  <div class="proof"><h3>各尾部を上下から挟む</h3><p>収束列では、各項と極限との距離を ε/2 未満にすれば、三角不等式で Cauchy 条件が得られます。逆に Cauchy 列なら、十分先の項は一つの項の前後 1 以内にあり、最初の有限個も含めて全体が有界です。尾部 {aₖ : k ≥ n} の下限を lₙ、上限を uₙ とすると、lₙ は増加、uₙ は減少する有界列です。単調有界定理により両方に極限があります。Cauchy 条件から十分先で 0 ≤ uₙ − lₙ ≤ ε なので、極限は共通の L です。lₙ ≤ aₙ ≤ uₙ と挟み撃ちから aₙ → L を得ます。これは最小上界性から導いた定理で、新しい公理ではありません。</p></div>
+</section>
+
+<section id="limits-geometric">
+  <h2>等比数列の収束と誤差評価</h2>
+  <div class="theorem"><h3>幾何的な減少の補題</h3><p>実数 r が |r| &lt; 1 を満たすなら、|r|ⁿ → 0、したがって rⁿ → 0 です。</p></div>
+  <div class="proof"><h3>Bernoulli の不等式から</h3><p>r = 0 は直ちに分かります。0 &lt; q = |r| &lt; 1 なら d = 1/q − 1 &gt; 0 と置きます。<a href="inequalities.html#inequalities-bernoulli">入門で得た Bernoulli の不等式</a> (1 + d)ⁿ ≥ 1 + nd を使います。n = 1 で成立し、両辺に 1 + d を掛ければ次の n でも成立するので帰納法で得られるものでした。よって 0 ≤ qⁿ ≤ 1/(1 + nd)。任意の ε &gt; 0 に対し N &gt; 1/(dε) と選べば、n ≥ N で右辺は ε 未満です。挟み撃ちから結論が従います。二分法の幅や幾何級数の残りの評価は、この補題を使います。</p></div>
+</section>
+
+<section id="limits-function">
+  <h2>関数の極限とε–δ定義</h2>
+  <p><a href="derivatives.html">微分</a>では、刻み h を 0 に近づけます。関数 g の h → 0 での極限が L とは、どんな ε &gt; 0 に対しても δ &gt; 0 を選べて、定義域の h が 0 &lt; |h| &lt; δ を満たすなら |g(h) − L| &lt; ε となることです。ここでは g が 0 の両側の、0 を除く十分小さい範囲で定義されている場合を考えます。</p>
+  <p>h = 0 を除くのは、極限がその点の値ではなく、その周りでのふるまいを述べるからです。例えば g(h) = h/h は h ≠ 0 で 1 なので極限は 1 ですが、式のままでは g(0) は定義されません。連続性は、こうして得られる極限と、その点で定義された関数値が一致する条件として読み直せます。</p>
+  <p>和・積・商と順序の極限法則も同じ誤差評価で成り立ちます。数列で「十分大きい番号」とした部分を、「十分小さい入力のずれ」に替えて証明します。商では、ここでも分母の極限が 0 でないことが必要です。</p>
+</section>
+
+<details class="column" id="limits-column">
+  <summary>寄り道［背景］：半分、また半分。それでもゴールへ着けるか</summary>
+  <p>アリストテレス『自然学』第6巻には、ゼノンの議論として「目的地へ着く前に、まず半分まで着かねばならない」という難問が記録されています。半分までの途中にもさらに半分があるなら、終えるべき段階は無限にある。何が本当の障害なのか、考えたくなる問いです。</p>
+  <p>ここからは現代の数列で見直しましょう。長さ1を、1/2、1/4、1/8、…と進むなら、n 段階の合計は 1 − 2⁻ⁿ、残りは 2⁻ⁿ です。段階の個数は無限でも、残りは指定したどんな正の幅より小さくできます。各段階に同じ時間が必要だとは限りません。極限は「無限だから終わらない」という言葉を、何が増え、何が小さくなり、どんなモデルで時間を数えているかという問いへ分けてくれます。</p>
+  <p class="source-note">出典：<a href="https://classics.mit.edu/Aristotle/physics.6.vi.html">アリストテレス『自然学』VI.9、MIT 公開英訳</a>。</p>
+</details>
+
+<section id="limits-exercises">
+  <h2>極限の定義と誤差評価の演習</h2>
+  <article class="exercise">
+    <h3>1．開始位置を作る</h3>
+    <p>aₙ = 3 + 2/n が 3 に収束することを示し、ε = 0.01 に使える N を一つ求めてください。</p>
+    <details><summary>ヒント1：差だけを残す</summary><p>|aₙ − 3| = 2/n です。</p></details>
+    <details><summary>ヒント2：不等号に注意する</summary><p>N &gt; 2/ε を満たす整数を選びます。</p></details>
+    <details><summary>解答</summary><p>任意の ε &gt; 0 に対して N &gt; 2/ε を選ぶと、n ≥ N で |aₙ − 3| = 2/n ≤ 2/N &lt; ε です。ε = 0.01 なら N = 201 が使えます。これで定義のすべての要求を満たしました。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>2．ときどき近いだけでは足りない</h3>
+    <p>aₙ = (−1)ⁿ が 1 に収束しないことを、ε を一つ選んで示してください。</p>
+    <details><summary>ヒント1：定義を否定する</summary><p>どんな N に対しても、要求に反する n ≥ N を見つけます。</p></details>
+    <details><summary>ヒント2：奇数番目を見る</summary><p>奇数番目の値は −1 です。</p></details>
+    <details><summary>解答</summary><p>ε = 1 とします。どの N より先にも奇数 n があり、その項では |aₙ − 1| = |−1 − 1| = 2 ≥ 1 です。「以後のすべての項」が近いとは言えず、1 に収束しません。同様に、二つの部分列の値が異なるため、ほかの実数にも収束しません。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>3．単調有界定理を使う</h3>
+    <p>aₙ = n/(n + 1) の単調性と上界を確かめ、収束先も求めてください。</p>
+    <details><summary>ヒント1：1 との差を見る</summary><p>aₙ = 1 − 1/(n + 1) と書けます。</p></details>
+    <details><summary>ヒント2：存在と値を分ける</summary><p>単調有界定理は行き先の存在を、差の評価は行き先の値を教えます。</p></details>
+    <details><summary>解答</summary><p>1/(n + 1) は減少するので aₙ は増加し、aₙ &lt; 1 です。単調有界定理から収束します。また |aₙ − 1| = 1/(n + 1) → 0 なので、極限は 1 です。上界は 2 などでもよいですが、収束先は上界の任意の選び方では決まりません。</p></details>
+  </article>
+</section>
+
+<section id="limits-reflection">
+  <h2>自分の言葉で</h2>
+  <ol>
+    <li>「どんな ε に対しても」の後で N を選ぶのは、どんな精度保証を表していますか。</li>
+    <li>単調有界定理の証明で、実数の完備性はどの一文に使われましたか。</li>
+    <li>関数の h → 0 での極限と、h = 0 での関数値はどう違いますか。</li>
+  </ol>
+</section>

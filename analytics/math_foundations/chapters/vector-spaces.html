@@ -1,0 +1,154 @@
+<section id="vector-spaces-question">
+  <h2>ベクトル空間の具体例</h2>
+  <p><a href="rotation.html">回転の章</a>では、矢印を足すことと実数倍することを保つため、二本の基本の矢印の行き先だけで回転が決まりました。この仕組みは、矢印だけのものでしょうか。多項式も足せますし、数列も同じ番号の項どうしを足せます。見た目が違っても、同じ計算の約束が使えそうです。</p>
+  <p>例えば多項式では (1 + t) + (2 − t) = 3、2(1 + t) = 2 + 2t です。数列 (1, 2, 3, …) も二倍できます。「足す・何倍かする」を共通の言葉にすれば、図形で得た考えを関数や数列へ持ち運べます。そのための定義が、ベクトル空間です。</p>
+</section>
+
+<section id="vector-spaces-laws">
+  <h2>ベクトル空間の公理</h2>
+  <p>この章では倍率に<strong>実数</strong>を使います。集合 V に、二つの要素の和 u + v と、実数 a による倍 av を定めます。どちらの結果も V に入り、次の約束が、すべての u、v、w と実数 a、b について成り立つとき、V を<strong>実ベクトル空間</strong>と呼びます。その要素がベクトルです。</p>
+  <ul>
+    <li>足す順序と括弧を変えられる：u + v = v + u、(u + v) + w = u + (v + w)。</li>
+    <li>足しても変わらない<strong>零ベクトル</strong> 0<sub>V</sub> がある：v + 0<sub>V</sub> = v。各 v には、v + (−v) = 0<sub>V</sub> となる<strong>加法の逆元</strong> −v がある。</li>
+    <li>倍率をまとめられる：a(bv) = (ab)v。また 1v = v。</li>
+    <li>二種類の分配法則がある：a(u + v) = au + av、(a + b)v = av + bv。</li>
+  </ul>
+  <p>これらが定義の出発点となる<strong>公理</strong>です。零ベクトルは実数の 0 と役割を区別した記号で、多項式なら「どの t に対しても値が 0 の多項式」、数列なら「全項が 0 の数列」です。多項式や数列では、各係数・各項に実数の法則を使えば、公理を確かめられます。</p>
+  <p>加法の逆元は一意です。u と w がともに v の逆元なら、u = u + 0<sub>V</sub> = u + (v + w) = (u + v) + w = 0<sub>V</sub> + w = w となるからです。</p>
+  <p class="note">成分がともに非負の平面ベクトル全体は、通常の足し算では閉じています。しかし (1, 0) を打ち消す (−1, 0) が入らず、−1 倍でも外へ出ます。したがって実ベクトル空間ではありません。足せるだけでは、公理を満たしたことになりません。</p>
+
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="見た目が違っても、足し算・実数倍・零元をそろえる">
+    <table id="vector-spaces-visual-operations" class="concept-table" style="min-width:47rem" data-visual="vector-spaces-visual-operations"><caption>演算ができるだけでなく、その範囲から出ないかを点検する</caption><thead><tr><th scope="col">対象</th><th scope="col">和が残ること</th><th scope="col">負の実数倍</th><th scope="col">零元と判定</th></tr></thead><tbody><tr><th scope="row">平面 ℝ²</th><td>(1,2)+(2,−1)=(3,1)。成分ごとの和は平面内。</td><td>−(1,2)=(−1,−2) も平面内。</td><td>(0,0) を含む。実数倍は全て許す。</td></tr><tr><th scope="row">実数係数の多項式</th><td>(1+t)+(2−t)=3 も多項式。</td><td>−(1+t)=−1−t も多項式。</td><td>零多項式0を含む。次数の上限を固定しない例。</td></tr><tr><th scope="row">実数列</th><td>(1,2,…)+(2,4,…)=(3,6,…)。各項で足す。</td><td>−(1,2,…)=(−1,−2,…) も実数列。</td><td>零数列(0,0,…) を含む。有限次元とは限らない。</td></tr><tr><th scope="row">半平面 S={(x,y):x≥0}</th><td>第一成分の和も非負で、和では外へ出ない。</td><td>u=(1,0) はS内だが、−u=(−1,0) はS外。</td><td>零元があっても、実数倍で閉じず部分空間ではない。</td></tr></tbody></table>
+  </div><p data-reading-note="vector-spaces-operations">同じ行を横に読み、足す・負の倍数を取る・零元を含む、を別々に点検します。最後の行は「和と零元だけでは足りない」という反例です。最初の三行の数値例だけで全公理を証明したわけではなく、各対象の演算に対して全ての実数倍と公理が成り立つことは本文の定義と合わせて確かめます。</p>
+</section>
+
+<section id="vector-spaces-reuse">
+  <h2>スカラー倍の基本性質：0倍と−1倍</h2>
+  <div class="theorem">
+    <h3>0 倍と、反対向きの一般化</h3>
+    <p>どんな実ベクトル空間でも、0v = 0<sub>V</sub>、(−1)v = −v です。</p>
+  </div>
+  <div class="proof">
+    <h3>短い証明</h3>
+    <p>分配法則より 0v = (0 + 0)v = 0v + 0v。両辺に 0v の加法の逆元を足せば、0<sub>V</sub> = 0v です。また v + (−1)v = (1 + (−1))v = 0v = 0<sub>V</sub>。したがって (−1)v は v を打ち消すベクトルです。</p>
+  </div>
+  <p>証明には矢印の長さも、多項式の次数も使いませんでした。だから、公理が確認できた対象すべてに通用します。<a href="numbers.html">数の拡張</a>と同じく、計算の法則を明示する利点は、どこまで同じ議論を使えるかが分かることです。</p>
+</section>
+
+<section id="vector-spaces-subspace">
+  <h2>部分空間と閉性</h2>
+  <p>実ベクトル空間 V の部分集合 U が、零ベクトル 0<sub>V</sub> を含み、U の要素どうしの和と、U の要素の任意の実数倍も U に入るとき、U を V の<strong>部分空間</strong>と呼びます。例えば平面の (x, 0) 全体は部分空間です。零ベクトルを含み、足しても実数倍しても第二成分が 0 のままだからです。</p>
+  <p>部分空間では、V の足し算と実数倍をそのまま使います。結合法則や分配法則などは V で成り立つ式を引き継ぎ、加法の逆元も (−1)u として U に入ります。したがって U 自身も実ベクトル空間になります。単に部分集合であるだけでなく、計算の結果が外へ出ないことが必要です。</p>
+
+  <div class="concept-grid">
+    <figure class="concept-figure" id="vector-spaces-visual-subspace" data-visual="vector-spaces-visual-subspace">
+      <svg class="concept-svg" viewBox="0 0 360 350" role="img" aria-labelledby="vector-spaces-visual-subspace-title vector-spaces-visual-subspace-desc"><title id="vector-spaces-visual-subspace-title">同じ原点から出るuと2uは、どちらもy=0上に残る</title><desc id="vector-spaces-visual-subspace-desc">同じ直線y=0を同縮尺で上下に分けた図。上は原点からu=(1,0)、下は原点から2u=(2,0)へ出る矢印。下の矢印は上の二倍の長さで、二本とも第二成分は零。一般の閉性は本文の演算式による。</desc><text x="180" y="35" font-size="22" fill="var(--ink)" text-anchor="middle">二本とも、出発点は原点</text><line x1="25" y1="120" x2="330" y2="120" stroke="var(--grid)" stroke-width="2"/><line x1="80" y1="144" x2="80" y2="85" stroke="var(--ink-3)" stroke-width="1.5"/><line x1="80" y1="120" x2="180" y2="120" stroke="var(--series-1)" stroke-width="4"/><polygon points="180,120 169,115 169,125" fill="var(--series-1)"/><circle cx="80" cy="120" r="4" fill="var(--ink)"/><text x="63" y="150" font-size="22" fill="var(--ink)" text-anchor="middle">0</text><text x="190" y="98" font-size="22" fill="var(--ink)" text-anchor="middle">u=(1,0)</text><text x="300" y="152" font-size="22" fill="var(--ink)" text-anchor="middle">y=0</text><line x1="25" y1="270" x2="330" y2="270" stroke="var(--grid)" stroke-width="2"/><line x1="80" y1="294" x2="80" y2="235" stroke="var(--ink-3)" stroke-width="1.5"/><line x1="80" y1="270" x2="280" y2="270" stroke="var(--series-2)" stroke-width="4"/><polygon points="280,270 269,265 269,275" fill="var(--series-2)"/><circle cx="80" cy="270" r="4" fill="var(--ink)"/><text x="63" y="300" font-size="22" fill="var(--ink)" text-anchor="middle">0</text><text x="190" y="248" font-size="22" fill="var(--ink)" text-anchor="middle">2u=(2,0)</text><text x="300" y="302" font-size="22" fill="var(--ink)" text-anchor="middle">y=0</text><text x="180" y="342" font-size="22" fill="var(--ink)" text-anchor="middle">上下は同じ直線・同じ縮尺</text></svg>
+      <figcaption>重なりを避けて上下に分けた矢印は、どちらも原点発です。2u=(2,0) は u=(1,0) の二倍の長さで、両方とも第二成分は0のままです。さらに (a,0)+(b,0)=(a+b,0)、c(a,0)=(ca,0) なので、図に描いた二点以外も全て同じ直線に残ります。原点を含むこと・和・任意の実数倍という三つの点検を、隣のずらした直線と比べます。</figcaption>
+    </figure>
+    <figure class="concept-figure" id="vector-spaces-visual-offset-line" data-visual="vector-spaces-visual-offset-line">
+      <svg class="concept-svg" viewBox="0 0 360 310" role="img" aria-labelledby="vector-spaces-visual-offset-line-title vector-spaces-visual-offset-line-desc">
+        <title id="vector-spaces-visual-offset-line-title">ずらした直線は、一つの実数倍の反例で部分空間から外れる</title>
+        <desc id="vector-spaces-visual-offset-line-desc">y=1上のu=(0,1)を原点から2倍すると2u=(0,2)へ出る。原点も直線に含まれない。一反例で実数倍の閉性の失敗を示す。</desc>
+        <line x1="25" y1="250" x2="334" y2="250" stroke="var(--ink-2)" stroke-width="3" /><polygon points="334,250 324.99,254.339 324.99,245.661" fill="var(--ink-2)"/><line x1="100" y1="290" x2="100" y2="25" stroke="var(--ink-2)" stroke-width="3" /><polygon points="100,25 104.339,34.0097 95.6612,34.0097" fill="var(--ink-2)"/><text x="329" y="280" text-anchor="middle" fill="var(--ink)" font-size="22" >x</text><text x="120" y="35" text-anchor="middle" fill="var(--ink)" font-size="22" >y</text><text x="83" y="278" text-anchor="middle" fill="var(--ink)" font-size="22" >0</text><line x1="25" y1="160" x2="334" y2="160" stroke="var(--series-1)" stroke-width="4" /><circle cx="100" cy="160" r="4" fill="var(--ink)"/><text x="117" y="147" text-anchor="start" fill="var(--ink)" font-size="22" >u</text><line x1="100" y1="250" x2="100" y2="70" stroke="var(--series-2)" stroke-width="3" /><polygon points="100,70 104.339,79.0097 95.6612,79.0097" fill="var(--series-2)"/><circle cx="100" cy="70" r="4" fill="var(--ink)"/><text x="117" y="77" text-anchor="start" fill="var(--ink)" font-size="22" >2u</text><text x="272" y="148" text-anchor="middle" fill="var(--ink)" font-size="22" >y = 1</text>
+      </svg>
+      <figcaption>u=(0,1) は直線 y=1 上でも、2u=(0,2) は外へ出ます。直線を少しずらすだけで、実数倍の閉性と零元を含む条件が失われます。一つの失敗例で部分空間ではないと結論できる点を、成功例をいくつか集めることとの違いとして読んでください。</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="vector-spaces-linear">
+  <h2>線形写像の定義</h2>
+  <p>実ベクトル空間 V から W への写像 T が、和と実数倍を保つとき、<strong>線形写像</strong>と呼びます。まとめると、すべての u、v と実数 a、b について次が条件です。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>T</mi><mo>(</mo><mi>a</mi><mi>u</mi><mo>+</mo><mi>b</mi><mi>v</mi><mo>)</mo><mo>=</mo><mi>a</mi><mi>T</mi><mo>(</mo><mi>u</mi><mo>)</mo><mo>+</mo><mi>b</mi><mi>T</mi><mo>(</mo><mi>v</mi><mo>)</mo></mrow></math></div>
+  <p>原点を中心とする回転は線形です。一方、T(x, y) = (x + 1, y) という平行移動は線形ではありません。線形写像なら T(0<sub>V</sub>) = T(0v) = 0T(v) = 0<sub>W</sub> ですが、この平行移動は (0, 0) を (1, 0) に送るからです。直線を直線へ移すことだけでは、線形とは言えません。</p>
+</section>
+
+<section id="vector-spaces-matrix">
+  <h2>基底と線形写像の行列表示</h2>
+  <p>すべてのベクトルを、ただ一通りの係数で表せる基本の組を<strong>基底</strong>と呼びます。平面では (1, 0)、(0, 1) が一例です。ここからは V と W に、それぞれ有限本のベクトルからなる基底を選べる場合を考えます。V の基底を e₁、…、eₙ とすると、線形性から次が出ます。</p>
+  <div class="theorem">
+    <h3>基底の行き先が、写像全体を決める</h3>
+    <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>T</mi><mo>(</mo><msub><mi>x</mi><mn>1</mn></msub><msub><mi>e</mi><mn>1</mn></msub><mo>+</mo><mo>⋯</mo><mo>+</mo><msub><mi>x</mi><mi>n</mi></msub><msub><mi>e</mi><mi>n</mi></msub><mo>)</mo><mo>=</mo><msub><mi>x</mi><mn>1</mn></msub><mi>T</mi><mo>(</mo><msub><mi>e</mi><mn>1</mn></msub><mo>)</mo><mo>+</mo><mo>⋯</mo><mo>+</mo><msub><mi>x</mi><mi>n</mi></msub><mi>T</mi><mo>(</mo><msub><mi>e</mi><mi>n</mi></msub><mo>)</mo></mrow></math></div>
+  </div>
+  <div class="proof">
+    <h3>短い証明</h3>
+    <p>和を保つ性質で T を各項へ分け、実数倍を保つ性質で各係数を外に出します。すべての入力は基底の和で書けるので、右辺だけですべての出力が決まります。</p>
+  </div>
+  <p>W の基底で T(e₁)、…、T(eₙ) の座標を書き、順に<strong>列</strong>へ並べた表が、T を表す行列です。入力の座標を掛けると、各列をその係数倍して足すので、上の式をそのまま計算できます。基底を変えれば、同じ写像を表す行列の数値も一般には変わります。</p>
+
+  <div class="concept-grid">
+    <figure class="concept-figure" id="vector-spaces-visual-basis-input" data-visual="vector-spaces-visual-basis-input">
+      <svg class="concept-svg" viewBox="0 0 360 300" role="img" aria-labelledby="vector-spaces-visual-basis-input-title vector-spaces-visual-basis-input-desc">
+        <title id="vector-spaces-visual-basis-input-title">入力の足し算の道を、次の出力図へ引き継ぐ</title>
+        <desc id="vector-spaces-visual-basis-input-desc">原点発のe1とe2を隣り合う辺とする平行四辺形の対角の点が(1,1)。同じ縮尺の出力図でも原点発の二本から和を読む。</desc>
+        <line x1="30" y1="245" x2="330" y2="245" stroke="var(--ink-2)" stroke-width="3" /><polygon points="330,245 320.99,249.339 320.99,240.661" fill="var(--ink-2)"/><line x1="60" y1="280" x2="60" y2="45" stroke="var(--ink-2)" stroke-width="3" /><polygon points="60,45 64.3388,54.0097 55.6612,54.0097" fill="var(--ink-2)"/><text x="42" y="272" text-anchor="middle" fill="var(--ink)" font-size="22" >0</text><polygon points="60,245 130,245 130,175 60,175" fill="none" stroke="var(--grid)" stroke-width="2.5" /><line x1="60" y1="245" x2="130" y2="245" stroke="var(--series-1)" stroke-width="3" /><polygon points="130,245 120.99,249.339 120.99,240.661" fill="var(--series-1)"/><line x1="60" y1="245" x2="60" y2="175" stroke="var(--series-2)" stroke-width="3" /><polygon points="60,175 64.3388,184.01 55.6612,184.01" fill="var(--series-2)"/><circle cx="130" cy="175" r="4" fill="var(--ink)"/><text x="130" y="157" text-anchor="start" fill="var(--ink)" font-size="22" >(1, 1)</text><text x="142" y="274" text-anchor="middle" fill="var(--ink)" font-size="22" >e₁</text><text x="45" y="155" text-anchor="middle" fill="var(--ink)" font-size="22" >e₂</text>
+      </svg>
+      <figcaption>原点発の横の e₁ と縦の e₂ を辺とする平行四辺形の、対角の点が和 (1,1) です。次の図でも同じ係数1,1で二本の像を辺に取ります。先に入力を足してから写すことと、二本を先に写して足すことを比較するための入力図です。</figcaption>
+    </figure>
+    <figure class="concept-figure" id="vector-spaces-visual-basis-output" data-visual="vector-spaces-visual-basis-output">
+      <svg class="concept-svg" viewBox="0 0 360 300" role="img" aria-labelledby="vector-spaces-visual-basis-output-title vector-spaces-visual-basis-output-desc">
+        <title id="vector-spaces-visual-basis-output-title">線形性が、入力の係数を基底の像へそのまま運ぶ</title>
+        <desc id="vector-spaces-visual-basis-output-desc">T(x,y)=(2x+y,y)の出力図。原点発の第1列(2,0)と第2列(1,1)を隣り合う辺とする平行四辺形の対角の点が和(3,1)。入力図のe1+e2と同じ係数を使う。一般の線形性は式から保証する。</desc>
+        <line x1="30" y1="245" x2="330" y2="245" stroke="var(--ink-2)" stroke-width="3" /><polygon points="330,245 320.99,249.339 320.99,240.661" fill="var(--ink-2)"/><line x1="60" y1="280" x2="60" y2="45" stroke="var(--ink-2)" stroke-width="3" /><polygon points="60,45 64.3388,54.0097 55.6612,54.0097" fill="var(--ink-2)"/><text x="42" y="272" text-anchor="middle" fill="var(--ink)" font-size="22" >0</text><polygon points="60,245 200,245 270,175 130,175" fill="none" stroke="var(--grid)" stroke-width="2.5" /><line x1="60" y1="245" x2="200" y2="245" stroke="var(--series-1)" stroke-width="3" /><polygon points="200,245 190.99,249.339 190.99,240.661" fill="var(--series-1)"/><line x1="60" y1="245" x2="130" y2="175" stroke="var(--series-2)" stroke-width="3" /><polygon points="130,175 126.697,184.439 120.561,178.303" fill="var(--series-2)"/><circle cx="270" cy="175" r="4" fill="var(--ink)"/><text x="270" y="157" text-anchor="start" fill="var(--ink)" font-size="22" >(3, 1)</text><text x="200" y="274" text-anchor="middle" fill="var(--ink)" font-size="22" >T(e₁)</text><text x="115" y="155" text-anchor="middle" fill="var(--ink)" font-size="22" >T(e₂)</text>
+      </svg>
+      <figcaption>同じ係数1,1で T(e₁)=(2,0) と T(e₂)=(1,1) を足すと (3,1) です。原点発の二本の列を辺とする平行四辺形の対角の点に、和が現れます。入力図と同じ読み方です。T が線形だと既に分かっているので、この対応を全ての係数へ広げられます。一組の図の一致だけで線形性を証明するわけではありません。二枚の座標は同縮尺です。</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="vector-spaces-polynomials">
+  <h2>多項式空間と微分の行列表示</h2>
+  <p>P₂ を実係数の次数 2 以下の多項式全体、P₁ を次数 1 以下のもの全体とします。ともに零多項式を含みます。<a href="derivatives.html">微分</a> D は a + bt + ct² を b + 2ct に送る写像 P₂ → P₁ です。和の微分は微分の和、定数倍の微分は微分の定数倍なので、D は線形です。</p>
+  <p>入力の基底を (1, t, t²)、出力の基底を (1, t) の順にします。D(1) = 0、D(t) = 1、D(t²) = 2t の座標を列に並べると、次の行列になります。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>(</mo><mtable><mtr><mtd><mn>0</mn></mtd><mtd><mn>1</mn></mtd><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>2</mn></mtd></mtr></mtable><mo>)</mo><mo>(</mo><mtable><mtr><mtd><mi>a</mi></mtd></mtr><mtr><mtd><mi>b</mi></mtd></mtr><mtr><mtd><mi>c</mi></mtd></mtr></mtable><mo>)</mo><mo>=</mo><mo>(</mo><mtable><mtr><mtd><mi>b</mi></mtd></mtr><mtr><mtd><mn>2</mn><mi>c</mi></mtd></mtr></mtable><mo>)</mo></mrow></math></div>
+  <p class="note">次数の上限を決めない多項式全体もベクトル空間ですが、有限個の多項式を用意しても、それらより高い次数は作れません。数列全体や、実数上の実数値関数全体も、項ごと・点ごとの演算でベクトル空間になりますが、有限本の基底ベクトルでは表し切れません。ベクトル空間がすべて有限次元という意味ではありません。</p>
+</section>
+
+<section id="vector-spaces-composition">
+  <h2>線形写像の合成と行列積</h2>
+  <p>行列 B の操作のあとに A を行うなら、出力は A(Bx) です。これを一つの行列で表すため、<strong>(AB)x = A(Bx)</strong> となるように積を定めます。右側が先です。例えば B の出力が (px + qy, rx + sy)、A の第一行が (a, b) なら、最後の第一座標は a(px + qy) + b(rx + sy)。x の係数は ap + br、y の係数は aq + bs に決まります。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>(</mo><mtable><mtr><mtd><mi>a</mi></mtd><mtd><mi>b</mi></mtd></mtr><mtr><mtd><mi>c</mi></mtd><mtd><mi>d</mi></mtd></mtr></mtable><mo>)</mo><mo>(</mo><mtable><mtr><mtd><mi>p</mi></mtd><mtd><mi>q</mi></mtd></mtr><mtr><mtd><mi>r</mi></mtd><mtd><mi>s</mi></mtd></mtr></mtable><mo>)</mo><mo>=</mo><mo>(</mo><mtable><mtr><mtd><mi>a</mi><mi>p</mi><mo>+</mo><mi>b</mi><mi>r</mi></mtd><mtd><mi>a</mi><mi>q</mi><mo>+</mo><mi>b</mi><mi>s</mi></mtd></mtr><mtr><mtd><mi>c</mi><mi>p</mi><mo>+</mo><mi>d</mi><mi>r</mi></mtd><mtd><mi>c</mi><mi>q</mi><mo>+</mo><mi>d</mi><mi>s</mi></mtd></mtr></mtable><mo>)</mo></mrow></math></div>
+  <p>「左の行と右の列を掛けて足す」は、合成を表そうとすれば必要な規則です。一般の大きさでも同じ代入で導けます。ただし、B の出力と A の入力の成分数は一致させ、その座標には同じ基底を使います。回転同士では順序を交換できましたが、一般の線形写像ではできません。</p>
+</section>
+
+<details class="column" id="vector-spaces-column">
+  <summary>寄り道［応用］：写真の8 × 8画素を、縞模様の重ね合わせで見る</summary>
+  <p>JPEG 規格 T.81 の DCT を使う方式は、画像の各色成分を 8 × 8 のブロックに分け、64個の値を64個の係数へ変換します。基本になるのは、縦横に異なる細かさで変化する余弦の模様です。点ごとの値で表した小さな画像を、基本模様がどれだけ混ざったかという座標で表し直すのです。</p>
+  <p>DCT そのものを正確な実数演算で考えれば、これは64次元のベクトル空間での基底変更で、逆変換により元へ戻せます。情報が減るのは、例えば次の量子化で、係数を決められた刻みへ丸める段階です。違う係数が同じ値へ重なれば、元を一意には復元できません。実装の丸めも別の誤差を生みます。「表し方を変えること」と「細部を捨てること」を分けると、線形変換が圧縮で果たす役割が見えてきます。</p>
+  <p class="source-note">出典：<a href="https://www.w3.org/Graphics/JPEG/itu-t81.pdf">JPEG T.81：4.3、A.3.3–A.3.4（W3C公開の規格本文）</a>。</p>
+</details>
+
+<section id="vector-spaces-exercises">
+  <h2>演習：ベクトル空間と線形写像</h2>
+  <article class="exercise">
+    <h3>1．原点を動かさなければ線形か</h3>
+    <p>F(x) = x² は実数から実数への線形写像でしょうか。</p>
+    <details><summary>ヒント1：必要な条件を一つ試す</summary><p>F(0) = 0 は満たします。次に実数倍を保つか試します。</p></details>
+    <details><summary>ヒント2：二倍を比べる</summary><p>F(2·1) と 2F(1) を計算してください。</p></details>
+    <details><summary>解答</summary><p>F(2) = 4、2F(1) = 2 なので、実数倍を保ちません。線形ではありません。原点を動かさないことは必要ですが、十分ではありません。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>2．値を読む操作の行列</h3>
+    <p>S(a + bt) = (a, a + b) は、0 と 1 での値を並べる線形写像です。入力の基底 (1, t)、出力の基底 ((1, 0), (0, 1)) による行列と、S(2 − 3t) を求めてください。</p>
+    <details><summary>ヒント1：基底を送る</summary><p>S(1) と S(t) を計算します。</p></details>
+    <details><summary>ヒント2：列に並べる</summary><p>S(1) = (1, 1)、S(t) = (0, 1) を、この順の列にします。</p></details>
+    <details><summary>解答</summary><p>行列は第一行が (1, 0)、第二行が (1, 1) です。(2, −3) を掛けると (2, −1)。実際に多項式へ 0、1 を入れた値と一致します。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>3．順序を逆にすると</h3>
+    <p>A(x, y) = (2x, y)、B(x, y) = (−y, x) とします。v = (1, 0) に対する ABv と BAv を比べてください。</p>
+    <details><summary>ヒント1：右側から作用する</summary><p>ABv は先に B、BAv は先に A です。</p></details>
+    <details><summary>ヒント2：途中の座標を残す</summary><p>Bv = (0, 1)、Av = (2, 0)。それぞれに残りの操作を行います。</p></details>
+    <details><summary>解答</summary><p>ABv = A(0, 1) = (0, 1)、BAv = B(2, 0) = (0, 2) です。一つでも出力が違う入力があるので、AB ≠ BA。横方向の拡大と 90 度回転は、順序を交換できません。</p></details>
+  </article>
+</section>
+
+<section id="vector-spaces-reflection">
+  <h2>自分の言葉で</h2>
+  <ol>
+    <li>矢印と多項式を、同じ公理で扱うと何が便利ですか。</li>
+    <li>なぜ基底の行き先を、行列の列に並べるのですか。</li>
+    <li>行列の積の規則と、写像の合成の順序はどう結び付きますか。</li>
+  </ol>
+  <p>次の<a href="dimension.html">次元の章</a>では、基底の本数がなぜ一定なのかを考えます。さらに<a href="determinants.html">行列式の章</a>では、線形写像が面積と向きをどう変えるかを追います。</p>
+</section>

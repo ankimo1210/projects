@@ -1,0 +1,93 @@
+<section id="law-of-large-numbers-question">
+  <h2>弱大数の法則と確率収束</h2>
+  <p>公平なコインの表の確率を 1/2 と定めても、10 回投げて表がちょうど 5 回になるとは限りません。それでも回数を増やすと、表の比率が 1/2 の近くにある確率は高くなるでしょうか。</p>
+  <p>ここまでの確率は、整合的なモデルの規則として扱ってきました。この章では、独立で同じ分布という条件を置き、繰り返しの平均が分布の期待値へ近づくことを証明します。頻度との結び付きは、条件を持つ<strong>定理</strong>として得られます。</p>
+</section>
+
+<section id="law-of-large-numbers-assumptions">
+  <h2>独立同分布と標本平均</h2>
+  <p>同じ確率モデル上の変数列 X₁、X₂、…を考えます。まず、全ての変数が共通の有限個の実数値を取る場合を扱います。任意の有限個について、どの値の組の同時確率も各変数の確率の積に分かれるという相互独立性を持ち、全ての Xᵢ が同じ分布なら、<strong>独立同分布</strong>（iid）と言います。共通の平均を μ、分散を σ² とします。有限値なので二乗の期待値も有限です。</p>
+  <p>最初の n 個の<strong>標本平均</strong>を、X̄ₙ = (X₁ + … + Xₙ)/n とします。X̄ₙ も結果によって値が変わる確率変数です。平均と分散は、<a href="expectation.html#expectation-linearity">期待値の線形性</a>、<a href="joint-distributions.html#joint-distributions-covariance">独立な和の分散</a>、尺度変換の公式から求まります。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>E</mi><mo>[</mo><msub><mover><mi>X</mi><mo>¯</mo></mover><mi>n</mi></msub><mo>]</mo><mo>=</mo><mi>μ</mi><mo>,</mo><mspace width="1em"/><mi>Var</mi><mo>(</mo><msub><mover><mi>X</mi><mo>¯</mo></mover><mi>n</mi></msub><mo>)</mo><mo>=</mo><mfrac><mn>1</mn><msup><mi>n</mi><mn>2</mn></msup></mfrac><mi>n</mi><msup><mi>σ</mi><mn>2</mn></msup><mo>=</mo><mfrac><msup><mi>σ</mi><mn>2</mn></msup><mi>n</mi></mfrac></mrow></math></div>
+  <p>分子の和の分散が nσ²、平均にする倍率 1/n の二乗が 1/n² なので、分散は σ²/n です。平均の式には独立性が要りませんが、ここで交差する共分散を消すためには独立性を使っています。</p>
+  <p class="note">無限列の確率モデルの構成は、前章までに明示した未証明の枠組みです。そのモデルを与えられれば、有限値の iid について以下の各 n の計算は有限の同時表で証明した性質だけで確認できます。一般の実数値の変数についても、有限な二乗の期待値を仮定し、未証明で借用した積分の線形性・独立な積の期待値の因数分解を使えば、同じ平均・分散の式が成り立ちます。この一般化の積分の基礎まで証明したわけではありません。</p>
+</section>
+
+<section id="law-of-large-numbers-theorem">
+  <h2>Chebyshevの不等式による弱大数の証明</h2>
+  <div class="theorem"><h3>有限値の iid に対する弱大数の法則</h3><p>上の有限値の iid の条件の下で、任意の ε &gt; 0 について、標本平均が μ から ε 以上外れる確率は 0 へ収束します。一般の実数値の iid に対しても、有限な二乗の期待値と、直前で明示した積分の性質を前提とすれば同じ結論になります。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mn>0</mn><mo>≤</mo><mi>P</mi><mo>(</mo><mo>|</mo><msub><mover><mi>X</mi><mo>¯</mo></mover><mi>n</mi></msub><mo>−</mo><mi>μ</mi><mo>|</mo><mo>≥</mo><mi>ε</mi><mo>)</mo><mo>≤</mo><mfrac><msup><mi>σ</mi><mn>2</mn></msup><mrow><mi>n</mi><msup><mi>ε</mi><mn>2</mn></msup></mrow></mfrac><munder><mo>→</mo><mrow><mi>n</mi><mo>→</mo><mi>∞</mi></mrow></munder><mn>0</mn></mrow></math></div></div>
+  <div class="proof"><h3>標本平均を、一つの変数として扱う</h3><p>標本平均の平均は μ、分散は σ²/n です。この X̄ₙ に<a href="variance.html#variance-chebyshev">Chebyshev の不等式</a>をしきい値 ε &gt; 0 で適用すると、P(|X̄ₙ − μ| ≥ ε) ≤ σ²/(nε²)。ε と σ² は n によらない有限な値なので、右辺は 0 へ行きます。確率は非負だから、挟み撃ちで結論です。実験のグラフを見て収束と判定したのではなく、全ての n に使える上限を作りました。</p></div>
+  <p>任意の ε &gt; 0 に対してこの外れる確率が 0 へ行くことを、X̄ₙ が μ に<strong>確率収束する</strong>と言います。さらに「外れる確率を δ 以下にしたい」なら、δ &gt; 0 に対し n ≥ σ²/(δε²) を選べば十分です。これは十分な回数の保証で、最小の必要回数だとは限りません。</p>
+  <p>σ² = 0 の場合も、割っているのは n と ε² だけなので式は成立します。逆に分散が有限でなければ、この証明の有限な上限は使えません。それだけで大数の法則自体が必ず不成立になるとは言えません。本章は、証明できた条件付きの範囲を述べています。</p>
+</section>
+
+<section id="law-of-large-numbers-frequency">
+  <h2>Bernoulli標本平均と成功比率</h2>
+  <p>Xᵢ が成功確率 p の iid Bernoulli 変数なら、X̄ₙ は成功数を n で割った比率です。μ = p、σ² = p(1 − p) なので、外れる確率は p(1 − p)/(nε²) 以下となります。成功確率 p を先に持つモデルから、観測比率が p に近い確率を導けました。</p>
+  <p>例えば p = 1/2、n = 100、ε = 0.1 なら Chebyshev の上限は 0.25 です。同じ事象の正確な確率は二項分布から計算でき、約 0.0568879 です。ここで「0.1 以上」には成功数 40 と 60 も含むので、足すのは 40 以下または 60 以上の質量です。上限と実際の確率は同じとは限りません。</p>
+  <div class="lab" data-lab="probability-lln"></div>
+  <noscript><p class="note">実験には JavaScript が必要です。初期値は n = 100、p = 0.5、ε = 0.1、疑似乱数の seed = 42 です。主図は回数 1〜200 に対する二項分布の理論の逸脱確率と Chebyshev上界を比べ、選択した n を示します。n = 100 で P(|X̄₁₀₀ − 0.5| ≥ 0.1) は約 0.0568879、上限は 0.25 です。補助図の固定の 32 bit LCG による一経路は、100 回で成功 50 回、最終比率 0.5 になります。n は 10〜200、p は 0.1〜0.9、ε は 0.05〜0.5 で変更します。経路は再現できる計算例であり、独立性や大数の法則の証明ではありません。</p></noscript>
+  <p>主図の「理論の逸脱確率」は同じ n の全ての成否列にモデルの重みを付けて足した値、「Chebyshev上界」は不等式が保証する値です。上界を 1 で打ち切って表示します。二項分布の k/n という格子が n とともに変わるため、理論の逸脱確率は単調に減らないことがあります。補助図は一回分の経路です。固定 seed の有限な疑似乱数列が、数学上の無限 iid 列を構成したわけではありません。</p>
+</section>
+
+<section id="law-of-large-numbers-paths">
+  <h2>逸脱確率と標本平均の標本経路</h2>
+  <p>確率収束の主張は、各 n で平均の分布を見たとき、固定幅 ε の外側の確率が小さくなるというものです。一つの経路が毎回 μ に近づく、誤差が単調に減る、ある回数以降は必ず帯の中にいる、という主張ではありません。Chebyshev の上限も、その一経路の誤差の上下を囲う帯の保証ではありません。</p>
+  <p>公平なコインで、最初の三つが 1、0、1 なら、比率は 1、1/2、2/3 です。二回目で中心に着いた後、三回目では離れます。この並びの確率は 1/8 で、普通に起こり得ます。また無限列を全て含むモデルでは、全て表という経路も存在し、その経路の比率は 1 のままです。ただしその経路の確率は、最初の n 回が全て表である確率 2⁻ⁿ 以下なので 0 です。</p>
+  <p>「確率 1 で経路が収束する」という、さらに強い型の大数の法則もありますが、それは別の定理で、本冊では証明しません。ここで確かめた確率収束の内容だけを、まず正確に読めるようにします。経路の誤差や、理論の逸脱確率の列が単調減少するとも、この定理からは言えません。</p>
+</section>
+
+<section id="law-of-large-numbers-counterexample">
+  <h2>依存する標本の平均と分散</h2>
+  <p>Y を公平な Bernoulli 変数とし、全ての i で Xᵢ = Y とします。全ての変数は同じ分布で、平均 1/2、分散 1/4 です。しかし独立ではありません。何個平均しても X̄ₙ = Y のままです。</p>
+  <p>ε = 1/4 とすれば、|Y − 1/2| は必ず 1/2 なので、P(|X̄ₙ − 1/2| ≥ 1/4) = 1。いくら n を増やしても 0 へ近づきません。和の分散には全ての組の共分散 1/4 が残るため、平均の分散も 1/4 のままです。「同じ分布」と「観測回数が多い」だけでは、この結論は保証できません。</p>
+  <p>独立性はこの証明に使った十分条件です。依存する列の全てで平均が失敗する、とまでは言っていません。例えば前章の和の分散の式からは、二変数ずつの共分散が全て 0 で、平均と分散が共通なら同じ上限を導けます。条件の役割を追うと、どこまで一般化できるかも分かります。</p>
+  <div class="concept-grid">
+    <figure class="concept-figure" id="law-of-large-numbers-visual-iid-average" data-visual="law-of-large-numbers-iid-average">
+      <svg class="concept-svg" viewBox="0 0 360 290" role="img" aria-labelledby="law-of-large-numbers-iid-title law-of-large-numbers-iid-desc" fill="var(--ink)" font-size="22">
+        <title id="law-of-large-numbers-iid-title">公平で独立な四回の成否を平均した分布</title>
+        <desc id="law-of-large-numbers-iid-desc">横軸は四回の0,1の標本平均。0、1/4、1/2、3/4、1に、それぞれ1/16、4/16、6/16、4/16、1/16の確率の棒がある。平均は1/2、分散は1/16。コピー平均の図と両軸の尺度をそろえている。</desc>
+        <path d="M 20 220 H 340 M 40 220 V 230 M 110 220 V 230 M 180 220 V 230 M 250 220 V 230 M 320 220 V 230" fill="none" stroke="var(--ink)" stroke-width="2"/>
+        <path d="M 40 200 V 220 M 110 140 V 220 M 180 100 V 220 M 250 140 V 220 M 320 200 V 220" stroke="var(--series-1)" stroke-width="12"/>
+        <g text-anchor="middle"><text x="40" y="188">1/16</text><text x="110" y="128">4/16</text><text x="180" y="88">6/16</text><text x="250" y="128">4/16</text><text x="320" y="188">1/16</text><text x="40" y="268">0</text><text x="110" y="268">1/4</text><text x="180" y="268">1/2</text><text x="250" y="268">3/4</text><text x="320" y="268">1</text></g>
+      </svg>
+      <figcaption>iid な四回の平均の分布。平均は 1/2、分散は (1/4)/4 = 1/16。棒の高さが各値の確率です。</figcaption>
+    </figure>
+    <figure class="concept-figure" id="law-of-large-numbers-visual-copied-average" data-visual="law-of-large-numbers-copied-average">
+      <svg class="concept-svg" viewBox="0 0 360 290" role="img" aria-labelledby="law-of-large-numbers-copy-title law-of-large-numbers-copy-desc" fill="var(--ink)" font-size="22">
+        <title id="law-of-large-numbers-copy-title">同じ公平な一回を四つコピーした平均の分布</title>
+        <desc id="law-of-large-numbers-copy-desc">横軸は四つのコピーの標本平均。値0と1だけに各1/2の確率の棒がある。平均は1/2、分散は1/4で、元の一回から減らない。iidの図と両軸の尺度をそろえている。</desc>
+        <path d="M 20 220 H 340 M 40 220 V 230 M 110 220 V 230 M 180 220 V 230 M 250 220 V 230 M 320 220 V 230" fill="none" stroke="var(--ink)" stroke-width="2"/>
+        <path d="M 40 60 V 220 M 320 60 V 220" stroke="var(--series-2)" stroke-width="12"/>
+        <g text-anchor="middle"><text x="40" y="45">1/2</text><text x="320" y="45">1/2</text><text x="40" y="268">0</text><text x="110" y="268">1/4</text><text x="180" y="268">1/2</text><text x="250" y="268">3/4</text><text x="320" y="268">1</text></g>
+      </svg>
+      <figcaption>同じ Y を四つコピーした平均は Y のまま。平均は 1/2、分散は 1/4。左の図と両軸の尺度は同じです。</figcaption>
+    </figure>
+  </div>
+  <p>比べているのは、有限回 n = 4 の平均が取り得る値の<strong>分布</strong>です。一本の実現経路を描いた図ではなく、この有限例だけを弱大数の証明としているわけでもありません。</p>
+</section>
+
+<details class="column" id="law-of-large-numbers-column">
+  <summary>寄り道［応用］：たくさん測っても、ずれた物差しは直らない</summary>
+  <p>MIT の大数の法則の教材は、偶然の誤差と、系統的な誤差や標本の偏りを区別しています。大数の法則が近づける相手は、そのモデルの期待値です。測りたかった対象と、その期待値が一致するかは別に確認します。</p>
+  <p>例えば真の長さを 100 とした仮想の計測で、各記録が 102 に平均 0 の独立同分布の誤差を足したものなら、誤差の分散が有限の下で記録の平均は 102 に確率収束します。回数を増やせば散らばりは抑えられても、校正のずれ 2 は消えません。繰り返しの条件と、何を測る分布なのかを併せて考える必要があります。</p>
+  <p class="source-note">出典：<a href="https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/resources/mit18_05_s22_class06-prep-b_pdf/">MIT OpenCourseWare 18.05：Central Limit Theorem and the Law of Large Numbers、2–3</a>。長さとずれの数値は本章の仮想値です。</p>
+</details>
+
+<section id="law-of-large-numbers-next">
+  <h2>大数の法則と統計的推測への接続</h2>
+  <p>この冊子では、確率モデルから確率変数、期待値、散らばりへ進み、最後に繰り返しの平均とモデルの平均を結びました。次には、有限回の観測から未知の値をどう推測するかが問題になります。</p>
+  <p>標本平均の揺れの形を調べる中心極限定理は、その先の道具です。本章の弱大数の法則から、揺れが正規分布であると結論することはできません。ここでは式や証明へ進まず、<a href="index.html#learning-map">入口の「その先の数学」</a>にある「確率・統計へ」から、既存の統計教材へつなぎます。モデルの仮定と推測に必要な追加の条件を、引き続き区別してください。</p>
+</section>
+
+<section id="law-of-large-numbers-exercises">
+  <h2>演習：確率収束と標本数</h2>
+  <article class="exercise"><h3>1．成功確率が未知でも上限を出す</h3><p>iid Bernoulli 試行で、成功比率が p から 0.05 以上外れる確率を 0.01 以下と保証したいとします。p が未知でも、Chebyshev による十分な n を求めてください。</p><details><summary>ヒント1：分散を一様に抑える</summary><p>p(1 − p) = 1/4 − (p − 1/2)² ≤ 1/4 です。</p></details><details><summary>ヒント2：確率の上限を 0.01 以下にする</summary><p>(1/4)/(n · 0.05²) ≤ 0.01 を解きます。</p></details><details><summary>解答</summary><p>外れる確率は (1/4)/(0.0025n) = 100/n 以下です。100/n ≤ 0.01 ならよいので n ≥ 10000。これは全ての p に共通する十分な回数です。特定の p における正確な二項確率を調べた最小回数ではありません。</p></details></article>
+  <article class="exercise"><h3>2．回数を四倍にする効果</h3><p>iid な記録の平均が μ、分散が 4 とします。ε = 0.2 に対する Chebyshev の上限を n = 400 と n = 1600 で計算してください。実際の尾確率も必ず四分の一になりますか。</p><details><summary>ヒント1：標本平均の分散を使う</summary><p>上限は 4/(n · 0.2²) です。</p></details><details><summary>ヒント2：上限と正確な確率を分ける</summary><p>不等式は、分布の全ての形を指定してはいません。</p></details><details><summary>解答</summary><p>n = 400 では 4/(400 · 0.04) = 1/4、n = 1600 では 4/(1600 · 0.04) = 1/16 です。上限は四分の一になります。実際の尾確率の比まで、この不等式だけで決まるわけではありません。</p></details></article>
+  <article class="exercise"><h3>3．コピーの回数を増やす</h3><p>Y が 0、1 を半々で取り、全ての Xᵢ が Y のコピーである例について、E[X̄ₙ]、Var(X̄ₙ)、P(|X̄ₙ − 1/2| ≥ 1/4) を求め、弱大数の証明で使えない箇所を示してください。</p><details><summary>ヒント1：平均しても同じ変数</summary><p>X̄ₙ = (nY)/n = Y です。</p></details><details><summary>ヒント2：和の交差項を見直す</summary><p>異なる i、j でも共分散は Var(Y) = 1/4 であり、0 ではありません。</p></details><details><summary>解答</summary><p>E[X̄ₙ] = 1/2、Var(X̄ₙ) = 1/4、求める外れる確率は 1 です。独立な和の分散として n · (1/4) と置く箇所が使えません。実際には Var(∑Xᵢ) = Var(nY) = n²/4 なので、平均の分散は n で減らず、外れる確率が 0 へ行く上限を得られません。</p></details></article>
+</section>
+
+<section id="law-of-large-numbers-reflection">
+  <h2>自分の言葉で</h2><ol><li>弱大数の証明で、同じ分布、独立性、有限な分散はそれぞれどこで使われましたか。</li><li>確率収束は、一つの経路が中心へ単調に近づくことと、どのように違いますか。</li><li>観測回数を増やす前に、分布の平均が何を表し、記録どうしがどう関係するかを確認する理由は何ですか。</li></ol>
+</section>

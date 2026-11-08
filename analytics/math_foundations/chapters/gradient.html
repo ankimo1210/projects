@@ -1,0 +1,92 @@
+<section id="gradient-question">
+  <h2>方向微分と勾配の関係</h2>
+  <p>地形の高さを f(x, y) とすると、偏微分は東西・南北という二つの切り口の傾きでした。では斜めに歩いたら、どれだけ上るのでしょうか。最も急に上る向きも選べるでしょうか。<a href="total-derivative.html#total-derivative-definition">全微分の一次近似</a>が、この問いを一つの内積へまとめます。</p>
+  <p>ただし、斜めの切り口ごとの微分が全部存在することと、全方向に共通する線形近似があることは別です。この章では、その差も確かめます。</p>
+</section>
+
+<section id="gradient-directional">
+  <h2>単位方向による方向微分の定義</h2>
+  <p>開集合 U ⊂ ℝ² の点 p と、長さ ‖u‖ = 1 のベクトル u = (u₁, u₂) を取ります。開性により、小さい正負の t で p + tu は U に入ります。</p>
+  <div class="theorem"><h3>方向微分の定義</h3><p>次の有限の両側極限が存在するとき、u 方向の<strong>方向微分</strong>と呼びます。</p>
+    <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>D</mi><mi>u</mi></msub><mi>f</mi><mo>(</mo><mi>p</mi><mo>)</mo><mo>=</mo><munder><mi>lim</mi><mrow><mi>t</mi><mo>→</mo><mn>0</mn></mrow></munder><mfrac><mrow><mi>f</mi><mo>(</mo><mi>p</mi><mo>+</mo><mi>t</mi><mi>u</mi><mo>)</mo><mo>−</mo><mi>f</mi><mo>(</mo><mi>p</mi><mo>)</mo></mrow><mi>t</mi></mfrac></mrow></math></div>
+  </div>
+  <p>t は向きの符号を含む距離で、商は t ≠ 0 で考えます。非単位の v に対して同じ商を定義することもできますが、それはパラメータ t 当たりの変化率です。例えば 2u は同じ向きでも移動速度が二倍なので、存在する微分も二倍になります。方向同士の急さを比べるには長さを 1 にそろえます。境界の片側微分は、ここでの両側の定義には含めません。</p>
+  <p>二つの偏微分が存在すれば、その値を並べた<strong>勾配</strong> ∇f(p) = (fₓ(p), fᵧ(p)) を定義できます。勾配というベクトルの存在だけで、任意方向の微分との公式まで保証されるわけではありません。</p>
+</section>
+
+<section id="gradient-inner-product">
+  <h2>全微分可能性と勾配の内積表示</h2>
+  <p>a · b = a₁b₁ + a₂b₂ を二成分の<strong>内積</strong>と書きます。</p>
+  <div class="theorem"><h3>全微分可能性から方向微分へ</h3><p>f が開集合の点 p で全微分可能なら、すべての単位方向 u の方向微分が存在し、Dᵤf(p) = ∇f(p) · u です。</p></div>
+  <div class="proof"><h3>全微分の余りに、直線を代入する</h3><p><a href="total-derivative.html#total-derivative-necessary">全微分の係数</a>から、f(p + v) = f(p) + ∇f(p) · v + R(v)、|R(v)|/‖v‖ → 0 です。v = tu を代入し、t ≠ 0 で割ると、差の商は ∇f(p) · u + R(tu)/t。‖tu‖ = |t| なので、後項の絶対値は |R(tu)|/‖tu‖ → 0 です。従って公式が成立します。</p></div>
+  <p>例えば P(x, y) = x² + xy + y² は<a href="total-derivative.html#total-derivative-quadratic">全微分可能と確認済み</a>で、∇P(a, b) = (2a + b, a + 2b) です。(1, 0) から u = (3/5, 4/5) へ進む方向微分は (2, 1) · u = 2。有限距離 t の変化が必ず 2t ちょうど、という意味ではありません。</p>
+</section>
+
+<section id="gradient-steepest">
+  <h2>Cauchy–Schwarz不等式と最急方向</h2>
+  <div class="theorem"><h3>二成分の Cauchy–Schwarz 不等式</h3><p>|a · b| ≤ ‖a‖‖b‖。両ベクトルが非零なら等号は平行な場合に限り、同じ向きなら内積は正、反対向きなら負です。</p></div>
+  <div class="proof"><h3>差を一つの平方にする</h3><p><a href="multivariable-limits.html#multivariable-limits-distance">距離の章の恒等式</a> ‖a‖²‖b‖² − (a · b)² = (a₁b₂ − a₂b₁)² ≥ 0 から、非負の平方根を取れば不等式です。等号は a₁b₂ = a₂b₁ のとき。a₁ ≠ 0 なら b = (b₁/a₁)a、a₁ = 0 なら a₂ ≠ 0 なので b₁ = 0 となり、やはり b は a の実数倍です。内積の符号はその倍率の符号で決まります。零ベクトルの場合は両辺 0 です。</p></div>
+  <div class="theorem"><h3>勾配による最急方向</h3><p>f が p で全微分可能で、q = ∇f(p) ≠ 0 なら、単位方向の最大変化率は ‖q‖、その方向は q/‖q‖。最小変化率は −‖q‖、その方向は −q/‖q‖ です。q = 0 なら全方向の一次変化率は 0 で、最急方向は一つに決まりません。</p></div>
+  <div class="proof"><h3>上限と、それを達成する方向を分けて確かめる</h3><p>‖u‖ = 1 に対し −‖q‖ ≤ q · u ≤ ‖q‖。実際に u = ±q/‖q‖ を入れれば両端の値を達成します。等号条件から、非零の q では最大・最小の単位方向もそれぞれ一つです。q = 0 の場合は割り算せず、q · u = 0 を使います。</p></div>
+  <div data-lab="multivariable-compass"></div>
+  <noscript><p class="note">実験の操作には JavaScript が必要です。初期値 P = x² + xy + y²、p = (1, 0)、角度 0° の u = (1, 0) では、∇P = (2, 1)、方向微分 2、最大変化率 √5、最急単位方向 (2, 1)/√5 です。p = (0, 0) なら勾配は 0、全方向の一次変化率も 0 です。</p></noscript>
+  <p class="note">方位盤は基準点 p での<strong>方向ベクトル</strong>の図です。角度は数学の慣習どおり x の正方向から反時計回りに測ります。角度ごとの曲線を有限個描くことと、すべての方向に対する不等式の証明は区別してください。</p>
+</section>
+
+<section id="gradient-level-tangent">
+  <h2>曲線に沿う微分と等高線の接線</h2>
+  <div class="theorem"><h3>曲線に沿う連鎖律</h3><p>開区間上の曲線 γ が t₀ で微分可能、γ(t₀) = p、f が p の開近傍で定義され p で全微分可能なら、(f ∘ γ)′(t₀) = ∇f(p) · γ′(t₀) です。曲線の微分は二つの成分をそれぞれ微分したベクトルです。</p></div>
+  <div class="proof"><h3>速度が 0 の場合も、余りの評価で含める</h3><p>s → 0 で γ(t₀ + s) = p + sγ′(t₀) + e(s)、‖e(s)‖/|s| → 0 です。w = γ(t₀ + s) − p と置けば、十分小さい s で ‖w‖ ≤ K|s|（K = ‖γ′(t₀)‖ + 1）。曲線の連続性と定義域の開性により合成も近くで定義できます。</p><p>全微分の式に代入すると、差は s∇f(p) · γ′(t₀) + ∇f(p) · e(s) + R(w) です。内積の不等式から第二項を |s| で割った絶対値は 0 へ近づきます。任意の η &gt; 0 に対し小さい w で |R(w)| ≤ η‖w‖、w = 0 でも R(0) = 0 なので、第三項は |s| で割って ηK 以下。η を小さくできるから極限は 0 です。γ′ や w で割らないので、速度が 0 でも成立します。</p></div>
+  <p>γ 上で f が一定なら、左辺は 0、従って ∇f(p) · γ′(t₀) = 0。速度も勾配も非零なら、接線と勾配は直交します。例えば f = x² + y²、γ(t) = (cos t, sin t) では (2cos t, 2sin t) · (−sin t, cos t) = 0 です。ここで証明したのは与えられた曲線に関する主張で、一般の等高線が滑らかな曲線になる存在定理はまだ使っていません。</p>
+
+<figure class="concept-figure" id="gradient-visual-level-normal" data-visual="gradient-level-normal">
+  <svg class="concept-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 310" role="img" aria-labelledby="gradient-visual-level-normal-title gradient-visual-level-normal-desc">
+    <title id="gradient-visual-level-normal-title">円の接線方向と勾配は直交する</title>
+    <desc id="gradient-visual-level-normal-desc">等高線x²+y²=1の第一象限の点で、外向きの勾配と接線に沿う曲線の速度が直交する。勾配の長さ2に対し速度の長さは1。</desc>
+    <g fill="var(--ink-2)" font-size="22"><defs><marker id="gradient-circle-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M 0 0 L 10 5 L 0 10 Z" fill="var(--ink-2)"/></marker></defs><path d="M 35 160 L 330 160" fill="none" stroke="var(--rule)" stroke-width="2"/><path d="M 180 280 L 180 27" fill="none" stroke="var(--rule)" stroke-width="2"/><circle cx="180" cy="160" r="100" fill="none" stroke="var(--series-1)" stroke-width="3"/><path d="M 250.711 89.289 L 295.966 44.034" fill="none" stroke="var(--series-2)" stroke-width="3" marker-end="url(#gradient-circle-arrow)"/><path d="M 250.711 89.289 L 228.083 66.662" fill="none" stroke="var(--ink-2)" stroke-width="5" marker-end="url(#gradient-circle-arrow)" stroke-dasharray="3 3"/><path d="M 257.782 82.2183 L 250.711 75.1472" fill="none" stroke="var(--ink-2)" stroke-width="1.5"/><path d="M 250.711 75.1472 L 243.64 82.2183" fill="none" stroke="var(--ink-2)" stroke-width="1.5"/><circle cx="250.711" cy="89.2893" r="4" fill="var(--ink-2)" stroke="var(--ink-2)" stroke-width="2"/><text x="301" y="47" text-anchor="start">∇f</text><text x="214" y="38" text-anchor="start">γ′</text><text x="230" y="120" text-anchor="start">p</text><text x="335" y="167" text-anchor="start">x</text><text x="191" y="28" text-anchor="start">y</text><text x="190" y="187" text-anchor="start">O</text></g>
+  </svg>
+  <figcaption>f = x² + y²、γ(t) = (cos t, sin t) の t = π/4 の例です。p = (1/√2, 1/√2) で、実線の勾配と破線の速度は直交します。二本の矢印の縮尺は共通で、座標の縮尺とは別です。‖∇f‖ = 2、‖γ′‖ = 1 の比2:1を表しています。γ上の値は一定なので、内積による変化率は0です。</figcaption>
+</figure>
+</section>
+
+<section id="gradient-counterexample">
+  <h2>方向微分と全微分可能性の反例</h2>
+  <p><a href="total-derivative.html#total-derivative-necessary">全微分できない例 G</a> をもう一度使います。G(x, y) = x²y/(x² + y²)（原点以外）、G(0, 0) = 0 です。v = (a, b) ≠ 0 なら t ≠ 0 で G(ta, tb)/t = a²b/(a² + b²)。従ってすべての方向で両側極限が存在します。単位 u なら DᵤG(0) = u₁²u₂ です。</p>
+  <p>軸方向の二つの偏微分は 0 なので、勾配は (0, 0) と定義できます。しかし u = (1, 1)/√2 では方向微分は 1/(2√2) ≠ 0。勾配との内積には一致しません。全微分があれば先の定理に矛盾するため、全微分はありません。「各方向で別々に極限を取れる」と「一つの線形写像で全方向を近似できる」の差です。</p>
+  <p class="note">全微分可能な関数でも、方向微分が 0 なら値一定、とはいえません。P の p = (1, 1)、u = (1, −1)/√2 では ∇P · u = 0 ですが、P(p + tu) = 3 + t²/2 です。消えたのは一次の変化だけで、二次の変化は残ります。<a href="hessian-extrema.html#hessian-extrema-question">次章</a>でその先を調べます。</p>
+</section>
+
+<details class="column" id="gradient-column">
+  <summary>寄り道［応用］：地図の斜面は、上りと下りで向きが逆</summary>
+  <p>GIS の slope は斜面の急さ、aspect は下り斜面の向きを表します。Esri の公式資料は、標高の近隣セルとの差から求めるため解像度の影響を受けること、aspect は格子の北を 0°、東を 90° とする時計回りの角度であることを説明しています。地形の条件を組み合わせた場所選びに使われます。</p>
+  <p>ここからは本章の仮想モデルです。東を x、北を y とし、水平距離も標高も m で測って z = 0.02x + 0.01y と置きます。最も上る単位方向は (2, 1)/√5、下る方向は (−2, −1)/√5。水平 1 m 当たりの最大上昇量は √5/100 m、傾斜角は arctan(√5/100) です。下りの aspect は南西寄りで、北から時計回りに約 243.4°。数学の角度と始点・回転方向が違います。</p>
+  <p>単位をそろえず標高だけを cm にすれば数値の傾きが変わります。また離散データからの推定値を、未知の地形の厳密な微分と同一視はできません。勾配 0 の平地には、この一次モデルでは一つの下り方位を選べません。</p>
+  <p class="source-note">出典：<a href="https://developers.arcgis.com/net/spatial-analysis/slope-and-aspect/">Esri：Slope and aspect</a>（定義・単位・格子方位・解像度）。平面モデルと数値は本章で設定・計算しました。</p>
+</details>
+
+<section id="gradient-exercises">
+  <h2>方向微分・勾配・適用条件の演習</h2>
+  <article class="exercise"><h3>1．最も増減する方向を探す</h3><p>P = x² + xy + y² の p = (1, 0) で、u = (3/5, 4/5) の方向微分、最も増加・減少する単位方向と変化率を求めてください。</p>
+    <details><summary>ヒント1：まず二つの偏微分</summary><p>∇P = (2x + y, x + 2y) です。</p></details>
+    <details><summary>ヒント2：長さを 1 にそろえる</summary><p>方向微分は勾配との内積、最大・最小は勾配の長さとその負です。</p></details>
+    <details><summary>解答</summary><p>P は多項式で C¹、従って全微分可能です。p では ∇P = (2, 1)、‖u‖ = 1。DᵤP = 2·3/5 + 1·4/5 = 2 です。勾配の長さは √5 なので、最大変化率 √5 は (2, 1)/√5 方向で、最小変化率 −√5 は −(2, 1)/√5 方向で達成します。元の u は最急方向ではありません。</p></details>
+  </article>
+  <article class="exercise"><h3>2．方向微分が全部ある G</h3><p>上の G の原点で、非零 v = (a, b) に沿う方向微分を計算し、全微分可能か判定してください。</p>
+    <details><summary>ヒント1：t ≠ 0 で約分する</summary><p>G(ta, tb) の分子は t³a²b、分母は t²(a² + b²) です。</p></details>
+    <details><summary>ヒント2：軸と斜めを比べる</summary><p>全微分があれば、軸方向の値が線形写像の二つの係数を決めます。</p></details>
+    <details><summary>解答</summary><p>差の商は a²b/(a² + b²) で t によらないため、全ての非零 v で存在します。単位 u なら u₁²u₂。軸では両方 0 なので、もし全微分があれば D G(0) は零写像です。しかし u = (1, 1)/√2 では 1/(2√2) となり、全微分から得られる内積の公式と矛盾します。従って全微分できません。非単位 v の値はパラメータ当たりの変化率です。</p></details>
+  </article>
+  <article class="exercise"><h3>3．一次の変化が 0 なら値は一定か</h3><p>P の p = (1, 1)、u = (1, −1)/√2 で方向微分を求め、直線 p + tu 上で P が一定か調べてください。</p>
+    <details><summary>ヒント1：勾配との内積</summary><p>∇P(p) = (3, 3) です。</p></details>
+    <details><summary>ヒント2：近似でなく、展開する</summary><p>x = 1 + t/√2、y = 1 − t/√2 を P に代入します。</p></details>
+    <details><summary>解答</summary><p>DᵤP = (3, 3) · (1, −1)/√2 = 0。一方、x² + y² = 2 + t²、xy = 1 − t²/2 なので P(p + tu) = 3 + t²/2 です。t ≠ 0 では基準値 3 より大きく、一定ではありません。差を t で割った t/2 は 0 に近づくため、方向微分 0 とも矛盾しません。</p></details>
+  </article>
+</section>
+
+<section id="gradient-reflection">
+  <h2>自分の言葉で</h2><ol>
+    <li>方向の長さを 1 にそろえるのはなぜですか。非単位ベクトルなら何を測っていますか。</li>
+    <li>勾配はいつ定義でき、方向微分を内積で表すには何を追加で仮定しましたか。</li>
+    <li>勾配 0、または接線との内積 0 から、有限距離の変化や極値についてどこまで結論できますか。</li>
+  </ol>
+</section>

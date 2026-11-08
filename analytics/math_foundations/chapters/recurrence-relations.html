@@ -1,0 +1,88 @@
+<section id="recurrence-relations-question">
+<h2>漸化式とタイルの数え上げ</h2>
+<p>長さnの細い盤を、長さ1と長さ2のタイルで隙間なく埋めます。タイルは盤と同じ幅で、回転せず、重なりません。同じ長さのタイル同士は区別しませんが、長さ1・2が現れる順番は区別します。長さ4なら、下の5通りです。</p>
+<figure class="concept-figure" id="recurrence-relations-enumeration" data-visual="recurrence-four-tilings">
+<svg class="concept-svg" viewBox="0 0 360 350" role="img" aria-labelledby="recurrence-four-title recurrence-four-desc">
+<title id="recurrence-four-title">長さ4の盤の五つの敷き方</title><desc id="recurrence-four-desc">上から1+1+1+1、2+1+1、1+2+1、1+1+2、2+2。長さ1のタイルは橙、長さ2は青で、幅も1対2。行の順序に確率の意味はない。</desc>
+<rect x="54" y="52" width="63" height="36" rx="4" fill="var(--series-1)" fill-opacity=".12" stroke="var(--series-1)" stroke-width="2"/><text x="85.5" y="78" text-anchor="middle">1</text><rect x="117" y="52" width="63" height="36" rx="4" fill="var(--series-1)" fill-opacity=".12" stroke="var(--series-1)" stroke-width="2"/><text x="148.5" y="78" text-anchor="middle">1</text><rect x="180" y="52" width="63" height="36" rx="4" fill="var(--series-1)" fill-opacity=".12" stroke="var(--series-1)" stroke-width="2"/><text x="211.5" y="78" text-anchor="middle">1</text><rect x="243" y="52" width="63" height="36" rx="4" fill="var(--series-1)" fill-opacity=".12" stroke="var(--series-1)" stroke-width="2"/><text x="274.5" y="78" text-anchor="middle">1</text><rect x="54" y="107" width="126" height="36" rx="4" fill="var(--series-2)" fill-opacity=".12" stroke="var(--series-2)" stroke-width="2"/><text x="117.0" y="133" text-anchor="middle">2</text><rect x="180" y="107" width="63" height="36" rx="4" fill="var(--series-1)" fill-opacity=".12" stroke="var(--series-1)" stroke-width="2"/><text x="211.5" y="133" text-anchor="middle">1</text><rect x="243" y="107" width="63" height="36" rx="4" fill="var(--series-1)" fill-opacity=".12" stroke="var(--series-1)" stroke-width="2"/><text x="274.5" y="133" text-anchor="middle">1</text><rect x="54" y="162" width="63" height="36" rx="4" fill="var(--series-1)" fill-opacity=".12" stroke="var(--series-1)" stroke-width="2"/><text x="85.5" y="188" text-anchor="middle">1</text><rect x="117" y="162" width="126" height="36" rx="4" fill="var(--series-2)" fill-opacity=".12" stroke="var(--series-2)" stroke-width="2"/><text x="180.0" y="188" text-anchor="middle">2</text><rect x="243" y="162" width="63" height="36" rx="4" fill="var(--series-1)" fill-opacity=".12" stroke="var(--series-1)" stroke-width="2"/><text x="274.5" y="188" text-anchor="middle">1</text><rect x="54" y="217" width="63" height="36" rx="4" fill="var(--series-1)" fill-opacity=".12" stroke="var(--series-1)" stroke-width="2"/><text x="85.5" y="243" text-anchor="middle">1</text><rect x="117" y="217" width="63" height="36" rx="4" fill="var(--series-1)" fill-opacity=".12" stroke="var(--series-1)" stroke-width="2"/><text x="148.5" y="243" text-anchor="middle">1</text><rect x="180" y="217" width="126" height="36" rx="4" fill="var(--series-2)" fill-opacity=".12" stroke="var(--series-2)" stroke-width="2"/><text x="243.0" y="243" text-anchor="middle">2</text><rect x="54" y="272" width="126" height="36" rx="4" fill="var(--series-2)" fill-opacity=".12" stroke="var(--series-2)" stroke-width="2"/><text x="117.0" y="298" text-anchor="middle">2</text><rect x="180" y="272" width="126" height="36" rx="4" fill="var(--series-2)" fill-opacity=".12" stroke="var(--series-2)" stroke-width="2"/><text x="243.0" y="298" text-anchor="middle">2</text>
+</svg><figcaption>同じタイルの名前は付け替えず、切れ目の場所で敷き方を区別します。例えば2+1+1と1+2+1は違う敷き方です。小さな盤は列挙できますが、盤が長くなるほど全てを描く作業が増えます。</figcaption></figure>
+<p>そこで、盤全体を一気に決める代わりに、左端の一枚だけを決めます。最初の一枚を外すと、同じ種類の小さな問題が残ります。この「同じ問題へ戻る」構造を、数の間の関係として記録します。</p>
+<p class="note">前提は<a href="induction.html">数学的帰納法</a>と<a href="discrete-counting.html">重ならない場合分け・全単射</a>です。微積分や確率を使わずに読めます。</p>
+</section>
+<section id="recurrence-relations-definition">
+<h2>漸化式と初期条件</h2>
+<p>長さnの盤の敷き方をTₙと書きます。nは0以上の整数です。空の盤には「何も置かない」一通りがあるのでT₀=1。長さ1には長さ1のタイルを一枚置くしかないため、T₁=1です。</p>
+<div class="theorem"><h3>タイルの漸化式</h3><p>n≥2なら、Tₙ=Tₙ₋₁+Tₙ₋₂。初期値T₀=T₁=1と合わせて、全てのTₙが決まります。</p></div>
+<div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>T</mi><mn>0</mn></msub><mo>=</mo><msub><mi>T</mi><mn>1</mn></msub><mo>=</mo><mn>1</mn><mo>,</mo><mspace width="1em"/><msub><mi>T</mi><mi>n</mi></msub><mo>=</mo><msub><mi>T</mi><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>+</mo><msub><mi>T</mi><mrow><mi>n</mi><mo>−</mo><mn>2</mn></mrow></msub><mspace width="1em"/><mo>(</mo><mi>n</mi><mo>≥</mo><mn>2</mn><mo>)</mo></mrow></math></div>
+<div class="proof"><h3>先頭の長さで、重ならない二組へ分ける</h3><p>先頭が長さ1なら、残りの長さn−1の敷き方と一対一に対応するのでTₙ₋₁通り。先頭が長さ2なら、残りは長さn−2でTₙ₋₂通りです。どの敷き方も、先頭が1か2かの片方だけに属し、それ以外の場合はありません。従って二組の数を足せます。</p><p>n=2のとき、長さ2を最初に置く場合の残りは空盤です。その場合も一通りなのでT₀=1が働き、T₂=T₁+T₀=2となります。空盤を0通りにすると、タイル一枚で埋める正しい敷き方まで消してしまいます。</p></div>
+<div class="concept-grid"><figure class="concept-figure" id="recurrence-relations-first-one" data-visual="recurrence-first-one">
+<svg class="concept-svg" viewBox="0 0 360 240" role="img" aria-labelledby="recurrence-one-title recurrence-one-desc">
+<title id="recurrence-one-title">最初のタイルの長さが1の場合</title><desc id="recurrence-one-desc">長さ5の盤の左端に長さ1のタイルを置くと、残りは長さ4の盤。残りの敷き方T4は5通り。端のタイルと残りの境目を破線で示す。</desc>
+<text x="180" y="36" text-anchor="middle">長さ5の盤</text>
+<rect x="45" y="95" width="270" height="44" fill="var(--surface-2)" stroke="var(--ink-3)" stroke-width="2"/><path d="M 99 95 V 139" stroke="var(--grid)"/><path d="M 153 95 V 139" stroke="var(--grid)"/><path d="M 207 95 V 139" stroke="var(--grid)"/><path d="M 261 95 V 139" stroke="var(--grid)"/>
+<rect x="45" y="95" width="54" height="44" fill="var(--series-1)" fill-opacity=".18" stroke="var(--series-1)" stroke-width="2"/>
+<text x="72.0" y="84" text-anchor="middle">1</text>
+<path d="M 99 79 V 156" stroke="var(--ink)" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="207.0" y="180" text-anchor="middle">残り 4</text>
+<text x="180" y="224" text-anchor="middle">T₅ への寄与：T₄ = 5</text>
+</svg><figcaption>最初が長さ1のタイルなら、残りの敷き方はT₄の5通り。先頭のタイルを戻す操作と外す操作が互いに逆なので、数が正確に対応します。</figcaption></figure><figure class="concept-figure" id="recurrence-relations-first-two" data-visual="recurrence-first-two">
+<svg class="concept-svg" viewBox="0 0 360 240" role="img" aria-labelledby="recurrence-two-title recurrence-two-desc">
+<title id="recurrence-two-title">最初のタイルの長さが2の場合</title><desc id="recurrence-two-desc">長さ5の盤の左端に長さ2のタイルを置くと、残りは長さ3の盤。残りの敷き方T3は3通り。端のタイルと残りの境目を破線で示す。</desc>
+<text x="180" y="36" text-anchor="middle">長さ5の盤</text>
+<rect x="45" y="95" width="270" height="44" fill="var(--surface-2)" stroke="var(--ink-3)" stroke-width="2"/><path d="M 99 95 V 139" stroke="var(--grid)"/><path d="M 153 95 V 139" stroke="var(--grid)"/><path d="M 207 95 V 139" stroke="var(--grid)"/><path d="M 261 95 V 139" stroke="var(--grid)"/>
+<rect x="45" y="95" width="108" height="44" fill="var(--series-2)" fill-opacity=".18" stroke="var(--series-2)" stroke-width="2"/>
+<text x="99.0" y="84" text-anchor="middle">2</text>
+<path d="M 153 79 V 156" stroke="var(--ink)" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="234.0" y="180" text-anchor="middle">残り 3</text>
+<text x="180" y="224" text-anchor="middle">T₅ への寄与：T₃ = 3</text>
+</svg><figcaption>最初が長さ2のタイルなら、残りの敷き方はT₃の3通り。先頭のタイルを戻す操作と外す操作が互いに逆なので、数が正確に対応します。</figcaption></figure></div>
+<p>前の項から次の項を決める関係を<strong>漸化式</strong>と呼び、出発点の値を<strong>初期値</strong>と呼びます。Tₙ=Tₙ₋₁+Tₙ₋₂という式だけでは、T₀=T₁=0の全て0の列も満たすので、一つの数列は選べません。</p>
+</section>
+<section id="recurrence-relations-uniqueness">
+<h2>漸化式で定まる数列の一意性</h2>
+<div class="proof"><h3>作れることと、一つしかないこと</h3><p>初期値からT₂、T₃、…を順に計算すれば、任意の有限のnまで値を作れます。各段階で必要な二つの前の値は、すでに決まっています。</p><p>同じ初期値と漸化式を満たす二つの列があるとします。n=0、1では一致します。n−1、n−2まで一致していれば、その和であるn番目も一致します。帰納法により、全ての項で一致します。これが一意性です。最初の数個が同じだという観察だけでなく、次へ進める理由を使いました。</p></div>
+<p class="note">前の二項を同時に使うことも、通常の帰納法で正当化できます。Q(n)を「0番目からn番目まで全部一致する」とします。Q(1)は二つの初期値から成立。Q(n)ならnとn−1の一致が使え、n+1も一致するのでQ(n+1)です。以後、前の二項で成り立つと仮定する回数の証明も、同じように過去の主張をまとめて運びます。</p>
+<p>この議論は、次の項を確実に一つ決める規則の場合です。例えばaₙ₊₁²=aₙ²、a₀=1だけなら、各項で1と−1のどちらも選べます。全て1の列も、1と−1を交互に並べる列も、同じ関係と初期値を満たします。「関係式」と呼ばれるものなら何でも、その場で次の一項を一つ選べるわけではありません。</p>
+<p>タイルでは、有限の盤に対する場合分けを先に証明したので、計算してできた列が「実際の敷き方の個数」と一致します。数字のパターンを当てただけではありません。</p>
+</section>
+<section id="recurrence-relations-iteration">
+<h2>動的計画法と計算量</h2>
+<p>T₅を直接二つへ分けるとT₄とT₃が必要です。T₄にもT₃が現れるため、素朴に枝を全てたどると同じT₃を繰り返し計算します。先にT₀、T₁、T₂、…を順に保存しておけば、各項は一度の加算で求まります。このように小問題の答えを再利用する考え方を<strong>動的計画法</strong>と呼びます。</p>
+<div class="concept-table-wrap" tabindex="0" role="region" aria-label="タイルの個数と二つの手順の回数">
+<table class="concept-table" data-visual="recurrence-work-count"><caption>答えは同じでも、繰り返す仕事の数が違う</caption>
+<thead><tr><th scope="col"><span class="table-math">n</span></th><th scope="col"><span class="table-math">Tₙ</span></th><th scope="col"><span class="table-math">順に解く加算回数</span></th><th scope="col"><span class="table-math">素朴な再帰の呼出回数</span></th></tr></thead>
+<tbody><tr><th scope="row"><span class="table-math">0</span></th><td><span class="table-math">1</span></td><td><span class="table-math">0</span></td><td><span class="table-math">1</span></td></tr><tr><th scope="row"><span class="table-math">1</span></th><td><span class="table-math">1</span></td><td><span class="table-math">0</span></td><td><span class="table-math">1</span></td></tr><tr><th scope="row"><span class="table-math">2</span></th><td><span class="table-math">2</span></td><td><span class="table-math">1</span></td><td><span class="table-math">3</span></td></tr><tr><th scope="row"><span class="table-math">3</span></th><td><span class="table-math">3</span></td><td><span class="table-math">2</span></td><td><span class="table-math">5</span></td></tr><tr><th scope="row"><span class="table-math">4</span></th><td><span class="table-math">5</span></td><td><span class="table-math">3</span></td><td><span class="table-math">9</span></td></tr><tr><th scope="row"><span class="table-math">5</span></th><td><span class="table-math">8</span></td><td><span class="table-math">4</span></td><td><span class="table-math">15</span></td></tr><tr><th scope="row"><span class="table-math">6</span></th><td><span class="table-math">13</span></td><td><span class="table-math">5</span></td><td><span class="table-math">25</span></td></tr>
+</tbody></table></div>
+<p>順に解くと、n≥2ではT₂からTₙまでのn−1回の加算です。対して、n=0、1で一回の呼び出しとして止まり、それ以外は二つの小問題を毎回解き直す再帰の呼出回数Cₙは、C₀=C₁=1、Cₙ=1+Cₙ₋₁+Cₙ₋₂です。</p>
+<div class="proof"><h3>再帰の回数を、もう一つの漸化式で測る</h3><p>Cₙ=2Tₙ−1を帰納法で確かめられます。初期の二項では1=2·1−1。前の二項で成り立つなら、1+(2Tₙ₋₁−1)+(2Tₙ₋₂−1)=2Tₙ−1です。n=20ならT₂₀=10946なので呼出回数は21891回、順に解く加算は19回です。</p></div>
+<p>ここで数えたのは指定した手順の呼出・加算の回数です。秒数や、任意に大きな整数を足す費用まで一定だと言ってはいません。求める項が大きくなると整数の桁数も増えます。重要なのは、同じ答えを何度も作り直す部分を取り除いたことです。</p>
+<p>次の実験では最後の一枚で分けます。最初の一枚で分けた本文の図を反対から読むのと同じで、残りの長さも個数も変わりません。</p>
+<div data-lab="discrete-recurrence"></div><noscript><p>操作実験にはJavaScriptが必要です。本文の図表だけでも、T₀=T₁=1、T₅=8=5+3、T₂₀=10946、順に解く加算19回を確認できます。一般の漸化式と回数の証明は上にあります。</p></noscript>
+</section>
+<section id="recurrence-relations-closed-form">
+<h2>線形漸化式の解の表示</h2>
+<p>別の例として、a₀=0、aₙ₊₁=2aₙ+1を考えます。0、1、3、7、15、…と進みます。右辺に毎回+1が残りますが、両辺へ1を加えると、aₙ₊₁+1=2(aₙ+1)になります。</p>
+<p>bₙ=aₙ+1と置けばb₀=1、bₙ₊₁=2bₙ。従ってbₙ=2ⁿ、元に戻すとaₙ=2ⁿ−1です。このように項番号nだけから求められる形を、ここでは<strong>一般項</strong>と呼びます。</p>
+<div class="proof"><h3>候補を元の条件へ戻す</h3><p>n=0では2⁰−1=0。aₙ=2ⁿ−1なら、2aₙ+1=2(2ⁿ−1)+1=2ⁿ⁺¹−1となり、次の項も同じ形です。初期値と関係式が一致し、一意性からこれが求める列です。</p></div>
+<p class="note">どの漸化式にも、このような短い一般項があるとは限りません。一般項が見つからなくても、漸化式のままで個数を証明し、必要な項を正確に計算できます。</p>
+</section>
+<details class="column" id="recurrence-relations-column"><summary>寄り道［見方］：数列を、一つの式に包む</summary>
+<p>数列をF(t)=T₀+T₁t+T₂t²+…と並べ、各次数の係数を記録する方法を母関数と呼びます。ここではtへ数を代入せず、係数を整理する<strong>形式的な式</strong>として読みます。積のある次数の係数に寄与する項は有限個なので、その係数の足し引きをできます。</p>
+<p>(1−t−t²)F(t)の定数項はT₀=1、tの係数はT₁−T₀=0、それ以降はTₙ−Tₙ₋₁−Tₙ₋₂=0です。したがって(1−t−t²)F(t)=1。これをF(t)=1/(1−t−t²)と書けば、タイルの全ての個数を一つの記号で持ち歩けます。</p>
+<p>この割り算の表記は、積が1になる係数列を表しています。その係数は上の初期値と漸化式で存在し、一意に決まると証明済みです。任意の実数tで級数が収束するという意味ではありません。数列の規則を、係数の等式へ置き換えたのです。</p>
+<p class="source-note">本章の自作タイルモデルによる補足。形式的な係数比較だけを扱い、解析的な収束や一般の母関数理論を本文の前提にしません。</p></details>
+<section id="recurrence-relations-exercises"><h2>演習：初期値と漸化式</h2>
+<article class="exercise"><h3>1．空の盤を一通りと数える理由</h3><p>T₀からT₄までを求めてください。T₀=0としたら、長さ2のどの敷き方が数え落とされますか。</p>
+<details><summary>ヒント1：最初の二項から進む</summary><p>T₀=T₁=1を使い、次の項を直前二項の和で求めます。</p></details>
+<details><summary>ヒント2：長さ2のタイルの後ろ</summary><p>長さ2のタイルを一枚置いた後に残る盤は、長さ0です。</p></details>
+<details><summary>解答</summary><p>1、1、2、3、5です。T₀=0としてT₁=1を保つとT₂=1になり、長さ2を一枚置く場合が消えます。空盤の「何も追加しない」一通りは、タイルを置き終えた正しい場合を記録しています。</p></details></article>
+<article class="exercise"><h3>2．足す定数を、変数の移し替えで消す</h3><p>a₀=2、aₙ₊₁=3aₙ+2の一般項を求め、初期値と漸化式に戻して確かめてください。</p>
+<details><summary>ヒント1：両辺へ1を足す</summary><p>aₙ₊₁+1=3(aₙ+1)になります。</p></details>
+<details><summary>ヒント2：新しい列の初期値</summary><p>bₙ=aₙ+1ならb₀=3、bₙ₊₁=3bₙです。</p></details>
+<details><summary>解答</summary><p>bₙ=3·3ⁿ=3ⁿ⁺¹なのでaₙ=3ⁿ⁺¹−1。n=0で2となり、3(3ⁿ⁺¹−1)+2=3ⁿ⁺²−1で次の項も満たします。初期値と規則に対する一意性により、この列が答えです。</p></details></article>
+<article class="exercise"><h3>3．同じ答えを、何度作り直しているか</h3><p>T₆を求めるとき、順に解く手順の加算回数と、毎回解き直す素朴な再帰の呼出回数を比べてください。回数が違っても答えが一致する理由も説明してください。</p>
+<details><summary>ヒント1：二つの数えている量</summary><p>順に解く加算はT₂からT₆の各一回。再帰ではCₙ=2Tₙ−1です。</p></details>
+<details><summary>ヒント2：個数を決める条件</summary><p>両方ともT₀=T₁=1とTₙ=Tₙ₋₁+Tₙ₋₂を使います。</p></details>
+<details><summary>解答</summary><p>T₆=13、加算は6−1=5回、再帰の呼出は2·13−1=25回。いずれも同じ初期値と漸化式で値を作るため、一意性から同じ答えです。再帰では部分問題を複製し、順に解く方法ではすでに求めた値を再利用するため、仕事の回数が違います。</p></details></article>
+</section>
+<section id="recurrence-relations-reflection"><h2>自分の言葉で</h2><ol><li>漸化式だけで一つの列を選べないのはなぜですか。初期値はどんな役割を持ちますか。</li><li>タイルの先頭で場合分けしたとき、漏れと重複がないことをどう説明しますか。</li><li>同じ問題を小さく分けることと、同じ小問題の答えを再利用することは、どこが違いますか。</li></ol></section>

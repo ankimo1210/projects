@@ -1,0 +1,66 @@
+<section id="complex-plane-question">
+  <h2>複素数と複素平面</h2>
+  <p>点 (3, 4) を原点のまわりに回すとき、二つの座標を別々に計算する方法があります。ところが、3 + 4i という一つの数へ i を掛ければ、結果は −4 + 3i。90度の回転が、一回の掛け算になりました。座標を数として扱うと、図形の変換や変化率にどんな見通しが生まれるのでしょう。</p>
+  <p class="note">前提は<a href="numbers.html#numbers-complex">複素数と四則演算</a>、<a href="numbers.html#numbers-absolute-value">絶対値</a>、<a href="rotation.html#rotation-complex">回転と複素数の積</a>です。実数の極限と同様に、近づくことを距離で定め直します。</p>
+</section>
+
+<section id="complex-plane-distance">
+  <h2>複素絶対値とユークリッド距離</h2>
+  <p>複素数 z = x + iy の実部を Re z = x、虚部を Im z = y と書きます。虚部は実数 y であり、iy 全体ではありません。共役は z̄ = x − iy、絶対値は |z| = √(x² + y²) です。点 z と w の距離を |z − w| とすると、いつもの平面の距離と一致します。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>z</mi><mover><mi>z</mi><mo>¯</mo></mover><mo>=</mo><msup><mrow><mo>|</mo><mi>z</mi><mo>|</mo></mrow><mn>2</mn></msup><mo>,</mo><mspace width="1em"/><mo>|</mo><mi>z</mi><mi>w</mi><mo>|</mo><mo>=</mo><mo>|</mo><mi>z</mi><mo>|</mo><mo>|</mo><mi>w</mi><mo>|</mo><mo>,</mo><mspace width="1em"/><mo>|</mo><mi>z</mi><mo>+</mo><mi>w</mi><mo>|</mo><mo>≤</mo><mo>|</mo><mi>z</mi><mo>|</mo><mo>+</mo><mo>|</mo><mi>w</mi><mo>|</mo></mrow></math></div>
+  <div class="proof"><h3>掛け算と足し算を、長さで読む</h3><p>共役の積は z z̄ = (x + iy)(x − iy) = x² + y²。また、共役は積を保つので |zw|² = zw z̄w̄ = |z|²|w|² です。非負の平方根を取れば積の式になります。和については |z + w|² = |z|² + 2 Re(z w̄) + |w|²。Re(z w̄) ≤ |z w̄| = |z||w| より、右辺は (|z| + |w|)² 以下です。これが三角不等式です。</p></div>
+  <figure class="concept-figure" id="complex-plane-visual-norm" data-visual="complex-plane-norm">
+    <svg class="concept-svg" viewBox="0 0 360 340" role="img" aria-labelledby="complex-plane-norm-title complex-plane-norm-desc">
+      <title id="complex-plane-norm-title">3足す4iの長さは5</title><desc id="complex-plane-norm-desc">原点から右に3、上に4進んだ点が3足す4i。横軸と縦軸は同じ縮尺で、三平方の定理により斜辺の長さは5となる。</desc>
+      <line x1="40" y1="260" x2="330" y2="260" stroke="var(--ink-2)" stroke-width="2"/><line x1="60" y1="285" x2="60" y2="40" stroke="var(--ink-2)" stroke-width="2"/>
+      <path d="M60 260 L180 260 L180 100" fill="none" stroke="var(--series-2)" stroke-width="3" stroke-dasharray="7 5"/>
+      <line x1="60" y1="260" x2="180" y2="100" stroke="var(--series-1)" stroke-width="4"/><polygon points="180,100 178,115 167,107" fill="var(--series-1)"/>
+      <circle cx="180" cy="100" r="5" fill="var(--ink)"/><path d="M166 260 L166 246 L180 246" fill="none" stroke="var(--ink-2)" stroke-width="2"/>
+      <text x="45" y="286" font-size="22" fill="var(--ink)">0</text><text x="171" y="289" font-size="22" fill="var(--ink)">3</text><text x="35" y="108" font-size="22" fill="var(--ink)">4</text>
+      <text x="195" y="98" font-size="22" fill="var(--ink)">3 + 4i</text><text x="83" y="164" font-size="22" fill="var(--ink)">5</text><text x="302" y="289" font-size="22" fill="var(--ink)">Re</text><text x="70" y="43" font-size="22" fill="var(--ink)">Im</text>
+      <text x="180" y="326" text-anchor="middle" font-size="22" fill="var(--ink)">両軸は同じ縮尺</text>
+    </svg><figcaption>横3・縦4の折線をたどると長さは7、同じ始終点を直線で結ぶと |3+4i|=5 です。横と縦が同じ縮尺なので、移動を順に足した上界7と、まとめた差の距離5を比べられます。これは三角不等式の一例で、一般の不等式は複素数の積と絶対値の式から確認します。</figcaption>
+  </figure>
+  <p>集合として ℂ と ℝ² は同じ座標で対応します。しかし、複素数の積という追加の規則があります。<strong>ℂ は実数上では二次元、複素数上では一次元</strong>です。ℂ² と書くと複素数の組 (z₁, z₂) なので、実数では四つの座標が必要です。ℂ と ℝ² の対応を、ℂ² と ℝ² が同じ次元という意味に取り違えないでください。</p>
+</section>
+
+<section id="complex-plane-polar">
+  <h2>極形式と複素数の積</h2>
+  <p>z ≠ 0 なら r = |z| &gt; 0 とし、z = r(cos θ + i sin θ) と表せます。これを<strong>極形式</strong>、θ を偏角と呼びます。角度はラジアンで測ります。同じ点に θ + 2πk（k は整数）も対応するため、偏角は指定なしには一つに決まりません。z = 0 では長さは0ですが、方向を決める偏角はありません。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>z</mi><mo>=</mo><mi>r</mi><mo>(</mo><mi>cos</mi><mi>θ</mi><mo>+</mo><mi>i</mi><mi>sin</mi><mi>θ</mi><mo>)</mo><mo>,</mo><mspace width="1em"/><mi>w</mi><mo>=</mo><mi>s</mi><mo>(</mo><mi>cos</mi><mi>φ</mi><mo>+</mo><mi>i</mi><mi>sin</mi><mi>φ</mi><mo>)</mo><mo>⇒</mo><mi>z</mi><mi>w</mi><mo>=</mo><mi>r</mi><mi>s</mi><mo>(</mo><mi>cos</mi><mo>(</mo><mi>θ</mi><mo>+</mo><mi>φ</mi><mo>)</mo><mo>+</mo><mi>i</mi><mi>sin</mi><mo>(</mo><mi>θ</mi><mo>+</mo><mi>φ</mi><mo>)</mo><mo>)</mo></mrow></math></div>
+  <p>証明は積を展開し、実の三角関数の加法定理を使うだけです。固定した w ≠ 0 を掛ける操作は、長さを s 倍し、角度を φ だけ回します。w = 0 のときは全点が原点へつぶれ、回転角という説明は使えません。</p>
+  <div class="theorem"><h3>逆数と二乗の幾何</h3><p>z ≠ 0 で 1/z = z̄/|z|²。長さは 1/r、偏角は −θ です。二乗 z² の長さは r²、偏角は 2θ です。二乗は各点に同じ数を掛ける線形変換とは異なり、掛ける数 z 自体が入力とともに変わります。</p></div>
+  <div class="proof"><h3>逆数が定義できる条件を確かめる</h3><p>z·z̄/|z|² = 1 なので逆数の式が成立します。分母が正であるために z ≠ 0 が必要です。極形式で共役を取ると sin の符号だけが変わり、長さの r を r² で割れば 1/r となります。二乗の式は上の積で w = z とすれば得られます。</p></div>
+  <figure class="concept-figure" id="complex-plane-visual-maps" data-visual="complex-plane-maps">
+    <svg class="concept-svg" viewBox="0 0 360 370" role="img" aria-labelledby="complex-plane-maps-title complex-plane-maps-desc">
+      <title id="complex-plane-maps-title">二乗の重なりと逆数の行き先</title><desc id="complex-plane-maps-desc">二乗では1足すiとマイナス1マイナスiが、それぞれの矢印で同じ2iへ移る。逆数では2iがマイナスi割る2へ移る。各行は独立した正確な入力と出力であり、座標の縮尺を示す図ではない。</desc>
+      <text x="180" y="34" text-anchor="middle" font-size="22" fill="var(--ink)">入力ごとの行き先</text>
+      <text x="30" y="92" font-size="22" fill="var(--ink)">1 + i</text><line x1="154" y1="84" x2="237" y2="84" stroke="var(--series-1)" stroke-width="3"/><polygon points="237,84 226,78 226,90" fill="var(--series-1)"/><text x="265" y="92" font-size="22" fill="var(--ink)">2i</text>
+      <text x="30" y="172" font-size="22" fill="var(--ink)">−1 − i</text><line x1="154" y1="164" x2="237" y2="164" stroke="var(--series-1)" stroke-width="3"/><polygon points="237,164 226,158 226,170" fill="var(--series-1)"/><text x="265" y="172" font-size="22" fill="var(--ink)">2i</text>
+      <text x="180" y="218" text-anchor="middle" font-size="22" fill="var(--ink)">上の二行：z ↦ z²</text><line x1="25" y1="238" x2="335" y2="238" stroke="var(--grid)" stroke-width="2"/>
+      <text x="47" y="296" font-size="22" fill="var(--ink)">2i</text><line x1="154" y1="288" x2="237" y2="288" stroke="var(--series-2)" stroke-width="3"/><polygon points="237,288 226,282 226,294" fill="var(--series-2)"/><text x="255" y="296" font-size="22" fill="var(--ink)">−i/2</text>
+      <text x="180" y="350" text-anchor="middle" font-size="22" fill="var(--ink)">下の一行：z ↦ 1/z</text>
+    </svg><figcaption>座標図ではなく、正確な対応の図です。二乗では逆向きの二点が重なります。逆数では長さ2が1/2へ、偏角 π/2 が −π/2 へ変わります。</figcaption>
+  </figure>
+</section>
+
+<section id="complex-plane-neighborhood">
+  <h2>開集合・領域と複素極限</h2>
+  <p>a を中心とする半径 r &gt; 0 の開円板を D(a, r) = {z : |z − a| &lt; r} と書きます。集合 U の各点 a に対して、ある D(a, r) が U に含まれるとき、U は<strong>開集合</strong>です。a の近傍とは、このような開円板を含む集合です。円板の境界 |z − a| = r は開円板に含めません。</p>
+  <p>開集合 U 上の関数 f について、a ∈ U で lim<sub>z→a</sub> f(z) = L とは、任意の ε &gt; 0 に対し、ある δ &gt; 0 があり、0 &lt; |z − a| &lt; δ なら |f(z) − L| &lt; ε となることです。十分小さい円板を U 内に取ります。a 自体での値は極限に使いません。極限が f(a) と一致するとき、f は a で連続です。ℝ² と同じ距離なので、実部と虚部の極限を別々に確かめることとも同値です。</p>
+  <p>二つの成分が0へ行けば複素絶対値も |Re z| + |Im z| 以下なので0へ行きます。逆に各成分の絶対値は |z| 以下です。この二つの不等式が同値性の根拠です。<strong>全方向の条件</strong>なので、実軸上だけで極限が存在しても不十分です。例えば z̄/z（z ≠ 0）は実軸で1、虚軸で−1となり、原点で極限を持ちません。</p>
+  <p><strong>領域</strong>とは、空でない連結な開集合です。連結とは、二つの空でない、互いに交わらない相対開集合に分けられないことです。平面の開集合では道でつながることとも同値ですが、この同値の証明はここでは使いません。</p>
+  <div class="proof"><h3>凸な開集合は、連結である</h3><p>任意の二点 a、b を結ぶ線分 γ(t) = (1 − t)a + tb（0 ≤ t ≤ 1）が集合内に入ることを<strong>凸</strong>といいます。空でない凸な開集合 U が、空でない相対開集合 A、B に分離できたと仮定し、a ∈ A、b ∈ B を取ります。|γ(t) − γ(s)| = |b − a||t − s| より γ は連続なので、その逆像 P = γ⁻¹(A)、Q = γ⁻¹(B) は [0, 1] の相対開集合です。両者は交わらず区間全体を覆い、0 ∈ P、1 ∈ Q です。</p><p>c = sup P と置きます。0でのPの開性と1でのQの開性から 0 &lt; c &lt; 1。c ∈ P なら開性により c より少し大きい点もPに入り、上限に反します。c ∈ Q なら開性により c の少し手前までQに入りますが、上限の定義により c へ任意に近いPの点が存在し、やはり矛盾します。区間がPとQで覆われる以上どちらかの場合なので、この分離は不可能です。したがってUは連結です。</p></div>
+  <p>開円板、平面全体、右半平面 {z : Re z &gt; 0} は空でない凸な開集合なので領域です。開円板の凸性は三角不等式、右半平面の凸性は実部の一次性から確かめられます。原点を除く平面も領域ですが、その連結性は本章では証明しない標準事実として借ります。離れた二つの円板の和集合は開集合ですが、領域ではありません。穴があることと、連結でないことは別です。</p>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="集合と極限で区別する条件"><table class="concept-table" style="min-width:47rem" data-visual="complex-plane-conditions"><caption>具体的な集合で、開集合・領域・穴を別々に判定する</caption><thead><tr><th scope="col">集合</th><th scope="col">開集合か</th><th scope="col">領域か</th><th scope="col">どこを点検するか</th></tr></thead><tbody><tr><th scope="row">|z|&lt;1</th><td>○。各点と境界の距離が正。</td><td>○。空でなく、線分で結べる。</td><td>境界 |z|=1 は含めない。</td></tr><tr><th scope="row">0&lt;|z|&lt;1</th><td>○。原点も境界も除いている。</td><td>○。穴はあっても円弧と半径方向の道で結べる。</td><td>「領域」は穴なしという意味ではない。</td></tr><tr><th scope="row">|z−2|&lt;1 または |z+2|&lt;1</th><td>○。どちらの円板内でも周囲に小円板が入る。</td><td>×。離れた二円板は連結でない。</td><td>開いていても、全体が一つにつながるとは限らない。</td></tr><tr><th scope="row">|z|≤1</th><td>×。点1の周りの小円板が外へ出る。</td><td>×。開集合の条件を欠く。</td><td>内部点だけ調べても、集合全体が開とは言えない。</td></tr></tbody></table></div><p data-reading-note="complex-open-domain">半径 r&gt;0 の開円板は |z−a|&lt;r です。開集合とは各点の周囲に小円板が入り、領域とは空でない連結な開集合をいいます。同じ図に点が二つあることと、集合がつながっていることは別です。極限を調べるときも、定義域内の全ての近づき方を相手にし、二本の軸だけの一致では全方向の極限を保証できません。</p>
+  <p>例えば z² の連続性は |z² − a²| = |z − a||z + a| から分かります。|z − a| &lt; 1 に制限すれば |z + a| ≤ 2|a| + 1 なので、ε に対し δ = min(1, ε/(2|a| + 1)) と取れます。図で滑らかに見えることを、全方向で同じ評価へ置き換えました。次章では、この全方向の極限を差商へ適用します。</p>
+</section>
+
+<details class="column" id="complex-plane-column"><summary>寄り道［自作モデル］：回転と拡大を、何度も繰り返す</summary><p>毎回同じ倍率 ρ &gt; 0、同じ角度 θ で矢印を動かすモデルを考えます。q = ρ(cos θ + i sin θ) と置けば、n回後は zₙ = qⁿz₀。積の規則から |zₙ| = ρⁿ|z₀| で、偏角は初期角に nθ を足したものです。ρ &lt; 1 なら原点へ縮み、ρ = 1 なら同じ円上、ρ &gt; 1 なら z₀ ≠ 0 のとき長さが増えます。</p><p>θ = π/2、ρ = 1/2、z₀ = 1 なら、1、i/2、−1/4、−i/8、1/16 と進みます。四回で向きは戻りますが、点そのものは戻りません。向きと大きさを別に読むことが、反復の見通しを作ります。行列なら<a href="rotation.html#rotation-unit-circle">ρR(θ)</a>の反復と同じです。</p><p class="source-note">出典：本章の積の規則から作った数学モデルです。実際の装置や観測データを表すものではありません。</p></details>
+
+<section id="complex-plane-exercises"><h2>演習：複素平面と複素関数</h2>
+  <article class="exercise"><h3>1．逆数の向きと長さ</h3><p>z = 3 + 4i の逆数を求め、絶対値の積が1になることを確かめてください。</p><details><summary>ヒント1：共役を使う</summary><p>分子と分母に 3 − 4i を掛けます。</p></details><details><summary>ヒント2：長さの平方</summary><p>|3 + 4i|² = 25 です。</p></details><details><summary>解答</summary><p>1/z = (3 − 4i)/25 = 3/25 − (4/25)i。元の絶対値は5、逆数の絶対値は √(9 + 16)/25 = 1/5 なので積は1です。共役により偏角の符号が反転し、長さは逆数へ変わります。</p></details></article>
+  <article class="exercise"><h3>2．二乗で見分けられない二点</h3><p>z² = −4 の解をすべて求め、極形式で二点の向きの違いを説明してください。</p><details><summary>ヒント1：長さを先に決める</summary><p>|z|² = 4 なので |z| = 2 です。</p></details><details><summary>ヒント2：角度は2倍になる</summary><p>2θ = π + 2πk から、θ を 2π の違いまで区別します。</p></details><details><summary>解答</summary><p>θ = π/2 + πk なので、異なる点は 2i と −2i の二つです。両者の向きは π 違いますが、2倍すると差が 2π となり同じ向きになります。代数でも z² + 4 = (z − 2i)(z + 2i) = 0 より、この二つで尽くされています。</p></details></article>
+  <article class="exercise"><h3>3．軸だけ調べてよいか</h3><p>原点以外で F(x + iy) = xy/(x² + y²) とします。原点へ向かう二軸と直線 y = x で値を比べ、極限の有無を判断してください。</p><details><summary>ヒント1：二軸の分子</summary><p>x = 0 または y = 0 なら分子は0です。</p></details><details><summary>ヒント2：対角線で約分する</summary><p>x = y = t ≠ 0 を代入します。</p></details><details><summary>解答</summary><p>二軸では0、対角線では t²/(2t²) = 1/2 です。原点へいくら近づけても値が異なるので極限は存在しません。二軸の極限の一致は、全方向の極限が存在するための十分条件ではありません。</p></details></article>
+</section>
+<section id="complex-plane-reflection"><h2>自分の言葉で</h2><ol><li>ℂ を ℝ² と対応させても、複素数の掛け算にはどんな追加の意味がありますか。</li><li>逆数と二乗は、長さと偏角をそれぞれどう変えますか。0では何に注意しますか。</li><li>領域に穴があることと、極限が全方向で一致することは、どのように異なる条件ですか。</li></ol></section>

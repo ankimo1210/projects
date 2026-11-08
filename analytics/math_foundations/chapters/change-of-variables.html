@@ -1,0 +1,128 @@
+<section id="change-of-variables-question">
+  <h2>変数変換と面積要素</h2>
+  <p>円板の積分を、半径と角度で書けたら便利そうです。しかし x、y を式の中で置き換えるだけでは、面積の数え方が抜け落ちます。角度の同じ一歩でも、中心から遠いほど長い弧を進むからです。</p>
+  <p><a href="total-derivative.html#total-derivative-linear-map-bound">Jacobian 行列</a>は局所的な座標の伸び方を、<a href="determinants.html#determinants-definition">行列式</a>は面積倍率を表しました。その二つを二重積分につなぎます。一般の変数変換定理は未証明で借りる範囲を明示し、極座標で使う際の原点と継ぎ目も確かめます。</p>
+</section>
+
+<section id="change-of-variables-affine">
+  <h2>線形変換と行列式による面積倍率</h2>
+  <p>座標領域 E = [0, 1] × [0, 1] から、T(u, v) = (2u + v, 3v) により平行四辺形 D へ移るとします。Jacobian 行列の二行は (2, 1)、(0, 3)、行列式は 6。u 方向の辺 (2Δu, 0)、v 方向の辺 (Δv, 3Δv) が作るセル面積は、正確に 6ΔuΔv です。</p>
+  <p>従って変換後の合計の一項は、f(T(u, v)) と 6ΔuΔv の積になります。点の値を替える操作と、面積を替える操作の両方が必要です。この例の倍率は有限のセルにも正確で、非線形写像の局所近似とは違います。</p>
+  <div class="proof"><h3>この平行四辺形の公式は、一変数の置換でも確認できる</h3><p>D は 0 ≤ y ≤ 3、y/3 ≤ x ≤ 2 + y/3 と表せます。連続な f について、<a href="double-integrals.html#double-integrals-simple-region">単純領域の公式</a>により積分を y 外側で書き、内側に x = 2u + y/3、外側に y = 3v を代入します。<a href="integration-methods.html#integration-methods-substitution">一変数の置換積分</a>から、dx = 2du、dy = 3dv の係数が出て、∬<sub>D</sub>f dA = ∫₀¹∫₀¹6f(2u + v, 3v)du dv です。ここでは三角形の格子や一般の曲線セルの極限について、新たな定理を仮定していません。</p></div>
+  <p>f = 1 なら面積は 6。f = x + 2y なら合成した値は 2u + 7v、面積の係数を含めて 6(2u + 7v) を単位正方形で積分し、答えは 27 になります。</p>
+
+<div class="concept-grid">
+<figure class="concept-figure" id="change-of-variables-visual-affine-source" data-visual="change-of-variables-affine-source">
+  <svg class="concept-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 310" role="img" aria-labelledby="change-of-variables-visual-affine-source-title change-of-variables-visual-affine-source-desc">
+    <title id="change-of-variables-visual-affine-source-title">座標の正方形を四つのセルに分ける</title>
+    <desc id="change-of-variables-visual-affine-source-desc">uとvが0から1の正方形。半分ずつの格子を入れ、左下の面積1/4のセルを区別する。</desc>
+    <g fill="var(--ink-2)" font-size="22"><polygon points="70,260 270,260 270,60 70,60" fill="var(--series-1)" fill-opacity="0.08" stroke="var(--ink-2)" stroke-width="2"/><polygon points="70,260 170,260 170,160 70,160" fill="var(--series-2)" fill-opacity="0.18" stroke="var(--ink-2)" stroke-width="2"/><path d="M 170 260 L 170 60" fill="none" stroke="var(--rule)" stroke-width="2"/><path d="M 70 160 L 270 160" fill="none" stroke="var(--rule)" stroke-width="2"/><path d="M 45 260 L 325 260" fill="none" stroke="var(--ink-2)" stroke-width="2"/><path d="M 70 278 L 70 32" fill="none" stroke="var(--ink-2)" stroke-width="2"/><text x="270" y="293" text-anchor="middle">1</text><text x="45" y="67" text-anchor="start">1</text><text x="55" y="293" text-anchor="start">0</text><text x="330" y="267" text-anchor="start">u</text><text x="82" y="33" text-anchor="start">v</text></g>
+  </svg>
+  <figcaption>座標領域 E = [0, 1]²。区別したセルでは Δu = Δv = 1/2 なので、面積は1/4です。</figcaption>
+</figure>
+<figure class="concept-figure" id="change-of-variables-visual-affine-image" data-visual="change-of-variables-affine-image">
+  <svg class="concept-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 310" role="img" aria-labelledby="change-of-variables-visual-affine-image-title change-of-variables-visual-affine-image-desc">
+    <title id="change-of-variables-visual-affine-image-title">対応するセルは、正確に六倍の面積を持つ</title>
+    <desc id="change-of-variables-visual-affine-image-desc">写像T(u,v)=(2u+v,3v)による平行四辺形。頂点は0,0、2,0、3,3、1,3。区別したセルの面積は3/2で、元の1/4の六倍。</desc>
+    <g fill="var(--ink-2)" font-size="22"><polygon points="55,260 195,260 265,50 125,50" fill="var(--series-1)" fill-opacity="0.08" stroke="var(--ink-2)" stroke-width="2"/><polygon points="55,260 125,260 160,155 90,155" fill="var(--series-2)" fill-opacity="0.18" stroke="var(--ink-2)" stroke-width="2"/><path d="M 125 260 L 195 50" fill="none" stroke="var(--rule)" stroke-width="2"/><path d="M 90 155 L 230 155" fill="none" stroke="var(--rule)" stroke-width="2"/><path d="M 35 260 L 325 260" fill="none" stroke="var(--ink-2)" stroke-width="2"/><path d="M 55 278 L 55 30" fill="none" stroke="var(--ink-2)" stroke-width="2"/><text x="195" y="293" text-anchor="middle">2</text><text x="265" y="293" text-anchor="middle">3</text><text x="32" y="57" text-anchor="start">3</text><text x="40" y="293" text-anchor="start">0</text><text x="330" y="267" text-anchor="start">x</text><text x="67" y="30" text-anchor="start">y</text></g>
+  </svg>
+  <figcaption>像の頂点は (0, 0)、(2, 0)、(3, 3)、(1, 3)。区別したセルの面積は 6 × 1/4 = 3/2、全体は6です。<strong>元の図と像の図では座標の1単位を描く縮尺が異なります。</strong> 面積倍率は見かけの大きさでなく、対応する辺の行列式から求めます。</figcaption>
+</figure>
+</div>
+</section>
+
+<section id="change-of-variables-theorem">
+  <h2>二重積分の変数変換定理</h2>
+  <p>有界な領域 E の指示関数（E 内で 1、外で 0）が、囲む矩形上で Riemann 積分可能なとき、E を<strong>Jordan 可測</strong>といいます。面積はその積分です。<a href="double-integrals.html#double-integrals-simple-region">連続グラフの境界に挟まれた閉領域</a>は、その条件を既に確かめました。</p>
+  <div class="theorem"><h3>未証明で借りる：二重積分の変数変換定理</h3><p>U ⊂ ℝ² は開集合、T : U → ℝ² は C¹ で単射、すべての q ∈ U で det DT(q) ≠ 0 とします。E ⊂ U は閉かつ有界な Jordan 可測領域、f は T(E) 上で連続とします。このとき T(E) も Jordan 可測で、以下の両辺が積分可能かつ等しいとします。像の可測性と積分可能性も、この借用定理に含めます。</p>
+    <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mo>∬</mo><mrow><mi>T</mi><mo>(</mo><mi>E</mi><mo>)</mo></mrow></msub><mi>f</mi><mo>(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>)</mo><mi>dx</mi><mi>dy</mi><mo>=</mo><msub><mo>∬</mo><mi>E</mi></msub><mi>f</mi><mo>(</mo><mi>T</mi><mo>(</mo><mi>u</mi><mo>,</mo><mi>v</mi><mo>)</mo><mo>)</mo><mo>|</mo><mi>det</mi><mi>DT</mi><mo>(</mo><mi>u</mi><mo>,</mo><mi>v</mi><mo>)</mo><mo>|</mo><mi>du</mi><mi>dv</mi></mrow></math></div>
+  </div>
+  <p>局所的には T(q + h) ≈ T(q) + DT(q)h なので、行列式の絶対値が微小面積の倍率になる、と理解できます。しかし、この説明だけでは、曲がったセルの面積誤差を全体で抑えること、境界、重なり、像の積分可能性を証明できていません。上の一般定理の完全証明は本章の範囲外です。</p>
+  <p>絶対値は面積と向きを分けます。例えば T(u, v) = (−u, v) は向きを反転し det DT = −1 ですが、面積を負にはしません。f が負なら積分に負の寄与が出ますが、それは密度の符号であって面積倍率の符号ではありません。</p>
+</section>
+
+<section id="change-of-variables-polar">
+  <h2>極座標とヤコビアン</h2>
+  <p>T(r, θ) = (r cos θ, r sin θ) とします。θ はラジアンで、x の正方向から反時計回りに測ります。r、θ による偏微分を列に並べると次の行列です。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>DT</mi><mo>=</mo><mo>[</mo><mtable><mtr><mtd><mi>cos</mi><mi>θ</mi></mtd><mtd><mo>−</mo><mi>r</mi><mi>sin</mi><mi>θ</mi></mtd></mtr><mtr><mtd><mi>sin</mi><mi>θ</mi></mtd><mtd><mi>r</mi><mi>cos</mi><mi>θ</mi></mtd></mtr></mtable><mo>]</mo><mo>,</mo><mspace width="1em"/><mi>det</mi><mi>DT</mi><mo>=</mo><mi>r</mi><msup><mrow><mo>(</mo><mi>cos</mi><mi>θ</mi><mo>)</mo></mrow><mn>2</mn></msup><mo>+</mo><mi>r</mi><msup><mrow><mo>(</mo><mi>sin</mi><mi>θ</mi><mo>)</mo></mrow><mn>2</mn></msup><mo>=</mo><mi>r</mi></mrow></math></div>
+  <p>r &gt; 0、角度の幅が 2π 未満の開区間なら T は単射です。同じ像から r = √(x² + y²) が決まり、<a href="elementary-functions.html#elementary-functions-angle">同じ sin、cos を持つ二つの角度の差は 2π の整数倍</a>なので、この幅では一致します。r &gt; 0 では行列式も非零で、閉じた環状扇形の座標矩形を含む少し大きい開集合に定理を適用できます。</p>
+  <p>その範囲では dA に対応する係数は r dr dθ です。例えば a ≤ r ≤ b、α ≤ θ ≤ β、0 &lt; a &lt; b、0 &lt; β − α &lt; 2π の環状扇形の面積は、∫<sub>α</sub><sup>β</sup>∫<sub>a</sub><sup>b</sup>r dr dθ = (b² − a²)(β − α)/2 です。</p>
+  <p class="note">r = 0 では全角度が原点に集まり、行列式は 0。θ と θ + 2π も同じ点です。従って [0, R] × [0, 2π] 全体へ、上の定理をそのまま適用したことにはできません。</p>
+</section>
+
+<section id="change-of-variables-disk">
+  <h2>極座標の原点・継ぎ目と除外誤差</h2>
+  <p>半径 R &gt; 0 の閉円板 B = {x² + y² ≤ R²} と、B 上で連続な f を考えます。B は −R ≤ x ≤ R、−√(R² − x²) ≤ y ≤ √(R² − x²) と書けるので、前章の単純領域の証明により Jordan 可測で f は積分可能です。円の面積の値を先に使ったのではありません。|f| ≤ M となる有限の M も取れます。</p>
+  <div class="proof"><h3>二つの細い除外部分を、矩形で覆う</h3><p>0 &lt; r₀ &lt; R、0 &lt; ε &lt; π/2 とし、E₀ = [r₀, R] × [ε, 2π − ε] を取ります。これを含む開集合 U = (r₀/2, R + 1) × (ε/2, 2π − ε/2) では T は単射、行列式は非零なので、借用定理を正当に適用できます。S₀ = T(E₀) 上では ∬<sub>S₀</sub>f dA = ∫<sub>ε</sub><sup>2π−ε</sup>∫<sub>r₀</sub><sup>R</sup>f(r cos θ, r sin θ)r dr dθ です。</p><p>円板の原点以外の点は、半径 r &gt; 0 と θ ∈ [0, 2π) で表せます（<a href="elementary-functions.html#elementary-functions-angle">単位円を一周することの確認</a>）。従って、円板から取り除いた中心部分は正方形 [−r₀, r₀]² に入り、その面積は 4r₀²。正の x 軸付近の継ぎ目は、|θ| ≤ ε と見れば 0 ≤ x ≤ R、|y| ≤ R sin ε ≤ Rε に入るので、面積 2R²ε の矩形で覆えます。sin ε ≤ ε は sin ε = ∫₀ᵋcos t dt ≤ ε からも従います。従って除外部分での積分の絶対値は M(4r₀² + 2R²ε) 以下で、r₀、ε → 0 で消えます。</p><p>この比較は、B 上と S₀ 上の f をそれぞれ 0 拡張した、積分可能な二関数の差に対するものです。その差は B から S₀ を除いた部分でのみ非零であり、絶対値を M と被覆矩形の指示関数で抑え、単調性を使います。ここで円の面積 πr₀² を誤差評価の前提にしてはいません。</p><p>右辺についても F(r, θ) = f(r cos θ, r sin θ)r は [0, R] × [0, 2π] で連続です。除外した座標領域の積分は、|F| ≤ Mr により、中心の r ∈ [0, r₀] と角度の二つの帯で上から抑えられます。その値は Mπr₀² + Mε(R² − r₀²) ≤ M(πr₀² + εR²) で、やはり 0 へ近づきます。ここに現れた πr₀² は一変数の ∫r dr を計算した結果です。</p><p>左右の除外誤差がともに消えるため、円板全体で次の公式を得ます。</p>
+    <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mo>∬</mo><mi>B</mi></msub><mi>f</mi><mi>dA</mi><mo>=</mo><msubsup><mo>∫</mo><mn>0</mn><mrow><mn>2</mn><mi>π</mi></mrow></msubsup><mo>(</mo><msubsup><mo>∫</mo><mn>0</mn><mi>R</mi></msubsup><mi>f</mi><mo>(</mo><mi>r</mi><mi>cos</mi><mi>θ</mi><mo>,</mo><mi>r</mi><mi>sin</mi><mi>θ</mi><mo>)</mo><mi>r</mi><mi>dr</mi><mo>)</mo><mi>dθ</mi></mrow></math></div>
+  </div>
+  <p>f = 1 を入れると面積は ∫<sub>0</sub><sup>2π</sup>R²/2 dθ = πR²。f = x² + y² なら合成後は r² ですが、面積係数も掛けて r³ を積分し、∬<sub>B</sub>(x² + y²)dA = πR⁴/2 です。単位円板の面積平均は (π/2)/π = 1/2 になります。</p>
+</section>
+
+<section id="change-of-variables-lab">
+  <h2>極座標の有限セルと面積の実験</h2>
+  <p>r₀ ≤ r ≤ r₀ + Δr、θ₀ ≤ θ ≤ θ₀ + Δθ の座標矩形の積は ΔrΔθ。一方、xy 平面の正確な面積は {(r₀ + Δr)² − r₀²}Δθ/2 = (r₀ + Δr/2)ΔrΔθ です。比は中点半径 r₀ + Δr/2 で、角度を回すだけでは変わりません。r₀ = 0 の扇形も、前節と同じ中心除外の極限で公式を得られます。</p>
+  <div data-lab="multivariable-polar"></div>
+  <noscript><p class="note">実験の操作には JavaScript が必要です。初期 r₀ = 0.5、Δr = 0.5、θ₀ = 0、Δθ = 90° = π/2 では、外半径 1、座標の積 π/4、xy 平面の正確な面積 3π/16、比は 0.75 です。同じ幅で r₀ = 0 なら面積 π/16、比 0.25、r₀ = 1 なら面積 5π/16、比 1.25。座標の矩形が同じ大きさでも、外側ほど実際の面積が増えます。</p></noscript>
+  <p class="note">ここでの扇形面積は近似ではなく、積分から得た厳密な式です。図の描画と数値表示には浮動小数点の丸めがあります。ΔrΔθ は xy 面積そのものではありません。</p>
+</section>
+
+<section id="change-of-variables-conditions">
+  <h2>単射性を欠く変換の多重被覆</h2>
+  <p>E = ([-1, −1/2] ∪ [1/2, 1]) × [0, 1] 上の T(u, v) = (u², v) を考えます。|det DT| = 2|u| ≥ 1 なので特異点はありません。しかし T(u, v) = T(−u, v) で、単射ではありません。像は [1/4, 1] × [0, 1]、面積は 3/4 なのに、∬<sub>E</sub>2|u|du dv = 3/2 です。</p>
+  <p>二つの枝が同じ像を一回ずつ覆い、二重に数えたためです。各枝だけに定理を使えば正しく面積 3/4 となりますが、像が重なるのに両方を足すと二倍です。「行列式が消えない」は局所的な条件で、「一つの像を一回だけ数える」単射性の代わりにはなりません。</p>
+
+<div class="concept-grid">
+<figure class="concept-figure" id="change-of-variables-visual-two-branches" data-visual="change-of-variables-two-branches">
+  <svg class="concept-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 310" role="img" aria-labelledby="change-of-variables-visual-two-branches-title change-of-variables-visual-two-branches-desc">
+    <title id="change-of-variables-visual-two-branches-title">二つの枝には特異点がない</title>
+    <desc id="change-of-variables-visual-two-branches-desc">uが−1から−1/2と1/2から1の二つの矩形。vはいずれも0から1で、二つの枝を実線と破線で区別する。</desc>
+    <g fill="var(--ink-2)" font-size="22"><path d="M 35 260 L 335 260" fill="none" stroke="var(--ink-2)" stroke-width="2"/><path d="M 180 280 L 180 35" fill="none" stroke="var(--ink-2)" stroke-width="2"/><polygon points="60,260 120,260 120,80 60,80" fill="var(--series-1)" fill-opacity="0.12" stroke="var(--series-1)" stroke-width="3"/><polygon points="240,260 300,260 300,80 240,80" fill="var(--series-2)" fill-opacity="0.12" stroke="var(--series-2)" stroke-width="3"/><rect x="240" y="80" width="60" height="180" fill="none" stroke="var(--ink-2)" stroke-width="2" stroke-dasharray="7 5"/><text x="60" y="294" text-anchor="middle">−1</text><text x="120" y="294" text-anchor="middle">−1/2</text><text x="240" y="294" text-anchor="middle">1/2</text><text x="300" y="294" text-anchor="middle">1</text><text x="156" y="87" text-anchor="start">1</text><text x="335" y="252" text-anchor="start">u</text><text x="192" y="35" text-anchor="start">v</text></g>
+  </svg>
+  <figcaption>T(u, v) = (u², v) の定義域。左の枝も右の枝も |det DT| = 2|u| ≥ 1 なので、行列式は消えません。しかし u と −u は同じ像へ移ります。</figcaption>
+</figure>
+<figure class="concept-figure" id="change-of-variables-visual-overlapping-image" data-visual="change-of-variables-overlapping-image">
+  <svg class="concept-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 310" role="img" aria-labelledby="change-of-variables-visual-overlapping-image-title change-of-variables-visual-overlapping-image-desc">
+    <title id="change-of-variables-visual-overlapping-image-title">二つの枝を足すと、同じ像を二回数える</title>
+    <desc id="change-of-variables-visual-overlapping-image-desc">像はxが1/4から1、yが0から1の一つの矩形。左枝の実線と右枝の破線の輪郭が同じ位置に重なる。</desc>
+    <g fill="var(--ink-2)" font-size="22"><path d="M 45 260 L 325 260" fill="none" stroke="var(--ink-2)" stroke-width="2"/><path d="M 80 280 L 80 35" fill="none" stroke="var(--ink-2)" stroke-width="2"/><rect x="127.5" y="70" width="142.5" height="190" fill="var(--series-1)" fill-opacity="0.10" stroke="var(--series-1)" stroke-width="4"/><rect x="127.5" y="70" width="142.5" height="190" fill="var(--series-2)" fill-opacity="0.08" stroke="var(--series-2)" stroke-width="2" stroke-dasharray="7 5"/><text x="200" y="40" text-anchor="middle">同じ像に重なる</text><text x="127.5" y="294" text-anchor="middle">1/4</text><text x="270" y="294" text-anchor="middle">1</text><text x="56" y="78" text-anchor="start">1</text><text x="330" y="266" text-anchor="start">x</text><text x="92" y="35" text-anchor="start">y</text></g>
+  </svg>
+  <figcaption>実線と破線の輪郭は同じ矩形に重なります。像の面積は (1 − 1/4) × 1 = 3/4。各枝の重み付き積分も3/4ですが、両枝を足すと3/2です。局所的な面積倍率だけでは、一度だけ数える単射性を補えません。</figcaption>
+</figure>
+</div>
+</section>
+
+<details class="column" id="change-of-variables-column">
+  <summary>寄り道［応用］：円形の画像を、半径と角度の長方形へほどく</summary>
+  <p>OpenCV の warpPolar は画像を極座標や半対数の座標へ再配置します。公式資料では、中心からの距離を出力の横座標へ、角度を縦座標へ尺度変換する式を示しています。また幾何変換全体の説明では、出力画素が参照する入力座標を求め、補間して画素値を得る仕組みを説明しています。</p>
+  <p>ここからは本章の連続モデルによる比較です。同じ Δr と Δθ の二つのセルを半径 1 と 2 の近くに取れば、面積の一次近似 rΔrΔθ は約二倍違います。極座標画像上の同じ大きさの画素を、元の xy 平面の等面積の画素と読み替えることはできません。</p>
+  <p>画素値を別の場所で標本化する操作と、面積密度の総量を保存して積分する操作は別です。明るさを再標本化する warpPolar が、全画素の総和へ Jacobian の r を自動的に掛けて保存する、とこの定理から結論はできません。画像の値の意味、補間、画素の面積を決めた上で必要な重みを考えます。</p>
+  <p class="source-note">出典：<a href="https://docs.opencv.org/4.13.0/da/d54/group__imgproc__transform.html">OpenCV：Geometric Image Transformations（Detailed Description・warpPolar）</a>。半径 1、2 のセル比較は本章の自作モデルです。</p>
+</details>
+
+<section id="change-of-variables-exercises">
+  <h2>変数変換と面積倍率の演習</h2>
+  <article class="exercise"><h3>1．平行四辺形へ移る</h3><p>T(u, v) = (2u + v, 3v)、0 ≤ u, v ≤ 1 の像 D の面積と、∬<sub>D</sub>(x + 2y)dA を求めてください。</p>
+    <details><summary>ヒント1：合成した式を求める</summary><p>x + 2y = 2u + v + 6v = 2u + 7v です。</p></details>
+    <details><summary>ヒント2：面積倍率も掛ける</summary><p>det DT = 2·3 − 1·0 = 6。単位正方形での u、v の積分はどちらも 1/2 です。</p></details>
+    <details><summary>解答</summary><p>DT の行列式は 6 で非零、T は逆写像 v = y/3、u = (x − y/3)/2 を持つので単射です。面積は ∬<sub>E</sub>6du dv = 6。目的の積分は ∫₀¹∫₀¹6(2u + 7v)du dv = 6(2·1/2 + 7·1/2) = 27 です。係数 6 を落とすと 9/2 となり、面積の違いを数えていない計算になります。</p></details>
+  </article>
+  <article class="exercise"><h3>2．単位円板で半径の二乗を集める</h3><p>単位円板 B 上の x² + y² の積分を極座標で計算し、原点と継ぎ目に定理を直接使わない理由を説明してください。</p>
+    <details><summary>ヒント1：密度と面積は別の係数</summary><p>x² + y² = r²、面積係数は r です。</p></details>
+    <details><summary>ヒント2：除外してから戻す</summary><p>まず r ≥ r₀ &gt; 0、ε ≤ θ ≤ 2π − ε の範囲に定理を適用します。</p></details>
+    <details><summary>解答</summary><p>前節の中心・継ぎ目の誤差評価から、円板全体の公式を使えます。∬<sub>B</sub>(x² + y²)dA = ∫<sub>0</sub><sup>2π</sup>∫₀¹r³dr dθ = ∫<sub>0</sub><sup>2π</sup>1/4 dθ = π/2。原点では det DT = 0 で全角度が同じ像に集まり、角度 0 と 2π も同じ像なので、閉じた全座標矩形には定理の非零行列式・単射の仮定が成立しません。除外部分の xy 側と座標側の積分誤差を両方 0 へ縮めることで補いました。</p></details>
+  </article>
+  <article class="exercise"><h3>3．原点を除いても二重計数は起こる</h3><p>E = ([-1, −1/2] ∪ [1/2, 1]) × [0, 1]、T(u, v) = (u², v) とします。像の面積と、E 上の |det DT| の積分を比べ、変数変換定理を全体へ適用できない理由を述べてください。</p>
+    <details><summary>ヒント1：u² の範囲を見る</summary><p>正負の枝は、どちらも [1/4, 1] に移ります。</p></details>
+    <details><summary>ヒント2：枝ごとに積分する</summary><p>正の枝では ∫<sub>1/2</sub><sup>1</sup>2u du = 3/4、負の枝も同じです。</p></details>
+    <details><summary>解答</summary><p>像は [1/4, 1] × [0, 1] なので面積 3/4。|det DT| = 2|u| を積分すると、v の幅は 1、正の枝の寄与は [u²]<sub>1/2</sub><sup>1</sup> = 3/4、負の枝の寄与も 3/4、合計 3/2 です。|det DT| ≥ 1 なので原点の特異性は関係しませんが、T(u, v) = T(−u, v) のため単射性を欠きます。各像の点を二回数えており、定理の仮定が満たされません。</p></details>
+  </article>
+</section>
+
+<section id="change-of-variables-reflection">
+  <h2>自分の言葉で</h2><ol>
+    <li>変数変換で、合成 f ∘ T と |det DT| はそれぞれ何を替えますか。絶対値が必要なのはなぜですか。</li>
+    <li>円板全体の極座標公式では、原点・継ぎ目をどの図形で覆い、何を 0 へ近づけましたか。</li>
+    <li>局所近似が示唆する面積倍率と、未証明で借りた一般定理の結論はどこが違いますか。単射性を落とすと何が起こりますか。</li>
+  </ol>
+</section>

@@ -1,0 +1,119 @@
+<section id="counting-probability-question">
+  <h2>順列・組合せと確率モデル</h2>
+  <p>二個のさいころの和は 2 から 12 までの十一通りです。では、和が 2 になる確率も 7 になる確率も 1/11 でしょうか。結果を「和」だけにまとめると、その裏に何通りの出目があるかが見えなくなります。7 は六通りの順序つき出目から生まれ、2 は一通りからしか生まれません。</p>
+  <p>場合の数は、細かい結果を漏れなく、重複なく数える道具です。確率に使うには、どの細かさの結果が等確率なのかを先に決めます。<a href="probability-models.html">確率モデル</a>で分けた「結果」と「重み」を、数え上げの場面でも分けておきましょう。</p>
+</section>
+
+<section id="counting-probability-product">
+  <h2>積の法則と場合の数</h2>
+  <p>シャツが 3 種類あり、どのシャツにも 2 種類のズボンを合わせられるなら、組合せは 3×2 = 6 通りです。最初の選択が n 通りで、そのどれに対しても次の選択が m 通りあるとき、二段階の選び方は nm 通り。これを<strong>積の法則</strong>といいます。最初の選択ごとに m 個ずつ結果を並べれば、重ならない n 組ができることが根拠です。</p>
+  <p>後半の選択肢の個数が前半によって変わる場合は、その個数を足します。シャツ A には 2 種類、B には 1 種類、C には 3 種類のズボンが合うなら 2 + 1 + 3 = 6 通りです。排反な分類ごとに数えて足すのが和の法則です。分類が重なっていれば、確率の加法公式と同じく重複を調整します。</p>
+  <p class="note">積の法則は個数の規則で、確率の独立性を仮定していません。「選択肢が各段で何個あるか」と「どれがどの確率で選ばれるか」は別です。確率の積については<a href="conditional-probability.html">条件付き確率</a>と<a href="independence.html">独立</a>で条件を確かめます。</p>
+</section>
+
+<section id="counting-probability-permutations">
+  <h2>順列と組合せ</h2>
+  <p>異なる n 個から、重複を許さず k 個を順番に選びます。最初は n 通り、二番目は n − 1 通り、最後は n − k + 1 通り。従って<strong>順列</strong>の個数は次の形になります。n、k は整数で 0 ≤ k ≤ n です。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>P</mi><mrow><mi>n</mi><mo>,</mo><mi>k</mi></mrow></msub><mo>=</mo><mi>n</mi><mo>(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo>)</mo><mo>⋯</mo><mo>(</mo><mi>n</mi><mo>−</mo><mi>k</mi><mo>+</mo><mn>1</mn><mo>)</mo><mo>=</mo><mfrac><mrow><mi>n</mi><mo>!</mo></mrow><mrow><mo>(</mo><mi>n</mi><mo>−</mo><mi>k</mi><mo>)</mo><mo>!</mo></mrow></mfrac></mrow></math></div>
+  <p>n! = n(n − 1)⋯1 は<strong>階乗</strong>です。0! = 1 と約束します。k = 0 は何も選ばない一通りで、空の積を 1 と読むと公式にも一致します。例えば 5 人から議長、副議長を一人ずつ選ぶなら 5×4 = 20 通り。A さんが議長で B さんが副議長の場合と、役割が逆の場合は別です。</p>
+  <div class="theorem">
+    <h3>順序を忘れるには、一つの集まりを何度数えたかを見る</h3>
+    <p>n 個から順序を区別せず k 個を選ぶ<strong>組合せ</strong>の個数は、二項係数と呼ばれる次の数です。</p>
+    <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mrow><mo>(</mo><mfrac linethickness="0"><mi>n</mi><mi>k</mi></mfrac><mo>)</mo></mrow><mo>=</mo><mfrac><mrow><mi>n</mi><mo>!</mo></mrow><mrow><mi>k</mi><mo>!</mo><mo>(</mo><mi>n</mi><mo>−</mo><mi>k</mi><mo>)</mo><mo>!</mo></mrow></mfrac></mrow></math></div>
+  </div>
+  <div class="proof">
+    <h3>すべての集まりが、同じ k! 回ずつ現れる</h3>
+    <p>選んだ k 個が決まったら、並べ方は k! 通りあります。一つの順序なしの集まりは、順列の数にちょうど k! 回ずつ入っています。どの集まりも同じ回数なので Pₙ,ₖ を k! で割ればよく、上の公式になります。5 人から同じ役割の委員を 2 人選ぶなら、20/2! = 10 通りです。k = 0 の空集合と k = n の全体はどちらも一通りです。</p>
+  </div>
+  <p>「順序を忘れるなら何かで割る」という暗記では足りません。全対象が同じ回数ずつ数えられたことを確認して初めて割れます。同じ文字を含む並べ方など、区別する対象が変わる問題では、その重複の仕組みを改めて調べます。</p>
+  <figure class="concept-figure" id="counting-probability-visual-forget-order" data-visual="counting-probability-forget-order">
+    <svg class="concept-svg" viewBox="0 0 360 420" role="img" aria-labelledby="counting-probability-order-title counting-probability-order-desc" fill="var(--ink)" font-size="22">
+      <title id="counting-probability-order-title">三人から二人を選ぶとき、順序を忘れる対応</title>
+      <desc id="counting-probability-order-desc">順序付きのABとBAは同じ組A,Bへ、ACとCAはA,Cへ、BCとCBはB,Cへ移る。三つの組はどれも二回ずつ数えられているので、六を二で割って三になる。</desc>
+      <text x="92" y="32" text-anchor="middle">順序あり</text><text x="280" y="32" text-anchor="middle">順序なし</text>
+      <g fill="var(--surface)" stroke="var(--rule)" stroke-width="2"><rect x="20" y="60" width="145" height="65" rx="6"/><rect x="220" y="60" width="120" height="65" rx="6"/><rect x="20" y="170" width="145" height="65" rx="6"/><rect x="220" y="170" width="120" height="65" rx="6"/><rect x="20" y="280" width="145" height="65" rx="6"/><rect x="220" y="280" width="120" height="65" rx="6"/></g>
+      <g text-anchor="middle"><text x="55" y="101">AB</text><text x="125" y="101">BA</text><text x="280" y="101">{A, B}</text><text x="55" y="211">AC</text><text x="125" y="211">CA</text><text x="280" y="211">{A, C}</text><text x="55" y="321">BC</text><text x="125" y="321">CB</text><text x="280" y="321">{B, C}</text></g>
+      <path d="M 175 93 H 208 M 199 86 L 208 93 L 199 100 M 175 203 H 208 M 199 196 L 208 203 L 199 210 M 175 313 H 208 M 199 306 L 208 313 L 199 320" fill="none" stroke="var(--series-1)" stroke-width="3"/>
+      <text x="180" y="397" text-anchor="middle">6 ÷ 2! = 3 組</text>
+    </svg>
+    <figcaption>三人 A、B、C の小例です。どの組にも順序付きの結果がちょうど二つ対応します。何かで割る前に、この「どれも同じ回数」を確かめます。</figcaption>
+  </figure>
+</section>
+
+<section id="counting-probability-binomial">
+  <h2>二項定理と二項係数</h2>
+  <p>(x + y)ⁿ は、n 個の括弧のそれぞれから x か y を一つ選んで掛けた項を足す式です。x を k 回選ぶには、n 個の位置から k 個を選べばよいので、xᵏyⁿ⁻ᵏ の係数は n 個から k 個を選ぶ組合せの数です。従って、非負整数 n について<strong>二項定理</strong>が得られます。</p>
+  <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msup><mrow><mo>(</mo><mi>x</mi><mo>+</mo><mi>y</mi><mo>)</mo></mrow><mi>n</mi></msup><mo>=</mo><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>0</mn></mrow><mi>n</mi></munderover><mrow><mo>(</mo><mfrac linethickness="0"><mi>n</mi><mi>k</mi></mfrac><mo>)</mo></mrow><msup><mi>x</mi><mi>k</mi></msup><msup><mi>y</mi><mrow><mi>n</mi><mo>−</mo><mi>k</mi></mrow></msup></mrow></math></div>
+  <p>例えば (x + y)³ = y³ + 3xy² + 3x²y + x³。x = y = 1 とすれば、二項係数を全部足すと 2ⁿ です。これは n 個の要素それぞれについて「入れる／入れない」を選ぶ部分集合が 2ⁿ 個あることと一致します。<a href="random-variables.html">二項分布</a>では、同じ係数が成功する位置の選び方を数えます。</p>
+</section>
+
+<section id="counting-probability-sampling">
+  <h2>復元抽出と非復元抽出</h2>
+  <p>n 個の区別できる札から k 回引き、毎回戻す<strong>復元抽出</strong>では、順序つきの結果は nᵏ 通りです（n ≥ 1）。毎回戻さない<strong>非復元抽出</strong>では、0 ≤ k ≤ n の範囲で n(n − 1)⋯(n − k + 1) 通り。それまでに引いた札を条件として、各段で選べる札を等確率に選ぶモデルなら、それぞれの順序つき結果は同じ重みになります。各段の確率を掛けてよい理由は、次の<a href="conditional-probability.html">条件付き確率の乗法公式</a>で説明します。</p>
+  <p>具体的に、赤札 R₁, R₂, R₃ と青札 B₁, B₂ の五枚から二枚を戻さずに引きます。順序つきの結果は 5×4 = 20 通り、両方赤は 3×2 = 6 通りなので確率は 6/20 = 3/10。順序を忘れるなら、全体は五枚から二枚を選ぶ 10 通り、両方赤は三枚から二枚を選ぶ 3 通りで、やはり 3/10 です。分子も分母も同じ 2! 回ずつ数えたので比が保たれます。</p>
+  <p>戻して引くなら全体は 5² = 25 通り、両方赤は 3² = 9 通りで 9/25。R₁ を二回引くことも結果に入ります。戻すかどうかを変えたのに、同じ分母や分子を使うことはできません。色だけにまとめた「赤赤・赤青・青赤・青青」の四通りも、元の札の重みを足し合わせた結果であり、四通りとも 1/4 にはなりません。</p>
+</section>
+
+<section id="counting-probability-dice">
+  <h2>二つのさいころの和の分布</h2>
+  <p>二個のさいころを区別し、Ω = {(i, j)：1 ≤ i, j ≤ 6} の 36 個の結果を等確率とするモデルを置きます。この仮定の下で、一つの順序つき結果の重みは 1/36 です。和が 7 の結果は (1, 6)、(2, 5)、(3, 4)、(4, 3)、(5, 2)、(6, 1) の六個。従って確率は 6/36 = 1/6。一方、和が 2 になるのは (1, 1) だけなので 1/36 です。</p>
+  <p>和 s が 2 ≤ s ≤ 7 なら s − 1 個、7 ≤ s ≤ 12 なら 13 − s 個の結果があります。前半では i を 1 から s − 1 まで選べば j = s − i が決まり、後半は各出目を 7 − i、7 − j に置き換えると和が 14 − s になるので、前半と対応します。個数は 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1 で、全部足すと 36 です。</p>
+  <p class="note">場合の数で確率を P(A) = |A|/|Ω| と計算できるのは、有限の Ω の各結果を等確率とするモデルだからです。各さいころが単独では公平であっても、二個の関係まで決めたことにはなりません。例えばいつも同じ出目を出すように連動させれば、各出目は公平なまま、和 7 の確率は 0 です。36 個を等確率とする仮定には、二個の関係についての情報も入っています。</p>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="二個のさいころの順序付き出目36通りと和の表">
+    <table class="concept-table" id="counting-probability-visual-dice-grid" data-visual="counting-probability-dice-grid">
+      <caption>行が一個目、列が二個目の出目。各セルは和（★は7、○は2）</caption>
+      <thead><tr><th scope="col"><span class="table-math">1個目＼2個目</span></th><th scope="col"><span class="table-math">1</span></th><th scope="col"><span class="table-math">2</span></th><th scope="col"><span class="table-math">3</span></th><th scope="col"><span class="table-math">4</span></th><th scope="col"><span class="table-math">5</span></th><th scope="col"><span class="table-math">6</span></th></tr></thead>
+      <tbody>
+        <tr><th scope="row"><span class="table-math">1</span></th><td><strong>○2</strong></td><td><span class="table-math">3</span></td><td><span class="table-math">4</span></td><td><span class="table-math">5</span></td><td><span class="table-math">6</span></td><td><strong>★7</strong></td></tr>
+        <tr><th scope="row"><span class="table-math">2</span></th><td><span class="table-math">3</span></td><td><span class="table-math">4</span></td><td><span class="table-math">5</span></td><td><span class="table-math">6</span></td><td><strong>★7</strong></td><td><span class="table-math">8</span></td></tr>
+        <tr><th scope="row"><span class="table-math">3</span></th><td><span class="table-math">4</span></td><td><span class="table-math">5</span></td><td><span class="table-math">6</span></td><td><strong>★7</strong></td><td><span class="table-math">8</span></td><td><span class="table-math">9</span></td></tr>
+        <tr><th scope="row"><span class="table-math">4</span></th><td><span class="table-math">5</span></td><td><span class="table-math">6</span></td><td><strong>★7</strong></td><td><span class="table-math">8</span></td><td><span class="table-math">9</span></td><td><span class="table-math">10</span></td></tr>
+        <tr><th scope="row"><span class="table-math">5</span></th><td><span class="table-math">6</span></td><td><strong>★7</strong></td><td><span class="table-math">8</span></td><td><span class="table-math">9</span></td><td><span class="table-math">10</span></td><td><span class="table-math">11</span></td></tr>
+        <tr><th scope="row"><span class="table-math">6</span></th><td><strong>★7</strong></td><td><span class="table-math">8</span></td><td><span class="table-math">9</span></td><td><span class="table-math">10</span></td><td><span class="table-math">11</span></td><td><span class="table-math">12</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>36 個の順序付き結果を等確率とする、という追加の仮定の下で、各セルの重みは 1/36 です。★は六セル、○は一セル。表のセル面積が確率に対応するのは、この等確率の仮定によります。</p>
+</section>
+
+<details class="column" id="counting-probability-column">
+  <summary>寄り道［つながり］：誕生日の一致は、誰と誰を比べるかで変わる</summary>
+  <p>ワシントン大学の確率の講義資料は、365 日を等確率とし、重複を許して誕生日を選ぶモデルでは、23 人で少なくとも一組の誕生日が一致する確率が 1/2 を超えると説明しています。以下でも一年を 365 日とし、各人の選択を独立と仮定します。これは本章で採用する単純化で、実際の誕生日の分布をそのまま記述する主張ではありません。独立の意味は次の二章で正確にします。</p>
+  <p>本章で小さく作り直すと、「一年が 5 日の世界に 3 人いる」場合を数えられます。全割当ては 5³ = 125 通り。全員違う割当ては 5×4×3 = 60 通りなので、誰か二人以上が一致する確率は 1 − 60/125 = 13/25 = 0.52 です。「決めた一組が一致する」確率 1/5 より大きくなります。少なくとも一組の一致には、複数の比較の可能性が含まれているからです。</p>
+  <p>一般にも n ≤ 365 人なら、全員違う確率は 365×364×⋯×(365 − n + 1)/365ⁿ です。この補集合を使えば、誰と誰が何組重なったかを細かく分類しなくて済みます。「起こる場合」を直接数えるより、「起こらない場合」を数える方が見通しよくなる例です。</p>
+  <p class="source-note">出典：<a href="https://courses.cs.washington.edu/courses/cse312/26sp/files/notes/birthday_paradox.html">University of Washington CSE 312：Birthday “Paradox” Notes</a>。5 日・3 人の設定と計算は本章で作りました。</p>
+</details>
+
+<section id="counting-probability-exercises">
+  <h2>演習：場合の数と等確率</h2>
+  <article class="exercise">
+    <h3>1．役職と委員では、何が違うか</h3>
+    <p>6 人から議長と副議長を一人ずつ選ぶ場合と、同じ役割の委員を 2 人選ぶ場合の個数を求めてください。さらに、(x + y)⁶ の x²y⁴ の係数との関係を説明してください。</p>
+    <details><summary>ヒント1：役割を逆にしたら別か</summary><p>議長 A・副議長 B と、議長 B・副議長 A を区別するか考えます。</p></details>
+    <details><summary>ヒント2：六つの括弧のうち、どこから x を選ぶか</summary><p>x を選ぶ二つの位置は、順番を付けない二要素の集合です。</p></details>
+    <details><summary>解答</summary><p>役職なら 6×5 = 30 通り。委員なら同じ二人を二順序で数えたため、30/2! = 15 通りです。x²y⁴ を作るには六つの括弧から x を選ぶ二つを決めるので、係数も六個から二個を選ぶ 15 です。対象は人と位置で違いますが、順序を付けない二要素集合を数える構造は同じです。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>2．二枚が同じ色になる確率</h3>
+    <p>赤三枚、青二枚の区別できる札から二回、各段で札を等確率に選びます。二枚が同じ色になる確率を、復元抽出と非復元抽出の両方で求めてください。</p>
+    <details><summary>ヒント1：同じ色を二種類に分ける</summary><p>「両方赤」と「両方青」は排反です。</p></details>
+    <details><summary>ヒント2：分母と分子の両方で、戻す規則をそろえる</summary><p>復元なら全体 25、非復元なら全体 20 の順序つき結果です。</p></details>
+    <details><summary>解答</summary><p>復元では両方赤 3² = 9 通り、両方青 2² = 4 通りなので、(9 + 4)/25 = 13/25。非復元では両方赤 3×2 = 6 通り、両方青 2×1 = 2 通りなので、(6 + 2)/20 = 2/5 です。非復元を順序なしで数えても、分母 10、分子は赤二枚 3 通りと青二枚 1 通りで 4/10 になります。</p></details>
+  </article>
+  <article class="exercise">
+    <h3>3．少なくとも片方は 6、または和は 6</h3>
+    <p>二個のさいころの 36 個の順序つき結果を等確率とします。A を「少なくとも片方の出目が 6」、B を「和が 6」として、P(A)、P(B)、P(A ∪ B) を求めてください。</p>
+    <details><summary>ヒント1：両方 6 を二回数えていないか</summary><p>A の個数は 6 + 6 − 1 です。</p></details>
+    <details><summary>ヒント2：二つの事象は同時に起きるか</summary><p>片方が 6 なら、もう片方の出目を足した和は少なくとも 7 です。</p></details>
+    <details><summary>解答</summary><p>A は一個目が 6 の六通りと二個目が 6 の六通りから (6, 6) の重複一通りを引き、11 通り。従って P(A) = 11/36。B は (1, 5)、(2, 4)、(3, 3)、(4, 2)、(5, 1) の五通りで P(B) = 5/36。A と B は排反なので、P(A ∪ B) = 16/36 = 4/9 です。A の内部の重なりと、A と B の重なりを別々に確認しました。</p></details>
+  </article>
+</section>
+
+<section id="counting-probability-reflection">
+  <h2>自分の言葉で</h2>
+  <ol>
+    <li>積の法則で個数を掛けることと、独立な事象の確率を掛けることでは、確かめる条件がどう違いますか。</li>
+    <li>順列の数を k! で割れるのは、何がすべて同じ回数ずつ数えられているからですか。</li>
+    <li>二個のさいころの和や札の色だけを記録したとき、元の等確率な重みはどのように引き継がれますか。</li>
+  </ol>
+</section>
