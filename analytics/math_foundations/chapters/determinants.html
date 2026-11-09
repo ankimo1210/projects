@@ -4,6 +4,8 @@
   <p>対象は実数の 2 × 2 行列と、それが表す原点を保つ線形変換です。横軸は右、縦軸は上を正とします。<a href="vector-spaces.html">線形写像の章</a>で見たように、基本の矢印 e₁ = (1, 0)、e₂ = (0, 1) の行き先は、行列の<strong>列</strong>に入ります。</p>
   <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>A</mi><mo>=</mo><mo>(</mo><mtable><mtr><mtd><mi>a</mi></mtd><mtd><mi>b</mi></mtd></mtr><mtr><mtd><mi>c</mi></mtd><mtd><mi>d</mi></mtd></mtr></mtable><mo>)</mo><mo>,</mo><mspace width="1em"/><mi>u</mi><mo>=</mo><mi>A</mi><msub><mi>e</mi><mn>1</mn></msub><mo>=</mo><mo>(</mo><mi>a</mi><mo>,</mo><mi>c</mi><mo>)</mo><mo>,</mo><mspace width="1em"/><mi>v</mi><mo>=</mo><mi>A</mi><msub><mi>e</mi><mn>2</mn></msub><mo>=</mo><mo>(</mo><mi>b</mi><mo>,</mo><mi>d</mi><mo>)</mo></mrow></math></div>
   <p>単位正方形の四頂点は 0、e₁、e₁ + e₂、e₂。線形性から、像は 0、u、u + v、v を頂点とする平行四辺形です。成分を行ごとに a、b、c、d と読む順序と、列の矢印 (a, c)、(b, d) を混同しないようにしましょう。</p>
+  <p>例えば二本をu=(2,1)、v=(1,3)にすると、横方向の長さだけを掛けても、斜めの辺の長さ同士を掛けても面積にはなりません。底辺に垂直な高さが必要です。さらに、同じ二本の読む順序を交換すると通常の面積は同じでも、向きは逆になります。一つの量へこの二つを記録し、0になったとき何が失われるかまで調べます。</p>
+  <p class="note">演習込み120–170分を目安とします。まず二次行列式を面積と向きから作り、次に列操作と可逆性を計算し、最後に積の公式と10問の演習へ進みます。この章の計算と証明の中心は2×2で、一般次元への言及は区別して読みます。</p>
 </section>
 
 <section id="determinants-definition">
@@ -21,6 +23,10 @@
     <p>逆に ad − bc は、(a, c) を固定すれば (b, d) の和と実数倍を保ち、(b, d) を固定すれば (a, c) の和と実数倍を保ちます。u = v なら ac − ac = 0、u = e₁、v = e₂ なら 1·1 − 0·0 = 1 です。三つの約束をすべて満たすので、この約束に合う量は存在し、しかも一つに定まります。これを行列 A の<strong>行列式</strong>と呼び、det A と書きます。</p>
   </div>
   <p>本当に面積でしょうか。ここでは平面の<strong>内積</strong>を (x₁, x₂)·(y₁, y₂) = x₁y₁ + x₂y₂ と定めます。単位矢印 n の方向への v の符号付き正射影成分が v·n であるという高校幾何の公式と、面積 = 底辺 × 高さの公式を使います。u ≠ 0 のとき、底辺の長さは √(a² + c²)。u を反時計回りに直角に向けた単位矢印は n = (−c, a)/√(a² + c²) です。符号付きの高さは v·n = (ad − bc)/√(a² + c²) なので、底辺と掛けると ad − bc、通常の面積はその絶対値になります。u = 0 なら面積も行列式も 0 です。</p>
+  <div class="proof"><h3>例題1：斜めの二辺から、面積と向きを読む</h3>
+  <p>u=(2,1)、v=(1,3)を列に持つAの上段は(2,1)、下段は(1,3)です。det A=2·3−1·1=5。従って単位正方形の像の面積は5、向きは標準の順序と同じです。長さを掛けると√5·√10=√50で5にはなりません。二辺が直角でないためです。</p>
+  <p>高さを使って検算できます。底辺uの長さは√5、左へ直角の単位方向はn=(−1,2)/√5。vの符号付き高さはv·n=(−1+6)/√5=√5なので、底辺との積は5です。向きの基準を固定したから、vが底辺の左側にあれば高さが正になり、右側なら負になります。</p>
+  <p>二本の順序を交換すると上段(1,2)、下段(3,1)になり、行列式は1−6=−5。四頂点の集合0,u,u+v,vは同じなので通常の面積は5のままですが、0から最初の列、次に二列の和へ進む順序は逆です。列の交換は面積の大きさを変えず、向きの情報を変えます。</p></div>
   <p class="note">正負は二本を読む順序と向きの約束を含みます。固定した順序 (e₁, e₂) に対して、独立な二本では u から v が反時計回りに 180 度未満なら正、時計回りに 180 度未満なら負です。鏡映 (x, y) → (−x, y) の行列式は −1。面積を保っても向きは反転します。「負の面積がある」のではなく、面積と向きを一緒に記録しているのです。</p>
 
   <div class="concept-grid">
@@ -28,6 +34,17 @@
     <figure class="concept-figure" id="determinants-visual-negative" data-visual="determinants-visual-negative"><svg class="concept-svg" viewBox="0 0 360 360" role="img" aria-labelledby="determinants-visual-negative-title determinants-visual-negative-desc"><title id="determinants-visual-negative-title">境界をたどる順序が反転し、面積の符号だけが変わる</title><desc id="determinants-visual-negative-desc">鏡映u=(-1,0),v=(0,1)。同じ単位正方形の像は左側へ裏返る。矢印で境界0,u,u+v,v,0をたどると時計回り。面積1のままdetは-1。</desc><defs><marker id="determinants-visual-negative-walk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--ink)"/></marker></defs><text x="180" y="34" font-size="22" fill="var(--ink)" text-anchor="middle">同じ面積1、向きは逆</text><polygon points="145,238 225,238 225,158 145,158" fill="none" stroke="var(--ink-3)" stroke-width="2" stroke-dasharray="5 5"/><polygon points="145,238 65,238 65,158 145,158" fill="var(--accent-wash)" stroke="none"/><path d="M145 238 L65 238" fill="none" stroke="var(--ink)" stroke-width="2.5" marker-end="url(#determinants-visual-negative-walk)"/><path d="M65 238 L65 158" fill="none" stroke="var(--ink)" stroke-width="2.5" marker-end="url(#determinants-visual-negative-walk)"/><path d="M65 158 L145 158" fill="none" stroke="var(--ink)" stroke-width="2.5" marker-end="url(#determinants-visual-negative-walk)"/><path d="M145 158 L145 238" fill="none" stroke="var(--ink)" stroke-width="2.5" marker-end="url(#determinants-visual-negative-walk)"/><circle cx="145" cy="238" r="4" fill="var(--ink)"/><circle cx="65" cy="238" r="4" fill="var(--ink)"/><circle cx="65" cy="158" r="4" fill="var(--ink)"/><circle cx="145" cy="158" r="4" fill="var(--ink)"/><text x="128" y="266" font-size="22" fill="var(--ink)">0</text><text x="56" y="267" font-size="22" fill="var(--ink)">u</text><text x="135" y="142" font-size="22" fill="var(--ink)">v</text><text x="65" y="132" font-size="22" fill="var(--ink)" text-anchor="middle">u+v</text><text x="180" y="310" font-size="22" fill="var(--ink)" text-anchor="middle">破線：元の単位正方形</text><text x="180" y="340" font-size="22" fill="var(--ink)" text-anchor="middle">det=−1、面積=1</text></svg><figcaption>同じ境界順序 0→u→u+v→v→0 を矢印で追うと、こちらは時計回りです。前図と同じ面積1でも、det=−1 と符号だけが変わります。破線の正方形を右から左へ鏡映した例です。矢印は境界の順序を示し、二枚は同縮尺です。</figcaption></figure>
     <figure class="concept-figure" id="determinants-visual-zero" data-visual="determinants-visual-zero"><svg class="concept-svg" viewBox="0 0 360 360" role="img" aria-labelledby="determinants-visual-zero-title determinants-visual-zero-desc"><title id="determinants-visual-zero-title">零でない方向が消えても、残る方向はある</title><desc id="determinants-visual-zero-desc">u=(1,0),v=(0,0)では単位正方形の像は線分。0とe2の二入力は0へ重なり、e1方向は残る。det0は全てが一点への像という意味ではない。</desc><defs><marker id="determinants-visual-zero-walk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--ink)"/></marker></defs><text x="180" y="34" font-size="22" fill="var(--ink)" text-anchor="middle">高さ0、別の入力が重なる</text><polygon points="145,238 225,238 225,158 145,158" fill="none" stroke="var(--ink-3)" stroke-width="2" stroke-dasharray="5 5"/><line x1="145" y1="238" x2="225" y2="238" stroke="var(--series-1)" stroke-width="5"/><circle cx="145" cy="238" r="6" fill="var(--series-2)"/><circle cx="225" cy="238" r="6" fill="var(--series-1)"/><text x="228" y="268" font-size="22" fill="var(--ink)">u</text><text x="117" y="275" font-size="22" fill="var(--ink)" text-anchor="middle">v=0</text><text x="180" y="310" font-size="22" fill="var(--ink)" text-anchor="middle">A0=Ae₂=0</text><text x="180" y="340" font-size="22" fill="var(--ink)" text-anchor="middle">det=0、像は線分</text></svg><figcaption>高さが0になって単位正方形は線分へつぶれます。A0=Ae₂=0 と、異なる入力が同じ出力へ重なる一方、e₁ の行き先 u=(1,0) は残ります。det=0 は可逆性の失敗を示しますが、像が必ず一点とは限りません。この図は像が一次元の例で、三枚は同縮尺です。</figcaption></figure>
   </div>
+</section>
+
+<section id="determinants-column-operations">
+  <h2>列操作と行列式の変化</h2>
+  <p>公式へ毎回四つの数を代入するだけでなく、列どうしを混ぜて簡単な形にすると、面積を変える操作と変えない操作を見分けられます。二本をu,vとし、実数kを使います。片方へ他方のk倍を足すと、D(u,v+ku)=D(u,v)+kD(u,u)=D(u,v)。交代性によって余分な項が0なので、行列式は変わりません。</p>
+  <p>一方、一列そのものをk倍するとD(u,kv)=kD(u,v)です。kが負なら向きが反転し、k=0なら一列が零になって面積が消えます。二列を入れ替えると符号が逆です。「列へ他方の倍数を足す」と「一列を倍にする」は異なる操作で、係数が同じでも行列式への効果は違います。</p>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="同じ二本の列を操作したときの行列式と幾何の比較"><table id="determinants-depth-column-table" class="concept-table" style="min-width:30rem" data-visual="determinants-depth-column-table"><caption>入力の二列の順序を固定して比較。面積は絶対値、向きは符号で読む</caption><thead><tr><th scope="col">新しい列</th><th scope="col">新しい符号付き面積</th><th scope="col">幾何の読み方</th></tr></thead><tbody><tr><th scope="row">u, v+ku</th><td>D(u,v)</td><td>底辺に沿ってもう一辺をずらす。高さは変わらない。</td></tr><tr><th scope="row">u, kv</th><td>kD(u,v)</td><td>面積は|k|倍。k&lt;0なら符号反転、k=0なら退化。</td></tr><tr><th scope="row">v, u</th><td>−D(u,v)</td><td>同じ平行四辺形を逆の順に読む。</td></tr></tbody></table></div>
+  <p>表は長さを作図するものではなく、同じ二列に対する操作を式で比較します。元からD(u,v)=0なら、どの行でも非零の面積を復活させられません。符号0に「正向き」「逆向き」を付けない点も確認してください。どのkについても成り立つ理由は、上の線形性と交代性による等式です。</p>
+  <div class="proof"><h3>例題2：大きな成分を持つ二列を、面積を変えずに単純化する</h3>
+  <p>u=(3,2)、v=(7,5)なら直接の計算は15−14=1です。二本は近い向きで、長い辺でも面積は小さくなります。まず第二列をv−2u=(1,1)へ変えます。次に<strong>変更後の</strong>第二列を使って、第一列をu−2(1,1)=(1,0)へ変えます。最後に第二列から変更後の第一列を引けば(0,1)。すべて「他方の倍数を足す」操作なので、最後の標準の二列と同じ行列式1です。</p>
+  <p>各段階を検算すると、D((3,2),(1,1))=3−2=1、D((1,0),(1,1))=1、最後も1。ここでは各列操作が元に戻せるため、独立な二方向も保たれています。ただし同じなのは行列式であり、写像全体ではありません。元の行列は(1,0)を(3,2)へ送り、最後の単位行列は(1,0)をそのままにします。面積と向きが同じでも、すべての点の行き先まで同じとは限りません。</p></div>
 </section>
 
 <section id="determinants-lab">
@@ -40,6 +57,7 @@
 
 <section id="determinants-zero">
   <h2>行列式の零と可逆性</h2>
+  <p>元に戻す計算の目印は、何もしない変換です。対角の二成分が1、残りが0の行列を<strong>単位行列</strong> I と呼びます。これを (x,y) に作用させても (x,y) のままです。二つの変換の積がIなら、その順番で動かした結果は元の入力へ戻ったことになります。</p>
   <div class="theorem">
     <h3>2 × 2 行列で同じことをいう三条件</h3>
     <p>det A ≠ 0、二本の列が一次独立、A に逆行列がある、の三つは同値です。逆行列があるとは、変換を前後どちらからも元に戻せる行列があることです。</p>
@@ -50,6 +68,14 @@
     <p>従属なら、同時には 0 でない係数 x、y で xu + yv = 0 と書けます。A は非零の入力 (x, y) と入力 0 を同じ 0 へ移すため、元に戻せません。一方、Δ = ad − bc ≠ 0 なら、次の行列との積を両順序で計算すると単位行列になります。</p>
     <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msup><mi>A</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo>=</mo><mfrac><mn>1</mn><mi>Δ</mi></mfrac><mo>(</mo><mtable><mtr><mtd><mi>d</mi></mtd><mtd><mo>−</mo><mi>b</mi></mtd></mtr><mtr><mtd><mo>−</mo><mi>c</mi></mtd><mtd><mi>a</mi></mtd></mtr></mtable><mo>)</mo></mrow></math></div>
   </div>
+  <div class="proof"><h3>例題3：逆行列を使い、順方向と逆方向を照合する</h3>
+  <p>Aの上段を(2,1)、下段を(1,3)とします。Δ=5なので、逆行列の上段は(3/5,−1/5)、下段は(−1/5,2/5)。出力(5,5)を元へ戻すには、x=(3·5−5)/5=2、y=(−5+2·5)/5=1です。順方向でもA(2,1)=(5,5)と確かめられます。</p>
+  <p>公式そのものも検算しましょう。Aと分子の行列を掛けると上段は(6−1,−2+2)=(5,0)、下段は(3−3,−1+6)=(0,5)。5で割ればIです。逆順の積も上段(6−1,3−3)=(5,0)、下段(−2+2,−1+6)=(0,5)なので、前後どちらからも戻せます。</p>
+  <p>これに対し列u=(2,1)、v=(4,2)ではΔ=0で公式の分母を使えません。しかも−2u+v=0なので、非零入力(−2,1)と0が同じ出力へ移ります。「0で割れない」という計算上の問題の後ろに、出力から入力を区別できないという問題そのものの理由があります。像は一本の直線で、必ず一点へ消えるわけではありません。</p></div>
+  <div class="proof"><h3>例題4：係数が境界を越えると、向きと復元可能性はどう変わるか</h3>
+  <p>列をu=(1,1)、v=(1,t)とすると、det A=t−1。t&gt;1なら向きを保ち、t&lt;1なら反転し、t=1で二本が重なります。面積倍率は|t−1|です。t=1では0という符号に向きを割り当てません。</p>
+  <p>出力(1,0)の入力を探すと、x+y=1、x+ty=0。差から(t−1)y=−1です。t≠1ならy=−1/(t−1)、x=t/(t−1)と一意に求まり、代入すると両式を満たします。t=1なら同じ左辺へ1と0を要求し、解はありません。出力を(2,2)へ変えれば、t=1でもx+y=2の全入力が届きます。可逆でないとき「どの出力にも解がない」のではありません。</p>
+  <p>例えばt=2なら(2,−1)ですが、t=101/100なら(101,−100)。二列がほぼ同じ向きになると、差し引いて作るこの出力には大きな係数が要ります。これはこの特定の行列族と出力についての計算であり、行列式の大きさだけがすべての誤差の増え方を決める、という主張ではありません。小さい非零と厳密な0を分けて扱います。</p></div>
   <p><a href="dimension.html">次元の章</a>の言葉では、行列式が 0 のとき、像の次元は 2 より小さくなります。面積が 0 でも、図形のすべてが一点になるとは限りません。線分に押しつぶされる場合もあります。</p>
 </section>
 
@@ -61,6 +87,9 @@
     <p>F(s, t) = D(As, At) と置きます。A の線形性から F は二本それぞれについて線形で、F(s, s) = 0 です。また F(e₁, e₂) = det A。先ほどと同じ基本の二本への展開により、F(s, t) = det A · D(s, t) が出ます。ここで s、t を B の二本の列にすると、As、At は AB の列なので、求める積の式になります。A や B がつぶれる場合にも、この計算はそのまま有効です。</p>
   </div>
   <p>これで、どの平行四辺形も面積が |det A| 倍になることが分かりました。向きの反転を二度続ければ符号は正に戻ります。なお、図形の二本を読む順序の交換と、同じ変換の基底の取り替えは別の操作です。入力と出力に同じ別の基底を用いる場合、表す行列は変わっても変換の行列式は変わりません。</p>
+  <div class="proof"><h3>例題5：同じ面積倍率でも、合成順序は別に確かめる</h3>
+  <p>A(x,y)=(−2x,y)、B(x,y)=(x+y,y)とします。det A=−2、det B=1なので、積の公式からdet(AB)=−2。実際にAB(x,y)=(−2x−2y,y)で、行列の上段は(−2,−2)、下段は(0,1)、行列式は−2です。せん断で面積と向きを保ち、その後に横を反転して二倍します。</p>
+  <p>逆順ではBA(x,y)=(−2x+y,y)で別の写像ですが、det(BA)=1·(−2)=−2。同じ面積倍率と同じ向きだけでは、合成順序や各点の像は決まりません。例えば入力(0,1)はABで(−2,1)、BAで(1,1)となります。行列式は変換の重要な一つの情報であって、行列全体の代わりではありません。</p></div>
   <p>旧基底での行列を A、新基底での行列を A<sub>new</sub> とし、新基底の座標を旧基底の座標へ直す行列を P とします。新座標 x で表した同じ入力を、先に旧座標へ直してから写すと A(Px)、先に写してから旧座標へ直すと P(A<sub>new</sub>x) です。すべての x で一致するので AP = PA<sub>new</sub>。逆向きの座標変換もあるため P は逆行列を持ち、A<sub>new</sub> = P⁻¹AP となります。det(P⁻¹)det P = det I = 1 と積の公式から、det A<sub>new</sub> = det(P⁻¹)det A det P = det A です。</p>
   <p>実数 n 次元では、n 本それぞれへの線形性、二本が同じなら 0、標準基底の順序で 1、という規則へ拡張します。これが正方行列の行列式です。絶対値は n 次元の体積、符号は向きを担います。ただし、体積との対応や積の性質を一般次元で証明するには、n 本への展開などを別途示す必要があります。二次元の図だけで、その証明が済んだわけではありません。</p>
 </section>
@@ -73,7 +102,7 @@
 </details>
 
 <section id="determinants-exercises">
-  <h2>演習：行列式の計算と幾何</h2>
+  <h2>演習：行列式の計算と幾何</h2><p>1–4は符号・面積・列の基本、5–7は操作と逆向きの設計、8–10は退化・合成・境界の判断です。行列は上段と下段を明記し、面積は絶対値、向きは非零の符号から答えてください。</p>
   <article class="exercise">
     <h3>1．面積を保てば回転か</h3>
     <p>上段 (1, 2)、下段 (0, 1) の行列の行列式を求めてください。長さを保つ変換でもありますか。</p>
@@ -95,6 +124,13 @@
     <details><summary>ヒント2：列の関係を使う</summary><p>v = 3u なので、3u − v を考えます。</p></details>
     <details><summary>解答</summary><p>行列式は 1·6 − 3·2 = 0。入力 (3, −1) は 3u − v = 0 へ移ります。0 とこの入力を区別できず、逆変換は作れません。像は直線上にあり、面積は 0 です。</p></details>
   </article>
+<article class="exercise"><h3>4．行と列を取り違えずに面積を読む</h3><p>列u=(2,1)、v=(−1,2)を持つ行列Aについて、行列の二行、行列式、通常の面積、向きを求めてください。列の順を交換した場合も比べてください。</p><details><summary>ヒント1</summary><p>上段は二本の第一成分を並べます。</p></details><details><summary>ヒント2</summary><p>det A=2·2−(−1)·1です。交換後の四頂点の集合は同じです。</p></details><details><summary>解答</summary><p>Aの上段は(2,−1)、下段は(1,2)。行列式は4+1=5、面積は5で、向きは標準と同じです。順を交換した行列の上段は(−1,2)、下段は(2,1)、行列式は−1−4=−5。面積5は変わらず、読む順序の向きが反転します。この例はu·v=−2+2=0なので、長さ√5同士の積5でも検算できます。一般には二辺が直角でないため、長さの積だけでは面積を求められません。</p></details></article>
+<article class="exercise"><h3>5．二つの列操作を区別する</h3><p>D(u,v)=3とします。新しい二列がそれぞれ(u,v−4u)、(u,−2v)、(v,u)のとき、行列式と面積を求めてください。「v−4uも第二列を−4倍するから行列式は−12」という答案の誤りも指摘してください。</p><details><summary>ヒント1</summary><p>第二列全体を倍にするのか、他方の列の倍数を足すのかを区別します。</p></details><details><summary>ヒント2</summary><p>D(u,v−4u)=D(u,v)−4D(u,u)です。</p></details><details><summary>解答</summary><p>順に行列式は3、−6、−3、面積は3、6、3です。第一の操作は第二列へ第一列の−4倍を足す操作で、第二列そのものの−4倍ではありません。余分な項は−4D(u,u)=0なので値は3のままです。第二では線形性により−2が掛かり、第三では列交換で符号が反転します。元の3は非零なので、後二つの負符号は向きの反転を表します。</p></details></article>
+<article class="exercise"><h3>6．面積と向きから未知の列を設計する</h3><p>第一列u=(2,1)を固定し、第二列v=(b,d)の第一成分をb=1に制限します。通常の面積を3にしたいとき、dをすべて求め、向きも答えてください。二列が重なる境界のdも求めてください。</p><details><summary>ヒント1</summary><p>条件は|2d−1|=3で、絶対値を外すと二通りです。</p></details><details><summary>ヒント2</summary><p>2d−1=3と2d−1=−3をそれぞれ解きます。</p></details><details><summary>解答</summary><p>d=2なら行列式3で正向き、d=−1なら行列式−3で逆向き。いずれも面積3です。面積だけの指定では向きの異なる二解が残ります。重なる境界は2d−1=0よりd=1/2で、v=(1,1/2)=u/2と検算できます。d=0を境界と考えるのは誤りで、高さは斜めの底辺uから測る必要があります。</p></details></article>
+<article class="exercise"><h3>7．逆行列の公式を元の変換で検算する</h3><p>Aの上段を(1,2)、下段を(2,5)とします。逆行列を求め、出力(3,7)を持つ入力を求めてください。逆行列との積と、元の二式への代入の両方で確認してください。</p><details><summary>ヒント1</summary><p>行列式は5−4です。</p></details><details><summary>ヒント2</summary><p>逆行列の上段は(5,−2)、下段は(−2,1)になります。</p></details><details><summary>解答</summary><p>det A=1なので逆行列は上段(5,−2)、下段(−2,1)。入力は(15−14,−6+7)=(1,1)です。順方向でも(1+2,2+5)=(3,7)。Aと逆行列の積は上段(5−4,−2+2)=(1,0)、下段(10−10,−4+5)=(0,1)。逆順も上段(5−4,10−10)=(1,0)、下段(−2+2,−4+5)=(0,1)で、両側の逆を確かめられます。</p></details></article>
+<article class="exercise"><h3>8．行列式0は、全出力を零にするか</h3><p>Aの列を(2,1),(4,2)とします。出力(6,3)と(1,0)について、入力の存在と全入力を調べてください。行列式0だけから「どの出力にも届かない」と言えない理由も説明してください。</p><details><summary>ヒント1</summary><p>出力は(x+2y)(2,1)という形になります。</p></details><details><summary>ヒント2</summary><p>(6,3)は3(2,1)ですが、(1,0)は(2,1)の実数倍ではありません。</p></details><details><summary>解答</summary><p>det A=4−4=0で、像は(2s,s)の直線全体です。(6,3)にはx+2y=3より入力(3−2t,t)、t∈ℝがすべて届きます。代入すると常に(6,3)です。(1,0)には第二成分からs=0、第一成分から2s=1が必要となり矛盾、解なしです。行列式0は全出力へ一意に戻せないことを意味しますが、像に入る出力には入力があります。この非零行列では像は一点でなく直線です。</p></details></article>
+<article class="exercise"><h3>9．積の符号と、途中の退化</h3><p>det A=−2、det B=−3の二つの2×2行列について、ABの行列式・面積倍率・向きを答えてください。さらに途中に行列式0のCを入れたACBについても答えてください。積の公式だけでAB=BAは結論できますか。</p><details><summary>ヒント1</summary><p>向きを二度反転すると、符号は正に戻ります。</p></details><details><summary>ヒント2</summary><p>det(ACB)=det A·det C·det Bです。</p></details><details><summary>解答</summary><p>det(AB)=6、面積倍率6、向きは標準と同じです。ACBでは(−2)·0·(−3)=0なので面積0で、二方向が独立な像には戻りません。符号0に向きは付けません。積の公式はdet(AB)=det(BA)を示しますが、行列全体の一致は示しません。例えばA=diag(−2,1)、Bが上段(−3,1)・下段(0,1)ならABの上段は(6,−2)、BAの上段は(6,1)で異なり、行列式はともに6です。</p></details></article>
+<article class="exercise"><h3>10．ほぼ重なる列と、指定出力の難しさ</h3><p>Aₜの上段を(1,1)、下段を(1,t)とします。t=1、t=2、t=99/100について、行列式と、出力(1,0)を持つ入力を比べてください。また出力を(2,2)へ変えると、t=1の結論はどう変わりますか。</p><details><summary>ヒント1</summary><p>差を取ると(t−1)y=−1です。t=1を先に分けます。</p></details><details><summary>ヒント2</summary><p>t=99/100ではt−1=−1/100。解はy=100です。</p></details><details><summary>解答</summary><p>t=1では行列式0、同じ左辺x+yへ1と0を要求するため解なし。t=2では行列式1、入力(2,−1)です。t=99/100では行列式−1/100、y=100、x=−99で、−99+100=1、−99+(99/100)100=0と検算できます。小さい非零では逆変換はあり、この出力には大きな係数が必要です。一方t=1で出力(2,2)ならx+y=2のみになり、入力(2−s,s)の全体が届きます。特定の出力の整合性と、全出力への可逆性は分けて判断します。</p></details></article>
 </section>
 
 <section id="determinants-reflection">

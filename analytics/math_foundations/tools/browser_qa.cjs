@@ -15,12 +15,24 @@ function permittedPage(raw, known) {
   return /^[a-z0-9-]+\.html$/.test(name) && known.has(name) ? name : null;
 }
 
+function chapterExerciseCount(chapter) {
+  const count = chapter.exerciseCount === undefined ? 3 : chapter.exerciseCount;
+  assert(Number.isInteger(count) && count > 0, chapter.slug + ': exerciseCount must be a positive integer.');
+  return count;
+}
+
 function selfTest() {
   const known = new Set(['index.html', 'limits.html']);
   assert.equal(permittedPage('/index.html', known), 'index.html');
   assert.equal(permittedPage('/limits.html?theme=dark', known), 'limits.html');
   for (const value of ['/../README.md', '/%2e%2e/README.md', '/other.html', '//outside.test/index.html', '/assets/style.css']) {
     assert.equal(permittedPage(value, known), null);
+  }
+  assert.equal(chapterExerciseCount({ slug: 'default' }), 3);
+  assert.equal(chapterExerciseCount({ slug: 'single', exerciseCount: 1 }), 1);
+  assert.equal(chapterExerciseCount({ slug: 'extended', exerciseCount: 12 }), 12);
+  for (const exerciseCount of [0, -1, 1.5, true, null, '12']) {
+    assert.throws(() => chapterExerciseCount({ slug: 'invalid', exerciseCount }), /exerciseCount must be a positive integer/);
   }
   console.log('Browser QA self-test passed.');
 }
@@ -59,6 +71,8 @@ async function main(config) {
   for (const book of ['vector','numerical','optimization','linear-core']) assert.equal(catalog.chapters.filter(chapter => chapter.book === book).length, 10, book + ' has ten chapters.');
   const expectedStates = known.size * 6;
   const expectedLabs = catalog.chapters.filter(chapter => chapter.lab).length;
+  const exercisesByPage = new Map(catalog.chapters.map(chapter => [chapter.slug + '.html', chapterExerciseCount(chapter)]));
+  const expectedExercises = [...exercisesByPage.values()].reduce((sum, count) => sum + count, 0);
   const fragments = await Promise.all(catalog.chapters.map(chapter => fs.readFile(path.join(__dirname, '../chapters', chapter.slug + '.html'), 'utf8')));
   const expectedFigures = fragments.reduce((sum, fragment) => sum + (fragment.match(/<figure\b[^>]*class="concept-figure"/g) || []).length, 0);
   const expectedTables = fragments.reduce((sum, fragment) => sum + (fragment.match(/<table\b[^>]*class="concept-table"/g) || []).length, 0);
@@ -1019,6 +1033,8 @@ async function main(config) {
         const record = await staticPage.evaluate(() => ({ page: location.pathname.slice(1), h1: document.querySelector('h1')?.innerText,
           bodyLength: document.querySelector('main')?.innerText.length, exercises: document.querySelectorAll('article.exercise').length,
           answers: [...document.querySelectorAll('article.exercise details')].filter(element => element.querySelector('summary')?.textContent === '解答').length,
+          exerciseSummaries: [...document.querySelectorAll('article.exercise')].map(exercise =>
+            [...exercise.querySelectorAll('details > summary')].map(summary => summary.textContent.trim())),
           noscripts: [...document.querySelectorAll('main noscript')].map(element => element.innerText),
           mathCount: document.querySelectorAll('main math').length,
           mathHint: [...document.querySelectorAll('.chapter-header .math-scroll-hint')].map(element => ({
@@ -1027,7 +1043,11 @@ async function main(config) {
           conceptFigures: [...document.querySelectorAll('figure.concept-figure svg')].map(svg => ({ width: svg.getBoundingClientRect().width, height: svg.getBoundingClientRect().height, title: svg.querySelector('title')?.textContent })),
           conceptTables: [...document.querySelectorAll('table.concept-table')].map(table => ({ width: table.getBoundingClientRect().width, caption: table.caption?.textContent.trim() })) }));
         check(!!record.h1 && record.bodyLength > 150, 'nojs-readable-body', record, current);
-        check(record.answers === record.exercises, 'nojs-answers-present', record, current);
+        const expected = exercisesByPage.get(name) || 0;
+        check(record.exercises === expected && record.answers === expected, 'nojs-chapter-exercises-and-answers', { ...record, expected }, current);
+        check(record.exerciseSummaries.every(summaries => summaries.length === 3
+          && /^ヒント1(?:[：:\s]|$)/.test(summaries[0]) && /^ヒント2(?:[：:\s]|$)/.test(summaries[1]) && summaries[2] === '解答'),
+          'nojs-two-stage-hints-and-answer', record.exerciseSummaries, current);
         check(record.labCount === 0 || record.noscripts.length >= record.labCount && record.noscripts.every(text => text.trim().length > 20), 'nojs-lab-fallback', record, current);
         if (record.mathCount > 0) check(record.mathHint.length === 1 && record.mathHint[0].visible && record.mathHint[0].text === mathScrollHintText,
           'nojs-math-scroll-hint-visible', record.mathHint, current);
@@ -1054,7 +1074,7 @@ async function main(config) {
         }
         exerciseCount += record.exercises; answerCount += record.answers; report.noJavaScript.push(record);
       }
-      check(exerciseCount === catalog.chapters.length * 3 && answerCount === catalog.chapters.length * 3, 'nojs-all-exercises-and-answers', { exerciseCount, answerCount });
+      check(exerciseCount === expectedExercises && answerCount === expectedExercises, 'nojs-all-exercises-and-answers', { exerciseCount, answerCount, expectedExercises });
       await staticPage.setViewportSize({ width: 320, height: 900 });
       current = { page: 'gradient.html' };
       await staticPage.goto(origin + '/gradient.html', { waitUntil: 'load' });

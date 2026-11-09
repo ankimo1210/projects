@@ -2,6 +2,7 @@
   <h2>円周積分と負一乗の係数</h2>
   <p>中心 a を反時計回りに一周すると、(z − a)⁻¹ の積分だけが 2πi になり、それ以外の整数べきの積分は0でした。<a href="laurent-singularities.html">Laurent展開</a>があれば、多くの項を含む関数の積分でも、たった一つの係数を読むだけで済みそうです。その係数を<strong>留数</strong>と名づけます。</p>
   <p>円の積分から始め、最後に有限個の特異点を囲む単純閉曲線へ進みます。前提は<a href="complex-contours.html">べきの円周積分と向き</a>、Laurent展開、<a href="cauchy-theorem.html">有限円孔を持つ境界のCauchyの定理</a>です。自己交差する曲線や一般の巻き数は扱わず、境界上に特異点がある場合は公式の対象外にします。</p>
+<p>計算の順番は、まず積分路と特異点の位置を確定し、各点で必要な係数だけを求め、最後に向きの符号を付けることです。全てのLaurent係数を計算する必要はありませんが、留数が0だから特異点が消えたとも言えません。以下の例題では「どこを囲むか」と「どの係数を求めるか」を別々に選びます。</p><p class="note" data-reading-guide="study-parts">学習時間の目安は演習を含みます。本文と例題、条件を変える考察、演習の三回に分けて読み進めても構いません。</p>
 </section>
 
 <section id="complex-residues-coefficient">
@@ -29,13 +30,45 @@
   <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi mathvariant="normal">Res</mi><mo>(</mo><mi>f</mi><mo>,</mo><mi>a</mi><mo>)</mo><mo>=</mo><mfrac><mrow><msup><mi>φ</mi><mrow><mo>(</mo><mi>m</mi><mo>−</mo><mn>1</mn><mo>)</mo></mrow></msup><mo>(</mo><mi>a</mi><mo>)</mo></mrow><mrow><mo>(</mo><mi>m</mi><mo>−</mo><mn>1</mn><mo>)</mo><mo>!</mo></mrow></mfrac><mo>,</mo><mspace width="0.6em"/><mi>f</mi><mo>(</mo><mi>z</mi><mo>)</mo><mo>=</mo><mfrac><mrow><mi>φ</mi><mo>(</mo><mi>z</mi><mo>)</mo></mrow><msup><mrow><mo>(</mo><mi>z</mi><mo>−</mo><mi>a</mi><mo>)</mo></mrow><mi>m</mi></msup></mfrac></mrow></math></div>
 </section>
 
+
+<section id="complex-residues-method-example"><h2>留数の計算法を選ぶ</h2>
+
+<p>極の位数を調べるのは、留数と取り違えるためではなく、正則な分子の何次までが必要かを決めるためです。中心で正則な関数の導関数が簡単なら高位の極の公式、低次数の係数がすぐ読めるなら級数を選びます。</p>
+<article class="worked-example" id="complex-residues-worked-double"><h3>例題1：二重極の「必要な一次」だけを求める</h3>
+<p>f(z)=eᶻ/(z−1)² を反時計回りの円 |z−1|=1/2 で積分します。eᶻ は全平面で正則、e¹≠0なので1は二重極で、他に特異点はありません。分母の零点を微分する単純極の公式は、ここでは分母の微分が1で0になるため使いません。</p>
+<p>φ(z)=eᶻ と置けば、負1乗に必要なのは φ′(1)=e。従って Res(f,1)=e、円周積分は2πieです。別に w=z−1 と置くと eᶻ=e·eʷ=e(1+w+w²/2+…) なので、f=e w⁻²+e w⁻¹+e/2+…。負2乗の係数も負1乗の係数も今回はeですが、積分へ残る理由はあくまで指数が−1だからです。</p>
+<p>条件を変えて f(z)=eᶻ/(z−1)³ にすると三重極になり、必要なのは二次係数e/2です。留数e/2、同じ円での積分πie。極の位数が増えても、積分が大きくなるとは限りません。円を時計回りにすれば、それぞれ−2πieと−πieになります。</p></article>
+
+</section>
+
 <section id="complex-residues-theorem">
   <h2>留数定理と境界積分</h2>
   <div class="theorem"><h3>有限個の孤立特異点に対する留数定理</h3><p>Γ を単純な区分 C¹ 閉曲線で、内部を左に見る正向きとします。f は Γ とその内部の閉領域を含む開集合で、内部の有限個の点 a₁,…,aₘ を除いて正則で、各 aⱼ は孤立特異点とします。Γ 上に特異点はないものとします。このとき</p></div>
   <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mo>∮</mo><mi>Γ</mi></msub><mi>f</mi><mo>(</mo><mi>z</mi><mo>)</mo><mspace width="0.2em"/><mi>d</mi><mi>z</mi><mo>=</mo><mn>2</mn><mi>π</mi><mi>i</mi><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>m</mi></munderover><mi mathvariant="normal">Res</mi><mo>(</mo><mi>f</mi><mo>,</mo><msub><mi>a</mi><mi>j</mi></msub><mo>)</mo></mrow></math></div>
-  <div class="proof"><h3>借用した境界定理の条件を確認する</h3><p>各 aⱼ の周りに、互いに交わらず、Γ の内部に厳密に含まれ、他の特異点を含まない小さい閉円板を取ります。点は有限個なので、この選び方ができます。f は全境界と円板の間の閉領域を含む開近傍で正則です。</p><p>第5章で借用した有限円孔へのCauchyの定理から、Γ の積分は各小円を反時計回りに積分したものの和。各小円の積分は前節から 2πi Res(f, aⱼ) なので、足せば上の式です。領域の境界として内周をたどる向きは時計回りですが、等号の右側へ移した小円は反時計回り。この符号を図と合わせて確認します。</p></div>
+  <div class="proof"><h3>借用した境界定理の条件を確認する</h3><p>各 aⱼ の周りに、互いに交わらず、Γ の内部に厳密に含まれ、他の特異点を含まない小さい閉円板を取ります。点は有限個なので、この選び方ができます。f は全境界と円板の間の閉領域を含む開近傍で正則です。</p><p><a href="cauchy-theorem.html">有限円孔へのCauchyの定理</a>（そこで一般境界への拡張を借用）から、Γ の積分は各小円を反時計回りに積分したものの和。各小円の積分は<a href="#complex-residues-coefficient">留数の定義と円周積分</a>から 2πi Res(f, aⱼ) なので、足せば上の式です。領域の境界として内周をたどる向きは時計回りですが、等号の右側へ移した小円は反時計回り。この符号を図と合わせて確認します。</p></div>
   <figure class="concept-figure" id="complex-residues-visual-holes" data-visual="complex-residues-holes"><svg class="concept-svg" viewBox="0 0 360 390" role="img" aria-labelledby="complex-residues-visual-holes-title complex-residues-visual-holes-desc"><title id="complex-residues-visual-holes-title">留数は向きをそろえて足し、内部の極があっても相殺しうる</title><desc id="complex-residues-visual-holes-desc">具体例F=1/(z+1)-1/(z-1)。極-1の留数1、極1の留数-1。外円と二つの小円は全て反時計回り。小円の二積分を足すと外周積分0になる。零積分から内部正則とは逆算できない。</desc><defs><marker id="complex-residues-visual-holes-ccw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--series-2)"/></marker></defs><text x="180" y="28" font-size="22" fill="var(--ink)" text-anchor="middle">F=1/(z+1)−1/(z−1)</text><circle cx="180" cy="170" r="120" fill="var(--accent-wash)" stroke="var(--ink-3)" stroke-width="2.5"/><path d="M210 54 A120 120 0 0 0 180 50" fill="none" stroke="var(--series-2)" stroke-width="3" marker-end="url(#complex-residues-visual-holes-ccw)"/><circle cx="125" cy="170" r="27" fill="var(--surface)" stroke="var(--series-2)" stroke-width="2.5"/><path d="M152 170 A27 27 0 0 0 125 143" fill="none" stroke="var(--series-2)" stroke-width="2.5" marker-end="url(#complex-residues-visual-holes-ccw)"/><line x1="120" y1="165" x2="130" y2="175" stroke="var(--series-1)" stroke-width="3"/><line x1="120" y1="175" x2="130" y2="165" stroke="var(--series-1)" stroke-width="3"/><text x="125" y="221" font-size="22" fill="var(--ink)" text-anchor="middle">−1</text><text x="125" y="125" font-size="22" fill="var(--ink)" text-anchor="middle">Res=1</text><circle cx="235" cy="170" r="27" fill="var(--surface)" stroke="var(--series-2)" stroke-width="2.5"/><path d="M262 170 A27 27 0 0 0 235 143" fill="none" stroke="var(--series-2)" stroke-width="2.5" marker-end="url(#complex-residues-visual-holes-ccw)"/><line x1="230" y1="165" x2="240" y2="175" stroke="var(--series-1)" stroke-width="3"/><line x1="230" y1="175" x2="240" y2="165" stroke="var(--series-1)" stroke-width="3"/><text x="235" y="221" font-size="22" fill="var(--ink)" text-anchor="middle">1</text><text x="235" y="125" font-size="22" fill="var(--ink)" text-anchor="middle">Res=-1</text><text x="319" y="180" font-size="22" fill="var(--ink)">Γ</text><text x="180" y="332" font-size="22" fill="var(--ink)" text-anchor="middle">2πi·(1−1)=0</text><text x="180" y="371" font-size="22" fill="var(--ink)" text-anchor="middle">極があるのに、外周積分0</text></svg><figcaption>一般の穴の和の図を、二極を持つ具体例 F=1/(z+1)−1/(z−1) で読みます。全ての円を反時計回りにそろえると、小円の積分は2πiと−2πiで、外周では打ち消し合います。外周積分が0でも内部に極がないとは言えません。全境界と二穴を除いた閉領域の開近傍で正則であるため、境界定理と各留数の計算を使えます。円の面積や縦の高さは関数値を表していません。</figcaption></figure>
   <p>f(z) = 1/[z(z − 1)] なら、0での留数は −1、1での留数は1です。正向きの円 |z| = 2 の積分は0ですが、|z| = 1/2 の積分は −2πi。どちらも積分する円そのものに極はありません。どの極を内部に含むかを先に決めてから、留数を足します。</p>
+</section>
+
+
+<section id="complex-residues-contour-examples"><h2>積分路の選択と特異点の変化</h2>
+
+<article class="worked-example" id="complex-residues-worked-contours"><h3>例題2：同じ関数を、異なる円で積分する</h3>
+<p>F(z)=(z+2)/[z(z−1)] とします。分子を展開する前に、候補0と1で打ち消しがないことを確認します。どちらも単純極です。0で Res(F,0)=lim zF(z)=2/(−1)=−2、1で Res(F,1)=lim (z−1)F(z)=3/1=3 となります。</p>
+<p>反時計回りの |z|=1/2 なら0だけを含み、積分は2πi·(−2)=−4πi。|z|=2 なら両方を含み、2πi(−2+3)=2πiです。同じ0中心の円でも、半径を大きくすると内部の特異点が変わるので値は変わります。半径1では1が輪郭上に来るため、両方の答えを補間するのでなく、通常の積分が定義されません。</p>
+<p>別解として部分分数 F=−2/z+3/(z−1) も使えます。分子を戻すと −2(z−1)+3z=z+2 なので検算できます。係数−2と3がそのまま各単純極の留数になり、どの項を一周するかで同じ結果を得ます。</p></article>
+<div class="concept-table-wrap" tabindex="0" role="region" aria-label="同じ有理関数で輪郭と向きを変えた積分"><table class="concept-table" data-visual="complex-residues-contour-decision" style="min-width:34rem"><caption>留数を計算し直さず、内部と向きだけを切り替える</caption><thead><tr><th scope="col">F=(z+2)/[z(z−1)] の輪郭</th><th scope="col">使う留数</th><th scope="col">積分</th><th scope="col">判断の要点</th></tr></thead><tbody>
+<tr><th scope="row">|z|=1/2、反時計回り</th><td>−2</td><td>−4πi</td><td>0だけが内部。</td></tr>
+<tr><th scope="row">|z|=2、反時計回り</th><td>−2+3=1</td><td>2πi</td><td>両方を一度囲む。</td></tr>
+<tr><th scope="row">|z|=2、時計回り</th><td>−2+3=1</td><td>−2πi</td><td>向きの反転は最後に負号。</td></tr>
+<tr><th scope="row">|z|=1、いずれの向きも</th><td>定理を適用しない</td><td>未定義</td><td>1が輪郭上。誤差の大小ではない。</td></tr>
+</tbody></table></div>
+<p>この表で最初に見るべき列は輪郭です。留数自体は局所的な数で変わらず、有限個の特異点を含む単純閉曲線であるという条件の下で、選ぶ和と向きが積分を決めます。</p>
+<article class="worked-example" id="complex-residues-worked-collision"><h3>例題3：極が合流すると公式の形も変わる</h3>
+<p>実数aに対し Gₐ(z)=1/[z(z−a)] を反時計回りの |z|=1 で積分します。a≠0のとき、0とaは単純極で、留数はそれぞれ−1/aと1/aです。0&lt;|a|&lt;1なら両方が内部なので積分0、|a|&gt;1なら0だけが内部なので−2πi/aです。|a|=1は輪郭上の極のため除きます。</p>
+<p>a=0では分母がz²となり、二重極です。−1/aや1/aを代入してはいけません。G₀=z⁻² の負1乗の係数は0なので積分も0。a→0の各留数は大きくなりますが、両方を含む円での和は常に0です。「それぞれの極の式を極限へ送ること」と「合流後の関数から係数を読むこと」を分けます。</p>
+<p>例えばa=2では0の留数−1/2だけを使って−πi、a=1/2では留数−2と2を足して0です。合流後も特異点自体は消えません。z⁻²は0で有界ではなく、留数0は可除性の判定にはなりません。</p></article>
+
 </section>
 
 <section id="complex-residues-lab">
@@ -51,7 +84,7 @@
       <tr><th scope="row"><span class="table-math">|a| = 1</span></th><td>未定義</td><td>未定義</td><td>輪郭上の極。留数定理の条件外。</td></tr>
     </tbody></table>
   </div>
-  <p>境界上の極を勝手に「留数の半分」として扱うことはできません。経路を避けて通る方法や主値など、別の定義と条件を導入する必要があり、この章では扱いません。</p>
+  <p>境界上の極を勝手に「留数の半分」として扱うことはできません。経路を避けて通る方法や積分の主値など、別の定義と条件を導入する必要があり、この章では扱いません。</p><p>ここでいう積分の主値は、主値対数 Log のように関数の値の候補から一つを選ぶ約束ではありません。特異点の両側をどの組合せで極限へ近づけるかを別に指定する積分の定義です。本章の通常の輪郭積分へ、その値を補って扱うことはしません。</p>
 </section>
 
 <details class="column" id="complex-residues-column"><summary>寄り道［数学の見方］：円の上の振動を、平均で選ぶ</summary>
@@ -61,5 +94,11 @@
   <article class="exercise"><h3>1．単純極の公式を使う</h3><p>反時計回りの円 |z| = 2 に沿う ∮ dz/(z² + 1) を求めてください。内部の二つの極の留数を別々に書きます。</p><details><summary>ヒント1：分母の零点</summary><p>z² + 1 = (z − i)(z + i) です。</p></details><details><summary>ヒント2：h′(z) = 2z</summary><p>それぞれの留数は 1/(2i) と 1/(−2i) になります。</p></details><details><summary>解答</summary><p>極は ±i で両方とも円の内部です。留数は i で 1/(2i)、−i で −1/(2i)、和は0。留数定理から積分は0です。内部に極があることだけで積分が非零とは限りません。</p></details></article>
   <article class="exercise"><h3>2．二重極でも負1乗を読む</h3><p>f(z) = (z + 2)/(z − 1)² の1での極の位数と留数を求め、反時計回りの円 |z − 1| = 1/2 の積分を計算してください。</p><details><summary>ヒント1：分子を中心1で書く</summary><p>z + 2 = 3 + (z − 1) です。</p></details><details><summary>ヒント2：二つの負のべき</summary><p>f = 3(z − 1)⁻² + (z − 1)⁻¹ です。</p></details><details><summary>解答</summary><p>2位の極で、留数は負1乗の係数1です。積分は 2πi。負2乗の係数3を留数にしてはいけません。φ(z) = z + 2 とすれば、m = 2 の公式 φ′(1) = 1 でも確かめられます。</p></details></article>
   <article class="exercise"><h3>3．円上の極を検出する</h3><p>∮<sub>|z|=1</sub> dz/(z − 1) を、この章の留数定理で求められますか。「極は境界にあるので半分」という説明の問題点を述べてください。</p><details><summary>ヒント1：曲線に代入する</summary><p>z = eⁱᵗ と置くと t = 0、2π で分母が0です。</p></details><details><summary>ヒント2：定理の仮定</summary><p>f は Γ 上でも正則でなければなりません。</p></details><details><summary>解答</summary><p>求められません。極1が輪郭上にあり、通常の区分C¹曲線上で連続な被積分関数という前提も破れています。この章で定義した輪郭積分は未定義で、0やπiと結論できません。経路の変更や主値を使うなら、別の定義とその根拠が必要です。</p></details></article>
+<article class="exercise"><h3>4．打ち消してから極を判定する</h3><p>f(z)=(z²−1)/[(z−1)(z+2)] の1と−2での特異点を分類し、反時計回りの |z|=3 の積分を求めてください。</p><details><summary>ヒント1</summary><p>z≠1で共通因子z−1を打ち消せます。</p></details><details><summary>ヒント2</summary><p>延長した関数は(z+1)/(z+2)。−2では分子は−1です。</p></details><details><summary>解答</summary><p>1は可除で留数0。−2は単純極で留数−1です。よって積分は−2πi。実際 (z+1)/(z+2)=1−1/(z+2) なので同じ係数が読めます。1で元の式が未定義でも、円上には問題がなく、留数定理では内部の孤立特異点として扱えます。</p></details></article>
+<article class="exercise"><h3>5．必要な次数を逆算する</h3><p>f(z)=sin z/z⁴ の0での極の位数と留数を求め、反時計回りの |z|=1 の積分を計算してください。</p><details><summary>ヒント1</summary><p>sin z=z−z³/6+z⁵/120−… です。分子の零点も数えます。</p></details><details><summary>ヒント2</summary><p>z⁴で割った後、z⁻¹になる項を探します。</p></details><details><summary>解答</summary><p>f=z⁻³−(1/6)z⁻¹+z/120−… なので3位の極、留数−1/6、積分−πi/3です。分母の四乗だけから4位と判断するのは誤りです。sin z/z は0へ正則に延長され値1なので、f=(sin z/z)/z³ として二階導関数の公式でも係数−1/6を確認できます。</p></details></article>
+<article class="exercise"><h3>6．積分値から分子を設計する</h3><p>H(z)=(αz+β)/[z(z−1)]（α,βは実数）について、反時計回りの |z|=1/2 の積分を2πi、|z|=2 の積分を6πiにするα,βを求めてください。</p><details><summary>ヒント1</summary><p>0の留数は−β、1の留数はα+βです。</p></details><details><summary>ヒント2</summary><p>小円は−βだけ、大円は二つの和αを選びます。</p></details><details><summary>解答</summary><p>−β=1、α=3よりα=3、β=−1。1での留数は2となり、実際 H=1/z+2/(z−1) です。小円は2πi、大円は2πi(1+2)=6πiに戻ります。両方の留数が非零なので、どちらも確かに単純極です。</p></details></article>
+<article class="exercise"><h3>7．零積分からの誤診を直す</h3><p>「|z|=2での積分が0なら、内部に特異点はない」という主張を、極が一つの場合と二つの場合の反例で訂正してください。向きは反時計回りです。</p><details><summary>ヒント1</summary><p>一つの極でも留数が0になれます。</p></details><details><summary>ヒント2</summary><p>二つの単純極の留数を、互いに反対の数にします。</p></details><details><summary>解答</summary><p>一つなら f=1/z² で二重極があっても留数0。二つなら f=1/[z(z−1)]=−1/z+1/(z−1) で留数の和0です。どちらも積分は0。逆に内部に特異点がなく閉領域の開近傍で正則ならCauchyの定理で0ですが、その逆は一つの輪郭の積分だけから言えません。</p></details></article>
+<article class="exercise"><h3>8．中心を選んで一つだけ囲む</h3><p>F(z)=(z+2)/[z(z−1)] の0だけを含み、1を含まない反時計回りの円を、中心c=−1/2を固定して選びます。許される半径r&gt;0を全て求め、積分を答えてください。</p><details><summary>ヒント1</summary><p>中心から0と1への距離はそれぞれ1/2と3/2です。</p></details><details><summary>ヒント2</summary><p>内部に入れるには距離より大きく、外部に置くには距離より小さくします。</p></details><details><summary>解答</summary><p>1/2&lt;r&lt;3/2 が全てです。両端の等号は極が円上に来るため除きます。内部の留数は−2だけなので積分は−4πi。例えばr=1なら実軸との交点は−3/2と1/2で、0が内部、1が外部という位置関係も確かめられます。</p></details></article>
+<article class="exercise"><h3>9．真性特異点にも同じ係数を使う</h3><p>f(z)=z e^(1/z) の0の留数と、時計回りの |z|=1/2 の積分を求めてください。「極でないから留数定理は使えない」という説明も判定してください。</p><details><summary>ヒント1</summary><p>e^(1/z)=1+z⁻¹+z⁻²/2+z⁻³/6+… です。</p></details><details><summary>ヒント2</summary><p>zを掛けるので、元のz⁻²の項が負1乗になります。</p></details><details><summary>解答</summary><p>f=z+1+(1/2)z⁻¹+(1/6)z⁻²+… なので留数1/2、時計回りの積分は−2πi·(1/2)=−πi。負のべきが無限にある真性特異点ですが、0は孤立特異点で、円と0を除く内部では正則です。有限個の孤立特異点に対する本章の定理の条件を満たします。</p></details></article>
 </section>
 <section id="complex-residues-reflection"><h2>自分の言葉で</h2><ol><li>留数は、Laurent展開のどの係数で、なぜ一周の積分にその係数だけが残りますか。</li><li>有限個の小円の和を外周の積分へ置き換えるとき、正則性と向きについて何を確認しましたか。</li><li>輪郭上に極がある場合と、輪郭に近い極で数値誤差が大きい場合は、何が違いますか。</li></ol></section>

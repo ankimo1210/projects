@@ -2,14 +2,18 @@
   <h2>積分で定義した関数と微分</h2>
   <p>ある容器へ水が入り、時刻 t における正味の流入速度が f(t) であるとします。負の値は流出です。時刻 a から x までの水量の変化を集めた関数 F(x) を作ると、その瞬間の変化率は元の f(x) に戻るでしょうか。微分と積分が逆の操作になるという言葉を、条件を確かめながら定理にします。</p>
   <p>前提は<a href="integration.html">積分</a>の定義と<a href="integration.html#integration-properties">加法性・大小関係</a>、<a href="continuity.html">連続性</a>、<a href="mean-value.html">平均値の定理</a>です。連続関数は閉区間でRiemann積分可能であるという定理も、積分の章から借ります。積分の存在を原始関数で定義していないので、これからの議論は循環しません。</p>
+  <p>この章では、流入の割合と水量が同じものではないことを数で確かめます。その後、短い時間の平均から瞬間の割合を取り出す理由を示し、原始関数の端の値で積分を計算します。最後に、上端・下端がともに動く場合と、割合に飛びがある場合へ条件を変えて、どこまで同じ説明が通るかを調べます。</p>
+  <p class="note">学習の目安は演習を含めて120–170分です。符号付きの蓄積と第一の基本定理、原始関数と初期値、動く端点と条件の診断の三回に分けられます。演習1–3は基本、4–7は蓄積と連鎖律、8–10は条件・復元・設計です。模型の流量は自作の理想化であり、実測を予測するものではありません。</p>
 </section>
 
 <section id="fundamental-theorem-accumulation">
   <h2>符号付き積分と面積</h2>
+  <p>水量の例で、f はその時々の流入・流出の割合、F はそれまでに増減した水量と考えます。aは集め始める固定の時刻、xは今どこまで集めたかを表す動く上端です。積分の中の t は、aからxまで途中の場所を順に集めるための仮の文字で、上端xとは役割が違います。小文字fの値を積み重ねて、大文字Fという新しい関数を作ります。</p>
   <p>f が [a, b] で連続として、各 x に対して a から x まで積分した値を F(x) と定めます。左端では F(a) = 0 です。積分の向きを逆にしたときは符号を変える約束を使います。</p>
   <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>F</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><msubsup><mo>∫</mo><mi>a</mi><mi>x</mi></msubsup><mi>f</mi><mo>(</mo><mi>t</mi><mo>)</mo><mi>d</mi><mi>t</mi></mrow></math></div>
   <p>f が非負なら、この値はグラフと横軸の間の面積です。負の部分があれば、その部分を引きます。例えば f(t) = t を [−1, 1] で積分すると 0 ですが、左右の三角形の面積の合計は 1。面積そのものを求めるなら |f(t)| を積分します。水量の例で流入と流出を相殺するのは、正味の変化を知りたいからです。</p>
   <p>x を少し動かしたとき F に加わるのは、細い区間の積分だけです。加法性により F(x + h) − F(x) は x から x + h までの積分になります。差商は、この小区間における f の平均値と読めます。</p>
+  <p>例えば一定の割合 v なら、時刻を h だけ動かしたときの水量の変化は vh です。h ≠ 0 でこれを h で割ると、平均の割合は v です。一般に割合が場所ごとに違っても、小区間の平均がその点の割合へ近づけば、蓄積Fの微分から元のfを取り出せそうです。次の定理が、その条件を連続性で保証します。</p>
 
 <figure class="concept-figure" id="fundamental-theorem-visual-signed-area" data-visual="fundamental-theorem-signed-area">
   <svg class="concept-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 310" role="img" aria-labelledby="fundamental-theorem-visual-signed-area-title fundamental-theorem-visual-signed-area-desc">
@@ -19,6 +23,14 @@
   </svg>
   <figcaption>f(t) = t、区間 [−1, 1]。積分は −1/2 + 1/2 = 0、面積の合計は 1/2 + 1/2 = 1 です。正味の増減を測るか、面積を測るかで集める量が違います。</figcaption>
 </figure>
+</section>
+
+<section id="fundamental-theorem-flow-example">
+  <h2>流量・蓄積した変化・初期量の違い</h2>
+  <p>時刻tを分、正味の流量f(t)をL/分とし、0≤t≤4でf(t)=2−tとする自作模型を考えます。最初は流入し、2分で0となり、その後は流出します。容器の最初の水量を5Lとします。容器は十分大きく、この範囲で水が尽きることはないと仮定します。</p>
+  <div class="proof"><h3>例題：割合が0でも水量は0にならない</h3><p>F(x)=∫<sub>0</sub><sup>x</sup>(2−t)dtを初期時刻からの増減量とします。0≤x≤2なら、流量のグラフの下は上底2−x、下底2、幅xの台形なのでF(x)=x(2+(2−x))/2=2x−x²/2です。x≥2では、最初の正の三角形の面積2から、その後の負の三角形(x−2)²/2を引き、F(x)=2−(x−2)²/2。同じ式2x−x²/2になります。ここは原始関数の公式を使わず、符号付きの面積から計算しました。</p><p>水量そのものはQ(x)=5+F(x)です。2分後にはf(2)=0ですが、F(2)=2L、Q(2)=7Lです。0なのはその瞬間の正味の流量であり、それまでに増えた量や今の総量ではありません。4分後はF(4)=0なので最初の5Lへ戻りますが、流入2Lと流出2Lはそれぞれ起きています。</p><p>得た式を微分するとF′(x)=2−x=f(x)です。値をグラフから計算した場合にも、蓄積の傾きが元の割合と一致しました。次節では特定の直線の模型から離れ、連続な割合ならなぜ同じことが起きるかを示します。</p></div>
+  <p>表のf(2)とQ(2)、F(4)とQ(4)を比べてください。各列の単位と、初期量がどこへ入るかが違います。</p>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="流量と水量の異なる量を比較"><table class="concept-table" id="fundamental-theorem-visual-flow-stock" data-visual="fundamental-theorem-visual-flow-stock"><caption>f(t)=2−t、初期量5Lの自作模型。時刻は分、流量はL/分、増減量と水量はL。異なる単位の列を同じ量として比較しない。有限の表を一般の基本定理の証明とはしない。</caption><thead><tr><th scope="col">t（分）</th><th scope="col">流量f(t)</th><th scope="col">増減量F(t)</th><th scope="col">水量Q(t)</th></tr></thead><tbody><tr><th scope="row">0</th><td>2</td><td>0</td><td>5</td></tr><tr><th scope="row">1</th><td>1</td><td>1.5</td><td>6.5</td></tr><tr><th scope="row">2</th><td>0</td><td>2</td><td>7</td></tr><tr><th scope="row">3</th><td>−1</td><td>1.5</td><td>6.5</td></tr><tr><th scope="row">4</th><td>−2</td><td>0</td><td>5</td></tr></tbody></table></div>
 </section>
 
 <section id="fundamental-theorem-first">
@@ -33,6 +45,12 @@
 <figure class="concept-figure" id="fundamental-theorem-visual-average-squeeze" data-visual="fundamental-theorem-average-squeeze"><svg class="concept-svg" viewBox="0 0 360 485" role="img" aria-labelledby="fundamental-theorem-visual-average-squeeze-title fundamental-theorem-visual-average-squeeze-desc"><title id="fundamental-theorem-visual-average-squeeze-title">積分を幅で割った平均も、連続性の帯に挟まれる</title><desc id="fundamental-theorem-visual-average-squeeze-desc">f(t)=t、x=1、h=1/2。台形の積分5/8と、幅1/2・高さ平均5/4の破線長方形は同面積。平均はf(x)±epsilon=1/4,7/4の帯に入る。</desc><text x="180" y="28" text-anchor="middle" font-size="22" fill="var(--ink)">積分÷幅h = 平均の高さ</text><line x1="60" y1="270" x2="322" y2="270" stroke="var(--ink-3)" stroke-width="2"/><line x1="60" y1="270" x2="60" y2="65" stroke="var(--ink-3)" stroke-width="2"/><rect x="190" y="95" width="65" height="150" fill="var(--series-2)" fill-opacity="0.07"/><line x1="60" y1="95" x2="315" y2="95" stroke="var(--ink-3)" stroke-width="2" stroke-dasharray="6 5"/><line x1="60" y1="245" x2="315" y2="245" stroke="var(--ink-3)" stroke-width="2" stroke-dasharray="6 5"/><polygon points="190,270 255,270 255,120 190,170" fill="var(--series-1)" fill-opacity=".1" stroke="var(--series-1)" stroke-width="2"/><rect x="190" y="145" width="65" height="125" fill="none" stroke="var(--series-2)" stroke-width="3" stroke-dasharray="6 5"/><polygon points="190,170 190,145 222.5,145" fill="var(--series-2)" fill-opacity=".23"/><polygon points="222.5,145 255,145 255,120" fill="var(--series-1)" fill-opacity=".23"/><line x1="60" y1="270" x2="294" y2="90" stroke="var(--series-1)" stroke-width="3"/><line x1="190" y1="145" x2="255" y2="145" stroke="var(--series-2)" stroke-width="3" stroke-dasharray="6 5"/><circle cx="222.5" cy="145" r="4" fill="var(--series-2)"/><text x="35" y="102" text-anchor="middle" font-size="22" fill="var(--ink)">7/4</text><text x="35" y="252" text-anchor="middle" font-size="22" fill="var(--ink)">1/4</text><text x="125" y="133" text-anchor="middle" font-size="22" fill="var(--series-2)">平均5/4</text><text x="190" y="303" text-anchor="middle" font-size="22" fill="var(--ink)">1</text><text x="255" y="303" text-anchor="middle" font-size="22" fill="var(--ink)">3/2</text><text x="335" y="277" text-anchor="middle" font-size="22" fill="var(--ink)">t</text><text x="180" y="346" text-anchor="middle" font-size="22" fill="var(--ink)">積分=5/8、幅h=1/2</text><text x="180" y="385" text-anchor="middle" font-size="22" fill="var(--ink)">平均=(5/8)/(1/2)=5/4</text><text x="180" y="425" text-anchor="middle" font-size="22" fill="var(--ink)">f(1)=1、ε=3/4</text><text x="180" y="463" text-anchor="middle" font-size="22" fill="var(--ink)">1−ε &lt; 平均5/4 &lt; 1+ε</text></svg><figcaption>橙の台形と青破線の長方形は同じ面積で、切り分けた小三角形も同面積です。横軸と縦軸は別の縮尺です。積分をhで割る操作を長方形の高さとして読み、その高さも連続性の帯に残ることを比較します。これはf(t)=t、h&gt;0の一例で、一般の保証とh&lt;0の向きは本文で扱います。</figcaption></figure><p class="note" data-reading-note="fundamental-theorem-visual-average-squeeze">読み方：まず台形と長方形が同面積であることを追い、次に「面積÷幅」が高さへ変わる対応を見ます。有限の数値例だけを基本定理の証明とはせず、本文のε帯による全ての十分小さいhの評価へ戻ります。</p>
 </section>
 
+<section id="fundamental-theorem-average-calculation">
+  <h2>差商を小区間の平均として計算する</h2>
+  <p>「薄い区間だから高さは同じ」という図だけでは、極限の保証にはなりません。必要なのは、区間のどの点でもf(t)がf(x)に近いという連続性です。その帯の中で積分し、幅で割ると、平均も同じ帯から出ないという順序で考えます。</p>
+  <div class="proof"><h3>例題：正負どちらの時間差でも同じ瞬間の値へ戻る</h3><p>流量f(t)=2−tの模型で、F(x)=2x−x²/2から差を計算します。F(x+h)−F(x)=2h−[(x+h)²−x²]/2=(2−x)h−h²/2。h≠0で割ると差商は2−x−h/2です。これはf(x)=2−xとの差が−h/2なので、hが正でも負でも、その絶対値は|h|/2です。</p><p>x=1では、h=0.2なら平均の流量は0.9L/分、h=−0.2なら1.1L/分。どちらもhを0へ近付ければ、その瞬間の1L/分へ近付きます。h&lt;0ではF(0.8)−F(1)=−0.22Lを−0.2分で割るので、平均は正の1.1です。過去側を見た差が負になることと、割合が負であることは違います。</p><p>一般の証明でも、h&lt;0なら区間の向きと分母の負号が同時に反転します。符号を一つだけ直すのでなく、積分した向きと割った幅を対応させると同じ平均に戻ります。</p></div>
+</section>
+
 <section id="fundamental-theorem-second">
   <h2>原始関数による定積分の計算</h2>
   <p>区間で G′ = f を満たす関数 G を、f の<strong>原始関数</strong>と呼びます。上の定理は、連続な f には積分から作った原始関数 F があることも示しています。ただし、それを簡単な式で書けるとは限りません。</p>
@@ -41,9 +59,23 @@
   <p>例えば f(x) = x² には G(x) = x³/3 が使えます。微分して確かめてから、[0, 2] の積分は 8/3 − 0 = 8/3。長方形を限りなく細かく足す定義と、端の二つの値を引く計算が、いま同じ量を与えると分かりました。原始関数の定数項は差で消えるので、どの原始関数を選んでも同じ結果です。</p>
 </section>
 
+<section id="fundamental-theorem-moving-endpoints">
+  <h2>合成関数としての上端と、両端が動く積分</h2>
+  <p>基本定理のF′(x)=f(x)は、上端をそのままxにした形です。上端がx²なら、まずA(u)=∫<sub>0</sub><sup>u</sup>f(t)dtを作り、A(x²)という合成関数として微分します。A′(u)=f(u)に連鎖律を合わせるので、上端が動く速さ2xも必要です。</p>
+  <div class="proof"><h3>例題：上端の動く向きも含めて微分する</h3><p>f(t)=1+t²、A(u)=∫<sub>0</sub><sup>u</sup>(1+t²)dtとします。A′(u)=1+u²です。H(x)=A(x²)ならH′(x)=(1+x⁴)·2x。直接積分してもA(u)=u+u³/3なのでH(x)=x²+x⁶/3、微分は2x+2x⁵で一致します。</p><p>x=−1ではH′(−1)=−4です。被積分関数は常に正なのに、xが負の側で増えると上端x²は小さくなり、集める範囲が縮むためHは減ります。H′を単に1+x⁴とすると、この向きも係数も失います。</p><p>次にJ(x)=∫<sub>x</sub><sup>2x</sup>(1+t²)dtを考えます。区間加法性からJ(x)=A(2x)−A(x)なので、J′(x)=2(1+4x²)−(1+x²)=1+7x²。二つの端の効果を、上端の追加から下端側の減少を引く形で計算しました。値そのものはJ(x)=[t+t³/3]<sub>x</sub><sup>2x</sup>=x+7x³/3で、微分して同じ結果です。x&lt;0では端の順序が逆でも、符号付き積分の約束でこの式が使えます。</p></div>
+  <p>一般にfが必要な範囲で連続で、u(x),v(x)が微分可能なら、∫<sub>u(x)</sub><sup>v(x)</sup>f(t)dt=A(v(x))−A(u(x))と書き、導関数はf(v(x))v′(x)−f(u(x))u′(x)です。この式は連鎖律から得たもので、積分記号の中でtを勝手にxへ置き換えて微分する規則ではありません。</p>
+</section>
+
+<section id="fundamental-theorem-reconstruction">
+  <h2>変化率と一つの初期値から総量を復元する</h2>
+  <p>原始関数Gに定数Cを加えても、導関数は変わりません。だから変化率だけでは量そのものは一つに決まらず、一つの時刻の値が必要です。連続なfに対してQ′=f、Q(a)=Q<sub>0</sub>を求めるなら、Q(x)=Q<sub>0</sub>+∫<sub>a</sub><sup>x</sup>f(t)dtが候補になります。基本定理で導関数を、同じ端の積分0で初期値を確認できます。</p>
+  <div class="proof"><h3>例題：後の時刻の観測から初期量を求める</h3><p>先ほどと同じ流量2−tで、2分後の水量が10Lだったとします。0から2分までの増加はF(2)=2Lなので、Q(0)=10−2=8Lです。従ってQ(t)=8+2t−t²/2。t=2で10L、t=0と4で8Lと検算できます。最初を5Lとした模型とは、どの時刻でも3Lだけ違いますが、流量は同じです。</p><p>もし別のRも同じ導関数と同じ観測値を持てば、(Q−R)′=0。任意の二時刻を結ぶ閉区間で平均値の定理を使えるので、Q−Rは定数です。観測した時刻では差が0だから、全時刻で差が0となり一意に決まります。ここで時刻の範囲が一つの区間であることも、二時刻の間で定理を使うための条件です。</p></div>
+</section>
+
 <section id="fundamental-theorem-limits">
   <h2>基本定理の適用条件と反例</h2>
   <p>[0, 1] で、t &lt; 1/2 なら f(t) = 0、t ≥ 1/2 なら f(t) = 1 としましょう。積分は存在しますが、F(x) は x ≤ 1/2 で 0、x ≥ 1/2 で x − 1/2 です。x = 1/2 で左の傾きは 0、右の傾きは 1 なので微分できません。「積分可能なら各点で F′ = f」とは言えない反例です。</p>
+  <p>もう一つ、[0,1]でt=1/2のときだけg(t)=1、それ以外は0とする関数を比べます。一点だけの値は積分値を変えないので、B(x)=∫<sub>0</sub><sup>x</sup>g(t)dtはすべて0です。従ってBは微分可能ですが、B′(1/2)=0≠g(1/2)=1。飛びの例では蓄積が微分できず、この例では微分できてもその点の値には戻りません。可積分性だけでは、どちらの結論も保証しません。</p>
   <p class="note">連続性はこの章の十分条件です。不連続な関数で基本定理の形が一切成り立たない、とまでは主張していません。また端で発散する関数や無限区間の積分は、閉区間の定理をそのまま適用せず、<a href="integration-methods.html">広義積分</a>として極限を追加します。</p>
 </section>
 
@@ -59,6 +91,13 @@
   <article class="exercise"><h3>1．蓄積の傾き</h3><p>F(x) = ∫₁ˣ (t² + 2)dt とします。F′(x) と F(2) を求め、初期値 F(1) も確かめてください。</p><details><summary>ヒント1：微分には第1の形</summary><p>被積分関数は全実数で連続です。積分の上端 x に注目します。</p></details><details><summary>ヒント2：値の計算には原始関数</summary><p>t³/3 + 2t を微分して確認します。</p></details><details><summary>解答</summary><p>基本定理で F′(x) = x² + 2。F(2) = (8/3 + 4) − (1/3 + 2) = 13/3 です。同じ端から同じ端への積分は 0 なので F(1) = 0。式 F(x) = x³/3 + 2x − 7/3 からも確認できます。</p></details></article>
   <article class="exercise"><h3>2．面積と正味の量</h3><p>∫₋₁¹ x dx と ∫₋₁¹ |x|dx を求め、値が違う理由を述べてください。</p><details><summary>ヒント1：最初は原始関数を使う</summary><p>x²/2 の両端の値を比べます。</p></details><details><summary>ヒント2：絶対値は区間を分ける</summary><p>[−1, 0] では |x| = −x、[0, 1] では |x| = x です。</p></details><details><summary>解答</summary><p>最初は 1/2 − 1/2 = 0。二番目は ∫₋₁⁰ (−x)dx + ∫₀¹ x dx = 1/2 + 1/2 = 1。最初は負の部分と正の部分が相殺する符号つき蓄積で、二番目は両側の面積を正として合計しています。</p></details></article>
   <article class="exercise"><h3>3．原始関数は何通りか</h3><p>実数全体で G′(x) = 2x かつ G(1) = 5 を満たす G を求め、それが一つだけである理由も説明してください。</p><details><summary>ヒント1：まず一つ見つける</summary><p>x² の導関数は 2x。定数を足して初期値を合わせます。</p></details><details><summary>ヒント2：二つあると仮定する</summary><p>その差の導関数と、x = 1 での値を考えます。</p></details><details><summary>解答</summary><p>G(x) = x² + 4 です。別の候補 H があれば (H − G)′ = 0 なので、平均値の定理で H − G は定数。x = 1 では差が 0 なので、すべての x で H = G。初期値が一つに定めます。</p></details></article>
+  <article class="exercise"><h3>4．流量の零点と水量の最大を区別する</h3><p>0≤t≤6で流量が3−t L/分、最初の水量が4Lの自作模型を考えます。水量Q(t)、最大の水量とその時刻、6分後までの正味変化と通過量を求めてください。</p><details><summary>ヒント1</summary><p>Q(t)=4+∫<sub>0</sub><sup>t</sup>(3−s)dsです。導関数の符号はt=3の前後で変わります。</p></details><details><summary>ヒント2</summary><p>増減量は3t−t²/2で、平方完成すると9/2−(t−3)²/2です。</p></details><details><summary>解答</summary><p>Q(t)=4+3t−t²/2=17/2−(t−3)²/2です。最大はt=3分の17/2=8.5Lで、この時刻の流量が0だからといって水量は0ではありません。Q(6)=4Lなので正味変化は0L。正の三角形の面積と負の三角形の絶対値は各9/2Lなので通過量は9Lです。初期量4Lと変化量を足す役割も確かめました。</p></details></article>
+  <article class="exercise"><h3>5．上端が戻ると蓄積はどう動くか</h3><p>H(x)=∫<sub>1</sub><sup>x²</sup>(2t+1)dtについて、H′(x)、H(0)、H(−1)を求めてください。「被積分関数が正ならHは常に増える」という説明を、−1&lt;x&lt;0で点検してください。</p><details><summary>ヒント1</summary><p>A(u)=∫<sub>1</sub><sup>u</sup>(2t+1)dtとして、A(x²)を微分します。</p></details><details><summary>ヒント2</summary><p>H(x)=[t²+t]<sub>1</sub><sup>x²</sup>=x⁴+x²−2です。</p></details><details><summary>解答</summary><p>H′(x)=(2x²+1)2x=4x³+2x。式からH(0)=−2、H(−1)=0です。−1&lt;x&lt;0では2x&lt;0、2x²+1&gt;0なのでH′&lt;0。上端x²が1から0の方向へ動くのでHは減ります。上端の範囲[0,1]で被積分関数が正であることと、入力xに対して増えることを混同しないよう、連鎖律の因子も見ます。</p></details></article>
+  <article class="exercise"><h3>6．左右へ動く二つの端</h3><p>K(x)=∫<sub>−x</sub><sup>x</sup>t²dtをすべての実数xで考えます。K′(x)とK(x)をそれぞれ求め、x&lt;0で積分値の符号を説明してください。</p><details><summary>ヒント1</summary><p>上端の導関数は1、下端の導関数は−1です。</p></details><details><summary>ヒント2</summary><p>K′(x)=x²−(−x)²(−1)。値は[t³/3]<sub>−x</sub><sup>x</sup>です。</p></details><details><summary>解答</summary><p>K′(x)=2x²、K(x)=2x³/3です。直接この式を微分しても2x²で一致します。x&lt;0では下端−xの方が上端xより大きく、積分の向きが逆なのでK(x)&lt;0です。非負の関数の積分が非負なのは小さい端から大きい端へ集める場合で、向きを逆にした定義も必要です。x=0では値も導関数も0です。</p></details></article>
+  <article class="exercise"><h3>7．差商の平均と瞬間の値を比べる</h3><p>F(x)=∫<sub>0</sub><sup>x</sup>t²dtについて、[F(1+h)−F(1)]/h（h≠0）を計算し、f(1)=1との差を求めてください。0&lt;|h|&lt;0.005なら差の絶対値が0.01未満になることも保証してください。</p><details><summary>ヒント1</summary><p>F(x)=x³/3なので、(1+h)³を展開します。</p></details><details><summary>ヒント2</summary><p>差はh+h²/3です。三角不等式で|h|+h²/3へ押さえます。</p></details><details><summary>解答</summary><p>差商は[(1+h)³−1]/(3h)=1+h+h²/3です。従って瞬間の値1との差はh+h²/3で、絶対値は|h|+h²/3以下。|h|&lt;0.005なら0.005+0.000025/3&lt;0.01です。正負どちらのhにも同じ保証が使え、h→0で平均が1へ戻ります。有限の平均は1と全く等しいとは限りません。</p></details></article>
+  <article class="exercise"><h3>8．一点の値を直せば何が変わるか</h3><p>(a) t=1/2のときだけ1、それ以外0の関数gと、(b) t&lt;1/2で0、t≥1/2で1の関数fを比べます。各積分から作る蓄積について、1/2で「蓄積の導関数＝関数値」を満たすよう、その一点の値だけを変えられますか。</p><details><summary>ヒント1</summary><p>一点の値だけを変えても積分値と蓄積の式は変わりません。</p></details><details><summary>ヒント2</summary><p>(a)の蓄積は定数0です。(b)の蓄積は左の傾き0、右の傾き1で角があります。</p></details><details><summary>解答</summary><p>(a)はg(1/2)=0へ変えれば、蓄積の導関数0と一致します。(b)はその一点をどんな値へ変えても蓄積の角は変わらず、1/2で導関数が存在しません。従って一点の値の修正では一致を実現できません。関数値の不一致と、導関数そのものの不存在は異なる障害です。</p></details></article>
+  <article class="exercise"><h3>9．二つの観測から変化率を逆算する</h3><p>自作模型で水量Q(t)の導関数をQ′(t)=at+bと仮定します。Q(0)=5、Q(1)=7、Q(2)=8（単位はL、時刻は分）からa,bとQ(t)を求め、三つの観測を検算してください。</p><details><summary>ヒント1</summary><p>基本定理からQ(t)=5+at²/2+btです。</p></details><details><summary>ヒント2</summary><p>a/2+b=2、2a+2b=3を解きます。</p></details><details><summary>解答</summary><p>二式の後者を2で割るとa+b=3/2。前者との差からa/2=−1/2でa=−1、b=5/2です。従ってQ(t)=5−t²/2+(5/2)t。t=0で5、t=1で5−1/2+5/2=7、t=2で5−2+5=8となります。導関数は−t+5/2で仮定と一致します。aの単位はL/分²、bはL/分で、観測量Lとは区別します。</p></details></article>
+  <article class="exercise"><h3>10．同じ総量でも違う変化率を設計する</h3><p>0≤t≤2で連続かつ非負の流入速度fを考え、∫<sub>0</sub><sup>2</sup>f(t)dt=4を満たす例を、定数関数と一次関数で一つずつ作ってください。二つの蓄積F(x)=∫<sub>0</sub><sup>x</sup>f(t)dtを比べ、「終点の総量が同じなら途中の速度も同じ」という説明を点検してください。</p><details><summary>ヒント1</summary><p>定数ならf=2です。一次関数はf(t)=ctと置くと計算できます。</p></details><details><summary>ヒント2</summary><p>∫<sub>0</sub><sup>2</sup>ct dt=2cなので、c=2を選べます。</p></details><details><summary>解答</summary><p>f<sub>1</sub>(t)=2、f<sub>2</sub>(t)=2tなら、どちらも連続・非負で積分は4です。蓄積はF<sub>1</sub>(x)=2x、F<sub>2</sub>(x)=x²。終点x=2ではともに4でも、x=1では2と1で異なり、速度も2と2tで異なります。一つの積分値だけでは関数全体は復元できません。一方、蓄積の関数がすべてのxで分かれば、その導関数から連続な速度を復元できます。</p></details></article>
 </section>
 
 <section id="fundamental-theorem-reflection"><h2>自分の言葉で</h2><ol><li>積分の差商が小区間の平均になる理由と、連続性の役割を説明できますか。</li><li>原始関数で定積分を計算できる証明で、平均値の定理は何を保証しましたか。</li><li>面積、符号つき蓄積、初期値を含む総量をどう区別しますか。</li></ol></section>

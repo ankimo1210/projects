@@ -2,6 +2,7 @@
   <h2>同時分布と周辺分布</h2>
   <p>X と Y がそれぞれ 0、1 を半々で取るとします。いつも Y = X なら和は 0 または 2。いつも Y = 1 − X なら和は必ず 1。X と Y それぞれの分布は同じなのに、和の分布は違います。</p>
   <p>必要なのは、二つの値が<strong>同時に</strong>起きる確率です。この章では有限の同時確率の表を使い、条件付きの平均、独立性、和の分散を一つの表から導きます。</p>
+  <p class="note">学習の目安は演習込み110–160分です。表の復元と条件付き分布、独立性と分散、設計と演習の三回に分けられます。演習1–3は基本、4–7は復元と診断、8–10は証明と境界条件です。扱う表はすべて有限で、追加の数値モデルも自作です。</p>
 </section>
 
 <section id="joint-distributions-table">
@@ -13,17 +14,30 @@
   <p>この表では E[X] = E[Y] = 1/2。積 XY は (1, 1) だけで 1 になるので E[XY] = 3/8 です。一変数の周辺分布だけでは、この 3/8 という同時の重みを知ることはできません。</p>
 </section>
 
+<section id="joint-distributions-reconstruction">
+<h2>周辺分布から同時表を復元する</h2>
+<p>周辺分布が分かっても表が一つに決まらないことを、未知のセルを残して確かめます。X、Y は0か1を取り、P(X=1)=p、P(Y=1)=q とします。自由に動かせそうな量として t=P(X=1,Y=1) を選びます。残り三セルを別々の未知数にするより、行と列の和で順に消去する方が、残る自由度を見通せるからです。</p>
+<div class="formula"><p>P(1,1)=t、P(1,0)=p−t、P(0,1)=q−t、P(0,0)=1−p−q+t。</p></div>
+<p>ここでは P(i,j) を P(X=i,Y=j) の略記としました。四セルの和は自動的に1になりますが、非負性は別に確認しなければなりません。t≥0、t≤p、t≤q、t≥p+q−1 を同時に要求して、</p>
+<div class="formula"><p>max(0,p+q−1) ≤ t ≤ min(p,q)</p></div>
+<p>を得ます。逆にこの範囲の t なら全セルが非負で合計1なので、四つの結果 (0,0)、(0,1)、(1,0)、(1,1) にその確率を与えるモデルを作れます。従って必要条件であるだけでなく十分条件です。</p>
+<div class="proof"><h3>例題1：非負性で、許される未知量を決める</h3>
+<p>p=2/5、q=3/5 とします。上の式は四セルを (t,3/5−t; 2/5−t,t) とし、許される範囲は 0≤t≤2/5 です。行はX=0,1、列はY=0,1の順に読んでいます。たとえば t=3/10 を選ぶと、表は (3/10,3/10; 1/10,3/10)。行の和は3/5、2/5、列の和は2/5、3/5で、指定した周辺分布に戻ります。</p>
+<p>この表は10枚の等確率の札を、順に3枚、3枚、1枚、3枚の四組に分けて実現できます。一方 t=1/2 とすると P(1,0)=2/5−1/2=−1/10。合計だけは1でも確率表ではありません。式の代入後に行・列・非負性をすべて戻して確認する理由がここにあります。</p></div>
+<p>端の t=0 も許されます。このとき (0,0) と (1,1) は起こらず、必ず X+Y=1 です。確率0のセルがあることと、表そのものが不適切なことは区別します。</p>
+</section>
+
 <section id="joint-distributions-conditional">
   <h2>条件付き分布と条件付き期待値</h2>
   <p>qⱼ = P(Y = yⱼ) &gt; 0 のとき、Y = yⱼ を条件とする X の<strong>条件付き分布</strong>は、P(X = xᵢ | Y = yⱼ) = pᵢⱼ/qⱼ です。選んだ列を、その列の確率で割って合計 1 にします。これは<a href="conditional-probability.html">条件付き確率</a>の定義そのものです。</p>
-  <p>上の表で Y = 1 の列を使うと、P(X = 0 | Y = 1) = 1/4、P(X = 1 | Y = 1) = 3/4。従って<strong>条件付き期待値</strong> E[X | Y = 1] は 3/4 です。一方、Y = 0 なら E[X | Y = 0] = 1/4。条件で重みを変えた後に、普通の期待値を計算しています。</p>
+  <p>最初の<a href="#joint-distributions-table">対称表（3/8, 1/8; 1/8, 3/8）</a>で Y = 1 の列を使うと、P(X = 0 | Y = 1) = 1/4、P(X = 1 | Y = 1) = 3/4。従って<strong>条件付き期待値</strong> E[X | Y = 1] は 3/4 です。一方、Y = 0 なら E[X | Y = 0] = 1/4。条件で重みを変えた後に、普通の期待値を計算しています。</p>
   <div class="theorem"><h3>有限の場合の全期待値の法則</h3><p>m(yⱼ) = E[X | Y = yⱼ] とします。qⱼ = 0 の値では、m(yⱼ) を便宜上 0 などの任意の値に置きます。このとき m(Y) も確率変数になり、その期待値は E[X] です。</p>
   <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>E</mi><mo>[</mo><mi>m</mi><mo>(</mo><mi>Y</mi><mo>)</mo><mo>]</mo><mo>=</mo><munder><mo>∑</mo><mrow><mi>j</mi><mo>:</mo><msub><mi>q</mi><mi>j</mi></msub><mo>&gt;</mo><mn>0</mn></mrow></munder><mi>E</mi><mo>[</mo><mi>X</mi><mo>|</mo><mi>Y</mi><mo>=</mo><msub><mi>y</mi><mi>j</mi></msub><mo>]</mo><msub><mi>q</mi><mi>j</mi></msub><mo>=</mo><mi>E</mi><mo>[</mo><mi>X</mi><mo>]</mo></mrow></math></div></div>
   <div class="proof"><h3>条件で割った重みを、外側で戻す</h3><p>qⱼ &gt; 0 の列では m(yⱼ) = ∑ᵢxᵢpᵢⱼ/qⱼ です。これに qⱼ を掛けて j で足すと ∑ⱼ∑ᵢxᵢpᵢⱼ = ∑ᵢxᵢrᵢ = E[X]。qⱼ = 0 の列は、非負のセルの和が 0 なので全セルが 0 であり、合計に影響しません。未定義の条件付き分布を計算したのではなく、その列を除いて計算しています。</p></div>
   <p>例では (1/4)(1/2) + (3/4)(1/2) = 1/2。条件付き平均を、条件が起こる確率でもう一度平均すると、元の平均に戻ります。E[E[X | Y]] = E[X] という書き方も、この m(Y) の意味で読みます。</p>
   <div class="concept-table-wrap" tabindex="0" role="region" aria-label="同時分布の各列を正規化して作る条件付き分布と平均">
     <table class="concept-table" id="joint-distributions-visual-normalize-columns" data-visual="joint-distributions-normalize-columns">
-      <caption>先ほどの同時表の各列を、列の和 1/2 で割って合計 1 にする</caption>
+      <caption>最初の<a href="#joint-distributions-table">対称表（3/8, 1/8; 1/8, 3/8）</a>の各列を、列の和 1/2 で割って合計 1 にする</caption>
       <thead><tr><th scope="col"><span class="table-math">条件</span></th><th scope="col"><span class="table-math">P(X = 0 | 条件)</span></th><th scope="col"><span class="table-math">P(X = 1 | 条件)</span></th><th scope="col"><span class="table-math">条件付き平均</span></th></tr></thead>
       <tbody>
         <tr><th scope="row"><span class="table-math">Y = 0</span></th><td><span class="table-math">(3/8) ÷ (1/2) = 3/4</span></td><td><span class="table-math">(1/8) ÷ (1/2) = 1/4</span></td><td><span class="table-math">1/4</span></td></tr>
@@ -34,9 +48,18 @@
   <p>外側では、表の二行を等しく数えるからではなく、P(Y = 0) = P(Y = 1) = 1/2 を重みにします。従って (1/2) × (1/4) + (1/2) × (3/4) = 1/2 です。</p>
 </section>
 
+<section id="joint-distributions-unequal-conditions">
+<h2>条件付き平均を重み付きで戻す</h2>
+<div class="proof"><h3>例題2：条件が等確率でない場合</h3>
+<p>例題1の t=3/10 の表に戻ります。Y=0 の列は (3/10,1/10)、列の和は2/5です。X=1の条件付き確率は (1/10)/(2/5)=1/4。Y=1 の列は (3/10,3/10)、列の和は3/5なので、X=1の条件付き確率は1/2です。Xは0,1だけを取るため、この二つがそれぞれの条件付き平均になります。</p>
+<p>元の平均を求めたいなら、二つの条件を一回ずつ数えるのではなく、その起こる確率で重み付けします。従って E[X]=(2/5)(1/4)+(3/5)(1/2)=1/10+3/10=2/5。周辺から求めた値と一致します。二つの平均を単純に平均した (1/4+1/2)/2=3/8 は、Y=0とY=1を半々に選ぶ別のモデルの平均です。</p>
+<p>逆向きにも計算できます。P(Y=1)=3/5、E[X|Y=0]=1/4、E[X|Y=1]=1/2 が分かれば、Xが0,1という条件の下で、各列に列の和を掛けて (3/10,1/10) と (3/10,3/10) を復元できます。条件付きの平均だけで列の確率まで分かるのは、値が二つで、平均が「1の確率」だからです。三値以上なら一般には平均だけで分布は決まりません。</p></div>
+<p class="note">列の和が0なら、その列を正規化する割り算はできません。確率0の条件での平均を便宜上どう置いても、全期待値の和では重み0が掛かります。「条件付き分布を0と定義した」とは言っていません。</p>
+</section>
+
 <section id="joint-distributions-independence">
   <h2>独立な確率変数と積分布</h2>
-  <p>有限値の X、Y が<strong>独立</strong>であるとは、全ての値の組について pᵢⱼ = rᵢqⱼ が成り立つことです。このとき任意の値の集合 A、B に対して、P(X ∈ A, Y ∈ B) = P(X ∈ A)P(Y ∈ B) です。実際、該当するセルを足すと、∑ᵢ∈A∑ⱼ∈B rᵢqⱼ が二つの和の積へ分かれます。逆に任意の集合で成立するなら、一点の集合を取ってセルの式を得ます。</p>
+  <p>有限値の X、Y が<strong>独立</strong>であるとは、全ての値の組について pᵢⱼ = rᵢqⱼ が成り立つことです。このとき任意の値の集合 A、B に対して、P(X ∈ A, Y ∈ B) = P(X ∈ A)P(Y ∈ B) です。実際、xᵢ ∈ A を満たす添字 i と yⱼ ∈ B を満たす添字 j のセルを足すと、∑<sub>i:xᵢ∈A</sub>∑<sub>j:yⱼ∈B</sub> rᵢqⱼ が二つの和の積へ分かれます。逆に任意の集合で成立するなら、一点の集合を取ってセルの式を得ます。</p>
   <div class="theorem"><h3>独立な有限変数の積の平均</h3><p>独立な有限値の X、Y について、E[XY] = E[X]E[Y] です。</p></div>
   <div class="proof"><h3>二重の有限和を因数分解する</h3><p>E[XY] = ∑ᵢ∑ⱼ xᵢyⱼpᵢⱼ = ∑ᵢ∑ⱼ(xᵢrᵢ)(yⱼqⱼ) = (∑ᵢxᵢrᵢ)(∑ⱼyⱼqⱼ)。これが E[X]E[Y] です。ここでは、期待値の和の線形性とは違って、同時確率を積へ変える箇所で独立性を使いました。</p></div>
   <p>最初の表は (1, 1) のセルが 3/8 ですが、周辺の積は (1/2)(1/2) = 1/4 なので独立ではありません。独立なら、正の確率を持つ条件 Y = yⱼ で割った後も、X の分布は rᵢ のままです。</p>
@@ -69,6 +92,24 @@
   <p>交差項は各組 i &lt; j に一つずつ対応します。各組が独立なら全て消えます。従って独立な Bernoulli 変数 n 個の成功数の分散は np(1 − p)。実は、和の分散の加法性だけには、各組の共分散が 0 であれば十分です。</p>
 </section>
 
+<section id="joint-distributions-design">
+<h2>和の分散から依存の強さを設計する</h2>
+<p>平均と分散を別々に指定するだけでは、二変数を同時にどう動かすかは決まりません。例題1と同じ周辺 P(X=1)=2/5、P(Y=1)=3/5 を固定し、和 S=X+Y の分散を3/5にするには、どの表を選べばよいでしょう。ここでは「分散を計算する」向きを逆にします。</p>
+<div class="proof"><h3>例題3：目標から同時確率を逆算する</h3>
+<p>まず E[XY]=t、E[X]E[Y]=6/25 なので Cov(X,Y)=t−6/25。各分散は (2/5)(3/5)=6/25 です。従って Var(S)=6/25+6/25+2(t−6/25)=2t。目標 2t=3/5 を解くと t=3/10 です。</p>
+<p>計算だけでは設計完了ではありません。許される範囲0≤t≤2/5に3/10が入るので、例題1の表が実際に使えます。その共分散は3/10−6/25=3/50。独立の t=pq=6/25 より大きく、両方が1になる確率を増やした表です。</p>
+<p>別の検算として、S=0,1,2 の確率を表から集めます。それぞれ t、1−2t、t なので、設計した表では3/10、2/5、3/10。E[S]=1、E[S²]=2/5+4(3/10)=8/5、従って Var(S)=8/5−1=3/5です。共分散の公式を使わず同じ答えへ戻りました。</p>
+<p>目標を1に変えると t=1/2 が必要になり、許される上限2/5を超えます。この周辺分布の下では Var(S) は0以上4/5以下です。「各変数の分散が小さい」だけでなく、四セルの非負性が目標を制限しています。</p></div>
+<p>次の表で、独立な行を基準に t を上下させたとき、和と差のどちらの散らばりが増すか読んでください。差 D=X−Y について同じ二乗の展開をすれば、Var(D)=12/25−2(t−6/25)=24/25−2t です。</p>
+<div class="concept-table-wrap" tabindex="0" role="region" aria-label="周辺分布を固定して和と差の分散を比べる">
+<table class="concept-table" id="joint-distributions-visual-design" data-visual="joint-distributions-design">
+<caption>P(X=1)=2/5、P(Y=1)=3/5 を固定した自作モデル。tは確率で、分散は0,1という数値の二乗を単位とします。</caption>
+<thead><tr><th scope="col">t</th><th scope="col">Cov(X,Y)</th><th scope="col">Var(S)</th><th scope="col">Var(D)</th></tr></thead>
+<tbody><tr><th scope="row">0</th><td>−6/25</td><td>0</td><td>24/25</td></tr><tr><th scope="row">6/25（独立）</th><td>0</td><td>12/25</td><td>12/25</td></tr><tr><th scope="row">3/10</th><td>3/50</td><td>3/5</td><td>9/25</td></tr><tr><th scope="row">2/5</th><td>4/25</td><td>4/5</td><td>4/25</td></tr></tbody>
+</table></div>
+<p>tを増すと和の分散は増し、差の分散は減ります。四行は代表例ですが、両式は許された区間すべてで成り立ちます。どの行でも Var(S)+Var(D)=24/25 が保たれることも、計算の検算になります。</p>
+</section>
+
 <section id="joint-distributions-counterexample">
   <h2>無相関と独立の違い</h2>
   <p>共分散が 0 であることを<strong>無相関</strong>と呼びます。独立なら無相関ですが、逆向きは一般に誤りです。X が −1、0、1 をそれぞれ確率 1/3 で取り、Y = X² としましょう。X が決まれば Y も決まります。</p>
@@ -99,9 +140,16 @@
 
 <section id="joint-distributions-exercises">
   <h2>演習：同時分布と共分散</h2>
-  <article class="exercise"><h3>1．列を選び、平均を戻す</h3><p>本文の表について E[X | Y = 0]、E[X | Y = 1] を求め、全期待値の法則で E[X] を確かめてください。</p><details><summary>ヒント1：列の和はどちらも 1/2</summary><p>各セルを 1/2 で割って、条件付き確率を作ります。</p></details><details><summary>ヒント2：0、1 の平均は 1 の確率</summary><p>条件付き平均を、Y の二つの周辺確率で重み付けします。</p></details><details><summary>解答</summary><p>E[X | Y = 0] = (1/8)/(1/2) = 1/4、E[X | Y = 1] = (3/8)/(1/2) = 3/4。外側で平均すると (1/4)(1/2) + (3/4)(1/2) = 1/2 で、周辺分布から得る E[X] と一致します。</p></details></article>
-  <article class="exercise"><h3>2．同じ周辺分布で独立にする</h3><p>X、Y がそれぞれ 0、1 を半々で取り、さらに独立とします。同時表の四つのセルと、Var(X + Y) を求め、本文の表と比較してください。</p><details><summary>ヒント1：セルは周辺確率の積</summary><p>全ての組で (1/2)(1/2) です。</p></details><details><summary>ヒント2：独立なら交差項は 0</summary><p>各分散は Bernoulli の公式により 1/4 です。</p></details><details><summary>解答</summary><p>四つのセルは全て 1/4。E[XY] = 1/4 で共分散は 1/4 − (1/2)(1/2) = 0 です。従って Var(X + Y) = 1/4 + 1/4 = 1/2。本文の表では周辺分布が同じでも共分散が 1/8 なので、和の分散は 3/4 でした。</p></details></article>
+  <article class="exercise"><h3>1．列を選び、平均を戻す</h3><p>最初の<a href="#joint-distributions-table">対称表（3/8, 1/8; 1/8, 3/8）</a>について E[X | Y = 0]、E[X | Y = 1] を求め、全期待値の法則で E[X] を確かめてください。</p><details><summary>ヒント1：列の和はどちらも 1/2</summary><p>各セルを 1/2 で割って、条件付き確率を作ります。</p></details><details><summary>ヒント2：0、1 の平均は 1 の確率</summary><p>条件付き平均を、Y の二つの周辺確率で重み付けします。</p></details><details><summary>解答</summary><p>E[X | Y = 0] = (1/8)/(1/2) = 1/4、E[X | Y = 1] = (3/8)/(1/2) = 3/4。外側で平均すると (1/4)(1/2) + (3/4)(1/2) = 1/2 で、周辺分布から得る E[X] と一致します。</p></details></article>
+  <article class="exercise"><h3>2．同じ周辺分布で独立にする</h3><p>X、Y がそれぞれ 0、1 を半々で取り、さらに独立とします。同時表の四つのセルと、Var(X + Y) を求め、最初の<a href="#joint-distributions-table">対称表（3/8, 1/8; 1/8, 3/8）</a>と比較してください。</p><details><summary>ヒント1：セルは周辺確率の積</summary><p>全ての組で (1/2)(1/2) です。</p></details><details><summary>ヒント2：独立なら交差項は 0</summary><p>各分散は Bernoulli の公式により 1/4 です。</p></details><details><summary>解答</summary><p>四つのセルは全て 1/4。E[XY] = 1/4 で共分散は 1/4 − (1/2)(1/2) = 0 です。従って Var(X + Y) = 1/4 + 1/4 = 1/2。最初の<a href="#joint-distributions-table">対称表（3/8, 1/8; 1/8, 3/8）</a>では周辺分布が同じでも共分散が 1/8 なので、和の分散は 3/4 でした。</p></details></article>
   <article class="exercise"><h3>3．無相関でも依存する二変数</h3><p>本文の X = −1、0、1 が等確率で Y = X² の例について、Var(X)、Var(Y)、Var(X + Y) を求めてください。独立性を仮定してよいですか。</p><details><summary>ヒント1：Y² = Y</summary><p>E[Y] = 2/3 なので、Var(Y) = 2/3 − (2/3)² です。</p></details><details><summary>ヒント2：共分散は既に 0</summary><p>和の分散の公式は、独立でなくても使えます。</p></details><details><summary>解答</summary><p>Var(X) = 2/3 − 0² = 2/3、Var(Y) = 2/3 − 4/9 = 2/9。共分散 0 なので Var(X + Y) = 2/3 + 2/9 = 8/9 です。直接にも X + Y は 0 を確率 2/3、2 を確率 1/3 で取り、分散は 4/3 − (2/3)² = 8/9。二変数は独立ではなく、ここでは無相関だけで加法性が成立しています。</p></details></article>
+<article class="exercise"><h3>4．欠けたセルを復元する</h3><p>X,Yが0,1を取る表で、P(0,0)=a、P(0,1)=1/5、P(1,0)=1/10、P(1,1)=2/5です。a、両周辺分布、P(X=1|Y=1)、共分散を求めてください。</p><details><summary>ヒント1</summary><p>全セルの和を1にします。</p></details><details><summary>ヒント2</summary><p>XYが1なのは(1,1)だけです。</p></details><details><summary>解答</summary><p>a=1−1/5−1/10−2/5=3/10。Xの周辺は(1/2,1/2)、Yの周辺は(2/5,3/5)。条件付き確率は (2/5)/(3/5)=2/3。共分散は2/5−(1/2)(3/5)=1/10です。全セル非負、行・列の総和1を確認できます。</p></details></article>
+<article class="exercise"><h3>5．条件付き平均の単純平均を診断する</h3><p>例題2で、ある人は E[X]=(1/4+1/2)/2=3/8 と答えました。何を暗に変えたのか説明し、元の表を復元して正しい平均を示してください。</p><details><summary>ヒント1</summary><p>条件Yの確率は半々でしょうか。</p></details><details><summary>ヒント2</summary><p>各条件付き確率に列の和を掛けます。</p></details><details><summary>解答</summary><p>Yの分布を(1/2,1/2)へ変えています。元の列の和は2/5と3/5なので、列は(3/10,1/10)と(3/10,3/10)。X=1の行の和は1/10+3/10=2/5であり、全期待値でも (2/5)(1/4)+(3/5)(1/2)=2/5。単純平均3/8との差は1/40です。</p></details></article>
+<article class="exercise"><h3>6．実現できない共分散を見抜く</h3><p>P(X=1)=2/5、P(Y=1)=3/5 の0,1変数で、共分散を1/5にしたいとします。実現可能性を調べ、可能な共分散の範囲を求めてください。</p><details><summary>ヒント1</summary><p>共分散をt−6/25と書きます。</p></details><details><summary>ヒント2</summary><p>四セル非負の範囲は0≤t≤2/5です。</p></details><details><summary>解答</summary><p>目標にはt=1/5+6/25=11/25が必要ですが、2/5=10/25を超え、P(1,0)=−1/25になります。可能な範囲は−6/25≤Cov≤4/25。両端はt=0と2/5の確率表で実現するため、単なる上界・下界でなく正確な範囲です。</p></details></article>
+<article class="exercise"><h3>7．和と差の分散を同時に指定する</h3><p>例題3と同じ周辺で Var(X+Y)=3/5、Var(X−Y)=2/5 を同時に指定できますか。できなければ前者を保って後者を修正してください。</p><details><summary>ヒント1</summary><p>二つの分散の和を先に見ます。</p></details><details><summary>ヒント2</summary><p>共分散の交差項は和と差で相殺します。</p></details><details><summary>解答</summary><p>二つの分散の和は2Var(X)+2Var(Y)=24/25。指定値の和は1=25/25なので両立しません。前者を保つとt=3/10、後者は24/25−3/5=9/25です。表(3/10,3/10;1/10,3/10)で実現します。差Dは−1を3/10、0を3/5、1を1/10で取り、E[D]=−1/5、E[D²]=2/5より分散2/5−1/25=9/25と検算できます。</p></details></article>
+<article class="exercise"><h3>8．二値変数での逆向きを証明する</h3><p>X,Yが0,1だけを取るとき、無相関なら独立であることを証明してください。p=0やq=1という境界も含めてください。</p><details><summary>ヒント1</summary><p>E[XY]=t、E[X]=p、E[Y]=qです。</p></details><details><summary>ヒント2</summary><p>t=pqを残り三セルへ代入します。</p></details><details><summary>解答</summary><p>共分散0はt=pqです。四セルは (1−p−q+pq,q−pq;p−pq,pq)=((1−p)(1−q),(1−p)q;p(1−q),pq)。すべて周辺確率の積なので独立です。割り算をしない証明なのでp=0やq=1でも有効です。一般の無相関から独立が従わない反例と矛盾しません。ここでは0,1の二値に限定しています。</p></details></article>
+<article class="exercise"><h3>9．無相関で依存する例を設計する</h3><p>Xが−1,0,1を確率a,1−2a,aで取り、Y=X²とします。確率表が作れるaの範囲を求め、無相関だが独立ではない範囲を決めてください。</p><details><summary>ヒント1</summary><p>E[X]とE[X³]は対称性で0です。</p></details><details><summary>ヒント2</summary><p>事象X=0とY=0を使い、a=0とa=1/2も別に調べます。</p></details><details><summary>解答</summary><p>非負性から0≤a≤1/2。E[X]=E[X³]=0なので共分散は全範囲で0です。0&lt;a&lt;1/2ではP(X=0,Y=0)=1−2aと周辺の積(1−2a)²が異なるため独立ではありません。a=0ではX=Y=0が確実、a=1/2ではY=1が確実で、どちらも独立です。従って求める範囲は開区間(0,1/2)で、端点を含めると誤りです。</p></details></article>
+<article class="exercise"><h3>10．確率0の条件を区別する</h3><p>X,Yが0,1を取り、表が(3/4,0;1/4,0)です。Y=0でのXの分布、E[X]を求めてください。「Y=1ではXの平均は0」と条件付き分布から計算できるでしょうか。全期待値ではその列をどう扱いますか。</p><details><summary>ヒント1</summary><p>Yの列の和は1と0です。</p></details><details><summary>ヒント2</summary><p>0/0という比は条件付き確率を定めません。</p></details><details><summary>解答</summary><p>Y=0でXの分布は(3/4,1/4)で平均1/4です。周辺からもE[X]=1/4。Y=1の条件付き確率は0/0で未定義です。m(1)を便宜上0あるいは他の有限値に置けますが、条件付き分布を計算したことにはなりません。E[m(Y)]=m(0)·1+m(1)·0=1/4で、正の確率を持つ列だけで全期待値が求まります。</p></details></article>
 </section>
 
 <section id="joint-distributions-reflection">

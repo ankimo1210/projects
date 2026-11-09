@@ -2,12 +2,13 @@
   <h2>ベクトル場の基本概念</h2>
   <p>温度のように各点へ一つの数を置く代わりに、向きと大きさを持つ矢印を置くと、流れや力を表す数学のモデルになります。しかし、地図上の矢印、粒子の位置、粒子が描く道は同じものではありません。この違いを保ちながら、三次元で矢印を測る道具を整えます。</p>
   <p class="note">復習は<a href="vector-spaces.html">ベクトルの和と定数倍</a>、<a href="determinants.html">行列式と面積</a>、<a href="gradient.html">二変数の勾配</a>です。線形代数や常微分方程式の既存教材を先に修了する必要はありません。発展先は<a href="index.html#learning-map">学習経路</a>に残しています。</p>
+<p>この章では、矢印を「一つの方向の成分」「面に垂直な成分」「各点での速度」として使い分けます。成分を求める前に、入力が場所なのか時刻なのか、出力に長さや向きをどこまで含めるのかを確かめます。法線の設計、回転の速さ、勾配の単位方向を例題で順に計算します。</p><p class="note" data-reading-guide="study-parts">学習時間の目安は演習を含みます。本文と例題、条件を変える考察、演習の三回に分けて読み進めても構いません。</p>
 </section>
 
 <section id="vector-fields-products">
   <h2>三次元ベクトルの内積と外積</h2>
   <p>三次元ベクトル a = (a₁, a₂, a₃)、b = (b₁, b₂, b₃) の<strong>内積</strong>を a·b = a₁b₁ + a₂b₂ + a₃b₃、長さを ‖a‖ = √(a·a) と定めます。a ≠ 0 なら、b の a 方向の符号付き成分は b·a/‖a‖。内積0は直交を表し、向きが逆なら内積は負になります。</p>
-  <p>面積に向きも持たせたいときは、<strong>外積</strong>を使います。座標軸 e₁、e₂、e₃ は右手系とし、e₁ × e₂ = e₃ となる向きを採用します。右手の指を a から b へ曲げたときの親指の向きが a × b の向きです。平行な場合の外積は0で、向きは定まりません。</p>
+  <p>e₁=(1,0,0)、e₂=(0,1,0)、e₃=(0,0,1) を、それぞれ x,y,z 軸の正方向を向く単位ベクトルとします。「右手系」は、この三方向の向きの約束です。次の外積では、二本の順序も結果の向きに関わります。</p><p>面積に向きも持たせたいときは、<strong>外積</strong>を使います。座標軸 e₁、e₂、e₃ は右手系とし、e₁ × e₂ = e₃ となる向きを採用します。右手の指を a から b へ曲げたときの親指の向きが a × b の向きです。平行な場合の外積は0で、向きは定まりません。</p>
   <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>a</mi><mo>×</mo><mi>b</mi><mo>=</mo><mo>(</mo><msub><mi>a</mi><mn>2</mn></msub><msub><mi>b</mi><mn>3</mn></msub><mo>−</mo><msub><mi>a</mi><mn>3</mn></msub><msub><mi>b</mi><mn>2</mn></msub><mo>,</mo><msub><mi>a</mi><mn>3</mn></msub><msub><mi>b</mi><mn>1</mn></msub><mo>−</mo><msub><mi>a</mi><mn>1</mn></msub><msub><mi>b</mi><mn>3</mn></msub><mo>,</mo><msub><mi>a</mi><mn>1</mn></msub><msub><mi>b</mi><mn>2</mn></msub><mo>−</mo><msub><mi>a</mi><mn>2</mn></msub><msub><mi>b</mi><mn>1</mn></msub><mo>)</mo></mrow></math></div>
   <div class="proof"><h3>成分式が、垂直と面積を同時に保証する</h3><p>a·(a × b) を展開すると、a₁a₂b₃ と −a₂a₁b₃ のように六項が二つずつ消えて0になります。b との内積も同様です。また三成分の二乗を足して整理すると、‖a × b‖² = ‖a‖²‖b‖² − (a·b)²。a ≠ 0 のとき、b から a 方向の成分を引いた高さベクトル b⊥ = b − {(a·b)/‖a‖²}a は a と直交し、‖a‖²‖b⊥‖² が同じ右辺です。従って ‖a × b‖ は底辺 ‖a‖ と高さ ‖b⊥‖ の積、つまり平行四辺形の面積です。a = 0 でも両方0です。</p></div>
   <figure class="concept-figure" id="vector-fields-visual-area" data-visual="vector-fields-area">
@@ -22,8 +23,20 @@
   </figure>
 </section>
 
+
+<section id="vector-fields-normal-example"><h2>外積で面の向きと面積を決める</h2>
+
+<p>二本の辺から法線を作るときは、外積の成分式を使う前に辺の順序を決めます。また、外積そのものは面積を含むベクトルであり、単位法線とは長さが違います。</p>
+<article class="worked-example" id="vector-fields-worked-normal"><h3>例題1：面積と単位法線を同じ外積から作る</h3>
+<p>点p=(1,0,0)から出る二辺 a=(1,0,1)、b=(0,2,1) が張る平行四辺形を考えます。位置pは図形を置く場所、a,bは辺の変位です。法線と面積は変位から求めるので、pを外積へ入れません。</p>
+<p>a×b=(0·1−1·2, 1·0−1·1, 1·2−0·0)=(−2,−1,2)。長さは√(4+1+4)=3なので面積は3です。aとの内積−2+2=0、bとの内積−2+2=0も確認できます。第三成分が正となる向きを選んだ単位法線は n=(−2,−1,2)/3。三角形の面積なら、この半分の3/2です。</p>
+<p>この場所の力をF(p)=(3,1,4)とした自作モデルでは、法線方向の符号付き成分はF(p)·n=(−6−1+8)/3=1/3です。一方、F(p)·(a×b)=1は面積3を含む量です。単位法線で射影を測る場面と、面積を含む向き付き量を測る場面を区別します。</p>
+<p>辺の順序をb,aにすれば法線は−n、符号付き成分は−1/3に反転しますが、平行四辺形の面積3は変わりません。法線方向への射影ベクトル (F·n)n も、二つの負号が消えるため同じです。向きを持つ数と、幾何的な成分ベクトルは違う情報を残します。</p></article>
+
+</section>
+
 <section id="vector-fields-definition">
-  <h2>スカラー場とベクトル場</h2>
+  <h2>スカラー場とベクトル場</h2><p>場所 p に実数を一つ対応させる関数を<strong>スカラー場</strong>と呼びます。例えば、各点での温度や高さを一つの数として表すモデルです。向きと大きさも出力に含めたいときは、数の代わりにベクトルを対応させます。</p>
   <p>領域 U ⊂ ℝ³ の各点 p にベクトル F(p) を対応させる写像 F : U → ℝ³ を<strong>ベクトル場</strong>と呼びます。F(x, y, z) = (P, Q, R) と書き、成分が連続なら連続な場、成分の偏微分が連続なら C¹ の場です。平面の場は二成分で同様に定義し、必要なら第三成分を0にして眺めます。</p>
   <p>例えば F(x, y) = (−y, x) の矢印は、各点で原点からの半径に直交します。F(1, 0) = (0, 1) は場所 (1, 0) に立てる矢印であり、その点の位置ベクトル (1, 0) とは別物です。速度場と解釈するモデルでは、粒子の位置 r(t) は r′(t) = F(r(t)) を満たす曲線として別に求めます。この式を満たす道は場に沿う流線にもなりますが、一本の流線から場全体は分かりません。時間に依存する場の粒子軌道と各時刻の流線は、さらに区別が必要です。</p>
   <figure class="concept-figure" id="vector-fields-visual-rotation" data-visual="vector-fields-rotation">
@@ -41,10 +54,41 @@
   <div class="concept-table-wrap" tabindex="0" role="region" aria-label="位置と場と流線の比較"><table class="concept-table" style="min-width:30rem" data-visual="vector-fields-objects"><caption>場所と時間を入れ替えず、具体的な出力を検算する</caption><thead><tr><th scope="col">対象</th><th scope="col">具体的な入力→出力</th><th scope="col">何を判断するか</th></tr></thead><tbody><tr><th scope="row">スカラー場</th><td>f=x²+y²、p=(1,2) → 5</td><td>場所から一つの数。場の値には方向がない。</td></tr><tr><th scope="row">ベクトル場</th><td>F=(−y,x)、p=(1,2) → (−2,1)</td><td>出力はその場所での向きと大きさ。次の位置そのものではない。</td></tr><tr><th scope="row">位置の曲線</th><td>r(t)=(cos t,sin t)、t=π/2 → (0,1)</td><td>時間から場所。同じtでr′=(−1,0)は位置と異なる。</td></tr><tr><th scope="row">速度場の軌道</th><td>r′(π/2)=(−1,0)=F(0,1)</td><td>すべてのtでr′(t)=F(r(t))（直前の本文）なら軌道です。π/2はその一点の検算です。</td></tr></tbody></table></div>
 </section>
 
+
+<section id="vector-fields-orbit-examples"><h2>速度場と軌道を計算で区別する</h2>
+
+<article class="worked-example" id="vector-fields-worked-speed"><h3>例題2：同じ円を描いても、速度場は違う</h3>
+<p>実数ωを固定し、全平面の場 F<sub>ω</sub>(x,y)=(−ωy,ωx) を考えます。半径2の曲線 r<sub>ω</sub>(t)=(2cos(ωt),2sin(ωt)) を直接微分すると r′<sub>ω</sub>=(−2ωsin(ωt),2ωcos(ωt))=F<sub>ω</sub>(r<sub>ω</sub>(t)) です。全てのtで等式が成立するので、この曲線は初期位置(2,0)からの軌道の一つです。ここでは一般の微分方程式の存在・一意性定理を借りず、候補を代入して確認しています。</p>
+<p>速さは2|ω|。ω≠0なら一周に要する最小の正の時間は2π/|ω|です。ω&gt;0なら反時計回り、ω&lt;0なら時計回り。ω=0では位置は(2,0)のままで、円を一周する時間はありません。式の分母に0を入れるのでなく、この場合を別に扱います。</p>
+<p>なぜ半径が保たれるのでしょう。任意の微分可能な解r=(x,y)に沿い、d(x²+y²)/dt=2xx′+2yy′=2x(−ωy)+2y(ωx)=0です。従って初期半径から離れないことは、候補を見付ける前にも分かります。ただしこの保存則だけでは一周の速さや向きは決まらず、場の大きさを使う必要があります。</p></article>
+<div class="concept-table-wrap" tabindex="0" role="region" aria-label="回転場の倍率による方向と速さと一周時間の比較"><table class="concept-table" data-visual="vector-fields-speed-orbit" style="min-width:34rem"><caption>位置(2,0)での矢印と、半径2の軌道の進み方</caption><thead><tr><th scope="col">ω</th><th scope="col">F<sub>ω</sub>(2,0)</th><th scope="col">速さ</th><th scope="col">一周時間と向き</th></tr></thead><tbody>
+<tr><th scope="row">1</th><td>(0,2)</td><td>2</td><td>2π、反時計回り。</td></tr>
+<tr><th scope="row">3</th><td>(0,6)</td><td>6</td><td>2π/3、反時計回り。</td></tr>
+<tr><th scope="row">−1</th><td>(0,−2)</td><td>2</td><td>2π、時計回り。</td></tr>
+<tr><th scope="row">0</th><td>(0,0)</td><td>0</td><td>停止。一周しない。</td></tr>
+</tbody></table></div>
+<p>ω=1と3の二行は円という像が同じでも、同じ時刻の位置や速さが違う例です。時刻は共通の単位で、位置と速度は数式の同じ座標尺度を使います。この有限の比較と、本文の全tに対する代入確認を区別して読んでください。</p>
+<article class="worked-example" id="vector-fields-worked-inverse"><h3>例題3：一本の軌道から場全体を復元できるか</h3>
+<p>r(t)=(2cos t,2sin t) が観測されたとします。この円上では F(x,y)=(−y,x) が速度と合います。しかし別の場 H(x,y)=(−y,x)+(x²+y²−4)(x,y) も同じ軌道を生みます。円上では x²+y²−4=0 なので、全tで H(r(t))=F(r(t))=r′(t) だからです。</p>
+<p>両方とも全平面でC¹ですが、点(1,0)ではF(1,0)=(0,1)、H(1,0)=(−3,1)で違います。原点でも両方0という一致はありますが、場全体の一致にはなりません。一点の検算、一つの円全体での一致、領域全体での一致は、要求する範囲が違います。</p>
+<p>この例は軌道が一つ与えられたときの逆問題の限界です。円から離れた場所で何が起きるかは観測していないため、円上で消える項を加える自由度が残ります。一方、特定の場と初期位置から軌道が一意に決まるかという問いは別であり、本章ではその一般定理を証明していません。</p></article>
+
+</section>
+
 <section id="vector-fields-gradient">
   <h2>勾配場の計算例</h2>
   <p>開集合 U 上の C¹ 関数 φ(x, y, z) に対し、<strong>勾配</strong>を ∇φ = (φₓ, φᵧ, φ_z) と定めます。二変数の<a href="gradient.html">勾配</a>へ第三成分を加えたものです。全微分と連鎖律により、単位ベクトル u に沿う方向微分は Dᵤφ = ∇φ·u。Cauchy–Schwarz の不等式から |Dᵤφ| ≤ ‖∇φ‖ であり、∇φ ≠ 0 ならその向きで最も速く増えます。</p>
   <p>例えば φ = x² + y² + z² なら ∇φ = (2x, 2y, 2z)。半径方向の場になります。しかし、どんな場も勾配とは限りません。回転する場 (−y, x, 0) が勾配でないことは、<a href="vector-line-integrals.html">道に沿う仕事</a>と<a href="vector-potentials.html">一周の積分</a>で確かめます。なお、内積0は二つのベクトルが平行という意味ではありません。a = (1, 0, 0)、b = (0, 1, 0) は内積0ですが外積は e₃ です。</p>
+</section>
+
+
+<section id="vector-fields-gradient-example"><h2>勾配による方向の選択と検算</h2>
+
+<article class="worked-example" id="vector-fields-worked-gradient"><h3>例題4：最も速く増える方向は単位長さで比べる</h3>
+<p>全空間で φ(x,y,z)=x²+2y²+z² とし、p=(1,1,1)での増え方を比べます。∇φ=(2x,4y,2z)なので∇φ(p)=(2,4,2)、長さは2√6です。単位方向uに対しDᵤφ(p)=(2,4,2)·uであり、最大値2√6は u=(1,2,1)/√6 で達成されます。Cauchy–Schwarzの等号条件からも同じ方向です。</p>
+<p>x軸方向e₁ではDₑ₁φ=2。v=(2,−1,0)では∇φ(p)·v=4−4=0なので、単位方向v/√5に沿う一次変化は0です。実際、直線p+hvに代入すると φ(1+2h,1−h,1)=4+6h²。hの一次の項がないことを、偏微分を使わず検算できます。ただしh≠0では値は変わるので、一次変化0はその直線上で一定という意味ではありません。</p>
+<p>v=(1,2,1)を長さの調整なしに用い、時刻hでp+hvへ動くと、dφ(p+hv)/dh|<sub>h=0</sub>=12です。この12は最大方向微分2√6より大きくても矛盾しません。vの速さが√6だからです。単位距離当たりに直すと12/√6=2√6となります。</p></article>
+
 </section>
 
 <details class="column" id="vector-fields-column"><summary>寄り道［数学の見方］：地図を一枚足しても、粒子はまだ動かない</summary><p>同じ場 F(x, y) = (−y, x) に、初期位置 (1, 0) と (2, 0) を入れるモデルを考えます。曲線 (cos t, sin t) と (2cos t, 2sin t) はどちらも r′ = F(r) を満たします。地図は一つでも、初期位置の選び方で道が変わります。</p><p>「各点で何が起こるか」という規則と、「どこから始めてどう動くか」という解を分けると、微分方程式への入口が見えます。存在や一意性の一般定理はここでは使っていません。</p><p class="source-note">出典：本章の二つの曲線を直接微分した自作モデルです。</p></details>
@@ -53,5 +97,11 @@
   <article class="exercise"><h3>1．垂直と面積を同じ計算で</h3><p>a = (1, 2, 0)、b = (0, 1, 3) の内積と外積を求め、外積の直交性と面積恒等式を確認してください。</p><details><summary>ヒント1：外積の順序を保つ</summary><p>第一成分は 2·3 − 0·1、第二成分は 0·0 − 1·3 です。</p></details><details><summary>ヒント2：二乗長さを比べる</summary><p>‖a‖² = 5、‖b‖² = 10。外積の二乗長さは成分の二乗の和です。</p></details><details><summary>解答</summary><p>a·b = 2、a × b = (6, −3, 1)。a との内積は 6 − 6 = 0、b とは −3 + 3 = 0。二乗長さは 36 + 9 + 1 = 46 で、5·10 − 2² = 46 と一致します。平行四辺形の面積は √46 です。</p></details></article>
   <article class="exercise"><h3>2．場の値と位置の違い</h3><p>F(x, y, z) = (−y, x, 0)、r(t) = (2cos t, 2sin t, 3) について、r′(t) = F(r(t)) を確認し、t = 0 の位置と場の値を答えてください。</p><details><summary>ヒント1：成分ごとに微分する</summary><p>第三成分の3は定数です。</p></details><details><summary>ヒント2：場に代入する</summary><p>x と y をそれぞれ 2cos t と 2sin t に替えます。</p></details><details><summary>解答</summary><p>r′(t) = (−2sin t, 2cos t, 0) = F(r(t))。t = 0 の位置は (2, 0, 3)、場の値は (0, 2, 0) です。位置は点を指定し、場の値はその点からの速度を指定します。</p></details></article>
   <article class="exercise"><h3>3．三次元の方向微分</h3><p>φ = xy + z²、p = (1, 2, 1)、u = (1, 0, 1)/√2 とします。勾配と Dᵤφ(p)、最大の方向微分を求めてください。</p><details><summary>ヒント1：三つの偏微分</summary><p>∇φ = (y, x, 2z) です。</p></details><details><summary>ヒント2：u は単位長さ</summary><p>方向微分は内積、最大値は勾配の長さです。</p></details><details><summary>解答</summary><p>∇φ(p) = (2, 1, 2)、Dᵤφ(p) = (2 + 2)/√2 = 2√2。‖∇φ(p)‖ = 3 なので最大の方向微分は3、向きは (2, 1, 2)/3 です。φ は多項式で C¹ のため、全微分と方向微分の内積公式を使えます。</p></details></article>
+<article class="exercise"><h3>4．面積を変えない辺の変更</h3><p>例題1のa=(1,0,1)、b=(0,2,1)について、bをb+λa（λ∈ℝ）に替えます。外積、面積、正のz成分を持つ単位法線はλでどう変わりますか。</p><details><summary>ヒント1</summary><p>外積の成分式から分配則を使い、a×aを調べます。</p></details><details><summary>ヒント2</summary><p>a×(b+λa)=a×b+λ(a×a)です。</p></details><details><summary>解答</summary><p>a×a=0なので外積は全てのλで(−2,−1,2)。従って面積3、単位法線(−2,−1,2)/3も変わりません。高さを保ったまま辺の平行成分だけを動かす変更です。λがどんな実数でも外積は非零なので、二辺が平行になる例外はありません。</p></details></article>
+<article class="exercise"><h3>5．成分条件から一定の場を設計する</h3><p>全空間で一定の場V=(A,B,C)が、V·e₁=2、V·e₂=−1、V·n=0（n=(1,1,1)/√3）を満たすようにA,B,Cを求めてください。三つの条件にどの演算を使うかも説明してください。</p><details><summary>ヒント1</summary><p>内積は指定した方向の符号付き成分を選びます。</p></details><details><summary>ヒント2</summary><p>最初の二式からA,Bを決め、三式目A+B+C=0を使います。</p></details><details><summary>解答</summary><p>A=2、B=−1、C=−1なのでV=(2,−1,−1)です。nは長さ1で、V·n=(2−1−1)/√3=0。nとの直交条件は、法線nを持つ平面にVが沿うことを意味します。外積を使って成分を測る必要はありません。三つの独立な一次条件で一つに決まります。</p></details></article>
+<article class="exercise"><h3>6．縮みながら回る場を設計する</h3><p>F(x,y)=(αx−βy,βx+αy)とします。任意の軌道で d(x²+y²)/dt=−2(x²+y²) となり、点(1,0)で速度のy成分が2となるα,βを選んでください。候補r(t)=e⁻ᵗ(cos2t,sin2t)も検算します。</p><details><summary>ヒント1</summary><p>2xx′+2yy′ではβの項が相殺します。</p></details><details><summary>ヒント2</summary><p>二乗半径の導関数は2α(x²+y²)、(1,0)でのy速度はβです。</p></details><details><summary>解答</summary><p>α=−1、β=2です。r′=e⁻ᵗ(−cos2t−2sin2t,2cos2t−sin2t)で、F(r)=同じ二成分となります。二乗半径はe⁻²ᵗなので導関数も−2e⁻²ᵗ。αは半径の増減、βは回転を担うことが成分の相殺から分かります。</p></details></article>
+<article class="exercise"><h3>7．一致する範囲から逆問題を診断する</h3><p>F=(−y,x)とH=(−y,x)+(x²+y²−4)(x,y)を区別する観測点を、半径1の円から一つ選んでください。また円x²+y²=4上の観測をいくつ増やしても両者を区別できない理由を説明してください。</p><details><summary>ヒント1</summary><p>差H−F=(x²+y²−4)(x,y)を先に計算します。</p></details><details><summary>ヒント2</summary><p>半径1なら差は−3(x,y)で、円上の点は零ベクトルではありません。</p></details><details><summary>解答</summary><p>例えば(1,0)でF=(0,1)、H=(−3,1)なので区別できます。実は半径1のどの点でも差は非零です。半径2の円では差が恒等的に0なので、有限点を増やすだけでなく円全体を観測しても二つの場を区別できません。領域全体の復元には別の情報が必要です。</p></details></article>
+<article class="exercise"><h3>8．場を生むスカラー関数を逆算する</h3><p>全空間の場G=(2x+y,x+4y,2z)が∇φとなるような多項式φを一つ探し、φ(0,0,0)=5も満たすようにしてください。</p><details><summary>ヒント1</summary><p>φₓをxで積分するとx²+xyに、xに依存しない項を足せます。</p></details><details><summary>ヒント2</summary><p>yの偏微分がx+4yになるには2y²、zの偏微分にはz²が必要です。</p></details><details><summary>解答</summary><p>φ=x²+xy+2y²+z²+5です。三つの偏微分を順に取ると(2x+y,x+4y,2z)で、原点の値も5となります。今回は候補を構成し直接確認したので、一般の場が勾配となる条件や一般の積分定理を借りていません。定数項は勾配に現れませんが、指定値で決まります。</p></details></article>
+<article class="exercise"><h3>9．方向微分の最大値を誤診断しない</h3><p>あるC¹関数の点pで∇φ(p)=(3,4,0)です。「v=(6,8,0)なら内積50だから、方向微分の最大値は少なくとも50」という説明を訂正し、最大・最小の単位方向と値を求めてください。</p><details><summary>ヒント1</summary><p>vの長さは10です。単位方向の比較か、時間当たりの比較かを分けます。</p></details><details><summary>ヒント2</summary><p>勾配の長さは5、正負の勾配方向が等号を与えます。</p></details><details><summary>解答</summary><p>vとの内積50は速さ10で進むp+tvに沿う時刻当たりの変化です。単位方向v/10=(3/5,4/5,0)では50/10=5で、これが最大。逆方向(−3/5,−4/5,0)では−5で最小です。全ての単位uで|∇φ·u|≤5だから、他に大きな値はありません。</p></details></article>
 </section>
 <section id="vector-fields-reflection"><h2>自分の言葉で</h2><ol><li>内積と外積は、それぞれどの幾何量を残しますか。順序を逆にするとどうなりますか。</li><li>場 F(p)、位置 r(t)、速度 r′(t) の入力と出力はどう違いますか。</li><li>方向微分を勾配との内積で表すとき、関数と方向に何を仮定しましたか。</li></ol></section>

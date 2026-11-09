@@ -1,12 +1,13 @@
 <section id="sets-maps-question">
   <h2>集合と写像の導入</h2>
-  <p>x を二乗する操作を考えます。実数をすべて入れてよいなら、2 と −2 は同じ 4 へ移ります。入力を 0 以上に限れば、この重なりはなくなります。また、出力として負の数まで期待するかどうかで、「すべての出力を作れるか」という問いの答えも変わります。計算式だけでは、関数の性質は決まりません。</p>
+  <p>x を二乗する操作を考えます。実数をすべて入れてよいなら、2 と −2 は同じ 4 へ移ります。入力を 0 以上に限れば、この重なりはなくなります。また、出力として負の数まで期待するかどうかで、「すべての出力を作れるか」という問いの答えも変わります。計算式だけでは、関数の性質は決まりません。</p><p class="note">学習の目安は演習込み110–160分です。集合の所属を追う前半と、写像の性質・合成・逆写像を計算する後半に分けて読めます。演習1–3は基本、4–7は定義と操作の点検、8–10は条件の設計と証明です。</p>
   <p>この章では、対象の集まりを集合として指定し、その間の対応を写像として扱います。微積分で関数を調べる前に、何を入力でき、どこに出力されるかを明確にするためです。<a href="logic.html">量化記号</a>と合わせると、「一つに決まる」「すべて届く」といった言葉も正確に読めるようになります。</p>
 </section>
 
 <section id="sets-maps-sets">
   <h2>集合・所属・包含と集合演算</h2>
   <p><strong>集合</strong>は、どの対象が入っているかを区別して考える集まりです。x が A の要素であることを x ∈ A と書きます。{1, 2, 3} と {3, 2, 1, 1} は同じ集合です。順番と重複回数は記録しません。要素が一つもない集合が空集合 ∅ です。集合が等しいとは、入っている要素がまったく同じという意味です。</p>
+  <p>要素を列挙する代わりに、条件で集合を指定することもできます。実数全体を ℝ と書くと、{x ∈ ℝ：x ≥ 0} は「実数 x のうち、x ≥ 0 を満たすものを全て集める」という意味です。区切りの「：」の右側が集める条件です。この集合は区間の記号で [0, ∞) とも書き、0を含む全ての非負の実数を表します。∞はここでは実数の要素でなく、上へ限りなく続くという印です。</p>
   <p>A のどの要素も B に入るとき、A は B の<strong>部分集合</strong>で、A ⊆ B と書きます。A 自身も A の部分集合です。「要素である」∈ と「部分集合である」⊆ は役割が異なり、1 ∈ {1, 2} と {1} ⊆ {1, 2} を区別します。前者は一つの対象、後者は集まりどうしの関係です。</p>
   <p>A ∪ B は A または B に入る要素の集合、A ∩ B は両方に入る要素の集合です。全体の範囲 U を固定したとき、A の補集合は U に入るが A に入らない要素の集合です。補集合は U に依存します。たとえば A = {1, 2} の補集合は、U = {1, 2, 3} なら {3} ですが、U を整数全体に変えれば別の集合になります。</p>
 
@@ -24,12 +25,23 @@
   </div>
 </section>
 
+<section id="sets-maps-element-proof">
+  <h2>要素による集合の等式の証明</h2>
+  <p>図の囲みを重ねると、いくつかの集合演算の等式を予想できます。しかし囲みの描き方に依存しない理由が必要です。集合が等しいとは要素が同じことなので、<strong>任意の一つの要素xを取り、その所属条件を言い換える</strong>方針を使います。AとBを同じ全体Uの部分集合とし、Uで取る補集合をA<sup>c</sup>、B<sup>c</sup>と書きます。集合の差A∖Bは、Aに入るがBには入らない要素の集合です。</p>
+  <div class="proof"><h3>例題：和集合の補集合を言葉に戻す</h3><p>(A∪B)<sup>c</sup>=A<sup>c</sup>∩B<sup>c</sup>を示します。任意のx∈Uについて、xが左辺に入る条件は「xはAまたはBに入る、ということがない」です。これは「xはAに入らず、かつBにも入らない」と同じです。補集合の定義に戻すと「x∈A<sup>c</sup>かつx∈B<sup>c</sup>」、つまり右辺への所属です。</p><p>どの言い換えも逆向きにたどれるので、左辺の要素は右辺へ入り、右辺の要素も左辺へ入ります。二つの包含を一度に示しました。片方だけを示して集合の等式とするのは不十分です。この等式は<strong>ド・モルガンの法則</strong>の一つで、前章の「または」の否定を集合で書いたものです。</p></div>
+  <p>次の表で、xがAだけに入る行と、両方に入らない行を比べてください。どの行で補集合に残るかを、二つの手順で追っています。1は所属、0は非所属を意味し、個数や確率を表しません。</p>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="和集合の補集合と補集合の共通部分の比較"><table class="concept-table" id="sets-maps-demorgan-table" data-visual="sets-maps-demorgan-table" style="min-width:28rem"><caption>所属の四通りすべてで、二つの計算結果が一致する</caption><thead><tr><th scope="col">Aへの所属</th><th scope="col">Bへの所属</th><th scope="col">A∪B</th><th scope="col">(A∪B)<sup>c</sup></th><th scope="col">A<sup>c</sup>∩B<sup>c</sup></th></tr></thead><tbody><tr><th scope="row">1</th><td>1</td><td>1</td><td>0</td><td>0</td></tr><tr><th scope="row">1</th><td>0</td><td>1</td><td>0</td><td>0</td></tr><tr><th scope="row">0</th><td>1</td><td>1</td><td>0</td><td>0</td></tr><tr><th scope="row">0</th><td>0</td><td>0</td><td>1</td><td>1</td></tr></tbody></table></div>
+  <p>これは四つの数例を試した表ではありません。各xの所属の仕方には四通りしかなく、それをすべて覆う場合分けです。Uの要素数が無限でも、所属条件の四通りは変わりません。ただし二つの補集合を異なるUで取れば、今の証明の前提が壊れます。</p>
+  <p>同じ観点から∅⊆Aも確認できます。「∅に入るのにAに入らないx」は存在しないので、包含を崩す反例はありません。一方、∅∈AはAの要素に空集合そのものがあるかという別の話です。例えばA={∅}は要素が一つある集合であり、∅とは等しくありません。</p>
+</section>
 <section id="sets-maps-functions">
   <h2>写像の定義・単射・全射</h2>
   <p><strong>写像</strong> f：A → B は、A の各要素 x に対し、B の要素 f(x) をちょうど一つ定める対応です。A が定義域、B が終域です。実際に出力される値の集合 f(A) = {f(x)：x ∈ A} を像と呼びます。終域の要素がすべて出力されるとは限らないので、終域と像は分けて考えます。この本では実数値の写像を特に関数とも呼びます。</p>
+  <p>像の記号 {f(x)：x ∈ A} では、「Aに入る入力 x を全て動かし、その出力 f(x) を集める」と読みます。例えば A={−1,0,1}、f(x)=x² なら、出力は1,0,1ですが、集合として重複を除いた像は {0,1} です。</p>
   <p>f：実数 → 実数、f(x) = x² なら、像は 0 以上の実数全体です。終域には −1 も入りますが、像には入りません。一方、f：実数 → 0 以上の実数、f(x) = x² と指定すれば、終域と像は一致します。「x に ±√x を対応させる」は x &gt; 0 で出力が二つあるため、そのままでは写像の定義を満たしません。</p>
   <p>異なる入力が異なる出力へ移る写像を<strong>単射</strong>といいます。同じことを「f(x₁) = f(x₂) なら x₁ = x₂」と書けます。終域のどの y に対しても、f(x) = y となる入力 x が少なくとも一つある写像を<strong>全射</strong>といいます。両方を満たせば<strong>全単射</strong>です。単射は重なりのなさ、全射は終域への届き方を述べています。</p>
   <p>二乗の関数の四つの指定を、節末の表で比べます。入力の重なりをなくす変更と、終域へすべて届くようにする変更は、別の役割を持ちます。ここでは非負の実数に一意な非負の平方根があるという、実数の性質を使っています。</p>
+  <p>表の「逆写像」は、出力 y から元の入力 x をただ一つ選び直す対応を意味します。二つの入力が同じ出力へ重なると選び直せず、終域に届かない出力があるとそこから戻れません。単射と全射の両方が必要になる理由です。次節では、全単射から逆写像を作り、行って戻る合成が元に戻ることを確かめます。</p>
 
   <div class="concept-grid">
     <figure class="concept-figure" id="sets-maps-visual-map-injective" data-visual="sets-maps-visual-map-injective"><svg class="concept-svg" viewBox="0 0 360 360" role="img" aria-labelledby="sets-maps-visual-map-injective-title sets-maps-visual-map-injective-desc"><title id="sets-maps-visual-map-injective-title">重複0でも、未到達は残る</title><desc id="sets-maps-visual-map-injective-desc">有限集合の全要素を表示。各入力から1本の矢印を出し、右端の丸には各出力へ入る矢印本数1,1,0を表示。本数0は解なし、1は一意、2は複数を意味する。</desc><defs><marker id="sets-maps-visual-map-injective-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--series-1)"/></marker></defs><text x="180" y="30" font-size="22" fill="var(--ink)" text-anchor="middle">重複0でも、未到達は残る</text><text x="85" y="75" font-size="22" fill="var(--ink)" text-anchor="middle">A</text><text x="250" y="75" font-size="22" fill="var(--ink)" text-anchor="middle">B</text><text x="330" y="75" font-size="22" fill="var(--ink)" text-anchor="middle">本数</text><ellipse cx="85" cy="190" rx="50" ry="105" fill="none" stroke="var(--ink-3)" stroke-width="2"/><ellipse cx="250" cy="190" rx="50" ry="105" fill="none" stroke="var(--ink-3)" stroke-width="2"/><circle cx="85" cy="150" r="4" fill="var(--ink)"/><text x="62" y="158" font-size="22" fill="var(--ink)" text-anchor="middle">1</text><path d="M93 150 L243 130" fill="none" stroke="var(--series-1)" stroke-width="3" marker-end="url(#sets-maps-visual-map-injective-arrow)"/><circle cx="85" cy="230" r="4" fill="var(--ink)"/><text x="62" y="238" font-size="22" fill="var(--ink)" text-anchor="middle">2</text><path d="M93 230 L243 190" fill="none" stroke="var(--series-1)" stroke-width="3" marker-end="url(#sets-maps-visual-map-injective-arrow)"/><circle cx="250" cy="130" r="4" fill="var(--ink)"/><text x="263" y="138" font-size="22" fill="var(--ink)">a</text><circle cx="330" cy="130" r="16" fill="var(--accent-wash)" stroke="var(--ink-3)" stroke-width="2"/><text x="330" y="138" font-size="22" fill="var(--ink)" text-anchor="middle">1</text><circle cx="250" cy="190" r="4" fill="var(--ink)"/><text x="263" y="198" font-size="22" fill="var(--ink)">b</text><circle cx="330" cy="190" r="16" fill="var(--accent-wash)" stroke="var(--ink-3)" stroke-width="2"/><text x="330" y="198" font-size="22" fill="var(--ink)" text-anchor="middle">1</text><circle cx="250" cy="250" r="4" fill="var(--ink)"/><text x="263" y="258" font-size="22" fill="var(--ink)">c</text><circle cx="330" cy="250" r="16" fill="var(--accent-wash)" stroke="var(--ink-3)" stroke-width="2" stroke-dasharray="4 3"/><text x="330" y="258" font-size="22" fill="var(--ink)" text-anchor="middle">0</text><text x="180" y="344" font-size="22" fill="var(--ink)" text-anchor="middle">単射 ○　全射 ×</text></svg><figcaption>単射のみ。a,bへ各1本で重なりはありませんが、cへの本数は0なのでf(x)=cに解がありません。 右端の本数は B の要素ではなく、各出力に対応する入力の個数です。これは図の全要素を数えられる有限例で、任意の写像の性質は定義へ戻って確認します。</figcaption></figure>
@@ -43,6 +55,12 @@
   </div><p data-reading-note="sets-maps-visual-square-ranges" class="note">×は一つの反例で確定できますが、「4への入力が一つだった」だけで単射○とは言えません。非負入力で x₁²=x₂² を因数分解すると x₁=x₂、任意の非負出力へは√yを選べる、という一般の理由を使っています。入力制限と終域制限が、それぞれどの障害を取り除いたかを比べてください。</p>
 </section>
 
+<section id="sets-maps-inverse-example">
+  <h2>定義域の制限と逆写像の構成</h2>
+  <p>二乗の表では、定義域を制限すると重なりを取り除けました。今度は式から逆写像を作るところまで自分で進めます。f(x)=(x−2)²とし、定義域A=[2,∞)、終域B=[0,∞)とします。Aは2以上の実数全体です。まず、どのx∈Aでもf(x)≥0なので、指定した終域へ値を返す写像になっています。</p>
+  <div class="proof"><h3>例題：方程式を解くだけで逆写像と呼べるか</h3><p>全射を示すには、任意のy∈Bを渡されたとして、(x−2)²=yを解きます。形式的にはx=2±√yですが、x≥2という条件があるのでx=2+√yを選びます。これならAに入り、代入してf(2+√y)=(√y)²=y。従ってどのyにも届きます。</p><p>単射は、f(x₁)=f(x₂)から示します。x₁−2、x₂−2はともに非負なので、平方が等しければx₁−2=x₂−2、従ってx₁=x₂です。したがってfは全単射で、逆写像はf⁻¹(y)=2+√y、B→Aとなります。「±」のままでは一つの出力を返さず、逆写像にはできません。</p><p>実数tの絶対値|t|を、t≥0ならt、t&lt;0なら−tとします。行って戻る計算も二方向で確認します。f(f⁻¹(y))=(2+√y−2)²=y。逆のf⁻¹(f(x))=2+√((x−2)²)=2+|x−2|=xです。ここではx≥2だから|x−2|=x−2です。平方根と二乗を条件なしに消したのではありません。x=3ならf(3)=1、逆で2+√1=3へ戻ります。</p></div>
+  <p>定義域を2以下の実数全体へ変えると、同じ終域Bへの全単射になりますが、今度の逆写像は2−√yです。すべての実数を入れる元の式では、1と3がともに1へ移るので逆写像を作れません。逆の式の符号は好みで選ぶのでなく、元の定義域が決めます。また、f⁻¹と逆数1/fは操作が異なります。例えば同じ入力3に対してf⁻¹(3)=2+√3ですが、1/f(3)=1です。記号の−1乗が、ここでは対応を逆にすることを意味している点に注意しましょう。</p>
+</section>
 <section id="sets-maps-composition">
   <h2>写像の合成と逆写像</h2>
   <p>f：A → B と g：B → C を順に使う写像を<strong>合成</strong>と呼び、g ∘ f：A → C、(g ∘ f)(x) = g(f(x)) と定めます。右の f を先に使います。f の出力を g が受け取れることが必要です。式だけをつなぎ、入力の範囲を忘れると、途中で定義されない計算を作ってしまいます。</p>
@@ -58,6 +76,12 @@
   <p>全単射なら、各 y ∈ B からそれを生む唯一の x ∈ A へ戻る<strong>逆写像</strong> f⁻¹：B → A が作れます。存在を保証するのが全射、ただ一つを保証するのが単射です。f⁻¹(f(x)) = x、f(f⁻¹(y)) = y が成り立ちます。ここで f⁻¹ は逆数 1/f ではありません。二乗の逆を平方根とするにも、まず非負の範囲へ制限する必要があります。</p>
 </section>
 
+<section id="sets-maps-composition-example">
+  <h2>合成の順序と逆写像の順序</h2>
+  <p>合成の記号を覚えるには、各段階の入力と出力を実際に書くのが確実です。f：ℝ→ℝをf(x)=x+1、g：ℝ→ℝをg(x)=3xとします。どちらも全実数で定義され、出力も実数なので、どちらの順番でも途中で定義されなくなることはありません。</p>
+  <div class="proof"><h3>例題：二つの操作を順に使い、順に戻す</h3><p>fを先に使うならx→x+1→3(x+1)で、(g∘f)(x)=3x+3。gを先に使うならx→3x→3x+1で、(f∘g)(x)=3x+1です。例えばx=0でも前者は3、後者は1。従って一般にg∘fとf∘gは同じではありません。矢印を読む順序と、記号を右から作用させる順序が対応しています。</p><p>h=g∘fを戻すには、最後に掛けた3を先に戻し、それから足した1を引きます。h(x)=yを直接解けば3x+3=y、3x=y−3、x=y/3−1です。一方f⁻¹(y)=y−1、g⁻¹(y)=y/3なので、h⁻¹=f⁻¹∘g⁻¹となり、順番が逆になります。</p><p>二方向の検算はh(y/3−1)=3(y/3−1)+3=yと、h⁻¹(3x+3)=(3x+3)/3−1=xです。もし誤ってg⁻¹∘f⁻¹とすると(y−1)/3で、hに戻すとy+2となり、元に戻りません。式の見た目ではなく、操作をどの順で取り消したかで判断します。</p></div>
+  <p>この順序の理由は一般の全単射でも同じです。fの出力をgが受け取るなら、結果から最初に戻す先はgの入力で、その後にfの入力へ戻ります。逆写像を作る前には各写像の全単射性と、合成の途中の範囲を確認します。本文の定理は単射の合成を保証しますが、逆方向の主張で何が言えるかは演習9で考えます。</p>
+</section>
 <details class="column" id="sets-maps-column">
   <summary>寄り道［つながり］：どんなファイルも小さくする圧縮は作れない</summary>
   <p>圧縮したファイルを必ず元に戻したいなら、異なる入力が同じ圧縮結果になることは許されません。圧縮は単射でなければならないのです。DEFLATE 形式を記述する RFC 1951 も、すべての入力を圧縮できる方式はないと、数え上げを理由に述べています。</p>
@@ -88,10 +112,17 @@
     <details><summary>ヒント2：合成は一要素どうし</summary><p>合成の入力は a だけ、終域の要素は d だけです。</p></details>
     <details><summary>解答</summary><p>f は単射ですが c に届かないため全射ではありません。g は全射ですが b、c が同じ d に移るため単射ではありません。合成は a を d に移す全単射です。したがって合成が全単射でも、途中の写像がそれぞれ全単射とは限りません。</p></details>
   </article>
+  <article class="exercise"><h3>4．要素と部分集合を分けて判定する</h3><p>A={∅,{1}}とします。①∅∈A、②∅⊆A、③{1}∈A、④{1}⊆Aの真偽を判定し、Aの要素数も答えてください。</p><details><summary>ヒント1</summary><p>Aの要素として列挙されている対象は、空集合と集合{1}の二つです。</p></details><details><summary>ヒント2</summary><p>{1}⊆Aなら、数1そのものがAの要素でなければなりません。</p></details><details><summary>解答</summary><p>①真、②真、③真、④偽。①と③は列挙された対象そのものです。②は空集合には包含を崩す要素がないため真。④は1∉Aなので偽です。Aの要素は二つで、∅と{1}は別の集合です。中括弧を外して数1を要素と数えたり、空集合を無視して一要素にしたりしません。</p></details></article>
+  <article class="exercise"><h3>5．もう一つのド・モルガンの法則</h3><p>A、B⊆Uとします。(A∩B)<sup>c</sup>=A<sup>c</sup>∪B<sup>c</sup>を、任意のx∈Uの所属条件から証明してください。有限集合の一例だけの確認で終えないようにします。</p><details><summary>ヒント1</summary><p>xが左辺に入るとは「Aに入り、かつBに入る」の否定です。</p></details><details><summary>ヒント2</summary><p>「かつ」の否定は「少なくとも一方が成り立たない」です。</p></details><details><summary>解答</summary><p>任意のx∈Uについて、x∈(A∩B)<sup>c</sup>であることは、xがAとBの両方に入るわけではないこと、すなわちx∉Aまたはx∉Bと同値です。これはx∈A<sup>c</sup>またはx∈B<sup>c</sup>、従ってx∈A<sup>c</sup>∪B<sup>c</sup>と同値です。どの段階も逆向きにたどれるため、両辺は同じ要素を持ちます。補集合はすべて同じUで取っています。</p></details></article>
+  <article class="exercise"><h3>6．式が書けても写像とは限らない</h3><p>①f：ℝ→ℝ、f(x)=1/x、②g：ℝ→[0,∞)、g(x)=x−1、③h：[0,∞)→ℝ、h(x)=√xのうち、指定された写像として定義できるものを選んでください。定義できないものは、式を変えずに定義域または終域を変更して修正してください。</p><details><summary>ヒント1</summary><p>各入力に一つの値が定まり、すべて終域に入る必要があります。</p></details><details><summary>ヒント2</summary><p>①はx=0、②はx=0を点検します。③では非負の平方根を取ります。</p></details><details><summary>解答</summary><p>③だけがそのままで写像です。①は0で割るため値が定まらず、定義域をℝ∖{0}へ変えればℝへの写像になります。②はg(0)=−1が終域に入らないので不適切です。終域をℝへ変えるか、定義域を[1,∞)へ制限すれば修正できます。修正は一意ではありません。終域を変える操作は未定義の割り算を直せず、①では定義域の変更が必要です。</p></details></article>
+  <article class="exercise"><h3>7．整数から整数への一次式</h3><p>整数全体をℤと書きます。f：ℤ→ℤ、f(n)=2n+1について、像、単射性、全射性を調べてください。式を変えずに全単射にする終域も指定してください。</p><details><summary>ヒント1</summary><p>出力はすべて奇数です。逆にどの奇数もこの形で書けますか。</p></details><details><summary>ヒント2</summary><p>単射では2n₁+1=2n₂+1を解きます。終域に0を残すと全射になれません。</p></details><details><summary>解答</summary><p>像は奇数全体{2k+1：k∈ℤ}です。任意の奇数2k+1は入力kで作れるので、含まれるだけでなく一致します。2n₁+1=2n₂+1なら2n₁=2n₂、n₁=n₂で単射。一方0へ届かず、ℤへの全射ではありません。終域を奇数全体へ変えれば全単射で、逆写像はy→(y−1)/2です。yが奇数なのでこの値は整数になり、二方向の合成も元に戻ります。</p></details></article>
+  <article class="exercise"><h3>8．二乗の逆を別の枝で作る</h3><p>f(x)=(x−2)²で、定義域を2以下の実数全体、終域を[0,∞)とします。全単射性と逆写像を示し、x=−1とy=9を用いて二方向の合成を検算してください。</p><details><summary>ヒント1</summary><p>yから戻る候補2±√yのうち、定義域に入るものを選びます。</p></details><details><summary>ヒント2</summary><p>x≤2なら√((x−2)²)=2−xです。</p></details><details><summary>解答</summary><p>任意のy≥0へx=2−√y≤2を選ぶとf(x)=yなので全射です。x₁,x₂≤2で平方が等しければ、非負の2−x₁と2−x₂が等しく、x₁=x₂なので単射。逆写像はf⁻¹(y)=2−√yです。f(−1)=9、f⁻¹(9)=−1で戻ります。一般にもf(f⁻¹(y))=(−√y)²=y、f⁻¹(f(x))=2−(2−x)=x。平方根をx−2と取り違えるとこの枝では戻れません。</p></details></article>
+  <article class="exercise"><h3>9．合成から必ず分かる性質</h3><p>f：A→B、g：B→Cとします。①g∘fが単射ならfは単射、②g∘fが全射ならgは全射を証明してください。gが単射、fが全射まで言えるかは、演習3の例で点検してください。</p><details><summary>ヒント1</summary><p>①はf(x₁)=f(x₂)から始めます。②は任意のz∈Cに対する合成の入力を使います。</p></details><details><summary>ヒント2</summary><p>①では両辺へgを作用させられます。②ではz=g(f(x))の中のf(x)がBに入ります。</p></details><details><summary>解答</summary><p>①f(x₁)=f(x₂)ならg(f(x₁))=g(f(x₂))。合成が単射なのでx₁=x₂、従ってfは単射です。②任意のz∈Cに対し、合成の全射性からg(f(x))=zとなるx∈Aがあります。y=f(x)∈Bを取ればg(y)=zなのでgは全射です。演習3では合成は全単射ですが、gは単射でなく、fは全射でありません。合成が使わないBの要素に起きる重なりや未到達は、合成の性質だけでは取り除けません。</p></details></article>
+  <article class="exercise"><h3>10．逆算から定義域と終域を設計する</h3><p>f(x)=(2x+1)/(x−1)とします。定義域をℝ∖{1}とし、終域を実数から一つだけ除いて全単射にしたいとします。除くべき値と逆写像を求め、分母が0にならないこと、二方向に戻ることを確認してください。</p><details><summary>ヒント1</summary><p>y=(2x+1)/(x−1)からxを解きます。y=2の場合は元の等式が成立しますか。</p></details><details><summary>ヒント2</summary><p>(y−2)x=y+1なのでx=(y+1)/(y−2)。このxについてx−1=3/(y−2)です。</p></details><details><summary>解答</summary><p>f(x)=2なら2x+1=2(x−1)から1=−2となり不可能なので、2を除きます。任意のy≠2に対しx=(y+1)/(y−2)は実数で、x−1=3/(y−2)≠0、従って定義域に入ります。代入すると2x+1=3y/(y−2)なのでf(x)=yです。この逆算はyごとに唯一のxを定めるため全単射で、f⁻¹(y)=(y+1)/(y−2)です。またf(x)−2=3/(x−1)≠0、f(x)+1=3x/(x−1)なのでf⁻¹(f(x))=x。y=0なら逆は−1/2、f(−1/2)=0となり、具体的にも検算できます。</p></details></article>
 </section>
 
 <section id="sets-maps-reflection">
-  <h2>自分の言葉で</h2>
+  <h2>集合・写像・逆写像の整理</h2>
   <ol>
     <li>定義域、終域、像は、それぞれどの範囲を指定しますか。</li>
     <li>逆写像を作るとき、単射と全射はそれぞれ何を保証しますか。</li>

@@ -1,7 +1,7 @@
 <section id="shortest-paths-question">
   <h2>重み付きグラフの最短路</h2>
   <p>ある場所から別の場所まで、通る通路の本数を最少にしたいなら、<a href="discrete-trees.html#discrete-trees-bfs">幅優先探索</a>が使えました。では各通路の時間が違ったらどうでしょう。三本の通路を通る候補が二つあっても、合計 5 分と 7 分では選び方が変わります。</p>
-  <p>候補を見つけるたびに距離を短くするだけでは、「もう短くならない」瞬間が分かりません。この章では、<strong>辺の重みが全て非負</strong>という条件から、距離を一つずつ確定できる理由を説明します。</p>
+  <p>候補を見つけるたびに距離を短くするだけでは、「もう短くならない」瞬間が分かりません。この章では、<strong>辺の重みが全て非負</strong>という条件から、距離を一つずつ確定できる理由を説明します。さらに、計算結果を辺ごとに検算する方法、未知の時間を逆算して経路を選ばせる設計、0と負の境界を調べます。</p><p class="note">演習を含む学習の目安は120–180分です。重みと暫定距離、確定規則と証明、重みを変える設計と演習の三回に分けて読めます。道の時間は自作モデルの値であり、図の線の長さからは読み取りません。</p>
 </section>
 
 <section id="shortest-paths-weights">
@@ -22,10 +22,21 @@
   <div class="proof"><h3>歩道を許しても、非負なら最小値は変わらない</h3><p>頂点を再訪する歩道から、同じ頂点の二回の出現の間を取り除きます。その部分の辺の重みは全て非負なので、取り除いても合計は増えません。有限回で道になります。有限グラフの道には頂点の繰り返しがないため、候補は有限個。到達可能ならその中に最小値があり、歩道全体の最小値とも等しくなります。重み 0 の周回を除いても合計が変わらないことはありますが、道への整理は可能です。</p></div>
 </section>
 
+<section id="shortest-paths-objective">
+  <h2>例題：辺の本数と合計時間で、答えが変わる</h2>
+  <p>三頂点S、U、Tの全ての二点間を結び、SU=4分、UT=1分、ST=7分とします。SからTへ行く道は、直接のS–Tと、Uを通るS–U–Tの二つだけです。辺数なら前者は1、後者は2なので、BFSは直接の道を選びます。時間なら前者は7分、後者は4+1=5分で、答えが逆転します。</p>
+  <p>最短にしたい量を決める前に、算法を決めてはいけません。重みが全て同じ正の数cなら、時間は辺数×cなのでBFSでも同じ最小値を得ます。しかし一般の非負重みでは、一本先の点より、二本先の点が近いこともあります。</p>
+  <h3>「見つけた」と「最短だと分かった」を分ける</h3>
+  <p>Sの隣を調べるだけでTへの7分という道を見つけられます。ただし、その時点ではUを経由する5分をまだ比べていません。7は上限、つまり「最短時間はこれ以下」という情報です。Tをもう調べなくてよいと決めるには、未知の経由地がそれを下げない理由が必要です。</p>
+  <p>そこで、SからUへの4分を先に処理し、UからTへの候補4+1=5と現在の7を比べます。短い5を残せば改善できます。この局所的な比較を<strong>緩和</strong>と名付け、どの点から順に比較すれば値を確定できるかを<a href="#shortest-paths-dijkstra">Dijkstra法</a>で考えます。</p>
+</section>
+
 <section id="shortest-paths-relaxation">
   <h2>緩和による暫定距離の更新</h2>
   <p>最短距離そのもの δ(v) と、計算途中の<strong>暫定距離</strong> d(v) を区別します。初めは d(s) = 0、他は ∞。有限の d(v) は、実際に見つけた経路の重みなので、真の最小値より小さくはありません。</p>
   <p>u へ d(u) で行けて、辺 uv があるなら、v へ d(u) + w(uv) で行く候補ができます。今の値より小さければ更新します。この操作が<strong>緩和</strong>です。名前は条件を弱める意味ではなく、暫定的な上限を短い方へ下げる操作を指しています。</p>
+  <p>次の式の矢印←は、右側で計算した値へ左側の記録を書き換える印です。既に二つの値が等しいという主張ではありません。今の候補と、新しい経由地からの候補を比べ、小さい方だけを残します。</p>
+
   <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>d</mi><mo>(</mo><mi>v</mi><mo>)</mo><mo>←</mo><mi>min</mi><mo>{</mo><mi>d</mi><mo>(</mo><mi>v</mi><mo>)</mo><mo>,</mo><mspace width="0.4em"/><mi>d</mi><mo>(</mo><mi>u</mi><mo>)</mo><mo>+</mo><mi>w</mi><mo>(</mo><mi>u</mi><mi>v</mi><mo>)</mo><mo>}</mo></mrow></math></div>
   <p>短くなったときは v の<strong>親</strong>を u にします。後で終点から親をたどれば、見つけた経路を復元できます。同じ値の候補では、今の親を変えない規則にします。同じ最短距離を実現する道が複数ある場合も、一つを記録すれば十分だからです。</p>
 </section>
@@ -39,8 +50,10 @@
     <li>u から未確定の隣接点 v への辺を全て緩和する。値が厳密に小さくなったときだけ親を u にする。</li>
   </ol>
   <p>以下の表では同距離ならアルファベット順で選びます。始点 A の確定後は B が 2、D が 5。B の確定で E が 3 と分かるので、D より先に E を選び、D の候補を 4 へ下げます。「一度候補に出た」ことは「確定した」ことではありません。</p>
+  <p>計算を一段進めるたびに成り立ち続ける性質を<strong>不変量</strong>と呼びます。この手順では「確定した値は正しく、暫定値も実際に見つけた経路から来る」ことを保ちます。<a href="#shortest-paths-trace-table">確定順の表</a>で更新を追った後、なぜその性質が次の段でも保たれるかを証明します。</p>
+
   <div class="concept-table-wrap" tabindex="0" role="region" aria-label="六頂点の例におけるDijkstra法の確定順と緩和">
-    <table class="concept-table" data-visual="shortest-paths-trace"><caption>通常例：確定順は A、B、E、C、D、F</caption>
+    <table class="concept-table" id="shortest-paths-trace-table" style="min-width:30rem" data-visual="shortest-paths-trace"><caption>通常例：確定順は A、B、E、C、D、F</caption>
       <thead><tr><th scope="col"><span class="table-math">新たに確定</span></th><th scope="col"><span class="table-math">確定距離</span></th><th scope="col">未確定の点への更新・比較</th></tr></thead>
       <tbody>
         <tr><th scope="row"><span class="table-math">A</span></th><td><span class="table-math">0</span></td><td>B を 2、D を 5 にする。</td></tr>
@@ -64,12 +77,33 @@
   <p>親の記録も有限回で始点へ戻れます。未確定点に親を付けるのは、その親を確定したときだけです。従って最終的に有限距離の点の親をたどると、確定順が厳密に前へ戻ります。0 重みで距離が等しくても、親同士の輪はできません。到達不能な点には親も経路も作りません。</p>
 </section>
 
+<section id="shortest-paths-certificate">
+  <h2>例題：親で経路を戻し、辺ごとの不等式で検算する</h2>
+  <p><a href="#shortest-paths-visual-weighted">六頂点の通常例</a>で、Dの暫定距離が5から4へ変わった時、親もAからEへ変えます。最終的な親はB←A、C←B、E←B、D←E、F←Eです。終点Fから親をたどるとF、E、B、A。順序を反転してA–B–E–Fを得て、重みを足すと2+1+2=5分です。</p>
+  <p>親を更新し忘れると、Dの距離は4なのに復元する経路はA–Dで5という食い違いが起きます。距離と親を一緒に更新し、復元した経路の合計が印字した距離に一致するか確かめます。ただし、一つの経路が5分であることだけでは、それより短い別の道がない証明にはなりません。</p>
+  <h3>全ての道への下限も確かめる</h3>
+  <p>候補のラベルをr(A)=0、r(B)=2、r(C)=4、r(D)=4、r(E)=3、r(F)=5と置きます。各辺uvについて |r(v)−r(u)|≤w(uv) を調べます。次の表で、余裕のある辺ADと、等号になる辺BEを比較してください。値も重みも単位は分です。</p>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="七辺でラベル差を確かめると、全ての道の下限になる"><table class="concept-table" data-visual="shortest-paths-edge-certificate"><caption>七辺でラベル差を確かめると、全ての道の下限になる</caption><thead><tr><th scope="col">辺</th><th scope="col">|r(v)−r(u)|</th><th scope="col">重みw</th><th scope="col">比較</th></tr></thead><tbody><tr><th scope="row">AB</th><td>2</td><td>2</td><td>2≤2</td></tr><tr><th scope="row">BC</th><td>2</td><td>2</td><td>2≤2</td></tr><tr><th scope="row">AD</th><td>4</td><td>5</td><td>4≤5</td></tr><tr><th scope="row">BE</th><td>1</td><td>1</td><td>1≤1</td></tr><tr><th scope="row">CF</th><td>1</td><td>3</td><td>1≤3</td></tr><tr><th scope="row">DE</th><td>1</td><td>1</td><td>1≤1</td></tr><tr><th scope="row">EF</th><td>2</td><td>2</td><td>2≤2</td></tr></tbody></table></div>
+  <p>なぜこの検査で全ての道を抑えられるのでしょう。任意の道A=v₀、v₁、…、vₖ=vに対し、各段でr(vᵢ)−r(vᵢ₋₁)≤w(vᵢ₋₁vᵢ)。全部足すと途中のrが消え、r(v)−r(A)≤道の重みです。r(A)=0なので、全ての道はr(v)以上の重みを持ちます。</p>
+  <p>一方、親の道はBへ2、Cへ2+2=4、Eへ2+1=3、Dへ2+1+1=4、Fへ2+1+2=5を実現します。各点で下限r(v)を達成する道もあるため、これらが最短距離です。Dijkstra法の実行をもう一度追う方法とは別に、結果そのものを検算できました。表はこの七辺の有限な検査ですが、道に沿って不等式を足す理由は一般に成り立ちます。</p>
+</section>
+
 <section id="shortest-paths-lab">
   <h2>ダイクストラ法の実行状態と親の記録</h2>
   <p>実験は上の六頂点のモデルを使います。「通常」「0 重み・同距離」「到達不能」を切り替え、初期状態から一つずつ確定する様子を調べてください。始点は A、終点は F です。通常例で D の候補が 5 から 4 へ下がる前後と、0 重みの場合に同距離の点が並ぶ場面を比べましょう。</p>
   <div data-lab="discrete-shortest"></div>
   <noscript><p>操作には JavaScript が必要です。通常例の辺は AB=2、BC=2、AD=5、BE=1、CF=3、DE=1、EF=2。全て非負で、A から F の最短路は A–B–E–F、合計 5、距離は A=0、B=2、C=4、D=4、E=3、F=5 です。0 の重みも許されます。F に接する辺を全て除いた場合は F が到達不能で、距離は ∞、経路はありません。負の重みを含む入力には、この手順の保証はありません。</p></noscript>
   <p class="note">同じ距離を実現する道が複数あると、親や確定順の一部は変わることがあります。距離の正しさと、選ばれた一本の経路の見た目は別です。また有限個の操作例を観察しただけで全入力への正しさが分かるわけではなく、その保証は上の不変量に基づきます。</p>
+</section>
+
+<section id="shortest-paths-parameter">
+  <h2>例題：通路の時間を逆算し、選ばれる経路を変える</h2>
+  <p>六頂点の通常例から、BEの重みだけを未知のx分、x≥0へ変えます。他の六辺は同じです。AからFへの最短時間をxの式で表し、「必ずEを通る最短路にしたい」という設計を考えます。毎回Dijkstra法を最初から実行する代わりに、競争する道を式で比べる方針を取ります。</p>
+  <p>A–B–E–Fは2+x+2=x+4分。A–B–C–Fは2+2+3=7分です。他にはA–D–E–Fが5+1+2=8分、A–D–E–B–C–Fが5+1+x+2+3=x+11分です。これで頂点を繰り返さないA–F道を全て挙げています。AでB側とD側の二通りに分け、それぞれ戻らずに進める枝をたどると確認できます。</p>
+  <p>8は7より大きく、x+11はx+4より大きいため、候補を二つに絞れます。従って最短時間は δ(F)=min{x+4,7} 分です。x+4=7を解いてx=3。ここが経路の入れ替わる境目です。</p>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="同じ通路網でBEの時間だけを変え、二経路の時間を比べる"><table class="concept-table" style="min-width:32rem" data-visual="shortest-paths-parameter-comparison"><caption>同じ通路網でBEの時間だけを変え、二経路の時間を比べる</caption><thead><tr><th scope="col">x（分）</th><th scope="col">A–B–E–F（分）</th><th scope="col">A–B–C–F（分）</th><th scope="col">最短時間（分）</th></tr></thead><tbody><tr><th scope="row">0</th><td>4</td><td>7</td><td>4</td></tr><tr><th scope="row">1</th><td>5</td><td>7</td><td>5</td></tr><tr><th scope="row">3</th><td>7</td><td>7</td><td>7（同順位）</td></tr><tr><th scope="row">5</th><td>9</td><td>7</td><td>7</td></tr></tbody></table></div>
+  <p>0≤x&lt;3ならA–B–E–Fだけが最短です。x=3ではこの道とA–B–C–Fがどちらも7分、x&gt;3では後者だけが最短になります。「Eを通る最短路が一つ存在する」ならx≤3、「最短路は全てEを通る」ならx&lt;3です。等号の扱いで設計条件が変わります。</p>
+  <p>最短時間をちょうど6分にしたいなら、6&lt;7なのでx+4=6、x=2です。代入すると候補は6、7、8、13分で、確かに6分が唯一の最小。最短時間を8分にするxはありません。BEをどれほど遅くしても、7分の別経路が残るからです。数式の解だけでなく、実現できる範囲も逆算の一部になります。</p>
 </section>
 
 <section id="shortest-paths-negative">
@@ -113,6 +147,41 @@
     <details><summary>ヒント1：最初の緩和後に選ばれる点</summary><p>U の候補 2 が V の候補 5 より小さいので、U を先に確定します。</p></details>
     <details><summary>ヒント2：途中までの重みと全体の重み</summary><p>S–V の 5 は、S–V–U の 1 以下でしょうか。</p></details>
     <details><summary>解答</summary><p>U を 2 で確定しても、後で S–V–U という重み 1 の道が見つかります。証明の「最短の道の途中までの重みは、全体の重み以下」が 5 ≤ 1 となって破れます。矢印をたどって戻る道がないので、有向閉路自体がありません。負の閉路がないことだけでは、この確定規則を正当化できません。</p></details>
+  </article>
+  <article class="exercise"><h3>4．目的から手順を選ぶ</h3><p>非負重みのグラフで、①全辺4分の移動時間、②全辺0分の移動時間、③辺ごとに違う所要時間を最小にします。BFSで最短辺数を求めることが、時間の最小化へどうつながるか説明してください。</p>
+    <details><summary>ヒント1：方針を決める</summary><p>①は辺数と時間の間の式を書きます。</p></details>
+    <details><summary>ヒント2：計算を進める</summary><p>②では到達可能な道の重みを比べます。③は三角形SUTを反例にできます。</p></details>
+    <details><summary>解答</summary><p>①時間=4×辺数なのでBFSの道が最短時間を与えます。②到達可能な全ての道が0分なので、BFSの道も時間最短ですが、辺数が多い道も同じ0分です。③BFSだけでは保証できません。SU=4、UT=1、ST=7なら、一辺のSTは7分、二辺のS–U–Tは5分。非負の時間を最小にするにはDijkstra法など重みを扱う手順を選びます。</p></details>
+  </article>
+  <article class="exercise"><h3>5．同距離の二点を、違う順で確定する</h3><p>通常例でA、B、Eを確定した直後の、未確定C、D、Fの距離と親を書いてください。その後DをCより先に確定しても、最終距離は変わりますか。</p>
+    <details><summary>ヒント1：方針を決める</summary><p>Eの緩和後はCもDも4です。</p></details>
+    <details><summary>ヒント2：計算を進める</summary><p>Dの隣は確定済みのAとEだけです。</p></details>
+    <details><summary>解答</summary><p>Cは4・親B、Dは4・親E、Fは5・親Eです。Dを先に選んでも新しい更新はありません。Cを次に選ぶとFへの候補は4+3=7で、現在の5を保ちます。従って距離は変わりません。アルファベット順は表示を一通りにする規則で、正しさに必要な規則ではありません。</p></details>
+  </article>
+  <article class="exercise"><h3>6．親の経路だけでは見抜けない誤答</h3><p>通常例のラベルをA=0、B=2、C=4、D=5、E=3、F=5と報告し、Dへの道はA–Dだとします。全ラベルに実現する道があるのに、最短距離の報告として誤りである理由を、辺ごとの不等式で診断してください。</p>
+    <details><summary>ヒント1：方針を決める</summary><p>重み1のDEを調べます。</p></details>
+    <details><summary>ヒント2：計算を進める</summary><p>|5−3|と1を比較します。</p></details>
+    <details><summary>解答</summary><p>DEでラベル差は2、重みは1なので2≤1が成立しません。Eへ3分で着けるならDへも3+1=4分で着けるため、5は最短ではありません。実現する経路は上限を与えますが、他の道を排除する下限の検査も必要です。</p></details>
+  </article>
+  <article class="exercise"><h3>7．望む時間から未知の辺を決める</h3><p>BE=x≥0、他の重みは通常例と同じとします。A–Fの最短時間を6分にするxを求めてください。また、最短路が全てEを通るxの範囲と、8分にできない理由を答えてください。</p>
+    <details><summary>ヒント1：方針を決める</summary><p>δ(F)=min{x+4,7}を使います。</p></details>
+    <details><summary>ヒント2：計算を進める</summary><p>x=3ではEを通らない同順位の道があります。</p></details>
+    <details><summary>解答</summary><p>6&lt;7よりx+4=6、x=2です。候補6、7、8、13を比較して検算できます。全最短路がEを通る範囲は0≤x&lt;3。x=3はA–B–C–Fも7分なので含めません。常にこの7分の道が残り、δ(F)≤7なので8分は不可能です。</p></details>
+  </article>
+  <article class="exercise"><h3>8．新しい直通辺の設計</h3><p>通常例へ新辺AFを重みy≥0で追加します。δ(F)をyの式で表し、直通路だけが最短になる範囲、既存の最短路と同順位になる値を求めてください。</p>
+    <details><summary>ヒント1：方針を決める</summary><p>Fを終点とする道は、AF一本か、AFを使わない道です。</p></details>
+    <details><summary>ヒント2：計算を進める</summary><p>途中でFを通ってからAFを使う列は、Fへの道にはなりません。</p></details>
+    <details><summary>解答</summary><p>δ(F)=min{y,5}です。AFを使うA–F道は直通一本だけで、それ以外の最小は既存の5分です。0≤y&lt;5なら直通だけが最短、y=5ならA–B–E–Fと同順位、y&gt;5なら既存路が最短。y=0も到達する0分の道であり、到達不能ではありません。</p></details>
+  </article>
+  <article class="exercise"><h3>9．負であることと、この入力で失敗すること</h3><p>有向辺S→U=2、S→V=5、V→U=aの三辺だけを考えます。Uを2で確定する判断が、この入力で正しいaの範囲を求めてください。負のaで成功する例から、全ての負重み入力にDijkstra法が使えると言えますか。</p>
+    <details><summary>ヒント1：方針を決める</summary><p>Uへの道はS–UとS–V–Uの二つです。</p></details>
+    <details><summary>ヒント2：計算を進める</summary><p>2≤5+aを解き、境界a=−3も調べます。</p></details>
+    <details><summary>解答</summary><p>正しい範囲はa≥−3です。a=−3では二経路とも2、a=−2では経由路が3なので直接の2が正しく、a=−4では経由路1を見逃します。負でも偶然成功する入力はありますが、全入力への保証にはなりません。非負性は本章の一般証明の十分条件で、この一例から必要条件や負重み一般の保証を結論できません。</p></details>
+  </article>
+  <article class="exercise"><h3>10．終点を見つけた時と、確定した時</h3><p>非負重みで終点だけへの最短距離が欲しいとき、終点を初めて発見した時に終了する案と、終点を最小暫定距離の点として確定した時に終了する案を比較してください。小さい反例と正しさの理由を示してください。</p>
+    <details><summary>ヒント1：方針を決める</summary><p>三角形SU=4、UT=1、ST=7を使えます。</p></details>
+    <details><summary>ヒント2：計算を進める</summary><p>確定した点の正しさは、その後の全点の処理を前提としていましたか。</p></details>
+    <details><summary>解答</summary><p>初発見で終了するとSからSTを見ただけで7と答え、S–U–Tの5を見逃します。確定時なら、本章の不変量によりその時点の値が真の最短距離であるため終了できます。三角形ではU=4を先に確定しTを5へ下げ、次にT=5を確定して答えます。終点が到達不能なら有限の点を全て処理した後、最小値∞で終了し、経路なしと報告します。</p></details>
   </article>
 </section>
 

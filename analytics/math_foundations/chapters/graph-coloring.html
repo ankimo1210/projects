@@ -1,13 +1,23 @@
 <section id="graph-coloring-question">
   <h2>頂点彩色と彩色数</h2>
   <p>架空の発表会で、同じ参加者が聞きたい二つの発表を、同じ時間帯に置かないようにしたいとします。発表を頂点、同時に置けない二つの発表を辺にすれば、各頂点に時間帯の番号を付ける問題になります。隣接する二点だけは、異なる番号にしなければなりません。</p>
-  <p>全てに違う番号を付ければ条件を守れますが、時間帯が多すぎます。二つで足りる条件は何か。必ず使える個数の上限を、近所の情報だけで保証できるか。この二つの問いを考えます。</p>
+  <p>全てに違う番号を付ければ条件を守れますが、時間帯が多すぎます。二つで足りる条件は何か。必ず使える個数の上限を、近所の情報だけで保証できるか。この二つの問いを考えます。少ない色で実際に組み分けする作業と、それより少なくできない理由を組み合わせ、最小値を確定します。さらに衝突を一本追加したときや、時間帯が一部指定されたときの違いも調べます。</p><p class="note">演習を含む学習の目安は120–180分です。最小色数の上下限、二色と奇閉路、貪欲法の順序と条件変更の三回に分けても読めます。時間割の例は全て本章用の自作モデルです。</p>
 </section>
 
 <section id="graph-coloring-definition">
   <h2>適正彩色と彩色数</h2>
   <p>この章も有限単純無向グラフを扱います。頂点へ 1、…、k の番号を割り当て、各辺 uv で c(u) ≠ c(v) となるものを<strong>適正な頂点彩色</strong>、または短く彩色と呼びます。実際の色の代わりに番号でもかまいません。同じ番号の頂点どうしには辺がなく、それぞれ一つの組として扱えます。</p>
   <p>彩色できる最小の色数を<strong>彩色数</strong> χ(G) とします。非空のグラフでは少なくとも 1、孤立点だけなら 1 です。空のグラフには 0 色で足りるとします。辺が一本でもあれば、両端を分けるため 2 色以上が必要です。どれか一つの彩色を見つけることと、色数が最小だと証明することは、別の作業です。</p>
+</section>
+
+<section id="graph-coloring-schedule-example">
+  <h2>例題：時間割を作り、最少である理由も示す</h2>
+  <p>六つの発表A、B、C、D、E、Fがあり、同時にできない組を E={AB,AC,BC,BD,CD,AE,CE,AF,BF} とします。辺のない二点は同じ時間帯に置いて構いません。各発表は一つの時間帯を使い、部屋数や参加人数による制限はないという理想化です。</p>
+  <p>全ての組合せを探す前に、必要な色数の<strong>下限</strong>、つまり「これより少なくできない」理由を探します。A、B、Cは三角形を作り、互いに全て隣接しています。AとBを違う色にした後、Cはどちらの色も使えないので少なくとも三色必要です。一般にk個の頂点が全て互いに隣接すれば、k色以上必要です。この全ての二点間に辺があるグラフを<strong>完全グラフ</strong>と呼びます。</p>
+  <p>次に三色で作れるかを試します。A=1、B=2、C=3とすると、DはB、Cに隣接するので1、EはA、Cに隣接するので2、FはA、Bに隣接するので3を使えます。時間帯は{A,D}、{B,E}、{C,F}の三組です。追加した点を、既に禁止された二色の残りへ置く方針です。</p>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="三つの時間帯に分け、各発表の衝突先を検算する"><table class="concept-table" data-visual="graph-coloring-schedule-construction"><caption>三つの時間帯に分け、各発表の衝突先を検算する</caption><thead><tr><th scope="col">発表</th><th scope="col">衝突する相手</th><th scope="col">時間帯</th></tr></thead><tbody><tr><th scope="row">A</th><td>B、C、E、F</td><td>1</td></tr><tr><th scope="row">B</th><td>A、C、D、F</td><td>2</td></tr><tr><th scope="row">C</th><td>A、B、D、E</td><td>3</td></tr><tr><th scope="row">D</th><td>B、C</td><td>1</td></tr><tr><th scope="row">E</th><td>A、C</td><td>2</td></tr><tr><th scope="row">F</th><td>A、B</td><td>3</td></tr></tbody></table></div>
+  <p>三角形が三色以上を要求し、表が三色の具体的な配置を与えました。下限3と上限3が一致するのでχ(G)=3です。「三色の例がある」だけならχ(G)≤3しか示しておらず、最小性には下限の理由も必要です。</p>
+  <p>検算は同じ色の組{A,D}、{B,E}、{C,F}の内部に辺がないことです。AD、BE、CFはいずれも辺集合にありません。全九辺も、ABは1と2、ACは1と3、BCは2と3、BDは2と1、CDは3と1、AEは1と2、CEは3と2、AFは1と3、BFは2と3となり、全て両端が異なります。</p>
 </section>
 
 <section id="graph-coloring-bipartite">
@@ -48,6 +58,14 @@
   <p>「奇数長の閉路がない」は「閉路がない」より弱い条件です。四角形の閉路は二部グラフですが木ではありません。一方、「三角形がない」だけでは足りません。五角形の閉路は三角形を含まなくても奇閉路なので、二色で彩色できません。</p>
 </section>
 
+<section id="graph-coloring-add-conflict">
+  <h2>例題：衝突を一本増やすと、二色の条件はどう変わるか</h2>
+  <p>六頂点の閉路A–B–C–D–E–F–Aを、A、C、Eが色1、B、D、Fが色2と彩色します。辺があるので一色では足りず、これでχ=2です。このグラフへ未使用の辺を一本追加するとき、もとの色が違う二点を結ぶなら、そのまま二色で守れます。例えばADを足してもA=1、D=2なので衝突しません。</p>
+  <p>同じ色のAとCを結ぶと、単に現在の割当てが失敗するだけでしょうか。辺AB、BCと新辺ACが三角形を作るため、どのように塗り直しても二色では不可能です。A、B、C、D、E、Fを1、2、3、1、2、3とすれば新辺も含む七辺を守れるので、今度の彩色数は3です。</p>
+  <div class="proof"><h3>連結な二部グラフなら、同じ側の追加辺は必ず奇閉路を作る</h3><p>同じ側の異なる二点u、vを結ぶ道を取ります。既存の辺は左右を交互に渡るので、その長さは偶数。u、vが未隣接なら長さは少なくとも2で、その道と新辺uvで奇数長の閉路になります。従って塗り直しても二色にはできません。反対側を結ぶなら、元の二色彩色をそのまま使えます。</p></div>
+  <p>ここで「連結」の条件が働いています。別の二成分にいる二点の間には、元の道がありません。一方の成分の色1と2を丸ごと交換してから新辺を足せば、両端を違う色にできます。例えば離れた辺XY、ZWをX=Z=1、Y=W=2としていても、XZを追加する前にZ=2、W=1へ変えれば二色のままです。描いてある現在の色と、グラフが二色可能かどうかを分けましょう。</p>
+</section>
+
 <section id="graph-coloring-greedy">
   <h2>貪欲彩色と最大次数による上界</h2>
   <p>二色で足りない場合にも、使える色数の簡単な保証があります。頂点が一つ以上あるとし、最大次数を Δ = max deg(v) とします。頂点を好きな順番に並べ、既に彩色した隣接点が使っていない最小の正の番号を付けていく方法を<strong>貪欲彩色（greedy coloring）</strong>と呼びます。</p>
@@ -58,7 +76,7 @@
   <p>この定理は<strong>上限</strong>であって、必ず Δ + 1 色必要という意味ではありません。また貪欲法がいつも最小色数を見つけるという保証でもありません。次の道グラフでは、最大次数は 2、最小色数は 2 ですが、順番によって貪欲法は三色を使います。</p>
   <figure class="concept-figure" id="graph-coloring-visual-greedy" data-visual="graph-coloring-greedy"><svg class="concept-svg" viewBox="0 0 360 380" role="img" aria-labelledby="graph-coloring-greedy-title graph-coloring-greedy-desc"><title id="graph-coloring-greedy-title">同じ道グラフでも、頂点順序で貪欲法の使用色数が変わる</title><desc id="graph-coloring-greedy-desc">四頂点の道を上下に同じ配置で描く。上はv1,v4,v2,v3順で左から1,2,3,1、三色。下はv1,v2,v3,v4順で1,2,1,2、二色。どちらも隣接色は異なり、最大次数2の上界3を守るが、最小色数は二色。</desc><text x="180" y="29" text-anchor="middle" font-size="22" fill="var(--ink)">順序 v₁,v₄,v₂,v₃</text><line x1="45" y1="87" x2="315" y2="87" stroke="var(--ink-3)" stroke-width="3"/><circle cx="45" cy="87" r="22" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><text x="45" y="95" text-anchor="middle" font-size="22" fill="var(--ink)">1</text><text x="45" y="137" text-anchor="middle" font-size="22" fill="var(--ink)">v₁</text><circle cx="135" cy="87" r="22" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><text x="135" y="95" text-anchor="middle" font-size="22" fill="var(--ink)">2</text><text x="135" y="137" text-anchor="middle" font-size="22" fill="var(--ink)">v₂</text><circle cx="225" cy="87" r="22" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><text x="225" y="95" text-anchor="middle" font-size="22" fill="var(--ink)">3</text><text x="225" y="137" text-anchor="middle" font-size="22" fill="var(--ink)">v₃</text><circle cx="315" cy="87" r="22" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><text x="315" y="95" text-anchor="middle" font-size="22" fill="var(--ink)">1</text><text x="315" y="137" text-anchor="middle" font-size="22" fill="var(--ink)">v₄</text><text x="180" y="171" text-anchor="middle" font-size="22" fill="var(--ink)">貪欲法：3色</text><text x="180" y="215" text-anchor="middle" font-size="22" fill="var(--ink)">順序 v₁,v₂,v₃,v₄</text><line x1="45" y1="265" x2="315" y2="265" stroke="var(--ink-3)" stroke-width="3"/><circle cx="45" cy="265" r="22" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><text x="45" y="273" text-anchor="middle" font-size="22" fill="var(--ink)">1</text><text x="45" y="315" text-anchor="middle" font-size="22" fill="var(--ink)">v₁</text><circle cx="135" cy="265" r="22" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><text x="135" y="273" text-anchor="middle" font-size="22" fill="var(--ink)">2</text><text x="135" y="315" text-anchor="middle" font-size="22" fill="var(--ink)">v₂</text><circle cx="225" cy="265" r="22" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><text x="225" y="273" text-anchor="middle" font-size="22" fill="var(--ink)">1</text><text x="225" y="315" text-anchor="middle" font-size="22" fill="var(--ink)">v₃</text><circle cx="315" cy="265" r="22" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><text x="315" y="273" text-anchor="middle" font-size="22" fill="var(--ink)">2</text><text x="315" y="315" text-anchor="middle" font-size="22" fill="var(--ink)">v₄</text><text x="180" y="351" text-anchor="middle" font-size="22" fill="var(--ink)">貪欲法：2色、最小も2</text></svg><figcaption>同じ P₄ を同じ配置で比べます。上の順序は両端が色1を先に取り、最後のv₃が隣の1と2を避けて3。下は左から進み1、2を交互に使えます。辺があるので一色は不可能、下段が二色彩色を実際に与えるので χ(P₄)=2 です。上段の三色も Δ+1=3 の保証内ですが、最小ではありません。</figcaption></figure>
   <div class="concept-table-wrap" tabindex="0" role="region" aria-label="具体的グラフの彩色数と最大次数による上限の比較">
-    <table class="concept-table" data-visual="graph-coloring-bounds"><caption>必要な最小値と、必ず足りる上限を分けて読む</caption>
+    <table class="concept-table" style="min-width:34rem" data-visual="graph-coloring-bounds"><caption>必要な最小値と、必ず足りる上限を分けて読む</caption>
       <thead><tr><th scope="col"><span class="table-math">グラフ</span></th><th scope="col"><span class="table-math">χ(G)</span></th><th scope="col"><span class="table-math">Δ + 1</span></th><th scope="col"><span class="table-math">最小値の理由</span></th></tr></thead>
       <tbody>
         <tr><th scope="row"><span class="table-math">四頂点の道</span></th><td>2</td><td>3</td><td>二部で、辺がある。</td></tr>
@@ -69,6 +87,16 @@
     </table>
   </div>
   <p>下限は「これより少なくはできない」理由、上限は「これだけあれば作れる」理由です。二つが一致したときに、最小色数が確定します。三角形なら下限 3 と上限 3 が一致しますが、四頂点の道の上限 3 だけから最小値を 3 とすることはできません。</p>
+</section>
+
+<section id="graph-coloring-order-strategy">
+  <h2>例題：貪欲法の順番を、構造から選ぶ</h2>
+  <p><a href="#graph-coloring-schedule-example">六発表の衝突モデル</a>へ戻ります。各頂点の次数はA、B、Cが4、D、E、Fが2なのでΔ=4。一般の保証は五色以下ですが、既に最小は三色と分かっています。順番を変えると、この差はどう現れるでしょう。</p>
+  <p>D、E、Fは互いには衝突しません。先にこの三つへ最小番号を付けると全部1です。その後A、B、Cを処理した結果を表で追ってください。「近所に同じ色が何人いるか」ではなく、「既に使われている異なる色は何種類か」が禁止色数です。</p>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="D、E、Fを先に処理すると、後半で四色目が必要になる"><table class="concept-table" style="min-width:30rem" data-visual="graph-coloring-greedy-order-trace"><caption>D、E、Fを先に処理すると、後半で四色目が必要になる</caption><thead><tr><th scope="col">手順</th><th scope="col">頂点</th><th scope="col">彩色済みの隣の色</th><th scope="col">選ぶ最小番号</th></tr></thead><tbody><tr><th scope="row">1</th><td>D</td><td>なし</td><td>1</td></tr><tr><th scope="row">2</th><td>E</td><td>なし</td><td>1</td></tr><tr><th scope="row">3</th><td>F</td><td>なし</td><td>1</td></tr><tr><th scope="row">4</th><td>A</td><td>{1}</td><td>2</td></tr><tr><th scope="row">5</th><td>B</td><td>{1,2}</td><td>3</td></tr><tr><th scope="row">6</th><td>C</td><td>{1,2,3}</td><td>4</td></tr></tbody></table></div>
+  <p>得られる割当てはA=2、B=3、C=4、D=E=F=1で、適正ですが四色を使います。最後のCはAの2、Bの3、DとEの1を避けるため4。隣が四点でも、禁止される色は三種類です。Δ+1=5には収まっていますが、最小の3には届いていません。</p>
+  <p>順番をA、B、C、D、E、Fとすれば1、2、3、1、2、3で三色になります。三角形を先に処理して、残りをその三色へ組み込む方針が成功しました。ただし「次数の高い点から始めれば必ず最小」という一般定理を得たわけではありません。ここでの順番はこの六頂点に対する設計です。</p>
+  <p>一度の貪欲彩色が四色だったとき、それはχ≤4という上限を与えます。三色では不可能という証拠にはなりません。よりよい順番を探す、または下限となる完全グラフや奇閉路を探すという、別の仕事が残っています。</p>
 </section>
 
 <details class="column" id="graph-coloring-column">
@@ -94,6 +122,41 @@
     <details><summary>ヒント1：R から近い順に並べる</summary><p>R が 0、A と B が 1、C と D が 2 です。</p></details>
     <details><summary>ヒント2：C と D の親を根までたどる</summary><p>C–A–R と D–B–R の最後の共通点は R です。</p></details>
     <details><summary>解答</summary><p>層は R=0、A=B=1、C=D=2。同じ層を結ぶ辺は CD です。親の枝 C–A–R–B–D に CD を足すと R–A–C–D–B–R という長さ 5 の閉路になります。従ってこのグラフは二部グラフではありません。</p></details>
+  </article>
+  <article class="exercise"><h3>4．追加の一衝突で、必要な時間帯を変える</h3><p>六発表モデルE={AB,AC,BC,BD,CD,AE,CE,AF,BF}で、ADを追加する場合とDEを追加する場合の彩色数を求めてください。下限と具体的彩色を示してください。</p>
+    <details><summary>ヒント1：方針を決める</summary><p>ADを足すとA、B、C、Dの六組が全て辺になります。</p></details>
+    <details><summary>ヒント2：計算を進める</summary><p>DEを足す場合、既存の三時間帯{A,D}、{B,E}、{C,F}は衝突しますか。</p></details>
+    <details><summary>解答</summary><p>ADを足すとA、B、C、Dが完全グラフなので四色以上必要です。A=1、B=2、C=3、D=4、E=2、F=3で全辺を守れ、χ=4。DE追加ならD=1、E=2なので既存の三色をそのまま使えます。ABCの三角形が残るためχ=3です。辺一本でも、追加場所で最小値への影響が変わります。</p></details>
+  </article>
+  <article class="exercise"><h3>5．同じグラフで、順番を自分で設計する</h3><p>六発表モデルで、貪欲法が四色を使う頂点順と、三色を使う頂点順を一つずつ示し、最後の色を選ぶ理由を説明してください。どちらも上界Δ+1を満たしますか。</p>
+    <details><summary>ヒント1：方針を決める</summary><p>互いに隣接しないD、E、Fを先に置く場合を試します。</p></details>
+    <details><summary>ヒント2：計算を進める</summary><p>三角形A、B、Cを先に処理する順と比べます。</p></details>
+    <details><summary>解答</summary><p>D,E,F,A,B,Cでは選ぶ色が1,1,1,2,3,4となります。最後のCは隣に1、2、3が全てあるため4です。A,B,C,D,E,Fなら1,2,3,1,2,3。最後のFはAの1とBの2を避けて3です。Δ=4なのでどちらも5以下。適正であることと最小色数を使うことは区別します。</p></details>
+  </article>
+  <article class="exercise"><h3>6．最大次数だけで最小色数を決めない</h3><p>最大次数Δ=4を持つグラフで、彩色数が2の例と5の例をそれぞれ作ってください。これがΔ+1の保証と矛盾しない理由も説明してください。</p>
+    <details><summary>ヒント1：方針を決める</summary><p>中心と四つの葉を結ぶグラフを考えます。</p></details>
+    <details><summary>ヒント2：計算を進める</summary><p>五頂点の全ての二点間を結ぶと、各次数はいくつになりますか。</p></details>
+    <details><summary>解答</summary><p>中心Oと葉A,B,C,Dを結ぶ四辺の星はΔ=4で、中心1、葉全て2とすれば二色。辺があるためχ=2です。五頂点の完全グラフは全点の次数4で、全点が異なる色を必要とするのでχ=5。どちらもχ≤5であり、上界は最小値が必ず5だという主張ではありません。</p></details>
+  </article>
+  <article class="exercise"><h3>7．違う成分なら、色を交換してつなぐ</h3><p>辺XYと辺ZWだけのグラフをX=Z=1、Y=W=2と彩色しています。新辺XZを足すと二色では不可能だという主張を診断し、二色彩色を作ってください。連結な二部グラフの同じ側へ辺を足す場合と何が違いますか。</p>
+    <details><summary>ヒント1：方針を決める</summary><p>一つの成分だけ、色1と2を交換できます。</p></details>
+    <details><summary>ヒント2：計算を進める</summary><p>Z=2、W=1としてもZWの両端は違うままです。</p></details>
+    <details><summary>解答</summary><p>X=1、Y=2、Z=2、W=1にすればXY、XZ、ZWの三辺を全て守れます。元のXとZの間に道がなかったので、新辺と合わせる奇閉路はできません。連結な場合には既存の偶数長の道があり、同じ側の新辺と奇閉路を作るところが違います。</p></details>
+  </article>
+  <article class="exercise"><h3>8．衝突を減らす最小の変更を選ぶ</h3><p>互いに離れた二つの三角形があります。二色で配置できるように辺だけを削除するとき、最小で何本必要ですか。どの辺を削除するかの例と、少ない本数では不可能な理由を示してください。</p>
+    <details><summary>ヒント1：方針を決める</summary><p>それぞれの三角形に奇閉路があります。</p></details>
+    <details><summary>ヒント2：計算を進める</summary><p>一方の成分の辺を消しても、もう一方の三角形は残ります。</p></details>
+    <details><summary>解答</summary><p>二本必要です。各三角形から一本ずつ削除すれば、二つの三頂点の道になり、各々を1,2,1と塗って全体も二色です。一本以下の削除では少なくとも一つの三角形が丸ごと残り、二色では不可能。二本の構成と二本以上の下限が一致します。</p></details>
+  </article>
+  <article class="exercise"><h3>9．層の番号が本当にBFSかを点検する</h3><p>三角形ABCに、根Aからの層をA=0、B=1、C=2と付けました。「三層に交互に色を付けたので二色でよい」という説明を診断してください。正しい距離の層と、同じ層の辺を答えてください。</p>
+    <details><summary>ヒント1：方針を決める</summary><p>直接の辺ACもあります。</p></details>
+    <details><summary>ヒント2：計算を進める</summary><p>BFS距離なら各辺の両端のラベル差は高々1です。</p></details>
+    <details><summary>解答</summary><p>CへはAC一本で着くので正しい層はA=0、B=C=1です。同じ層の辺BCが二色の衝突を示し、A–B–C–Aが奇閉路です。誤った層ではACで差が2となり、BFSの距離の性質を満たしません。任意の番号へ交互に色を付けるだけでは、辺の条件を保証できません。</p></details>
+  </article>
+  <article class="exercise"><h3>10．一部の時間帯が指定された場合</h3><p>四頂点の道A–B–C–Dで、AとDをともに時間帯1に固定します。グラフ自体の彩色数は2ですが、この固定条件でも二色で配置できますか。できなければ三色の例を示してください。</p>
+    <details><summary>ヒント1：方針を決める</summary><p>A=1から二色で交互に進むと、Dは何色になりますか。</p></details>
+    <details><summary>ヒント2：計算を進める</summary><p>固定条件を守り、BとCをそれぞれ2と3にできます。</p></details>
+    <details><summary>解答</summary><p>二色ではA=1に続いてB=2、C=1、D=2が強制されるので、D=1の指定と矛盾します。三色ならA=1、B=2、C=3、D=1で三辺の両端が異なります。χ=2は固定のない彩色の最小値であり、追加の指定条件まで満たす保証ではありません。</p></details>
   </article>
 </section>
 

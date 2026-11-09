@@ -2,6 +2,8 @@
   <h2>分散と標準偏差</h2>
   <p>必ず 0 を取る変数と、−10、10 を半々で取る変数は、どちらも期待値が 0 です。しかし平均からの離れ方は大きく違います。期待値に加えて、散らばりを数にする必要があります。</p>
   <p>単に平均からの差を平均すると、E[X − E[X]] = 0 になって左右が打ち消し合います。差を二乗してから平均すれば、符号による相殺を防げます。その数から、大きく外れる確率の上限も引き出します。</p>
+  <p>この「平均との差を二乗した数の重み付き平均」を<strong>分散</strong>と呼び、Var(X)と書きます。その平方根が<strong>標準偏差</strong>です。まず下の二例で、二乗する距離が0か100かという違いを見てから、一般の計算公式へ進みましょう。</p>
+
   <div class="concept-grid">
     <figure class="concept-figure" id="variance-visual-constant" data-visual="variance-constant">
       <svg class="concept-svg" viewBox="0 0 360 280" role="img" aria-labelledby="variance-constant-title variance-constant-desc" fill="var(--ink)" font-size="22">
@@ -29,6 +31,7 @@
     </figure>
   </div>
   <p>どちらも中心は 0 ですが、右では二乗距離 100 に合計 1 の重みがあります。平均だけでは、この違いが消えてしまいます。</p>
+<p class="note">学習の目安は演習込み120–180分です。まず分散を二通りで計算し、尺度変換と「中心に何を選ぶか」を確かめ、最後に平均や分散だけから得られる確率の保証を設計します。演習1–3は基本、4–7は計算・証明・誤診断、8–10は境界と保証の逆算です。</p>
 </section>
 
 <section id="variance-definition">
@@ -40,6 +43,15 @@
   <p>単位にも違いがあります。X が秒なら、分散は秒²、標準偏差は秒です。標準偏差は元の値と同じ尺度で散らばりを読めますが、「必ずその幅に収まる」という意味ではありません。</p>
 </section>
 
+<section id="variance-worked-calculation">
+<h2>分布を二乗距離の計算表へ直す</h2>
+<div class="proof"><h3>例題1：定義と計算公式を往復する</h3>
+<p>自作の抽選の受取額Xが0、2、5点を確率1/2、1/4、1/4で取るとします。平均はμ=7/4点です。分散では元の位置の二乗ではなく、まず<strong>平均からの差</strong>を作ります。次の表で、平均との差が小さい2点の寄与と、重みは同じでも遠い5点の寄与を比べてください。</p></div>
+<div class="concept-table-wrap" tabindex="0" role="region" aria-label="三値分布の平均からの二乗距離の計算"><table class="concept-table" style="min-width:34rem" data-visual="variance-squared-distance-ledger"><caption>有限の自作モデル。値と差は点、二乗距離と分散への寄与は点²、確率に単位はありません。</caption><thead><tr><th scope="col">値x</th><th scope="col">確率p</th><th scope="col">差x−7/4</th><th scope="col">二乗距離</th><th scope="col">重み付き寄与</th></tr></thead><tbody><tr><th scope="row">0</th><td>1/2</td><td>−7/4</td><td>49/16</td><td>49/32</td></tr><tr><th scope="row">2</th><td>1/4</td><td>1/4</td><td>1/16</td><td>1/64</td></tr><tr><th scope="row">5</th><td>1/4</td><td>13/4</td><td>169/16</td><td>169/64</td></tr><tr><th scope="row">合計</th><td>1</td><td>—</td><td>—</td><td>67/16</td></tr></tbody></table></div>
+<p>定義からVar(X)=49/32+1/64+169/64=67/16点²。標準偏差はσ=√67/4≈2.0463点です。負の差を二乗した後で確率を掛けるので、各行の寄与は非負になります。</p>
+<p>別解ではE[X²]=0²(1/2)+2²(1/4)+5²(1/4)=29/4点²を先に求め、Var(X)=29/4−(7/4)²=(116−49)/16=67/16とします。二通りで一致しました。E[X²]だけを分散と呼ぶと、0からの距離と平均からの距離を取り違えます。また標準偏差2.0463は「全ての値が平均±2.0463に入る」という幅ではなく、実際に値5はその外です。</p>
+<p>この表では値の大小と確率を正確に表示しましたが、三つの値が一般の分布を代表するわけではありません。表の役割は、定義と計算公式が同じ量になることを一つの分布で点検することです。</p>
+</section>
 <section id="variance-scaling">
   <h2>分散の平行移動と尺度変換</h2>
   <div class="theorem"><h3>尺度変換の公式</h3><p>有限な二乗の期待値を持つ X と実数 a、b に対して、Var(aX + b) = a²Var(X) です。従って標準偏差は |a| 倍です。</p></div>
@@ -47,6 +59,21 @@
   <p>例えば計測値を秒からミリ秒へ変えると a = 1000 なので分散は 100 万倍、標準偏差は 1000 倍です。単位を変えただけで散らばり方の意味が変わったわけではありません。なお Var(X + Y) をいつでも Var(X) + Var(Y) とすることはできません。和に現れる追加の項は、<a href="joint-distributions.html#joint-distributions-covariance">共分散</a>で扱います。</p>
 </section>
 
+<section id="variance-scaling-worked">
+<h2>負の倍率と、中心を動かす操作</h2>
+<div class="proof"><h3>例題2：表示の向きが逆になっても散らばりは非負</h3>
+<p>例題1のXをY=−2X+3で記録し直します。平均はE[Y]=−2(7/4)+3=−1/2、分散はVar(Y)=4(67/16)=67/4です。標準偏差は√67/2≈4.0927。倍率−2の符号は値の左右を反転させますが、距離は2倍、二乗距離は4倍です。</p>
+<p>実際の値で検算するとYは3、−1、−7を元と同じ確率で取ります。新しい平均−1/2からの差は7/2、−1/2、−13/2。元の差−7/4、1/4、13/4をそれぞれ−2倍したものと一致します。二乗距離の重み付き和も49/8+1/16+169/16=67/4となります。</p>
+<p>a=0ならaX+bは必ずbで、分散0・標準偏差0です。bだけを変えても散らばりは動きません。平均を目的の位置へ合わせる操作と、散らばりの大きさを変える操作を、二つの係数で分けて設計できます。</p></div>
+</section>
+<section id="variance-best-center">
+<h2>なぜ平均との差を使うのか</h2>
+<p>二乗距離を測る基準を、平均ではなく任意の実数cにしたらどうなるでしょう。E[(X−c)²]は、毎回の値と基準cのずれを二乗して平均した量です。基準を動かすと最も小さくなるのはどこか、式で調べます。</p>
+<div class="proof"><h3>例題3：二乗距離の平均を最小にする中心</h3>
+<p>μ=E[X]としてX−c=(X−μ)+(μ−c)と分けます。二乗を展開すると、(X−c)²=(X−μ)²+2(μ−c)(X−μ)+(μ−c)²です。E[X−μ]=0なので、中央の項を平均すると0になります。従って<strong>E[(X−c)²]=Var(X)+(μ−c)²</strong>。有限な二乗の期待値を仮定しているので、どの項も有限で、∞から∞を引いていません。</p>
+<p>右辺の最初の項はcによらず、二つ目は非負でc=μのときだけ0です。従って二乗距離の平均を最小にする基準は一意にc=μ、最小値はVar(X)です。この意味で平均を中心に選ぶ理由が得られました。絶対値の距離など、別のずれの測り方でも同じ中心になると主張しているわけではありません。</p>
+<p>例題1で基準c=2にすると、Var(X)+(7/4−2)²=67/16+1/16=17/4。直接でも、(0−2)²(1/2)+(2−2)²(1/4)+(5−2)²(1/4)=2+9/4=17/4です。2は実際に取る値ですが、二乗距離を最小にするのは実際には取らない7/4の方です。</p></div>
+</section>
 <section id="variance-markov">
   <h2>Markovの不等式</h2>
   <div class="theorem"><h3>Markov の不等式</h3><p>Y ≥ 0 で E[Y] &lt; ∞ とし、a &gt; 0 とします。このとき P(Y ≥ a) ≤ E[Y]/a です。右辺が 1 を超える場合は、確率の上限 1 と合わせて小さい方を使えます。</p>
@@ -55,17 +82,36 @@
   <p>Y の非負性は証明の外側の部分で必要です。反例として、Y が −1 を確率 9/10、9 を確率 1/10 で取ると E[Y] = 0 ですが、P(Y ≥ 1) = 1/10。非負性を外して E[Y]/1 = 0 を上限とすることはできません。また a = 0 では割り算自体が定義されません。</p>
 </section>
 
+<section id="variance-markov-worked">
+<h2>上界がちょうど実現する分布を作る</h2>
+<div class="proof"><h3>例題4：平均3分から分かること、分からないこと</h3>
+<p>非負な待ち時間Yの平均が3分なら、MarkovからP(Y≥12)≤3/12=1/4です。この数を実際の確率だと言ってよいでしょうか。異なる二つの分布を作って確かめます。</p>
+<p>必ず3分のモデルなら平均は3分で、12分以上の確率は0です。一方、0分を確率3/4、12分を確率1/4で取る自作モデルなら、平均は0(3/4)+12(1/4)=3分で、P(Y≥12)=1/4。平均が同じでも、実際の尾確率は異なります。</p>
+<p>後のモデルでは、事象A={Y≥12}の指示変数I<sub>A</sub>を使った不等式Y≥12I<sub>A</sub>が全ての結果で等号です。しきい値以上ではちょうど12、外ではちょうど0なので、平均を取っても余分な量がありません。これが上界へ達する理由です。「平均3分」という情報だけで、1/4より小さい一律の上限に置き換えることはできません。</p>
+<p>端点を外してP(Y&gt;12)とすると、同じ二点モデルの確率は0になります。Markovの≥という境界を、数値例でも保つ必要があります。また平均が非負でもY自体が負を取れるなら、元の証明の外側Y≥0が失われ、同じ上界は使えません。</p></div>
+</section>
 <section id="variance-chebyshev">
   <h2>Chebyshevの不等式</h2>
   <div class="theorem"><h3>Chebyshev の不等式</h3><p>有限な二乗の期待値を持ち、平均 μ、分散 σ² の変数 X について、任意の t &gt; 0 に対し、平均から t 以上離れる確率は σ²/t² 以下です。</p>
   <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>P</mi><mo>(</mo><mo>|</mo><mi>X</mi><mo>−</mo><mi>μ</mi><mo>|</mo><mo>≥</mo><mi>t</mi><mo>)</mo><mo>≤</mo><mfrac><msup><mi>σ</mi><mn>2</mn></msup><msup><mi>t</mi><mn>2</mn></msup></mfrac><mspace width="1em"/><mo>(</mo><mi>t</mi><mo>&gt;</mo><mn>0</mn><mo>)</mo></mrow></math></div></div>
   <div class="proof"><h3>二乗した差に Markov を使う</h3><p>Y = (X − μ)² と置きます。Y ≥ 0、E[Y] = σ² で、|X − μ| ≥ t と Y ≥ t² は同じ事象です。従って Markov の不等式をしきい値 a = t² &gt; 0 で使えば結論を得ます。これが、二乗による散らばりと、確率の上限を結ぶ理由です。</p></div>
   <p>σ &gt; 0 のとき、例えば t = 2σ なら外れる確率は高々 1/4。これは分布の形を知らずに使える上限です。実際の確率がちょうど 1/4 だという意味でも、観測値が必ず 2σ 以内だという意味でもありません。</p>
+  <p>標準偏差σが正なら、平均からの距離を「標準偏差の何倍か」で表せます。その倍率をk&gt;0としてt=kσを代入すると、上界はσ²/(kσ)²=1/k²です。次の図ではσ=1、k=2として、実際の尾の確率とこの上界を比べます。</p>
+
   <figure class="concept-figure" id="variance-visual-chebyshev-regions" data-visual="variance-chebyshev-regions"><svg class="concept-svg" viewBox="0 0 360 440" role="img" aria-labelledby="variance-chebyshev-title variance-chebyshev-desc"><title id="variance-chebyshev-title">二標準偏差の両尾1/4が、Chebyshev上界1/k²=1/4に一致する</title><desc id="variance-chebyshev-desc">Xが−2と2を各1/8、0を3/4で取る分布。平均0、分散1、標準偏差1、k=2。棒の横位置は値に比例し、高さは確率に比例する。数直線の両端の太線と塗点はX≤−2またはX≥2で、境界を含む両尾。P(|X|≥2)=1/8+1/8=1/4で、Chebyshev上界1/k²=1/4と等しい。開区間の中央は3/4。これは等号になる一つの分布。</desc><text x="180" y="28" text-anchor="middle" font-size="22" fill="var(--ink)">μ=0、σ=1、k=2</text><text x="180" y="66" text-anchor="middle" font-size="22" fill="var(--ink)">棒の高さ＝確率</text><line x1="30" y1="230" x2="330" y2="230" stroke="var(--ink)" stroke-width="2"/><line x1="30" y1="230" x2="70" y2="230" stroke="var(--series-1)" stroke-width="6"/><line x1="290" y1="230" x2="330" y2="230" stroke="var(--series-1)" stroke-width="6"/><rect x="63" y="210.0" width="14" height="20.0" fill="var(--series-1)"/><text x="70" y="196.0" text-anchor="middle" font-size="22" fill="var(--ink)">1/8</text><circle cx="70" cy="230" r="5" fill="var(--series-1)"/><rect x="173" y="110.0" width="14" height="120.0" fill="var(--series-2)"/><text x="180" y="96.0" text-anchor="middle" font-size="22" fill="var(--ink)">3/4</text><circle cx="180" cy="230" r="5" fill="var(--series-2)"/><rect x="283" y="210.0" width="14" height="20.0" fill="var(--series-1)"/><text x="290" y="196.0" text-anchor="middle" font-size="22" fill="var(--ink)">1/8</text><circle cx="290" cy="230" r="5" fill="var(--series-1)"/><text x="70" y="265" text-anchor="middle" font-size="22" fill="var(--ink)">−2</text><text x="180" y="265" text-anchor="middle" font-size="22" fill="var(--ink)">0</text><text x="290" y="265" text-anchor="middle" font-size="22" fill="var(--ink)">2</text><text x="344" y="237" text-anchor="middle" font-size="22" fill="var(--ink)">x</text><text x="180" y="303" text-anchor="middle" font-size="22" style="fill:var(--series-1)">X≤−2 または X≥2</text><text x="180" y="341" text-anchor="middle" font-size="22" style="fill:var(--series-1)">P(|X|≥2)=1/4=1/k²</text><text x="180" y="379" text-anchor="middle" font-size="22" style="fill:var(--series-1)">尾の確率 = 上界（k=2）</text><text x="180" y="417" text-anchor="middle" font-size="22" style="fill:var(--series-2)">中央：P(−2&lt;X&lt;2)=3/4</text></svg><figcaption>この三点分布では平均0、分散 <span class="table-math">4(1/8+1/8)=1</span>、従ってσ=1です。<span class="table-math">k=2</span> とすると、境界 <span class="table-math">X=±2</span> の質量も含む両尾は <span class="table-math">P(|X|≥2)=1/8+1/8=1/4</span>。比較するChebyshev上界も <span class="table-math">1/k²=1/2²=1/4</span> なので、この例では尾の確率が上界に達します。中央 <span class="table-math">−2&lt;X&lt;2</span> は3/4です。これは一般の不等式が等号になる一例で、すべての分布がこの三点や左右等確率になるとは主張しません。棒の高さは確率、横位置は値で、両軸の単位は異なります。</figcaption></figure>
   <p>σ² = 0 なら全ての正の t で P(|X − μ| ≥ t) = 0 です。X ≠ μ なら、ある正の整数 m で |X − μ| ≥ 1/m となるため、{X ≠ μ} はこれらの事象の可算和です。<a href="probability-models.html#probability-models-countable-bound">可算個の和事象の上界</a>から P(X ≠ μ) = 0。つまり X は<strong>確率 1 で</strong> μ に等しくなります。確率 0 の結果を含む一般モデルでは、全ての結果で等しいという主張とは区別します。</p>
   <p class="note">有限離散ではこの証明は全て有限和の期待値の性質に基づきます。一般のモデルでは<a href="expectation.html#expectation-density">前章で明示した積分の単調性</a>と、確率の可算加法性の枠組みを使っています。次章で和の分散を求めれば、最後に繰り返しの平均へこの不等式を適用できます。</p>
 </section>
 
+<section id="variance-tail-design">
+<h2>同じ平均と分散でも、尾の確率は決まらない</h2>
+<div class="proof"><h3>例題5：Chebyshev上界を二つの分布で比較する</h3>
+<p>X₁は−2、2を確率1/2ずつ、X₂は−4、0、4を確率1/8、3/4、1/8で取る自作モデルです。両方とも対称なので平均0。分散はX₁で4、X₂で16(1/8+1/8)=4です。従ってどちらもP(|X|≥4)≤4/16=1/4という同じ保証を受けます。</p>
+<p>実際にはX₁の尾確率は0、X₂は1/8+1/8=1/4です。平均と分散だけでは二つを見分けられません。X₂では二乗距離が、内側の0と、境界の4²=16だけなので、Markovを使った証明が等号になります。元の図のσ=1、しきい値2という例を、値を2倍にして読み直すこともできます。</p>
+<p>このX₂でP(|X|&gt;4)なら確率0です。図と式を読むときは、境界を尾へ入れたかを確認します。一般の上界は厳密な不等号の事象にも使えますが、この三点分布がその場合にも等号を実現するとは言えません。</p></div>
+<p>逆向きに、平均から3点以上外れる確率を1/100以下と<strong>Chebyshevで保証</strong>したいなら、σ²/3²≤1/100、すなわちσ²≤9/100点²を要求すれば十分です。標準偏差ではσ≤3/10点。分散と標準偏差のどちらが与えられたかで、二乗の置き方が違います。</p>
+<p>ただしこれは、その上界を通じた保証の条件です。条件を満たさない分布の実際の尾確率が1/100を超える、とは結論できません。平均と分散以外の情報が分かれば、もっと強い評価が得られる場合があります。演習では「十分な条件」と「実際の確率に必要な条件」を見分けます。</p>
+</section>
 <details class="column" id="variance-column">
   <summary>寄り道［見方］：平均が同じ分布を、どこまで見分けられるか</summary>
   <p>MIT の分散の教材は、同じ平均を持っていても散らばりが違う分布を比べるところから始まります。本章の言葉なら、中心の情報だけでは、中心からの距離の情報が欠けています。</p>
@@ -78,6 +124,13 @@
   <article class="exercise"><h3>1．成否を別の尺度で記録する</h3><p>X は成功確率 1/5 の Bernoulli 変数です。E[X]、Var(X)、Z = 5X + 3 の平均と分散を求めてください。</p><details><summary>ヒント1：X² = X を使う</summary><p>Var(X) = p − p² です。</p></details><details><summary>ヒント2：平均は一次、分散は倍率の二乗</summary><p>E[Z] = 5E[X] + 3、Var(Z) = 25Var(X) です。</p></details><details><summary>解答</summary><p>E[X] = 1/5、Var(X) = (1/5)(4/5) = 4/25。従って E[Z] = 1 + 3 = 4、Var(Z) = 25 · (4/25) = 4 です。定数 3 は平均を移動させますが、分散には影響しません。</p></details></article>
   <article class="exercise"><h3>2．非負な待ち時間</h3><p>Y ≥ 0 で E[Y] = 3 分と分かっています。12 分以上待つ確率の上限を求めてください。独立性や密度の形の仮定は必要ですか。</p><details><summary>ヒント1：平均しか分からない</summary><p>非負性と平均を使う Markov の不等式を選びます。</p></details><details><summary>ヒント2：単位をそろえる</summary><p>しきい値 a = 12 分で、E[Y]/a を計算します。</p></details><details><summary>解答</summary><p>P(Y ≥ 12) ≤ 3/12 = 1/4 です。比の単位は消えます。非負性と有限な期待値で十分であり、独立性も特定の密度も不要です。これは上限であって、待ち時間の確率を正確に決めたものではありません。</p></details></article>
   <article class="exercise"><h3>3．区間の外と内を対応させる</h3><p>X の平均が 50、分散が 9 のとき、P(|X − 50| ≥ 6) の上限と、P(44 &lt; X &lt; 56) の下限を求めてください。</p><details><summary>ヒント1：分散は既に二乗の量</summary><p>Chebyshev の右辺は 9/6² であり、9²/6² ではありません。</p></details><details><summary>ヒント2：端点の含め方を確認する</summary><p>|X − 50| ≥ 6 の補集合は |X − 50| &lt; 6 です。</p></details><details><summary>解答</summary><p>P(|X − 50| ≥ 6) ≤ 9/36 = 1/4。補集合を取ると P(44 &lt; X &lt; 56) ≥ 3/4 です。端点 44、56 は外側の事象に含めたので、内側の区間は厳密な不等号になります。</p></details></article>
+<article class="exercise"><h3>4．負の尺度変換の誤り</h3><p>E[X]=4、Var(X)=9とし、Y=−2X+5とします。平均・分散・標準偏差を求め、「分散は−2倍で−18になる」という計算を診断してください。</p><details><summary>ヒント1</summary><p>平均からの差は−2(X−4)です。</p></details><details><summary>ヒント2</summary><p>標準偏差は分散の非負の平方根です。</p></details><details><summary>解答</summary><p>E[Y]=−8+5=−3、Var(Y)=(−2)²9=36、標準偏差6です。分散は非負な二乗距離の平均なので−18にはなりません。定数5は平均を動かし、倍率の絶対値2が標準偏差を3から6へ変えます。</p></details></article>
+<article class="exercise"><h3>5．二通りの分散計算</h3><p>Xは−1、1、3を確率1/4、1/2、1/4で取ります。平均・分散を求め、定義とE[X²]−(E[X])²の両方で検算してください。</p><details><summary>ヒント1</summary><p>平均は中央の1になるかを重み付きで確かめます。</p></details><details><summary>ヒント2</summary><p>平均との差は−2、0、2です。</p></details><details><summary>解答</summary><p>μ=−1/4+1/2+3/4=1です。定義からVar(X)=4(1/4)+0(1/2)+4(1/4)=2。一方E[X²]=1/4+1/2+9/4=3なので、3−1²=2です。E[X²]=3をそのまま分散とする誤りを、二通りの一致で避けられます。</p></details></article>
+<article class="exercise"><h3>6．実際に取る値を中心にすべきか</h3><p>Xは0を確率3/4、4を確率1/4で取ります。E[(X−c)²]を最小にする実数cと最小値を求め、c=2の場合と比べてください。</p><details><summary>ヒント1</summary><p>平均は1です。中心の分解公式を使えます。</p></details><details><summary>ヒント2</summary><p>分散はE[X²]−1=4−1です。</p></details><details><summary>解答</summary><p>μ=1、Var(X)=3なのでE[(X−c)²]=3+(1−c)²です。最小はc=1で3、c=2では4です。直接でもc=1のとき(3/4)1+(1/4)9=3、c=2のとき両結果の二乗距離が4で平均4。中心は実際の値0、4のどちらでもなくて構いません。</p></details></article>
+<article class="exercise"><h3>7．平均非負ならMarkovを使えるか</h3><p>Yは−2を確率2/3、4を確率1/3で取ります。E[Y]とP(Y≥1)を求め、Markovで確率0以下とする誤りを説明してください。さらにZ=Y+2で非負に直した場合の上界も求めてください。</p><details><summary>ヒント1</summary><p>Yの平均と、Y自体の非負性は別の条件です。</p></details><details><summary>ヒント2</summary><p>{Y≥1}={Z≥3}で、E[Z]=2です。</p></details><details><summary>解答</summary><p>E[Y]=−4/3+4/3=0ですがP(Y≥1)=1/3です。Y≥0ではないのでE[Y]/1を上界にはできません。Zは0、6を確率2/3、1/3で取り非負、平均2なのでP(Y≥1)=P(Z≥3)≤2/3です。実際の1/3はこの上界以下で、矛盾しません。</p></details></article>
+<article class="exercise"><h3>8．等号と境界を設計する</h3><p>平均5、分散4で、P(|X−5|≥4)=1/4となる有限分布を一つ作ってください。同じ分布でP(|X−5|&gt;4)はいくつですか。</p><details><summary>ヒント1</summary><p>平均の位置と、そこから左右4離れた位置を使います。</p></details><details><summary>ヒント2</summary><p>左右の質量をそれぞれ1/8にすると、二乗距離16への合計質量は1/4です。</p></details><details><summary>解答</summary><p>1、5、9を確率1/8、3/4、1/8で取ればよいです。平均は1/8+15/4+9/8=5、分散は16(1/8+1/8)=4、境界を含む尾確率は1/4でChebyshev上界4/16に達します。一方厳密に4より離れた値はないのでP(|X−5|&gt;4)=0。左右等確率は今回平均を作るための選択で、一般分布の条件ではありません。</p></details></article>
+<article class="exercise"><h3>9．保証の条件は必要条件か</h3><p>平均10のXについてP(|X−10|≥2)≤1/100をChebyshevで保証する標準偏差の条件を求めてください。標準偏差が1なら実際の尾確率は1/100より大きいと言えますか。</p><details><summary>ヒント1</summary><p>分散σ²に対してσ²/4≤1/100を解きます。</p></details><details><summary>ヒント2</summary><p>平均からの距離が必ず1の分布を反例にできます。</p></details><details><summary>解答</summary><p>σ²≤1/25、すなわち0≤σ≤1/5なら保証できます。σ=1のとき上界1/4は目標を保証しませんが、実際の確率が大きいとは言えません。例えば9、11を半々で取るなら平均10、分散1、標準偏差1でも、距離2以上の尾確率は0です。十分条件を満たさないことと、目標そのものを満たさないことは違います。</p></details></article>
+<article class="exercise"><h3>10．平均と確率の保証を同時に設計する</h3><p>自作の記録値Xは平均20、分散9です。Y=aX+bでa≥0とし、平均を100へ合わせ、Chebyshevを使ってP(|Y−100|≥2)≤1/100を保証したいとします。全候補のa,bを求め、aを最も大きくする設定を選んでください。</p><details><summary>ヒント1</summary><p>平均条件でbをaの式にします。</p></details><details><summary>ヒント2</summary><p>分散は9a²なので、9a²/4≤1/100です。</p></details><details><summary>解答</summary><p>平均条件は20a+b=100、従ってb=100−20a。保証には9a²≤1/25が十分で、a≥0より0≤a≤1/15です。この全範囲とbの式が、指定のChebyshev保証を満たす候補です。最大はa=1/15、b=296/3。このとき平均100、分散1/25、標準偏差1/5、上界は(1/25)/4=1/100です。a=0なら必ず100となり分散0ですが、aを最大にする目的には選ばれません。分布の形を知らないため、上界の保証を超えて実際の尾確率を決めてはいません。</p></details></article>
 </section>
 
 <section id="variance-reflection">

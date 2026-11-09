@@ -2,10 +2,11 @@
   <h2>曲線とパラメータの役割</h2>
   <p>道を描く式には、形だけでなく進む順序や速さも入っています。長さは歩く速さによらない一方、同じ道を二周すれば二倍になるはずです。曲線の定義に何を含め、積分にどの係数を掛ければ、この二つを両立できるでしょう。</p>
   <p class="note">復習は<a href="vector-fields.html#vector-fields-products">ベクトルの長さ</a>、<a href="derivatives.html">微分</a>、<a href="integration-methods.html#integration-methods-substitution">置換積分</a>です。複素解析を学んだ読者は<a href="complex-contours.html">複素平面の道</a>と対比できますが、必修にはしません。</p>
+<p>まず位置・速度・速さを分け、次に速さの積分で長さを測り、最後に密度を掛けて道の上の量を集めます。途中で止まる点、進む向きを変える点、同じ場所を二度通る場合を具体的に計算すると、公式の係数と条件が必要な理由が見えてきます。</p><p class="note" data-reading-guide="study-parts">学習時間の目安は演習を含みます。本文と例題、条件を変える考察、演習の三回に分けて読み進めても構いません。</p>
 </section>
 
 <section id="vector-curves-definition">
-  <h2>曲線のパラメータ表示と接ベクトル</h2>
+  <h2>曲線のパラメータ表示と接ベクトル</h2><p>実数 t を時刻のような道の進み具合を表す変数として使い、r(t)=(x(t),y(t),z(t)) をそのときの位置とします。この t が<strong>パラメータ</strong>です。微分は三成分で別々に取り、r′(t)=(x′(t),y′(t),z′(t))。C¹ は、各成分が微分でき、その導関数が連続であることを意味します。</p>
   <p><strong>区分 C¹ 曲線</strong>r : [a, b] → ℝ³ は連続で、a = t₀ &lt; t₁ &lt; … &lt; tₙ = b という<strong>有限個</strong>の分割により、各閉部分区間で C¹ になるものとします。各部分の内部の導関数は端点まで連続に延長でき、端点ではその片側導関数と解釈します。折れ線の角では左右の導関数が違って構いません。積分は各部分の積分の和です。</p>
   <p>r(a) は始点、r(b) は終点で、一致すれば閉曲線です。r の像は通った点の集合ですが、曲線には順序と繰り返しも含めます。r(t) = (cos t, sin t, 0) を [0, 2π] と [0, 4π] で使うと像は同じ円でも、一周と二周の違う曲線です。</p>
   <p>C¹ の部分で r′(t) を速度、‖r′(t)‖ を速さと呼びます。<strong>単位接ベクトル</strong> T(t) = r′(t)/‖r′(t)‖ は r′(t) ≠ 0 の点でのみ定義します。曲線がその点で微分可能でも、速度0ならこの式は使えません。r(t) = (t³, 0, 0) は原点を滑らかな直線上で通りますが、t = 0 の速度は0です。単位接ベクトルの式の不成立と、像の直線の存在は別の話です。</p>
@@ -25,13 +26,24 @@
   <p>区分 C¹ 曲線の<strong>弧長</strong>を L(r) = ∫ₐᵇ‖r′(t)‖dt と定めます。小さな移動は r(t + Δt) − r(t) ≈ r′(t)Δt なので、その長さの一次近似を足す定義です。折線近似の長さの上限とこの積分が一致する定理は、ここでは未証明です。以下の計算はこの積分による定義から進めます。</p>
   <div class="proof"><h3>速さを変えると、積分の幅も変わる</h3><p>η(s) = r(ψ(s)) とし、ψ : [c, d] → [a, b] は向きを保つ増加全単射で、有限分割の各部分で C¹、ψ′ &gt; 0、導関数が各端まで延長できるとします。分割は r の分割点の逆像でも細かくしておきます。連鎖律で ‖η′(s)‖ = ‖r′(ψ(s))‖ψ′(s)。各部分で一変数の置換積分を使い、和を取れば L(η) = L(r) です。これを本章で扱う正則な再パラメータ化の十分条件とします。</p><p>逆向きの曲線 −r は s ↦ r(a + b − s)（s ∈ [a, b]）。速度には負号が付きますが、長さを取ると消えるので L(−r) = L(r)。一方、連結した二本の曲線の長さは和で、一周を二回たどれば二倍です。</p></div>
   <p>半径 R &gt; 0 の円 r(t) = (R cos t, R sin t, 0)、0 ≤ t ≤ 2π では、速さは一定の R、弧長は 2πR です。らせん r(t) = (R cos t, R sin t, ht) では速さは √(R² + h²)、同じ範囲の弧長は 2π√(R² + h²)。円への投影が同じでも、上下の移動は弧長に含まれます。</p>
+<p>この節でいう正則な再パラメータ化では、進み方の変更が途中で止まらず、向きも保つように ψ′&gt;0 などの条件を置きました。複素解析の「正則関数」は複素微分可能性を指すので、同じ言葉でも対象と条件を分けて読みます。</p></section>
+
+
+<section id="vector-curves-length-example"><h2>止まる点と弧長を計算で調べる</h2>
+
+<article class="worked-example" id="vector-curves-worked-cusp"><h3>例題1：速度0の点を含む曲線の弧長</h3>
+<p>r(t)=(t²,t³,0)、−1≤t≤1を考えます。両成分は多項式なので曲線は全区間でC¹です。速度は(2t,3t²,0)、速さは √(4t²+9t⁴)=|t|√(4+9t²)。√(t²)をtと置いてしまうと負のtで速さが負になるので、絶対値が必要です。</p>
+<p>t=0で速度は0ですが、速さは連続で積分できます。偶関数であることを使い、L=2∫₀¹t√(4+9t²)dt。u=4+9t²と置くとdu=18t dt、t=0,1でu=4,13です。従って L=(1/9)∫₄¹³√u du=(2/27)(13√13−8)。始点(1,−1,0)と終点(1,1,0)の距離2より大きく、途中で原点へ曲がる道として整合します。</p>
+<p>t≠0での単位接ベクトルは T=(2t,3t²,0)/{|t|√(4+9t²)}。t→0−では(−1,0,0)、t→0+では(1,0,0)となり、向き付きの接ベクトルは反転します。原点は尖った折返しの形ですが、C¹という条件自体は破れていません。速度0を許すパラメータ表示では、このような形も現れます。</p>
+<p>一方、既出の直線の表示(t³,0,0)も0で速度0ですが、左右の単位接ベクトルの極限はどちらも(1,0,0)です。速度0という一つの情報だけでは、像が尖っているか、単に一瞬ゆっくり通過するかは決まりません。</p></article>
+
 </section>
 
 <section id="vector-curves-scalar">
   <h2>スカラー場の線積分</h2>
   <p>曲線の像で連続なスカラー関数 f に対して、<strong>スカラー線積分</strong>を次で定めます。記号 ds は正の長さ要素を表し、s という特別なパラメータを既に選んだという意味ではありません。f が負でも積分は定義でき、非負の密度なら線に分布する量を集めるモデルになります。</p>
   <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mo>∫</mo><mi>C</mi></msub><mi>f</mi><mi>d</mi><mi>s</mi><mo>:=</mo><msubsup><mo>∫</mo><mi>a</mi><mi>b</mi></msubsup><mi>f</mi><mo>(</mo><mi>r</mi><mo>(</mo><mi>t</mi><mo>)</mo><mo>)</mo><mo>‖</mo><msup><mi>r</mi><mo>′</mo></msup><mo>(</mo><mi>t</mi><mo>)</mo><mo>‖</mo><mi>d</mi><mi>t</mi></mrow></math></div>
-  <p>前節の連鎖律と置換を f(r) にも適用すれば、向きを保つ正則な再パラメータ化で値は変わりません。逆向きでも速さは同じなので ∫<sub>−C</sub>f ds = ∫<sub>C</sub>f ds。曲線 C という記号には重複してたどる回数も含めます。同じ像だからといって二重計数が消えるわけではありません。</p>
+  <p><a href="#vector-curves-length">弧長の定義と再パラメータ化</a>の連鎖律と置換を f(r) にも適用すれば、向きを保つ正則な再パラメータ化で値は変わりません。逆向きでも速さは同じなので ∫<sub>−C</sub>f ds = ∫<sub>C</sub>f ds。曲線 C という記号には重複してたどる回数も含めます。同じ像だからといって二重計数が消えるわけではありません。</p>
   <figure class="concept-figure" id="vector-curves-visual-density" data-visual="vector-curves-density">
     <svg class="concept-svg" viewBox="0 0 360 360" role="img" aria-labelledby="vector-curves-density-title vector-curves-density-desc">
       <title id="vector-curves-density-title">密度と長さの積は向きで変わらない</title><desc id="vector-curves-density-desc">長さ2の線分を二本の長さ1に分割。左の密度1、右の密度3として、寄与は1と3。上の矢印は右向き、下は左向きだが集めた量はどちらも4。</desc>
@@ -45,11 +57,39 @@
   <p class="note">f = 1、r(t) = (t, 0)、0 ≤ t ≤ 1 の時間積分は1。同じ線分を η(s) = (s/2, 0)、0 ≤ s ≤ 2 で進む時間積分は2です。弧長はどちらも1。速さの係数を落とすと、道の量と滞在時間が入れ替わってしまいます。</p>
 </section>
 
+
+<section id="vector-curves-worked-integrals"><h2>進み方と密度を組み合わせて計算する</h2>
+
+<article class="worked-example" id="vector-curves-worked-reparameter"><h3>例題2：正則な再パラメータ化を実際に作る</h3>
+<p>上半円 r(u)=(cos u,sin u,0)、0≤u≤πを、0≤t≤1で非等速に進みたいとします。u=ψ(t)=π(t+t²)/2 と選ぶと、ψ(0)=0、ψ(1)=π、ψ′(t)=π(1+2t)/2&gt;0。増加全単射で端までC¹なので、本章の正則な再パラメータ化の条件を満たします。</p>
+<p>η(t)=r(ψ(t)) の速度は(−sinψ,cosψ,0)ψ′なので、速さはψ′です。長さは∫₀¹ψ′dt=ψ(1)−ψ(0)=π。最初の速さπ/2と最後の速さ3π/2は違いますが、長さは同じです。位置を変換したなら速度にも連鎖律の係数を掛ける必要があります。</p>
+<p>半円上の非負の密度 f(x,y,z)=1+y を積分します。元の表示では ∫₀^π(1+sin u)du=[u−cos u]₀^π=π+2。新しい表示でも ∫₀¹{1+sinψ(t)}ψ′(t)dt にu=ψ(t)を代入し、同じπ+2です。逆向きη(1−t)では速度に負号が出ても、速さはψ′(1−t)となるので値は変わりません。</p>
+<p>速さを省いた時間積分 ∫₀¹{1+sinψ(t)}dt は1以上2以下です。π+2は5より大きいので、同じ量ではないことが計算し切らずとも判定できます。時間の刻みと道の長さの刻みを混ぜると、密度を集める意味が変わります。</p></article>
+<article class="worked-example" id="vector-curves-worked-density"><h3>例題3：密度を積分し、重心から分布を読む</h3>
+<p>x軸の線分0≤x≤2に、連続な密度ρ(x)=1+xを置いた自作の針金モデルを考えます。密度は単位長さ当たりの量で、全量は M=∫<sub>C</sub>ρ ds。M&gt;0のとき、x座標の<strong>重心</strong>を x̄=(1/M)∫<sub>C</sub>xρ ds と定めます。位置で重み付けした全量を、全量で割った平均です。</p>
+<p>等速の表示r(t)=(2t,0,0)、0≤t≤1では速さ2、密度1+2tです。M=∫₀¹(1+2t)·2dt=[2t+2t²]₀¹=4。重み付き積分は∫₀¹(2t)(1+2t)·2dt=∫₀¹(4t+8t²)dt=2+8/3=14/3。従って x̄=(14/3)/4=7/6。右側ほど重いので、一様な場合の中心1より右へ寄ることも検算になります。</p>
+<p>非等速の表示η(t)=(2t²,0,0)では、密度1+2t²、速さ4tです。M=∫₀¹(4t+8t³)dt=4、重み付き積分は∫₀¹(8t³+16t⁵)dt=14/3で、同じ重心です。この表示は始点で速度0なので、ψ′&gt;0を仮定した定理をそのまま使わず、定義から直接計算しました。十分条件を満たさないことは、値が違うことの証明ではありません。</p></article>
+<div class="concept-table-wrap" tabindex="0" role="region" aria-label="等速と非等速と折返しによる弧長と全量と時間積分の違い"><table class="concept-table" data-visual="vector-curves-traversal" style="min-width:38rem"><caption>同じ線分でも、通過回数と時間の配分で何が変わるか</caption><thead><tr><th scope="col">0≤t≤1でのx座標（y=z=0）</th><th scope="col">弧長</th><th scope="col">∫(1+x) ds</th><th scope="col">∫₀¹(1+x(t))dt</th></tr></thead><tbody>
+<tr><th scope="row">x=2t：0から2へ</th><td>2</td><td>4</td><td>2</td></tr>
+<tr><th scope="row">x=2t²：同じ道を非等速で</th><td>2</td><td>4</td><td>5/3</td></tr>
+<tr><th scope="row">x=2−2t：2から0へ</th><td>2</td><td>4</td><td>2</td></tr>
+<tr><th scope="row">x=4t（t≤1/2）、x=4−4t（t≥1/2）：往復</th><td>4</td><td>8</td><td>2</td></tr>
+</tbody></table></div>
+<p>全行で位置の尺度と密度1+xは同じです。最後の行は始点へ戻り、線分の各部分を二度通るので弧長とスカラー線積分が二倍です。時間積分は、速さ4で半分ずつの時間を使うため2のまま。像の集合が同じこと、向きが違うこと、通過回数が違うことを分けて表を読んでください。</p>
+
+</section>
+
 <details class="column" id="vector-curves-column"><summary>寄り道［自作モデル］：同じ針金を二度数えるとは</summary><p>単位円上で密度を1とするモデルでは、一周のスカラー線積分は2π、二周なら4πです。一方、物体として一つの円形の線を数えるなら通常は一度だけ覆う曲線を選びます。二周の式を選んでから「同じ像だから2π」と直すのは、定義を途中で替えることになります。</p><p>パラメータ表示は、形を描く装置であると同時に、何回数えるかを決める装置でもあります。後の<a href="vector-surfaces.html">曲面積</a>でも、重なりの条件が必要になる理由です。</p><p class="source-note">出典：一定密度と円のパラメータ表示による自作モデルです。</p></details>
 
 <section id="vector-curves-exercises"><h2>演習：曲線・弧長・線密度</h2>
   <article class="exercise"><h3>1．らせんの速さと長さ</h3><p>r(t) = (3cos t, 3sin t, 4t)、0 ≤ t ≤ 2π の単位接ベクトルと弧長を求めてください。</p><details><summary>ヒント1：三成分を微分する</summary><p>r′ = (−3sin t, 3cos t, 4)。三角関数の二乗和を使います。</p></details><details><summary>ヒント2：速さは一定</summary><p>速さの二乗は 9 + 16 です。</p></details><details><summary>解答</summary><p>速さは5で常に非零。T(t) = (−3sin t, 3cos t, 4)/5、L = ∫₀²π5dt = 10π です。xy 平面への投影の長さ6πとは異なります。</p></details></article>
   <article class="exercise"><h3>2．非等速の線分と密度</h3><p>r(t) = (t², 0, 0)、0 ≤ t ≤ 1、f(x, y, z) = x とします。∫<sub>C</sub>f ds と ∫₀¹f(r(t))dt を比べ、逆向きの線積分も答えてください。</p><details><summary>ヒント1：長さの要素</summary><p>この範囲で ‖r′(t)‖ = 2t です。</p></details><details><summary>ヒント2：密度も代入する</summary><p>f(r(t)) = t²。線積分の被積分関数は 2t³ です。</p></details><details><summary>解答</summary><p>∫<sub>C</sub>f ds = ∫₀¹2t³dt = 1/2。一方、時間積分は ∫₀¹t²dt = 1/3。逆向きのスカラー線積分も1/2です。始点の速度が0でも、速さの積分による定義は有効です。</p></details></article>
   <article class="exercise"><h3>3．角を持つ道</h3><p>(0, 0, 0) から (1, 0, 0)、続いて (1, 1, 0) へ直線で進む道 C で、f(x, y, z) = x + y のスカラー線積分を求めてください。角で単位接ベクトルは一つに決まりますか。</p><details><summary>ヒント1：二本に分ける</summary><p>最初は r₁(t) = (t, 0, 0)、次は r₂(t) = (1, t, 0)、各0 ≤ t ≤ 1。</p></details><details><summary>ヒント2：各部分の速さ</summary><p>どちらも速さ1です。密度はそれぞれ t と 1 + t。</p></details><details><summary>解答</summary><p>第一部分は1/2、第二部分は3/2で、合計2。角では入る速度 (1, 0, 0) と出る速度 (0, 1, 0) が違い、二側の微分も一つの単位接ベクトルも定まりません。有限個の角は部分ごとに積分すればよく、積分値を妨げません。</p></details></article>
+<article class="exercise"><h3>4．速度0は尖点の十分条件か</h3><p>r(t)=(t³,0,0)、−1≤t≤1の弧長と、t≠0の単位接ベクトルを求めてください。例題1の(t²,t³,0)と比較し、「速度0だから必ず尖っている」という説明を訂正してください。</p><details><summary>ヒント1</summary><p>速さは3t²で、tが負でも非負です。</p></details><details><summary>ヒント2</summary><p>t≠0ならr′/‖r′‖=(1,0,0)。左右の極限を比べます。</p></details><details><summary>解答</summary><p>L=∫₋₁¹3t²dt=[t³]₋₁¹=2。t≠0でT=(1,0,0)なので、左右の極限は一致します。t=0では定義式は0/0で使えませんが、像はx軸の線分です。例題1は同じ速度0でも左右のTの極限が逆向きでした。零速度だけで像の尖りを判定することはできません。</p></details></article>
+<article class="exercise"><h3>5．弧長をパラメータにする設計</h3><p>R&gt;0、h∈ℝ、A&gt;0として r(t)=(Rcos t,Rsin t,ht)、0≤t≤A を単位速さで進む表示η(s)を作ってください。sの範囲と、h=0の場合も確かめます。</p><details><summary>ヒント1</summary><p>速さv=√(R²+h²)は正の定数です。進んだ弧長s=vtと置きます。</p></details><details><summary>ヒント2</summary><p>t=s/vを三成分へ代入し、η′の長さを計算します。</p></details><details><summary>解答</summary><p>v=√(R²+h²)、0≤s≤Avとしてη(s)=(Rcos(s/v),Rsin(s/v),hs/v)です。η′=(-Rsin(s/v),Rcos(s/v),h)/vなので長さ1。s=0,Avで元の始点/終点になり、弧長はAvです。h=0ではv=Rで円弧を単位速さでたどります。R&gt;0の仮定でv=0を避けています。</p></details></article>
+<article class="exercise"><h3>6．折返しを再パラメータ化と誤認しない</h3><p>r(u)=(u,0,0)、0≤u≤1に対し、η(t)=r(sinπt)、0≤t≤1とします。弧長と密度f=1+xのスカラー線積分を求め、「同じ像だから一回分」とする計算を訂正してください。</p><details><summary>ヒント1</summary><p>ψ(t)=sinπtは全単射ではなく、1/2で折り返します。速さはπ|cosπt|です。</p></details><details><summary>ヒント2</summary><p>[0,1/2]と[1/2,1]に分ければ、どちらもx=0から1の線分を一回ずつ通ります。</p></details><details><summary>解答</summary><p>長さは1+1=2。線積分は2∫₀¹(1+x)dx=2(1+1/2)=3です。直接なら∫₀¹(1+sinπt)π|cosπt|dtを半分ずつ置換して同じ値を得ます。ψは単調でも全単射でもなく、ψ′の符号も変わるため、本章の再パラメータ化の定理を適用できません。</p></details></article>
+<article class="exercise"><h3>7．重心の指定には実現可能な範囲がある</h3><p>0≤x≤2の線分に線形密度ρ=a+bx≥0を置き、全量を4に固定します。重心mを実現するa,bと、実現可能なmの全範囲を求めてください。m=3/2は可能でしょうか。</p><details><summary>ヒント1</summary><p>M=2a+2b=4、重み付き積分は2a+(8/3)b=4mです。</p></details><details><summary>ヒント2</summary><p>線形関数が区間で非負であるには、両端aとa+2bが非負なら必要十分です。</p></details><details><summary>解答</summary><p>a+b=2と2a+(8/3)b=4mよりb=6m−6、a=8−6mです。非負条件はa=8−6m≥0、a+2b=6m−4≥0。従って2/3≤m≤4/3が必要十分です。両端では片端の密度が0でも全量は4。m=3/2ならa=−1となり非負条件を破るので不可能です。重心が線分内にあるだけでは、この線形密度という設計条件を満たすとは限りません。</p></details></article>
+<article class="exercise"><h3>8．積分0でも密度0とは限らない</h3><p>x軸の−1から1への線分を一度たどり、f(x,y,z)=xとします。∫f ds、∫|f| ds、弧長を求め、「スカラー線積分は必ず非負」「積分0ならfは0」をそれぞれ判定してください。</p><details><summary>ヒント1</summary><p>xをパラメータにすると速さ1です。正負の寄与を別々に見ます。</p></details><details><summary>ヒント2</summary><p>∫₋₁¹x dxと2∫₀¹x dxを比べます。</p></details><details><summary>解答</summary><p>∫f ds=0、∫|f| ds=1、弧長は2です。スカラー線積分ではdsは非負ですがfの符号は制限していないため、積分値が必ず非負とは限りません。例えばf=−1なら−2です。今回の積分0は正負の相殺で、fが恒等的に0ではありません。非負密度という物理モデルの条件と、一般のスカラー線積分の定義を分けます。</p></details></article>
+<article class="exercise"><h3>9．全量から周回数を逆算する</h3><p>非零整数kについて rₖ(t)=(cos kt,sin kt,0)、0≤t≤2π、密度f=2+xを考えます。線積分が12πと観測されたときkを全て求めてください。向きも分かるでしょうか。時間積分∫₀²πf(rₖ(t))dtでも区別できるか調べます。</p><details><summary>ヒント1</summary><p>速さは|k|、一周ごとの密度の積分は4πです。</p></details><details><summary>ヒント2</summary><p>整数k≠0なら∫₀²πcos kt dt=0。符号と絶対値を分けます。</p></details><details><summary>解答</summary><p>線積分は|k|∫₀²π(2+cos kt)dt=4π|k|なので|k|=3、k=3または−3です。向きはこのスカラー線積分からは区別できません。弧長はいずれも6π。時間積分は全ての非零整数kで4πなので、速さも周回数もこの観測一つでは分かりません。f≥1で非負という条件にも整合します。</p></details></article>
 </section>
 <section id="vector-curves-reflection"><h2>自分の言葉で</h2><ol><li>曲線の像だけからは分からない、パラメータ表示の情報は何ですか。</li><li>弧長を速さの積分で定めたとき、再パラメータ化の連鎖律はどこに働きますか。</li><li>スカラー線積分が向きに依存しないのに、時間積分とは違うのはなぜですか。</li></ol></section>

@@ -1,7 +1,8 @@
 <section id="complex-real-integrals-question">
   <h2>留数定理による実積分</h2>
   <p>∫₋∞∞ dx/(1 + x⁴) は、実数の原始関数だけで計算しようとすると分解が長くなります。複素平面で半円の寄り道を足すと、閉じた経路になり、<a href="complex-residues.html">留数定理</a>が使えます。ただし足した円弧の寄与が最後に0になることと、元の実広義積分が存在することは、自分で確かめる必要があります。</p>
-  <p>この章では実軸上に極がない二つの有理関数を扱います。前提は<a href="integration-methods.html">実積分の評価</a>、<a href="complex-contours.html">ML評価</a>、留数定理です。振動因子のための特別な補題や、主値という別の積分の定義は使いません。</p>
+  <p>この章では実軸上に極がない有理関数を、二次分母から複数の極・高位の極へと広げて扱います。前提は<a href="integration-methods.html">実積分の評価</a>、<a href="complex-contours.html">ML評価</a>、留数定理です。振動因子のための特別な補題や、主値という別の積分の定義は使いません。</p>
+<p>まず分母が二次の 1/(x²+a²)（a&gt;0）で、極の配置・円弧の評価・左右の広義積分を一つずつ確認します。その後、同じ手順を四次の分母へ使い、冒頭の積分へ戻ります。</p><p class="note" data-reading-guide="study-parts">学習時間の目安は演習を含みます。本文と例題、条件を変える考察、演習の三回に分けて読み進めても構いません。</p>
 </section>
 
 <section id="complex-real-integrals-strategy">
@@ -9,11 +10,11 @@
   <p>R &gt; 0 とし、実軸上を −R から R へ進み、上半円 A<sub>R</sub> を z = Reⁱᶿ、0 ≤ θ ≤ π で R から −R へ戻ります。内部を左に見るので、合わせた輪郭 Γ<sub>R</sub> は正向きです。実区間の積分と円弧の積分の和が、留数で求まります。</p>
   <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msubsup><mo>∫</mo><mrow><mo>−</mo><mi>R</mi></mrow><mi>R</mi></msubsup><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mspace width="0.2em"/><mi>d</mi><mi>x</mi><mo>+</mo><msub><mo>∫</mo><msub><mi>A</mi><mi>R</mi></msub></msub><mi>f</mi><mo>(</mo><mi>z</mi><mo>)</mo><mspace width="0.2em"/><mi>d</mi><mi>z</mi><mo>=</mo><mn>2</mn><mi>π</mi><mi>i</mi><munder><mo>∑</mo><mrow><mi>a</mi><mtext> は内部の極</mtext></mrow></munder><mi mathvariant="normal">Res</mi><mo>(</mo><mi>f</mi><mo>,</mo><mi>a</mi><mo>)</mo></mrow></math></div>
   <p>目標は R → ∞ としたとき、円弧の積分が0に行くことです。一方、通常の実広義積分 ∫₋∞∞ f(x)dx は、例えば0で分けた左側・右側の広義積分がそれぞれ有限に収束するとき、その和と定めます。対称な区間 [−R, R] だけの極限が存在しても、この定義を満たすとは限りません。ここでは絶対値の左右の尾を評価して、両方の収束を先に保証します。</p>
-</section>
+<p>ここで「右側の尾」は R より右に残った積分、「左側の尾」は −R より左に残った積分です。左右それぞれの広義積分で、被積分関数の絶対値を積分しても有限に収まることを<strong>絶対収束</strong>と呼びます。複素平面で足した円弧の積分と、実軸上にまだ残る二つの尾は、別々に評価します。</p></section>
 
 <section id="complex-real-integrals-quadratic">
   <h2>二次分母の実積分と単純極</h2>
-  <p>a &gt; 0 とし、f(z) = 1/(z² + a²) を考えます。極は ±ia。R &gt; a とすれば、輪郭上に極はなく、上半円の内部には ia だけがあります。分母の微分は 2z なので、Res(f, ia) = 1/(2ia)。留数定理から輪郭積分は 2πi/(2ia) = π/a です。</p>
+  <p>a &gt; 0 とし、f(z) = 1/(z² + a²) を考えます。極は ±ia。R &gt; a とすれば、輪郭上に極はなく、上半円の内部には ia だけがあります。分母の微分は 2z なので、Res(f, ia) = 1/(2ia)。留数定理から輪郭積分は 2πi/(2ia) = π/a です。</p><p>円弧の上で分母がどれだけ0から離れるかには、逆三角不等式 |u+v|≥||u|−|v|| を使います。例えば |z|=R なら |z²|=R² なので、|z²+a²|≥R²−a² という共通の下界が得られます。</p>
   <figure class="concept-figure" id="complex-real-integrals-visual-quadratic" data-visual="complex-real-integrals-quadratic">
     <svg class="concept-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 350" role="img" aria-labelledby="complex-real-quadratic-title complex-real-quadratic-desc">
       <title id="complex-real-quadratic-title">上半円に入る極はiaだけ</title><desc id="complex-real-quadratic-desc">aが1、Rが2の同縮尺の例。実軸の区間は左から右、上半円は右から左の正向きで、iaは内部、負のiaは外部にある。</desc>
@@ -48,14 +49,48 @@
   <div class="proof"><h3>円弧と実軸の尾を、もう一度別々に確認する</h3><p>円弧上では |1 + z⁴| ≥ R⁴ − 1 &gt; 0。ML評価により円弧積分の絶対値は πR/(R⁴ − 1) 以下で、0へ行きます。実軸上の被積分関数は連続で非負、|x| ≥ 1 では 1/(1 + x⁴) ≤ 1/x⁴。左右それぞれの尾は ∫<sub>R</sub>∞ x⁻⁴ dx = 1/(3R³) 以下なので、通常の広義積分として絶対収束します。</p><p>従って輪郭積分から円弧を除いて極限を取れます。結論は ∫₋∞∞ dx/(1 + x⁴) = π/√2。四つの留数を全部足すのでなく、選んだ上半円の内部の二つだけを足した点に注意します。</p></div>
 </section>
 
+
+<section id="complex-real-integrals-worked-methods"><h2>極の種類と輪郭の選択を変える</h2>
+
+<p>最初の二次分母では、極が一つ、留数も一つでした。次は「極が増えた」「極が重なった」「中心が動いた」という違いを一つずつ変えます。いずれも、①実軸上の収束、②輪郭と極、③留数、④円弧を消す評価、の四点を省略しません。</p>
+<article class="worked-example" id="complex-real-integrals-worked-product"><h3>例題1：二つの極を足し、実の分解でも確かめる</h3>
+<p>I=∫₋∞∞ dx/[(x²+1)(x²+4)] を求めます。実軸上に零点はなく、|x|≥1では被積分関数はx⁻⁴以下です。従って左右それぞれの尾は1/(3R³)以下（R≥1）で、通常の広義積分が存在します。</p>
+<p>複素関数 f(z)=1/[(z²+1)(z²+4)] を用い、R&gt;2の上半円を選びます。内部の極はiと2iです。因子ごとに単純極の公式を使うと、Res(f,i)=1/[2i·(−1+4)]=1/(6i)、Res(f,2i)=1/[(−4+1)·4i]=−1/(12i)。和は1/(12i)なので閉路積分はπ/6です。</p>
+<p>円弧上では |z²+1|≥R²−1、|z²+4|≥R²−4。よって円弧の積分の絶対値は πR/[(R²−1)(R²−4)] 以下で0へ行き、<strong>I=π/6</strong>を得ます。複素数の係数を途中で実数に直す必要はなく、最後の2πiで純虚数が実数になります。</p>
+<p>別解は部分分数です。1/[(x²+1)(x²+4)]=(1/3){1/(x²+1)−1/(x²+4)}。右辺の分子は{(x²+4)−(x²+1)}/3=1なので恒等式を確認できます。既に示した二次分母の積分から (1/3)(π−π/2)=π/6。各広義積分が存在するため、差を取る操作も正当です。</p></article>
+<article class="worked-example" id="complex-real-integrals-worked-double"><h3>例題2：二重極なら正則部分を一回微分する</h3>
+<p>J=∫₋∞∞ dx/(x²+1)² を考えます。被積分関数は連続で、|x|≥1でx⁻⁴以下なので絶対収束します。上半円の内部にはiだけがありますが、今回は二重極です。分母の全体を一度微分して割る単純極の公式は使えません。</p>
+<p>f(z)=(z−i)⁻²φ(z)、φ(z)=(z+i)⁻² と置きます。φはiの近くで正則で、留数は φ′(i)=−2(2i)⁻³。ここで(2i)³=−8iなので、留数は1/(4i)=−i/4です。従って輪郭積分は2πi/(4i)=π/2。</p>
+<p>R&gt;1の円弧上では |(z²+1)²|=|z²+1|²≥(R²−1)² より、円弧の絶対値はπR/(R²−1)²以下で0へ行きます。よって<strong>J=π/2</strong>です。実の検算として x=tan θ（−π/2&lt;θ&lt;π/2）と置けば、dx/(1+x²)²=cos²θ dθ。端へ極限を取った積分は [θ/2+sin(2θ)/4] の差π/2となります。</p>
+<p>分母を二乗する前の積分πより小さいのも確認できます。全てのxで1/(1+x²)²≤1/(1+x²)で、例えば1&lt;x&lt;2では不等号が厳密です。正の関数の積分としてJ&lt;πとなり、符号や倍率の検算になります。</p></article>
+<article class="worked-example" id="complex-real-integrals-worked-shift"><h3>例題3：平行移動には輪郭の中心も合わせる</h3>
+<p>a&gt;0、b∈ℝとして K=∫₋∞∞ dx/[(x−b)²+a²] を求めます。w=z−bで見ると極はw=±iaです。原点中心に固執せず、実区間を[b−R,b+R]、円弧をz=b+Reⁱᶿ（0≤θ≤π、R&gt;a）と選ぶと、内部の極b+ia、留数1/(2ia)、円弧上界πR/(R²−a²)が二次分母と全く同じになります。</p>
+<p>実軸の右側x≥b+Rではu=x−b≥R、左側x≤b−Rではu=b−x≥Rなので、左右の尾はそれぞれ ∫<sub>R</sub><sup>∞</sup>u⁻²du=1/R 以下です。したがって各片側が別々に収束し、切る中心をbにしても同じ通常の広義積分になります。結論は<strong>K=π/a</strong>で、bには依存しません。</p>
+<p>実の置換u=x−bでも二次分母の結果へ戻れます。例えばa=2,b=3ならK=π/2、極は3±2iです。幅aを二倍にすると面積は半分になりますが、中心bを動かしても面積は変わりません。幅と平行移動は違う役割を持ちます。</p></article>
+
+</section>
+
 <section id="complex-real-integrals-conditions">
-  <h2>円弧積分と広義積分の収束条件</h2>
+  <h2>円弧積分と広義積分の収束条件</h2><p>表の O(1/Rᵖ) は、十分大きい R で、値の絶対値が C/Rᵖ 以下になる一つの定数 C を取れるという意味です。C は R によりません。同じ O(1/Rᵖ) でも、円弧と尾の値や上界が等しいという意味ではありません。</p>
   <div class="concept-table-wrap" tabindex="0" role="region" aria-label="二つの実積分の円弧誤差と左右の実軸の尾の比較">
     <table class="concept-table" style="min-width:49rem" data-visual="complex-real-integrals-bounds"><caption>同じ半径Rでも、消すべき円弧と片側の尾は別の誤差</caption><thead><tr><th scope="col">関数と半径</th><th scope="col">円弧積分の絶対値の上界</th><th scope="col">片側の尾の絶対値の上界</th><th scope="col">何を保証するか</th></tr></thead><tbody><tr><th scope="row">1/(z²+1)、R=2</th><td>2π/(4−1)=2π/3。</td><td>1/2。</td><td>円弧の評価と実軸の尾の評価は別。</td></tr><tr><th scope="row">同じ関数、R=4</th><td>4π/(16−1)=4π/15。</td><td>1/4。</td><td>どちらも一般にはO(1/R)で0へ。</td></tr><tr><th scope="row">1/(1+z⁴)、R=2</th><td>2π/(16−1)=2π/15。</td><td>1/(3·2³)=1/24。</td><td>四次の減衰は両方の上界を小さくする。</td></tr><tr><th scope="row">同じ関数、R=4</th><td>4π/(256−1)=4π/255。</td><td>1/(3·4³)=1/192。</td><td>両方O(1/R³)だが、同じ値ではない。</td></tr></tbody></table>
   </div><p data-reading-note="complex-real-integrals-errors">上段の二次分母はa=1の具体例です。一般の a&gt;0 では円弧上界はπR/(R²−a²)、R&gt;aを使います。円弧を0へ送ることは寄り道を消すため、左右それぞれの尾を抑えることは広義積分の存在のためです。表のR=2,4だけで極限を証明せず、本文の一般の上界が0へ向かうことを使います。対称に切った主値と両片側の収束を混同しないでください。</p>
   <p>一般の有理関数でも、分母の次数が分子より2以上大きければ、十分大きい |z| で |f(z)| ≤ C/|z|² と評価できます。理由は、分母の最高次項をくくると括弧が非零の定数へ一様に近づき、分子は定数倍の最高次数で抑えられるからです。このとき大円弧は長さ πR と掛けても0へ行きます。ただし実軸上の極がないことと、輪郭の内部の極の確認は別に必要です。</p>
-  <p>対照的に 1/z の上半円の積分は、z = Reⁱᶿ を代入すると ∫<sub>0</sub><sup>π</sup> i dθ = iπ で、R によらず残ります。単に f(z) → 0 というだけでは、長くなる円弧の積分を0にはできません。さらに0が実軸上の極なので、実積分の条件も破れます。ここで扱った二例の評価を、別の関数へ無条件に使ってはいけません。</p>
+  <p>対照的に 1/z の上半円の積分は、z = Reⁱᶿ を代入すると ∫<sub>0</sub><sup>π</sup> i dθ = iπ で、R によらず残ります。単に f(z) → 0 というだけでは、長くなる円弧の積分を0にはできません。さらに0が実軸上の極なので、実積分の条件も破れます。二次分母と四次分母で得た評価を、別の関数へ無条件に使ってはいけません。</p>
   <p>これまでの流れは、<a href="complex-plane.html">平面の幾何</a>から<a href="complex-differentiation.html">正則性</a>、<a href="cauchy-theorem.html">境界の打ち消し</a>、<a href="cauchy-formula.html">境界からの値の復元</a>、級数と留数へ進み、最後に実数の計算へ戻るものでした。複素数を使う利点は、答えの形だけでなく、どの情報だけを残せばよいかが見えることにもあります。</p>
+</section>
+
+
+<section id="complex-real-integrals-finite-error"><h2>有限の半径で誤差を保証する</h2>
+
+<p>円弧を消せることが分かった後は、有限のRでどこまで誤差を抑えられるかも計算できます。例題1の積分π/6を使い、円弧と二つの尾について得た上界を比較します。表を読むときは、どの近似にどの誤差が対応するかを先に決めてください。</p>
+<div class="concept-table-wrap" tabindex="0" role="region" aria-label="積型分母での半径選択と二種類の誤差上界"><table class="concept-table" style="min-width:38rem" data-visual="complex-real-integrals-radius-budget"><caption>Rを選ぶ：円弧の上界と、実区間の打切り誤差の上界</caption><thead><tr><th scope="col">R</th><th scope="col">円弧の絶対値 ≤ πR/[(R²−1)(R²−4)]</th><th scope="col">左右の尾の和 ≤ 2/(3R³)</th><th scope="col">二つの上界の読み方</th></tr></thead><tbody>
+<tr><th scope="row">3</th><td>3π/40 ≈ 0.23562</td><td>2/81 ≈ 0.02469</td><td>どちらもまだ大きい。</td></tr>
+<tr><th scope="row">5</th><td>5π/504 ≈ 0.03117</td><td>2/375 ≈ 0.00533</td><td>実軸の打切りには尾の上界の方が鋭い。</td></tr>
+<tr><th scope="row">10</th><td>5π/4752 ≈ 0.00331</td><td>1/1500 ≈ 0.00067</td><td>尾の上界で誤差0.001未満を保証できる。</td></tr>
+</tbody></table></div>
+<p>全実軸の積分Iと有限区間I<sub>R</sub>の差を保証するには、二つの尾の和の列を使えます。一方、輪郭の恒等式 I<sub>R</sub>+∫<sub>A_R</sub>f dz=π/6 の円弧を落とす議論には円弧の列を使います。この例では既にI=π/6なので、両者は同じ差を別の方法で抑えています。二列を足す必要はありません。表の数値は実測の誤差ではなく、本文で証明した上界の丸め値です。厳密な許容値の判定には分数の式を使います。</p>
+
 </section>
 
 <details class="column" id="complex-real-integrals-column"><summary>寄り道［接続］：回転・微分方程式・振動・確率の入口</summary>
@@ -70,5 +105,11 @@
   <article class="exercise"><h3>1．極の高さを変える</h3><p>∫₋∞∞ dx/(x² + 4) を求め、R &gt; 2 の上半円で円弧積分の絶対値を抑えてください。</p><details><summary>ヒント1：a = 2</summary><p>上半平面の極は 2i で、留数は 1/(4i) です。</p></details><details><summary>ヒント2：円弧上の分母</summary><p>|z² + 4| ≥ R² − 4 です。</p></details><details><summary>解答</summary><p>輪郭積分は 2πi/(4i) = π/2。円弧の絶対値は πR/(R² − 4) 以下で0へ行き、左右の実軸の尾もそれぞれ1/R以下なので、通常の広義積分は π/2 です。極が輪郭上に来る R = 2 は選びません。</p></details></article>
   <article class="exercise"><h3>2．半分の実軸だけを求める</h3><p>∫₀∞ dx/(1 + x⁴) を求め、上側の二つの留数を足した値との関係を説明してください。</p><details><summary>ヒント1：実関数は偶関数</summary><p>f(−x) = f(x) で、左右の広義積分は絶対収束しています。</p></details><details><summary>ヒント2：輪郭積分が表す区間</summary><p>上半円輪郭の実軸部分は −R から R で、0からRではありません。</p></details><details><summary>解答</summary><p>全実軸の積分は π/√2 で、偶関数の左右の積分が等しいので求める値は π/(2√2)。留数の和 −i/(2√2) に 2πi を掛けたものは全実軸の積分です。そこから偶対称性で2で割ります。</p></details></article>
   <article class="exercise"><h3>3．減衰だけでは足りない</h3><p>「1/z は大円上で0に近づくので、上半円の積分も0になる」という説明を訂正し、∫₋∞∞ dx/x にこの章の手順を使えない理由も挙げてください。</p><details><summary>ヒント1：円弧の長さも増える</summary><p>MLの上界は (1/R)πR = π で、0ではありません。</p></details><details><summary>ヒント2：パラメータを代入する</summary><p>(1/z)dz = i dθ なので、上半円の積分を直接計算できます。</p></details><details><summary>解答</summary><p>円弧の積分は iπ で、R → ∞ でも消えません。また0に実軸上の極があり、実積分は0付近でも無限遠でも左右別々には収束しません。対称な打ち消しを持ち出しても、この章の通常の広義積分の存在は示せません。主値などを論じるには別の定義が必要です。</p></details></article>
+<article class="exercise"><h3>4．下半円を選んでも同じ実積分になるか</h3><p>1/(z²+1)について、実軸を−RからRへ進み、下半円でRから−Rへ戻る輪郭（R&gt;1）を選びます。向き・内部の留数・円弧の極限を確認し、実積分を求めてください。</p><details><summary>ヒント1</summary><p>内部は進行方向の右側なので、輪郭は時計回りです。</p></details><details><summary>ヒント2</summary><p>下の極−iの留数は−1/(2i)。留数定理には−2πiを掛けます。</p></details><details><summary>解答</summary><p>内部の極は−iだけ。輪郭積分は(−2πi){−1/(2i)}=πです。円弧上の評価πR/(R²−1)は上半円と同じで0へ行きます。左右の実軸の尾は各1/R以下だから、実積分はπです。向きの負号と下側の留数の負号の両方が必要です。</p></details></article>
+<article class="exercise"><h3>5．正規化と高さから幅を設計する</h3><p>p(x)=C/[(x−b)²+a²]（a&gt;0,C&gt;0）を自作の線密度モデルとします。全積分を1、最大になる位置をx=3、最大値を1/(2π)にするa,b,Cを求めてください。</p><details><summary>ヒント1</summary><p>最大は分母が最小になるx=bで、値はC/a²です。</p></details><details><summary>ヒント2</summary><p>全積分Cπ/a=1と最大値C/a²=1/(2π)を連立します。</p></details><details><summary>解答</summary><p>b=3、正規化からC=a/π。最大値は1/(πa)なのでa=2、C=2/πです。実際p(3)=(2/π)/4=1/(2π)、積分は(2/π)(π/2)=1です。pは非負で実軸上に極もなく、モデルの条件を満たします。</p></details></article>
+<article class="exercise"><h3>6．実軸に極がなくても失敗する例</h3><p>f(z)=z/(z²+1) は実軸上で連続で、無限遠で0に近づきます。それでも通常の∫₋∞∞f(x)dxが存在しないことを示し、上半円の円弧積分の極限も求めてください。</p><details><summary>ヒント1</summary><p>実の原始関数は(1/2)log(1+x²)。対称区間の打ち消しと片側の収束は別です。</p></details><details><summary>ヒント2</summary><p>f(z)=1/z−1/[z(z²+1)]。上半円で第二項の積分の絶対値はπ/(R²−1)以下です。</p></details><details><summary>解答</summary><p>右片側の積分は(1/2)log(1+R²)→∞、左片側は−∞なので通常の広義積分は存在しません。対称区間では奇関数のため0ですが、それだけでは足りません。円弧では1/zの積分iπが残り、残りの上界π/(R²−1)は0へ行くので極限iπです。実軸上の極の不在もf→0も、それぞれ単独では十分ではありません。</p></details></article>
+<article class="exercise"><h3>7．二つの許容誤差から半径を選ぶ</h3><p>例題1の積型分母について、Rを3,5,10から選びます。円弧の上界が0.01未満、かつ左右の尾の和の上界が0.001未満になる候補を全て挙げてください。必要なら3&lt;π&lt;4を使って厳密に判定します。</p><details><summary>ヒント1</summary><p>半径別の表では丸めた値より、分数式を比べます。</p></details><details><summary>ヒント2</summary><p>R=10の円弧は5π/4752&lt;20/4752、尾は1/1500です。</p></details><details><summary>解答</summary><p>R=10だけです。20/4752&lt;1/100かつ1/1500&lt;1/1000なので両条件を保証します。R=5では円弧5π/504&gt;15/504&gt;0.01、尾2/375&gt;0.001。R=3も円弧3π/40&gt;9/40&gt;0.01、尾2/81&gt;0.001です。これは示した上界による選択であり、実際の円弧の値が条件を満たすための必要条件を求めたわけではありません。</p></details></article>
+<article class="exercise"><h3>8．係数を積分から逆算する</h3><p>実数αに対し qₐ(x)=(αx²+1)/(x²+1)² とします。積分をαの式で求め、全積分がπになるαを決めてください。また全積分0となるαでqₐは非負でしょうか。</p><details><summary>ヒント1</summary><p>x²/(1+x²)²=1/(1+x²)−1/(1+x²)² を使えます。</p></details><details><summary>ヒント2</summary><p>二つの既知の積分はπとπ/2です。各αで絶対収束も確認します。</p></details><details><summary>解答</summary><p>|qₐ(x)|≤(|α|+1)/x²（|x|≥1）なので絶対収束します。積分はα(π−π/2)+π/2=π(α+1)/2。πにするにはα=1で、実際q₁=1/(1+x²)です。全積分0はα=−1ですが、q₋₁=(1−x²)/(1+x²)²は|x|&gt;1で負、|x|&lt;1で正です。積分0は関数が0という意味ではなく、非負密度にもなりません。</p></details></article>
+<article class="exercise"><h3>9．下界として使えない半径を診断する</h3><p>f(z)=1/[(z²+1)(z²+4)] について「R=3/2なら円弧の上界はπR/[(R²−1)(R²−4)]」という計算を診断してください。その半径の上半円輪郭の積分自体はいくつですか。</p><details><summary>ヒント1</summary><p>R²−4は負です。逆三角不等式から負の数が出ても、逆数の上界には使えません。</p></details><details><summary>ヒント2</summary><p>R=3/2の内部にはiだけがあり、2iは外部です。</p></details><details><summary>解答</summary><p>R²−4=−7/4なので、提示された式は負となり絶対値の上界ではありません。|z²+4|≥4−R²=7/4、|z²+1|≥R²−1=5/4 と直すと、この半径での円弧の絶対値は(3π/2)/(35/16)=24π/35以下です。輪郭上には極がなく、内部の留数は1/(6i)だけなので閉路積分はπ/3。R&gt;2のときの閉路積分π/6と区別します。</p></details></article>
 </section>
 <section id="complex-real-integrals-reflection"><h2>自分の言葉で</h2><ol><li>実積分に半円を足したとき、留数で求まる量と、最後に消す量はどれですか。</li><li>円弧上の評価と実軸上の左右の尾の評価は、それぞれ何を保証していますか。</li><li>回転を表す複素指数と実2×2行列を結び、微分方程式やFourierへの入口を説明できますか。</li></ol></section>

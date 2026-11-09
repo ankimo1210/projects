@@ -24,12 +24,29 @@ class Document(HTMLParser):
         self.language = None
         self.labs = []
         self.text = []
+        self.exercise_summaries = []
+        self._exercise = None
+        self._summary = None
 
     def handle_data(self, data):
         self.text.append(data)
+        if self._summary is not None:
+            self._summary.append(data)
+
+    def handle_endtag(self, tag):
+        if tag == "summary" and self._summary is not None:
+            self._exercise.append("".join(self._summary).strip())
+            self._summary = None
+        if tag == "article":
+            self._exercise = None
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
+        if tag == "article" and "exercise" in attrs.get("class", "").split():
+            self._exercise = []
+            self.exercise_summaries.append(self._exercise)
+        if tag == "summary" and self._exercise is not None:
+            self._summary = []
         if tag == "html":
             self.language = attrs.get("lang")
         if tag == "h1":
@@ -47,6 +64,26 @@ class Document(HTMLParser):
 
 
 class PortableReaderTest(unittest.TestCase):
+    def test_each_chapter_delivers_catalogued_exercises_with_two_hints_and_an_answer(self):
+        with tempfile.TemporaryDirectory() as folder:
+            output = Path(folder)
+            builder.build(output)
+            for chapter in builder.CHAPTERS:
+                slug = chapter["slug"]
+                with self.subTest(chapter=slug):
+                    expected = chapter.get("exerciseCount", 3)
+                    self.assertIs(type(expected), int, "exerciseCount must be a positive integer")
+                    self.assertGreater(expected, 0, "exerciseCount must be a positive integer")
+                    document = Document()
+                    document.feed((output / f"{slug}.html").read_text(encoding="utf-8"))
+                    self.assertEqual(len(document.exercise_summaries), expected)
+                    for index, summaries in enumerate(document.exercise_summaries, 1):
+                        with self.subTest(exercise=index):
+                            self.assertEqual(len(summaries), 3)
+                            self.assertRegex(summaries[0], r"^ヒント1(?:[：:\s]|$)")
+                            self.assertRegex(summaries[1], r"^ヒント2(?:[：:\s]|$)")
+                            self.assertEqual(summaries[2], "解答")
+
     def test_chapter_titles_prioritize_standard_topics_and_optional_subtitles(self):
         chapter = next(c for c in builder.CHAPTERS if c["slug"] == "limits")
         self.assertEqual(chapter["title"], "実数と数列・関数の極限")
@@ -362,9 +399,7 @@ class PortableReaderTest(unittest.TestCase):
                     else "discrete-relations.html"
                 )
                 self.assertEqual(adjacent.links, [previous, following], slug)
-                self.assertEqual(page.count('class="exercise"'), 3, slug)
                 self.assertEqual(page.count('class="column"'), 1, slug)
-                self.assertEqual(page.count("<summary>解答</summary>"), 3, slug)
                 self.assertIn(f'id="{slug}-reflection"', page)
 
 

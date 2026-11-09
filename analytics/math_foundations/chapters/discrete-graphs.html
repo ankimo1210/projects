@@ -1,11 +1,13 @@
 <section id="discrete-graphs-question">
   <h2>無向グラフと接続関係</h2>
   <p>点検したい通路が何本もあるとします。通路を一本ずつ、ちょうど一度だけ通って全て点検できるでしょうか。この問いでは通路の長さや曲がり方より、「どの場所とどの場所がつながるか」が大切です。距離をいったん捨て、つながりだけを残すのがグラフの見方です。</p>
-  <p>この章では、通路を<strong>辺</strong>、端の場所を<strong>頂点</strong>として表します。一本の辺を一度だけ使う条件と、同じ頂点を再訪しない条件は違います。まず、その違いを言葉で分けましょう。</p>
+  <p>この章では、通路を<strong>辺</strong>、端の場所を<strong>頂点</strong>として表します。一本の辺を一度だけ使う条件と、同じ頂点を再訪しない条件は違います。まず、その違いを言葉で分けましょう。その後、通り方をむやみに列挙する代わりに、各場所に接する通路の本数を数えます。通れるかの判定から、始点の選択、通路を追加する設計まで進めます。</p><p class="note">演習を含む学習の目安は120–180分です。「図を集合へ写す」「次数で可能性を絞る」「全辺を通る順と設計」の三回に分けても構いません。例も演習も、本章用の自作グラフです。</p>
 </section>
 
 <section id="discrete-graphs-definition">
   <h2>単純グラフと次数</h2>
+  <p>通路の端に名前を付け、その場所を集めた<strong>頂点集合</strong>をVと書きます。どの二場所を直接つなぐかを集めた<strong>辺集合</strong>がEです。グラフG=(V,E)という表記は、この二種類の情報をまとめて指定しています。</p>
+
   <p><strong>有限単純無向グラフ</strong> G = (V, E) は、有限集合 V と、V の異なる二要素の組からなる集合 E です。{A, B} を短く AB と書きます。「無向」は AB と BA が同じ辺という意味。「単純」は自分自身への辺がなく、同じ二点を結ぶ辺も高々一本という意味です。図で辺が交差しても、頂点として指定しなければ、そこでは乗り換えられません。</p>
   <p>辺で直接結ばれる二頂点を<strong>隣接する</strong>といい、頂点 v に接する辺の本数を<strong>次数</strong> deg(v) と呼びます。次数 0 の頂点は<strong>孤立点</strong>です。図の配置を変えても、これらの情報は変わりません。</p>
   <figure class="concept-figure" id="discrete-graphs-visual-network" data-visual="discrete-graphs-network">
@@ -22,12 +24,21 @@
   <p>この例では A から D へ直接の辺はありませんが、A、C、D とたどれます。どの二頂点の間にも、辺をたどる道があるグラフを<strong>連結</strong>と呼びます。連結でない場合、互いに行き来できる頂点のまとまりが<strong>連結成分</strong>です。</p>
 </section>
 
+<section id="discrete-graphs-read-model">
+  <h2>例題：図から、数える対象を取り出す</h2>
+  <p>四頂点の<a href="#discrete-graphs-visual-network">通路図</a>を点検表へ直しましょう。まず「AからDへ線が見えるか」ではなく、辺集合 E={AB,AC,BC,CD} に AD があるかを見ます。直接の通路はありませんが、AC と CD を続ければ移動できます。直接つながることと、途中を経て行けることを分けるのが第一歩です。</p>
+  <p>次数を図だけから数えると、線の交差や同じ辺の二重計数で間違えがちです。頂点を行、辺を列に並べ、端なら1、端でなければ0を入れます。次の表で、Cの行の合計と、CDの列の合計をそれぞれ求めてください。</p>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="同じ8個の端を、行と列のどちらから足すか"><table class="concept-table" style="min-width:24rem" data-visual="discrete-graphs-incidence-count"><caption>同じ8個の端を、行と列のどちらから足すか</caption><thead><tr><th scope="col">頂点</th><th scope="col">AB</th><th scope="col">AC</th><th scope="col">BC</th><th scope="col">CD</th><th scope="col">行の和</th></tr></thead><tbody><tr><th scope="row">A</th><td>1</td><td>1</td><td>0</td><td>0</td><td>2</td></tr><tr><th scope="row">B</th><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td></tr><tr><th scope="row">C</th><td>0</td><td>1</td><td>1</td><td>1</td><td>3</td></tr><tr><th scope="row">D</th><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td></tr><tr><th scope="row">列の和</th><td>2</td><td>2</td><td>2</td><td>2</td><td>8</td></tr></tbody></table></div>
+  <p>Aの行は1+1+0+0=2、Bも2、Cは0+1+1+1=3、Dは1です。一方、どの列も合計は2。行を合計して2+2+3+1=8、列を合計して2+2+2+2=8となります。この一致は偶然ではありません。同じ「辺の端」を、場所別に数えるか通路別に数えるかだけが違います。<a href="#discrete-graphs-handshake">握手補題</a>は、この数え直しを一般化したものです。</p>
+  <p>この表では各辺を一本の列として持っています。ABとBAを別々の列にすれば、無向の同じ通路を二本だと誤って扱ってしまいます。図を描き直しても、行や列を並べ替えても、次数と辺数は変わりません。</p>
+</section>
+
 <section id="discrete-graphs-walks">
   <h2>歩道・小道・道と閉路</h2>
   <p><strong>歩道</strong>は、連続する二頂点が辺で結ばれた頂点列です。長さは使った辺の回数。同じ辺を二度使えば二回と数えます。長さ 0 の歩道は一つの頂点だけです。始点と終点が同じなら閉じています。</p>
   <div class="concept-table-wrap" tabindex="0" role="region" aria-label="歩道、小道、道、閉路の違い">
-    <table class="concept-table" data-visual="discrete-graphs-walk-types"><caption>同じ四頂点の図で、許される繰り返しを比較する</caption>
-      <thead><tr><th scope="col"><span class="table-math">名前</span></th><th scope="col"><span class="table-math">条件</span></th><th scope="col"><span class="table-math">上の図の例</span></th></tr></thead>
+    <table class="concept-table" data-visual="discrete-graphs-walk-types" style="min-width:40rem"><caption>同じ四頂点の図で、許される繰り返しを比較する</caption>
+      <thead><tr><th scope="col"><span class="table-math">名前</span></th><th scope="col"><span class="table-math">条件</span></th><th scope="col"><a href="#discrete-graphs-visual-network">四頂点の通路図</a>の例</th></tr></thead>
       <tbody>
         <tr><th scope="row"><span class="table-math">歩道（walk）</span></th><td>辺も頂点も繰り返してよい。</td><td><span class="table-math">A–B–A–C</span></td></tr>
         <tr><th scope="row"><span class="table-math">小道（trail）</span></th><td>同じ辺を二度使わない。頂点の再訪はよい。</td><td><span class="table-math">C–A–B–C–D</span></td></tr>
@@ -46,7 +57,15 @@
     <div class="formula"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><munder><mo>∑</mo><mrow><mi>v</mi><mo>∈</mo><mi>V</mi></mrow></munder><mi>deg</mi><mo>(</mo><mi>v</mi><mo>)</mo><mo>=</mo><mn>2</mn><mo>|</mo><mi>E</mi><mo>|</mo></mrow></math></div>
   </div>
   <div class="proof"><h3>一本の辺には端が二つある</h3><p>「辺と、その端にある頂点」の組を数えます。頂点 v ごとに数えれば deg(v) 個で、その合計が左辺。辺ごとなら、それぞれ異なる二つの端があるので右辺です。同じ組の集合を二通りに数えただけで、図の形は使っていません。</p></div>
-  <p>従って<strong>奇数の次数を持つ頂点の個数は偶数</strong>です。偶数の次数の和を除くと、残る奇数たちの和も偶数。奇数を奇数個足すと奇数になるので、個数は偶数でなければなりません。図の例でも 2 + 2 + 3 + 1 = 8 = 2 · 4 で、奇次数の頂点は C と D の二個です。</p>
+  <p>従って<strong>奇数の次数を持つ頂点の個数は偶数</strong>です。偶数の次数の和を除くと、残る奇数たちの和も偶数。奇数を奇数個足すと奇数になるので、個数は偶数でなければなりません。四頂点の通路図でも 2 + 2 + 3 + 1 = 8 = 2 · 4 で、奇次数の頂点は C と D の二個です。</p>
+</section>
+
+<section id="discrete-graphs-degree-inverse">
+  <h2>例題：次数から辺を逆算し、報告を点検する</h2>
+  <p>五頂点A、B、C、D、Xと五本の辺があり、A、B、C、Dの次数が3、2、2、1だとします。Xの次数を知りたいとき、全ての図を試す必要はありません。辺の端は2×5=10個なので、既知の端を引き、deg(X)=10−(3+2+2+1)=2です。未知量を残して総和を取る方針です。</p>
+  <p>ただし、方程式の解が出たことと、そのグラフを作れることは別です。存在の検算として E={AB,BX,XC,CA,AD} と置きます。AはB、C、Dにつながって3、BはA、Xで2、CはA、Xで2、DはAだけで1、XはB、Cで2。重複辺も自分自身への辺もなく、確かに五本です。必要条件から値を求めた後、具体的に作ることで十分性も確認できました。</p>
+  <div class="proof"><h3>偶数の和だけでは、実現できるとは限らない</h3><p>四頂点で次数3、3、1、1を要求すると、和は8で偶数です。各次数も0以上3以下なので、個々の数だけでは排除できません。しかし次数3の二頂点は他の全頂点へ隣接します。残る二頂点はどちらもその二点につながり、次数が少なくとも2になってしまいます。要求の1と矛盾します。</p><p>従って握手補題は、あり得ない報告を素早く除くための<strong>必要条件</strong>です。通った報告を全て認める判定法ではありません。「和が偶数」と「実際に辺を置ける」を取り違えないようにしましょう。</p></div>
+  <p>点検順を決めるなら、まず単純グラフの次数の範囲0≤deg(v)≤|V|−1、次に次数総和、最後に必要な隣接関係です。安い検査から始めると、辺の候補を大量に試す前に不可能性を説明できます。</p>
 </section>
 
 <section id="discrete-graphs-euler">
@@ -72,8 +91,18 @@
     <p>挿入のたびに使用辺が増え、同じ辺は二度使いません。有限回で全辺を使い、Euler 閉小道を得ます。途中の選び方で短い周回になっても、この継ぎ足しがあるので困りません。</p>
     <p>奇次数の頂点が s、t の二つなら、最初は s から未使用の辺で進み続けます。s 以外の偶次数の点では先ほどの理由で止まれません。s に戻った直後には使った本数が偶数で、元の次数は奇数なので、ここでも出る辺が残ります。従って止まる場所は t です。この s–t 小道を除くと、s と t では奇数本、他では偶数本を使ったので、残る次数は全て偶数。残りの閉小道を同様に挿入すれば、両端を保ったまま全辺を使えます。</p>
   </div>
-  <p>最初の四頂点の図では奇次数が C と D だけなので、C–A–B–C–D が Euler 小道です。A から始めて全辺を一度ずつ使うことはできません。始点を自由にしてよいことと、指定した始点で実行できることも区別します。</p>
+  <p><a href="#discrete-graphs-visual-network">四頂点の通路図</a>では奇次数が C と D だけなので、C–A–B–C–D が Euler 小道です。A から始めて全辺を一度ずつ使うことはできません。始点を自由にしてよいことと、指定した始点で実行できることも区別します。</p>
   <p class="note">連結性の条件は省けません。離れた二つの三角形は全次数が 2 でも、一続きには通れません。一方、Euler 閉小道のある図へ孤立点を足しても、点検する辺は増えません。辺が 0 本で V が空でなければ、一頂点だけの長さ 0 の歩道を Euler 閉小道とする規約を採ります。V も空なら始点を選べないため、この規約では小道を作らず、上の定理の対象外とします。</p>
+</section>
+
+<section id="discrete-graphs-route-design">
+  <h2>例題：始点を決め、条件を変えて点検路を設計する</h2>
+  <p>再び E={AB,AC,BC,CD} です。最初に経路を探し回るのではなく、次数(2,2,3,1)を調べます。奇次数はCとDだけなので、開いたEuler小道の両端はこの二点。Cを始点に選び、三角形を先に回ってから行き止まりへ進めば C–A–B–C–D です。辺を順に書き出すと CA、AB、BC、CD で、四本を過不足なく使います。</p>
+  <p>C–Dから出発して止まったら「Euler小道はない」と結論してよいでしょうか。Dには未使用の出る辺がないので、その試行は失敗します。しかし存在条件は満たされており、別の順なら成功しました。一本の試行の失敗は不可能性の証明になりません。閉じた周回を継ぎ足す構成と、無計画な一回の歩き方を区別します。</p>
+  <h3>閉じて戻りたいなら、何を追加するか</h3>
+  <p>始点へ戻るには全次数を偶数にしたいので、CとDの次数だけを変える必要があります。辺を一本追加すると、その両端の次数の偶奇だけが反転します。従って追加すべき一本はCDです。しかしCDは既にあります。単純グラフを保つなら、同じ二点間へ二本目を追加する案は使えません。</p>
+  <p>新しい中継点Xを一つ作り、CXとXDの二辺を足すならどうでしょう。Cの次数は4、Dは2、Xは2となり、AとBは2のままです。辺のある部分も連結なので閉じた点検ができます。例えば C–A–B–C–X–D–C。使う辺は CA、AB、BC、CX、XD、DC の六本で、一度ずつです。追加前のCDも最後に使っていることが検算になります。</p>
+  <p>この案が最小かは、許された変更によります。新しい頂点と辺の追加を認め、単純性を保つなら、一本では不可能と示したので二本が最少です。頂点を増やさない場合は、足せる辺がAD、BDだけでどちらもCに接しないので、閉じた周回にはできません。平行な通路を認める別モデルならCDを一本足せますが、それは本章の単純グラフの外です。最適化の結論には、変更してよい対象も含めて条件を固定する必要があります。</p>
 </section>
 
 <details class="column" id="discrete-graphs-column">
@@ -99,6 +128,41 @@
     <details><summary>ヒント1：共通の頂点から二回出発する</summary><p>C–A–B–C と C–D–E–C は辺を共有していません。</p></details>
     <details><summary>ヒント2：通るべき対象を確認する</summary><p>Euler 条件は全頂点を訪問する条件ではありません。</p></details>
     <details><summary>解答</summary><p>C–A–B–C–D–E–C で六辺を一度ずつ使えます。C の次数は 4、A、B、D、E は 2、Z は 0 です。次数が正の頂点の部分は連結で、全次数が偶数。Z に接する辺はなく、訪問義務もないため障害になりません。</p></details>
+  </article>
+  <article class="exercise"><h3>4．未知の次数を、辺数から戻す</h3><p>五頂点の単純無向グラフに辺が五本あり、四頂点の次数は3、2、2、1です。残る次数を求め、その次数列を実現する辺集合を一つ作って検算してください。</p>
+    <details><summary>ヒント1：方針を決める</summary><p>辺の端は全部で何個でしょう。</p></details>
+    <details><summary>ヒント2：計算を進める</summary><p>A、B、X、Cを輪にし、AにDを付ける案を試します。</p></details>
+    <details><summary>解答</summary><p>総和は10なので未知の次数は10−8=2です。E={AB,BX,XC,CA,AD}とすると(A,B,C,D,X)の次数は(3,2,2,1,2)。五本の異なる辺で実現できます。総和10=2×5も一致します。</p></details>
+  </article>
+  <article class="exercise"><h3>5．必要条件を十分条件にしない</h3><p>四頂点の次数が3、3、1、1という報告について、「合計が8なので可能だ」という説明を診断してください。</p>
+    <details><summary>ヒント1：方針を決める</summary><p>次数3の点は、残る何点に接する必要がありますか。</p></details>
+    <details><summary>ヒント2：計算を進める</summary><p>次数1とされた点から、二つの次数3の点を見ます。</p></details>
+    <details><summary>解答</summary><p>握手補題を満たすことは必要条件にすぎません。次数3の二点はそれぞれ他の全点と隣接するため、残る二点の次数はどちらも少なくとも2です。次数1を要求する報告は実現不能で、説明は逆向きに定理を使っています。</p></details>
+  </article>
+  <article class="exercise"><h3>6．辺を数えて、指定始点を選ぶ</h3><p>三角形ABCと三角形DEFを辺CD一本で結びます。Euler小道の両端を決め、一つ書いてください。Aを始点にできるでしょうか。</p>
+    <details><summary>ヒント1：方針を決める</summary><p>二つの三角形だけなら各次数は2です。CDがどこを変えますか。</p></details>
+    <details><summary>ヒント2：計算を進める</summary><p>片方の三角形を回り、CDを渡り、もう片方を回ります。</p></details>
+    <details><summary>解答</summary><p>CとDの次数だけが3、他は2なので両端はC、Dです。C–A–B–C–D–E–F–Dが一例で、七本を一度ずつ使います。Aは偶次数であり開いたEuler小道の始点にはできません。辺を持つ部分はCDで連結されています。</p></details>
+  </article>
+  <article class="exercise"><h3>7．新しい通路一本で閉じられる条件</h3><p>連結な単純無向グラフの奇次数頂点がsとtだけです。頂点を増やさず、新しい辺一本を足してEuler閉小道を作れるための条件を求めてください。</p>
+    <details><summary>ヒント1：方針を決める</summary><p>追加する一本の両端だけで偶奇が変わります。</p></details>
+    <details><summary>ヒント2：計算を進める</summary><p>必要な一本が既存の辺と重ならない条件を確認します。</p></details>
+    <details><summary>解答</summary><p>必要十分条件はsとtが隣接していないことです。全次数を偶数にするには両端がs、tでなければならず、候補はstだけ。stがなければ追加でき、連結性も保って全次数が偶数になります。既にあれば、単純性のため追加できません。</p></details>
+  </article>
+  <article class="exercise"><h3>8．四つの行き止まりを修理する</h3><p>中心Oと葉A、B、C、Dを結ぶ四辺のグラフを考えます。頂点を増やさず新辺を足し、閉じた点検路を作る最小本数を求め、実際の小道も書いてください。</p>
+    <details><summary>ヒント1：方針を決める</summary><p>奇次数の頂点はいくつあり、一本で最大いくつ直せますか。</p></details>
+    <details><summary>ヒント2：計算を進める</summary><p>ABとCDを追加する案を試します。</p></details>
+    <details><summary>解答</summary><p>Oは次数4、葉四点は次数1です。一本で反転できるのは二点だけなので少なくとも二本必要。AB、CDを足すと全次数が偶数になり、O–A–B–O–C–D–Oで六辺を一度ずつ通れます。従って最小は二本です。</p></details>
+  </article>
+  <article class="exercise"><h3>9．歩道から道を取り出す</h3><p>E={AB,BC,CD,BD,DE}で歩道A–B–C–D–B–D–Eを考えます。繰り返す頂点の間を取り除き、AからEへの道を一つ作ってください。取り除いた結果が最短とも言えますか。</p>
+    <details><summary>ヒント1：方針を決める</summary><p>二度現れるBの間を消してみます。</p></details>
+    <details><summary>ヒント2：計算を進める</summary><p>得た道の長さと、A–B–D–Eの長さを比べます。</p></details>
+    <details><summary>解答</summary><p>最初のBから二度目のBまでのB–C–D–Bを除くとA–B–D–Eとなり、長さ3の道です。一般にこの操作は道の存在を示すだけで、最短性までは保証しません。この個別例ではAの隣はB、Eの隣はDなので少なくともABとDEとその間の一辺が必要で、3が最短です。有限例の追加検証と一般の主張を分けます。</p></details>
+  </article>
+  <article class="exercise"><h3>10．全次数が偶数でも、どこから出発するか</h3><p>離れた二つの三角形と孤立点Zがあります。「全次数が偶数だからZを始点とするEuler閉小道がある」という主張の問題点を二つ挙げ、条件を直してください。</p>
+    <details><summary>ヒント1：方針を決める</summary><p>辺を持つ部分の連結性と、指定始点からの移動を別々に調べます。</p></details>
+    <details><summary>ヒント2：計算を進める</summary><p>三角形二つを一つの頂点を共有する形へ変えたらどうなりますか。</p></details>
+    <details><summary>解答</summary><p>辺を持つ部分が二成分なので、一続きに全辺を通れません。またZからは一本も出られず、辺があるグラフの点検の始点にはできません。例えば二つの三角形を一頂点Cで共有させ、Cを始点にすれば、全次数が偶数で正次数の部分が連結になり、C–A–B–C–D–E–Cという閉小道が作れます。孤立点Z自体は残して構いません。</p></details>
   </article>
 </section>
 

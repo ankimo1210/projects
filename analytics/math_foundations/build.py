@@ -149,7 +149,7 @@ def build(output: Path | None = None) -> list[Path]:
             if chapter.get("subtitle")
             else ""
         )
-        header = f'<header class="chapter-header"><p class="edition">{book["title"]} / CHAPTER {chapter["number"]}</p><h1>{escape(chapter["title"])}</h1>{subtitle}<p class="chapter-question">{escape(chapter["question"])}</p><p class="chapter-meta">{escape(chapter["duration"])} · 読む時間の目安</p>{math_hint}{table_hint}</header>'
+        header = f'<header class="chapter-header"><p class="edition">{book["title"]} / CHAPTER {chapter["number"]}</p><h1>{escape(chapter["title"])}</h1>{subtitle}<p class="chapter-question">{escape(chapter["question"])}</p><p class="chapter-meta">{escape(chapter["duration"])} · 学習時間の目安</p>{math_hint}{table_hint}</header>'
         pages.append(
             (
                 slug,

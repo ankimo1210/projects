@@ -2,6 +2,8 @@
   <h2>重複計数と包除原理</h2>
   <p>1 から 30 までの整数で、2 または 3 または 5 の倍数はいくつあるでしょう。各倍数を別々に数えて足すと、6 は 2 と 3 の両方、30 は三つすべてに現れます。重なりを一度引くだけで、どの数も一回に戻るでしょうか。</p>
   <p>この章では、<strong>一つの要素が最終的に何回残るか</strong>を調べて、重複を直します。集合の和と共通部分は<a href="sets-maps.html">集合</a>で復習できます。ここで数える集合は有限とし、確率や独立性の仮定は使いません。重なり方自体を計算に入れるのが包除原理です。</p>
+  <p>まず二条件の重なりを直し、三条件では何を足し戻すかを一要素ずつ追います。冒頭の問題は「どれかに入る」だけでなく「ちょうど二つに入る」数まで解きます。その後、重なりを未知量として逆算する問題と、禁止条件を自分で作る問題に進みます。</p>
+  <p class="note">演習込み110–160分が目安です。前半は二・三集合と所属数別の集計、後半は一般の証明と禁止条件、最後は9問の演習に分けられます。有限例での検算と、どんな有限集合にも通じる係数の証明を区別して読みます。</p>
 </section>
 
 <section id="inclusion-exclusion-two">
@@ -20,6 +22,16 @@
   <p>「A にも B にも入らない」ものを数えるなら、全体集合 U を固定し、|U| − |A ∪ B| を使います。補集合を取る範囲が必要であることは、包除でも変わりません。</p>
 </section>
 
+<section id="inclusion-exclusion-two-example">
+<h2>重なりの個数を未知量として求める</h2>
+<div class="proof"><h3>例題1：延べ件数と人数を分ける</h3>
+<p>自作の参加者モデルとして、全体30人、講習Aの参加者18人、講習Bの参加者15人、どちらにも参加しない人が5人とします。両方の参加者数をxと置きます。「AまたはB」の人数は全体から5人を除いた25人です。従って18+15−x=25、x=8人です。</p>
+<p>Aだけは18−8=10人、Bだけは15−8=7人、両方8人、どちらでもない5人。四つは重ならず、10+7+8+5=30人となります。Aの18とBの15を足した33は参加の延べ件数で、人の種類数25とは異なります。二講習へ出た8人だけが二件ずつ寄与するので、33−25=8という別の読み方もできます。</p>
+<p>人数として成立するかも確かめます。共通部分は0以上、18と15の小さい方以下でなければならず、8はこの条件を満たします。さらに全体30人なので、和集合18+15−x≤30からx≥3も必要です。例えばx=1という報告なら、和集合32人が全体を超えるため実現できません。公式に値を入れるだけでなく、全体と部分の大小関係も検算に使えます。</p>
+</div>
+<p>二集合では0≤|A∩B|≤min(|A|,|B|)に加え、|A∪B|≤|U|が制約になります。三集合に進んだら、同じように「どの領域も負にならないか」を調べる方針が使えます。</p>
+</section>
+
 <section id="inclusion-exclusion-three">
   <h2>三集合の包除原理</h2>
   <p>有限集合 A、B、C について、一集合ずつを足し、二集合ずつの共通部分を引きます。しかし三つすべてに属する要素は、最初に三回足され、次に三組の共通部分で三回引かれて、零回になっています。そこで三重の共通部分を一回足し戻します。</p>
@@ -35,6 +47,21 @@
   <p>冒頭の問題で A、B、C をそれぞれ 1 から 30 の範囲の 2、3、5 の倍数とすると、単独では 15、10、6 個です。二つの共通部分は 6、10、15 の倍数で、それぞれ 5、3、2 個。三つの共通部分は 30 だけです。従って 15 + 10 + 6 − 5 − 3 − 2 + 1 = 22 個となります。どれの倍数でもない数は 30 − 22 = 8 個です。</p>
 </section>
 
+<section id="inclusion-exclusion-exact-membership">
+<h2>ちょうど一つ・二つ・三つの条件を満たす個数</h2>
+<p>冒頭の1から30までの整数に戻ります。Aは2の倍数、Bは3の倍数、Cは5の倍数です。「どれかの倍数」は22個でした。では、ちょうど二つの条件を満たす数はいくつでしょう。二重共通部分を足すだけでは、三重に入る30が何回も現れます。</p>
+<div class="proof"><h3>例題2：重なりの深いところから戻す</h3>
+<p>ちょうどj集合に入る個数をNⱼと書きます。jは0,1,2,3です。三重共通部分は30一つなのでN₃=1。二重共通部分の延べ合計は5+3+2=10です。ちょうど二集合に属する数は一組の共通部分に一回、三集合に属する数はAB、AC、BCに三回現れます。従ってN₂+3N₃=10よりN₂=10−3=7です。</p>
+<p>単独集合の延べ合計は15+10+6=31。そこにはN₁が一回、N₂が二回、N₃が三回入るので、N₁+2N₂+3N₃=31。従ってN₁=31−14−3=14です。和集合は14+7+1=22、外側はN₀=30−22=8と戻せます。</p>
+<p>具体的にもちょうど二条件の数を並べます。ABだけは6、12、18、24の4個、ACだけは10、20の2個、BCだけは15の1個で計7個です。三重の30を各二重共通部分から除いたため、三群は重なりません。この列挙は今回の30個の検算であり、上のN₂+3N₃という関係の証明は一要素の所属数に基づきます。</p>
+</div>
+<p>表の縦方向の合計を取ると、同じ30個を三つの集計方法で見直せます。特に「三集合に属する一個」が、単独にも二重にも3を寄与する列を追ってください。</p>
+<div class="concept-table-wrap" tabindex="0" role="region" aria-label="1から30の整数を所属集合数で分類した個数と延べ寄与">
+<table class="concept-table" id="inclusion-exclusion-membership-table" data-visual="inclusion-exclusion-membership-table" style="min-width:32rem"><caption>個数と延べ合計を分けると、三重の重複を見失わない</caption><thead><tr><th scope="col">所属数j</th><th scope="col">個数Nⱼ</th><th scope="col">単独への寄与</th><th scope="col">二重への寄与</th><th scope="col">三重への寄与</th></tr></thead><tbody><tr><th scope="row">0</th><td>8</td><td>0</td><td>0</td><td>0</td></tr><tr><th scope="row">1</th><td>14</td><td>14</td><td>0</td><td>0</td></tr><tr><th scope="row">2</th><td>7</td><td>14</td><td>7</td><td>0</td></tr><tr><th scope="row">3</th><td>1</td><td>3</td><td>3</td><td>1</td></tr><tr><th scope="row">計</th><td>30</td><td>31</td><td>10</td><td>1</td></tr></tbody></table></div>
+<p>この表の値はすべて整数の個数または延べ寄与数で、割合ではありません。和集合は所属数1以上の個数の和22です。一方、包除の31−10+1も22になります。異なる集計から同じ答えへ戻ることが検算になります。</p>
+<p>倍数の共通部分にも注意します。4と6の両方の倍数は、4×6=24の倍数だけではなく12、24、…です。二数の両方で割り切れる最小の正の整数を<strong>最小公倍数</strong>といい、この場合は12。1から30では共通部分が12、24の二個となります。法則を使う前に、共通部分が実際に何かを定めます。</p>
+</section>
+
 <section id="inclusion-exclusion-general">
   <h2>有限個の集合の包除原理</h2>
   <p>A₁, …, Aₙ を有限集合、n ≥ 1 とします。[n] = {1, …, n} と書き、添字の空でない集合 I ⊆ [n] に対して、⋂ᵢ∈ᴵ Aᵢ は I に入る添字の集合すべての共通部分です。選ぶ集合数 |I| が奇数なら足し、偶数なら引きます。</p>
@@ -43,12 +70,35 @@
   <p class="note">「たくさん足して引けば近似できる」のではなく、有限の項をすべて入れた厳密な等式です。項を途中で省いた式が同じ答えになるとは限りません。集合が無限個の場合への拡張も、この有限の証明だけでは扱いません。</p>
 </section>
 
+<section id="inclusion-exclusion-reconstruct">
+<h2>三集合の重なりの復元と実現可能性</h2>
+<div class="proof"><h3>例題3：報告された和集合から三重共通部分を戻す</h3>
+<p>全体40個の対象について、|A|=18、|B|=16、|C|=14、|A∩B|=7、|A∩C|=6、|B∩C|=5、|A∪B∪C|=34と報告されたとします。自作の有限集計モデルです。二重共通部分には三重共通部分も含めています。</p>
+<p>三重共通部分をtとすると、34=18+16+14−7−6−5+t=30+tなのでt=4。次に二集合だけの領域を計算すると、ABだけ7−4=3、ACだけ6−4=2、BCだけ5−4=1となります。</p>
+<p>Aだけは18から二重の7と6を引き、二回引かれた三重4を一回戻して18−7−6+4=9。同様にBだけは16−7−5+4=8、Cだけは14−6−5+4=7です。外側は40−34=6。全八領域の個数は9、8、7、3、2、1、4、6で、どれも非負整数、合計40です。これらの数だけ異なる対象を各領域へ置けば集計を実現でき、元の各単独・二重の数にも戻れます。</p>
+<p>もし和集合だけを36へ変更したら、t=6を要します。しかしt≤|B∩C|=5に反し、BCだけが5−6=−1になります。公式から数が出ても、負の領域があれば実在する有限集合の集計ではありません。</p>
+</div>
+<p>逆算では、式を解いて候補を作る段階と、その候補が領域の非負性を満たす段階を分けます。三集合の場合は、三重、二重だけ、単独だけ、外側の順に戻すと、同じ対象を引き過ぎずに済みます。</p>
+</section>
+
 <section id="inclusion-exclusion-forbidden">
   <h2>禁止位置のある順列</h2>
   <p>札 A、B、C を左から三つの位置へ一枚ずつ置きます。A は位置 1、B は位置 2、C は位置 3 に置けないとします。許される配置を直接分類する代わりに、U を六通りの全配置、E₁、E₂、E₃ をそれぞれの札が禁止位置に置かれる配置の集合とします。求めるのは |U| − |E₁ ∪ E₂ ∪ E₃| です。</p>
   <figure class="concept-figure" id="inclusion-exclusion-visual-forbidden" data-visual="inclusion-exclusion-forbidden"><svg class="concept-svg" viewBox="0 0 360 350" role="img" aria-labelledby="inclusion-exclusion-forbidden-title inclusion-exclusion-forbidden-desc"><title id="inclusion-exclusion-forbidden-title">禁止位置を避ける二配置を、行と列の選択で確かめる</title><desc id="inclusion-exclusion-forbidden-desc">左はBCA、右はCABの配置。行A,B,C、列1,2,3。対角線の×は禁じる位置。丸は各行各列に一つずつあり、丸内の番号は選んだ列を表す。列1から読めば左BCA、右CABとなる。</desc><text x="180" y="28" text-anchor="middle" font-size="22" fill="var(--ink)">札を行、位置を列にする</text><text x="96" y="66" text-anchor="middle" font-size="22" fill="var(--ink)">BCA</text><rect x="42" y="116" width="36" height="36" fill="var(--surface-2)"/><line x1="51" y1="125" x2="69" y2="143" stroke="var(--ink)" stroke-width="2"/><line x1="51" y1="143" x2="69" y2="125" stroke="var(--ink)" stroke-width="2"/><rect x="78" y="152" width="36" height="36" fill="var(--surface-2)"/><line x1="87" y1="161" x2="105" y2="179" stroke="var(--ink)" stroke-width="2"/><line x1="87" y1="179" x2="105" y2="161" stroke="var(--ink)" stroke-width="2"/><rect x="114" y="188" width="36" height="36" fill="var(--surface-2)"/><line x1="123" y1="197" x2="141" y2="215" stroke="var(--ink)" stroke-width="2"/><line x1="123" y1="215" x2="141" y2="197" stroke="var(--ink)" stroke-width="2"/><line x1="42" y1="116" x2="42" y2="224" stroke="var(--rule)" stroke-width="2"/><line x1="42" y1="116" x2="150" y2="116" stroke="var(--rule)" stroke-width="2"/><line x1="78" y1="116" x2="78" y2="224" stroke="var(--rule)" stroke-width="2"/><line x1="42" y1="152" x2="150" y2="152" stroke="var(--rule)" stroke-width="2"/><line x1="114" y1="116" x2="114" y2="224" stroke="var(--rule)" stroke-width="2"/><line x1="42" y1="188" x2="150" y2="188" stroke="var(--rule)" stroke-width="2"/><line x1="150" y1="116" x2="150" y2="224" stroke="var(--rule)" stroke-width="2"/><line x1="42" y1="224" x2="150" y2="224" stroke="var(--rule)" stroke-width="2"/><text x="60" y="101" text-anchor="middle" font-size="22" fill="var(--ink)">1</text><text x="24" y="142" text-anchor="middle" font-size="22" fill="var(--ink)">A</text><text x="96" y="101" text-anchor="middle" font-size="22" fill="var(--ink)">2</text><text x="24" y="178" text-anchor="middle" font-size="22" fill="var(--ink)">B</text><text x="132" y="101" text-anchor="middle" font-size="22" fill="var(--ink)">3</text><text x="24" y="214" text-anchor="middle" font-size="22" fill="var(--ink)">C</text><circle cx="132" cy="134" r="15" fill="var(--surface)" stroke="var(--series-1)" stroke-width="2"/><text x="132" y="141" text-anchor="middle" font-size="22" fill="var(--ink)">3</text><circle cx="60" cy="170" r="15" fill="var(--surface)" stroke="var(--series-1)" stroke-width="2"/><text x="60" y="177" text-anchor="middle" font-size="22" fill="var(--ink)">1</text><circle cx="96" cy="206" r="15" fill="var(--surface)" stroke="var(--series-1)" stroke-width="2"/><text x="96" y="213" text-anchor="middle" font-size="22" fill="var(--ink)">2</text><text x="266" y="66" text-anchor="middle" font-size="22" fill="var(--ink)">CAB</text><rect x="212" y="116" width="36" height="36" fill="var(--surface-2)"/><line x1="221" y1="125" x2="239" y2="143" stroke="var(--ink)" stroke-width="2"/><line x1="221" y1="143" x2="239" y2="125" stroke="var(--ink)" stroke-width="2"/><rect x="248" y="152" width="36" height="36" fill="var(--surface-2)"/><line x1="257" y1="161" x2="275" y2="179" stroke="var(--ink)" stroke-width="2"/><line x1="257" y1="179" x2="275" y2="161" stroke="var(--ink)" stroke-width="2"/><rect x="284" y="188" width="36" height="36" fill="var(--surface-2)"/><line x1="293" y1="197" x2="311" y2="215" stroke="var(--ink)" stroke-width="2"/><line x1="293" y1="215" x2="311" y2="197" stroke="var(--ink)" stroke-width="2"/><line x1="212" y1="116" x2="212" y2="224" stroke="var(--rule)" stroke-width="2"/><line x1="212" y1="116" x2="320" y2="116" stroke="var(--rule)" stroke-width="2"/><line x1="248" y1="116" x2="248" y2="224" stroke="var(--rule)" stroke-width="2"/><line x1="212" y1="152" x2="320" y2="152" stroke="var(--rule)" stroke-width="2"/><line x1="284" y1="116" x2="284" y2="224" stroke="var(--rule)" stroke-width="2"/><line x1="212" y1="188" x2="320" y2="188" stroke="var(--rule)" stroke-width="2"/><line x1="320" y1="116" x2="320" y2="224" stroke="var(--rule)" stroke-width="2"/><line x1="212" y1="224" x2="320" y2="224" stroke="var(--rule)" stroke-width="2"/><text x="230" y="101" text-anchor="middle" font-size="22" fill="var(--ink)">1</text><text x="194" y="142" text-anchor="middle" font-size="22" fill="var(--ink)">A</text><text x="266" y="101" text-anchor="middle" font-size="22" fill="var(--ink)">2</text><text x="194" y="178" text-anchor="middle" font-size="22" fill="var(--ink)">B</text><text x="302" y="101" text-anchor="middle" font-size="22" fill="var(--ink)">3</text><text x="194" y="214" text-anchor="middle" font-size="22" fill="var(--ink)">C</text><circle cx="266" cy="134" r="15" fill="var(--surface)" stroke="var(--series-2)" stroke-width="2"/><text x="266" y="141" text-anchor="middle" font-size="22" fill="var(--ink)">2</text><circle cx="302" cy="170" r="15" fill="var(--surface)" stroke="var(--series-2)" stroke-width="2"/><text x="302" y="177" text-anchor="middle" font-size="22" fill="var(--ink)">3</text><circle cx="230" cy="206" r="15" fill="var(--surface)" stroke="var(--series-2)" stroke-width="2"/><text x="230" y="213" text-anchor="middle" font-size="22" fill="var(--ink)">1</text><text x="180" y="271" text-anchor="middle" font-size="22" fill="var(--ink)">各行1個・各列1個</text><text x="180" y="317" text-anchor="middle" font-size="22" fill="var(--ink)">×を避ける配置は2通り</text></svg><figcaption>× は禁止位置です。左の列1の丸は行B、列2は行C、列3は行Aなので BCA。右も列順に読めば CAB です。丸は各行・各列に一個ずつあり、同じ札や位置を再使用しません。「二通りだけ」という個数は本文の包除式でも確認します。空いた升を独立に選ぶ問題ではありません。</figcaption></figure>
   <p>禁止条件を一つ固定すると残り二枚の並べ方は二通りなので |Eᵢ| = 2。二つ固定すると最後の一枚も決まり、どの二集合の共通部分も一通りです。三つ固定した配置 ABC も一通り。従って禁止を一つ以上犯す配置は 3×2 − 3×1 + 1 = 4 通り、許される配置は 6 − 4 = 2 通りです。実際に BCA、CAB と一致します。</p>
   <p>二つの禁止位置を固定しただけで三つ目も禁止位置になるため、共通部分は強く関係しています。それでも包除は使えます。<strong>条件が独立である必要はありません。</strong>各共通部分を正しく数える必要があります。</p>
+</section>
+
+<section id="inclusion-exclusion-surjections">
+<h2>使われない種類を禁止条件にする</h2>
+<p>三種類の記号R、G、Bで長さ4の列を作り、どの記号も少なくとも一回使うとします。各記号の出現位置を直接分けることもできますが、同じ記号を何回使うかの整理が必要です。そこで<strong>「使う」を「使われない列を除く」へ置き換える</strong>方針を試します。</p>
+<div class="proof"><h3>例題4：三種類をすべて使う列</h3>
+<p>全体Uは3⁴=81列です。EᵣをRが一度も出ない列、EɢをGが出ない列、EʙをBが出ない列とします。一種類を使わないと残り二種類を各位置で選ぶので各Eは2⁴=16列。二種類を使わない列は、残る一種類だけを四回並べる1列です。三種類とも使わない列は、長さ4の位置を埋められないため0列です。</p>
+<p>求めるのはどの禁止条件にも入らない列なので、81−3×16+3×1−0=36列です。二重共通部分を数えるとき、残った一種類を「必ず一回は使う」と別途課したわけではありません。使用可能な記号が一つになり、長さ4なので結果として四回使うことになります。</p>
+<p>別解でも確かめます。長さ4で三種類すべてを使うなら、出現回数は2、1、1です。二回使う記号を3通り選び、その二位置をC(4,2)=6通り選び、残り二記号を2通りに並べます。3×6×2=36で一致します。二つの方法が同じ列を一度ずつ数える理由まで確認できました。</p>
+<p>長さを正の整数nへ変えると、同じ禁止条件から3ⁿ−3·2ⁿ+3列です。n=1では3−6+3=0、n=2では9−12+3=0。三種類を二位置以下では使い切れないという必要条件と一致します。n=0では三種類とも不使用の空列が一つあるため、最後の共通部分も一つです。0⁰をそのまま計算せず、空列を直接数えれば1−3+3−1=0となります。</p>
+</div>
+<p>禁止条件は、共通部分を簡単に数えられる形へ置くのが有利です。ただし条件同士が両立しない場合もあります。例えば一枚の札を同時に二位置へ固定する共通部分は空集合です。共通部分の個数を一律に階乗へ置き換える前に、その固定が可能かを確かめます。</p>
 </section>
 
 <details class="column" id="inclusion-exclusion-column">
@@ -63,6 +113,30 @@
   <article class="exercise"><h3>1．どちらにも入らない人数</h3><p>全体 20 人で A に 9 人、B に 8 人、両方に 3 人が入ります。少なくとも片方に入る人数と、どちらにも入らない人数を求めてください。</p><details><summary>ヒント1：両方に入る三人は何回現れるか</summary><p>9 + 8 に含まれる重複を直します。</p></details><details><summary>ヒント2：補集合の範囲を固定する</summary><p>全体は二十人です。</p></details><details><summary>解答</summary><p>少なくとも片方は 9 + 8 − 3 = 14 人です。どちらにも入らないのは 20 − 14 = 6 人。三人の共通部分は最初二回数えたので、一回引きました。</p></details></article>
   <article class="exercise"><h3>2．三重の重なりを戻さなかったら</h3><p>A ∩ B ∩ C に入る一要素について、単独集合を足し、二集合の共通部分だけを引いた式の係数を求めてください。また、四集合すべてに入る要素の一般包除での係数も確かめてください。</p><details><summary>ヒント1：三集合から二つ選ぶ組数</summary><p>AB、AC、BC の三組があります。</p></details><details><summary>ヒント2：四集合の非空部分集合を大きさで分ける</summary><p>一個選ぶ四通り、二個選ぶ六通り、三個選ぶ四通り、四個選ぶ一通りです。</p></details><details><summary>解答</summary><p>三重の要素は 3 − 3 = 0 回となり、数え落とされます。三重共通部分を足して 1 に戻す必要があります。四集合すべてに属する要素なら 4 − 6 + 4 − 1 = 1 で、やはり一回残ります。</p></details></article>
   <article class="exercise"><h3>3．四枚とも元の位置を避ける</h3><p>異なる四枚の札を四位置に並べ、どの札も自分の元の位置にない配置を数えてください。全配置は 24、一枚を固定すると残りは 6、二枚固定なら 2、三枚または四枚固定なら 1 通りです。</p><details><summary>ヒント1：避けたい条件を四集合にする</summary><p>Eᵢ を i 枚目が元の位置にある配置の集合にします。</p></details><details><summary>ヒント2：補集合を数えるので符号に注意する</summary><p>全体から和集合を引くと、24 − 単独 + 二重 − 三重 + 四重となります。</p></details><details><summary>解答</summary><p>固定する札の選び方は順に 4、6、4、1 通りです。従って求める数は 24 − 4×6 + 6×2 − 4×1 + 1 = 9 通り。共通部分では指定した札が固定されるだけで、残りの札まで固定を禁止していません。その条件を余分に足すと、包除に使う集合が変わってしまいます。</p></details></article>
+<article class="exercise"><h3>4．延べ合計から所属数別の個数を復元する</h3><p>三集合の単独の個数の和が50、三つの二重共通部分の個数の和が18、三重共通部分が2です。全体が40なら、ちょうど二集合、ちょうど一集合、少なくとも一集合、どれにも属さない個数を求めてください。</p>
+<details><summary>ヒント1</summary><p>三重に入る一要素は、二重共通部分の延べ合計へ三回寄与します。</p></details>
+<details><summary>ヒント2</summary><p>N₂=18−3×2を求め、50=N₁+2N₂+3×2へ戻します。</p></details>
+<details><summary>解答</summary><p>N₃=2、N₂=18−6=12、N₁=50−24−6=20です。和集合は20+12+2=34、外側は40−34=6。包除でも50−18+2=34です。N₁+N₂+N₃+N₀=40、単独への延べ寄与20+24+6=50、二重への寄与12+6=18がすべて戻ります。個々のA,B,Cの大きさはこの情報だけでは決まりません。</p></details></article>
+<article class="exercise"><h3>5．包含される条件を先に見付ける</h3><p>1から24までで、2または3または4の倍数を数えてください。三集合の包除で求めた後、条件の包含関係を使う短い方法で検算してください。</p>
+<details><summary>ヒント1</summary><p>4の倍数は必ず2の倍数です。共通部分は最小公倍数の倍数として数えます。</p></details>
+<details><summary>ヒント2</summary><p>単独は12、8、6。2と3、2と4、3と4の共通部分は4、6、2個です。</p></details>
+<details><summary>解答</summary><p>三重共通部分は12、24の二個なので、12+8+6−4−6−2+2=16個です。4の倍数を加えても2の倍数の集合は広がらないため、2または3だけを数えて12+8−4=16とできます。2と4の共通部分を積8の倍数とするのは誤りで、共通部分は4の倍数全体です。包除そのものより先に条件を整理すると手数を減らせます。</p></details></article>
+<article class="exercise"><h3>6．両立しない禁止条件を見分ける</h3><p>異なる札A,B,C,Dを四位置に並べます。Aは位置1と2を避け、Bは位置1を避けるとします。許される配置数を包除で求め、直接の場合分けでも確かめてください。</p>
+<details><summary>ヒント1</summary><p>E₁をAが位置1、E₂をAが位置2、E₃をBが位置1の配置にします。</p></details>
+<details><summary>ヒント2</summary><p>E₁∩E₂とE₁∩E₃は空です。E₂∩E₃ではA,Bを固定し残り二枚を並べます。</p></details>
+<details><summary>解答</summary><p>全体24、各禁止集合6です。E₁∩E₂はA一枚を二位置へ置けず0、E₁∩E₃は位置1へ二枚を置けず0、E₂∩E₃は残り二枚を並べる2通り、三重は0。従って24−18+2=8通りです。直接にはAは位置3か4の二択、Bは残った位置のうち位置1を除く二択、C,Dは二順序なので2×2×2=8です。二条件を固定したら必ず2!というわけではなく、固定の両立性が必要です。</p></details></article>
+<article class="exercise"><h3>7．可能な重なりを設計する</h3><p>全体12個、|A|=8、|B|=7、|C|=6、|A∩B|=5、|A∩C|=4、|B∩C|=3とします。三重共通部分tの可能な整数をすべて求めてください。さらに和集合を11個にする各領域の個数を設計してください。</p>
+<details><summary>ヒント1</summary><p>二重だけは5−t、4−t、3−t。単独だけと外側もtで表し、非負にします。</p></details>
+<details><summary>ヒント2</summary><p>三つの単独だけの個数はすべてt−1、外側は3−tになります。</p></details>
+<details><summary>解答</summary><p>和集合は8+7+6−5−4−3+t=9+t。Aだけ=8−5−4+t=t−1、Bだけ=7−5−3+t=t−1、Cだけ=6−4−3+t=t−1です。非負性よりt≥1。二重だけと外側12−(9+t)=3−tよりt≤3。従ってt=1,2,3です。これらでは全八領域が非負整数なので、それぞれ実現できます。和集合11にはt=2を選び、単独だけ各1、ABだけ3、ACだけ2、BCだけ1、三重2、外側1とします。合計12で、各集合と各共通部分を足し直して指定値へ戻ります。</p></details></article>
+<article class="exercise"><h3>8．「ちょうど固定」と「固定を含む」の誤診断</h3><p>四枚の札で元の位置をすべて避ける問題について、「ちょうど三枚固定の配置は零だから、三つの禁止集合の共通部分も零」とする説明は正しいでしょうか。共通部分の定義から説明し、正しい包除の結果と比べてください。</p>
+<details><summary>ヒント1</summary><p>E₁∩E₂∩E₃は、札1,2,3が固定されることを求めます。札4を動かす条件は付いているでしょうか。</p></details>
+<details><summary>ヒント2</summary><p>三枚固定なら残りも固定ですが、その一配置は共通部分から除かれません。</p></details>
+<details><summary>解答</summary><p>誤りです。三つの共通部分は「指定した三枚が固定」であり、「固定されるのはその三枚だけ」ではありません。残りも固定される一配置が入り、各三重共通部分は1通りです。正しくは24−4×6+6×2−4×1+1=9。三重を0へ変え他の項をそのまま使うと13となり、一要素の係数を1へ戻す仕組みを壊します。ちょうど三枚固定の零という命題自体は正しいですが、数える集合が違います。</p></details></article>
+<article class="exercise"><h3>9．列の長さを必要個数から逆算する</h3><p>R,G,Bすべてを使う長さnの列を少なくとも100種類作りたいとします。正の整数nの最小値を求め、最小性を説明してください。長さ5の個数は出現回数による別分類でも検算してください。</p>
+<details><summary>ヒント1</summary><p>n≥1では個数3ⁿ−3·2ⁿ+3です。n=4と5を調べます。</p></details>
+<details><summary>ヒント2</summary><p>長さ5の出現回数は3,1,1か2,2,1です。短い列の末尾にRを足すと長い列へ単射で送れます。</p></details>
+<details><summary>解答</summary><p>n=4では81−48+3=36、n=5では243−96+3=150なので候補は5です。すべての種類を使う列にRを一つ追加すれば同じ条件の長い列になり、異なる列は異なる列のままです。従って個数はnとともに減らず、n≤4では高々36。最小は5です。別分類では3,1,1型が、三回使う記号3通り×その位置C(5,3)=10通り×残る二記号2通り=60。2,2,1型が、一回使う記号3通り×その位置5通り×残り四位置のうち指定した一記号の二位置C(4,2)=6通り=90。合計150です。残る二記号は名前で区別されるので、最後の6をさらに2で割りません。</p></details></article>
 </section>
 
 <section id="inclusion-exclusion-reflection">

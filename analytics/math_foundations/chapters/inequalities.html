@@ -2,6 +2,8 @@
   <h2>不等式による評価と誤差の上限</h2>
   <p>二つの測定値にそれぞれ誤差があるとき、足した値の誤差はどこまで大きくなり得るでしょうか。個々の誤差が正か負か分からなくても、上限は知りたいものです。不等式は、答えをぴったり求める代わりに、答えが入る範囲を保証します。後の<a href="limits.html">極限</a>や<a href="approximation.html">近似</a>では、この「保証できる範囲」が中心になります。</p>
   <p>以下では通常の大小関係を持つ実数を扱います。不等式の両辺には同じ数を足せますが、掛ける場合は符号の確認が必要です。正の数なら向きは同じ、負の数なら向きは逆になります。また −3 &lt; 2 から 9 &lt; 4 は導けません。両辺の二乗が大小を保つのは、両辺が非負であるなど、適切な条件があるときです。</p>
+  <p>まず、符号が未知の誤差を足しても保証できる幅を作ります。次に、長方形の辺の長さを選んで面積を最大にする問題へ進みます。最後は「出力をこの幅へ入れたい」という注文から、入力の幅を逆に選びます。どの場合も、不等式を使う前に<strong>何を知っていて、どちら側から押さえたいか</strong>を決めることが出発点です。</p>
+  <p class="note">学習の目安は演習を含めて120–170分です。絶対値と誤差、平均の不等式と等号、繰返しと入力範囲の三回に分けても構いません。演習1–3は基本、4–7は評価の選択と条件の診断、8–10は精度の逆算と制約のある設計です。</p>
 </section>
 
 <section id="inequalities-triangle">
@@ -38,8 +40,19 @@
   </div>
 </section>
 
+<section id="inequalities-error-budget">
+  <h2>一次結合の誤差上限と精度の配分</h2>
+  <p>三角不等式を使う理由は、未知の符号を場合分けせずに済むことです。ただし、<strong>係数は誤差の大きさも拡大する</strong>ので、そのまま足すだけにはしません。以下は測定の性質を説明する自作模型で、誤差は指定した範囲を動けるものとし、確率分布や追加の関係は仮定しません。</p>
+  <div class="proof"><h3>例題：差を取る計算でも誤差が増えることがある</h3><p>長さX,Yを1.20cm、0.50cmと記録し、真の値との差をe<sub>1</sub>,e<sub>2</sub>としてX=1.20+e<sub>1</sub>、Y=0.50+e<sub>2</sub>と書きます。|e<sub>1</sub>|≤0.02cm、|e<sub>2</sub>|≤0.01cmだけが分かるとします。求めたい長さの一次結合D=2X−3Yは、記録値では2·1.20−3·0.50=0.90cmです。</p><p>真の値との差はD−0.90=2e<sub>1</sub>−3e<sub>2</sub>。符号が不明なので、差のまま打消しを期待せず、|D−0.90|≤|2e<sub>1</sub>|+|−3e<sub>2</sub>|=2|e<sub>1</sub>|+3|e<sub>2</sub>|≤0.04+0.03=0.07cmと評価します。従って0.83cm≤D≤0.97cmです。</p><p>上限0.07は実現できるでしょうか。e<sub>1</sub>=0.02、e<sub>2</sub>=−0.01なら2e<sub>1</sub>−3e<sub>2</sub>=0.07です。下端も符号を逆にすれば実現します。追加の情報なしで0.07より小さい幅を必ず保証することはできません。これを、この条件の下で<strong>鋭い上限</strong>と呼びます。</p></div>
+  <p>表でe<sub>2</sub>の符号を変えた二行を比べてください。元の誤差が同符号のときでなく、<strong>係数を掛けた後の二項</strong>が同符号のとき、三角不等式が等号になります。</p>
+  <div class="concept-table-wrap" tabindex="0" role="region" aria-label="符号による一次結合の誤差の比較"><table class="concept-table" id="inequalities-visual-weighted-errors" data-visual="inequalities-visual-weighted-errors"><caption>同じ記録値と同じ誤差上限で、符号だけを替えた四例。数値の単位はすべてcm。可能な誤差の端点の比較であり、確率や出現頻度を表さない。</caption><thead><tr><th scope="col">e<sub>1</sub></th><th scope="col">e<sub>2</sub></th><th scope="col">2e<sub>1</sub>−3e<sub>2</sub></th><th scope="col">真のD</th></tr></thead><tbody><tr><th scope="row">+0.02</th><td>+0.01</td><td>+0.01</td><td>0.91</td></tr><tr><th scope="row">+0.02</th><td>−0.01</td><td>+0.07</td><td>0.97</td></tr><tr><th scope="row">−0.02</th><td>+0.01</td><td>−0.07</td><td>0.83</td></tr><tr><th scope="row">−0.02</th><td>−0.01</td><td>−0.01</td><td>0.89</td></tr></tbody></table></div>
+  <p>逆向きに、Dの誤差を0.06cm以下にしたいとします。X,Yの誤差上限をr,sと設計するなら、2r+3s≤0.06が保証の条件です。同じ精度r=s=tなら5t≤0.06、つまりt≤0.012cm。Xをr=0.015cmまで測れるなら、残りは3s≤0.03からs≤0.01cmです。2r+3s≤0.06の範囲で、一方の誤差を小さくすれば他方の許容幅を広げられます。ただしrとsをそのまま交換してよいわけではありません。係数が大きいY側では同じ誤差の許容が、Dへより大きく響きます。</p>
+  <p>もしe<sub>1</sub>=e<sub>2</sub>という追加条件が本当に分かれば、Dの誤差は−e<sub>1</sub>へ簡単になり、さらに小さく押さえられます。三角不等式の保証は正しいままですが、追加条件を使わない分だけ広いことがあります。<strong>保証が正しいことと、その条件で最も狭いこと</strong>を区別します。</p>
+</section>
+
 <section id="inequalities-amgm">
   <h2>相加平均・相乗平均の不等式と等号条件</h2>
+  <p>誤差を上から押さえるだけでなく、これ以上小さくできない値を下から押さえたいこともあります。非負の二数 a、b の足し算の平均 (a+b)/2 を<strong>算術平均（相加平均）</strong>、積から作る平均 √(ab) を<strong>幾何平均（相乗平均）</strong>と呼びます。例えば1と4なら、算術平均は5/2、幾何平均は2です。次の不等式は、積を固定したとき、和をどこまで小さくできるかを教えます。</p>
   <div class="theorem">
     <h3>二数の相加平均・相乗平均の不等式</h3>
     <p>a、b が正の実数なら、(a + b)/2 ≥ √(ab) です。等号が成り立つのは、a = b のとき、そしてそのときに限ります。</p>
@@ -51,8 +64,16 @@
   <p>たとえば x &gt; 0 に対し、x と 1/x の積は 1 なので、x + 1/x ≥ 2 です。最小値 2 は x = 1 のときに実現します。下限を示しただけでは、その値を取れるかは未確定です。等号条件まで確認して初めて、最小値と言えます。前提 x &gt; 0 を落とすと、x = −1 では和は −2 となり、この評価は成り立ちません。</p>
 </section>
 
+<section id="inequalities-equality-design">
+  <h2>固定した和から積を評価し、等号を実現する</h2>
+  <p>相加平均・相乗平均の不等式は、積が分かれば和の下限を、和が分かれば積の上限を与えます。どちらの量を固定するかで、使う向きが変わります。a,bが非負なら証明の平方はそのまま使え、((a+b)/2)²≥abです。二乗する前に両辺が非負であることを確かめました。</p>
+  <div class="proof"><h3>例題：同じ周の長さで最大の面積を作る</h3><p>周の長さ20cmの長方形を作ります。辺をa,b cmとし、a,b&gt;0です。周の条件は2a+2b=20、従ってa+b=10。面積はA=ab cm²なので、5²=((a+b)/2)²≥ab、すなわちA≤25cm²です。等号条件a=bと和の条件からa=b=5。実際に一辺5cmの正方形を作れば周20cm、面積25cm²となり、上限を実現できます。</p><p>別の計算でも確かめられます。b=10−aを代入するとA=a(10−a)=25−(a−5)²。平方が非負だからA≤25で、平方が0となるa=5で等号です。「二辺が違う分」を表す平方が、面積の損失を測っています。たとえばa=3,b=7ならA=21で、最大からの差4は(3−5)²と一致します。</p><p>辺aに2≤a≤4という制限を追加したら、a=b=5は許されません。2≤a≤4では1≤5−a≤3なので、(a−5)²≥1。従ってA≤24で、a=4,b=6なら実現します。元の上限25は依然正しいですが、新しい制約下の最大値は24です。等号条件が許容範囲へ入るかまで調べる必要があります。</p></div>
+  <p>反対に最小面積はあるでしょうか。a,b&gt;0ならA&gt;0なので0は取りません。一方、任意の小さい正の数ηに対して0&lt;a&lt;1かつa&lt;η/10とすれば、b=10−a&gt;0で、A&lt;10a&lt;ηです。従って面積をいくらでも0に近くできても0にできず、最小値は存在しません。「A≥0という下からの保証」と「最小値0を取る」は異なります。辺0の退化した図形まで許せば、その別の条件では0を取れます。</p>
+</section>
+
 <section id="inequalities-bernoulli">
   <h2>ベルヌーイの不等式と帰納法</h2>
+  <p>毎回同じ倍率 1+x を掛ける変化を、n回繰り返したらどうなるでしょうか。実際の倍率は (1+x)ⁿ です。変化 x を単純にn回足した 1+nx と比べると、繰り返す掛け算の大きさに、扱いやすい下限を与えられます。</p>
   <div class="theorem">
     <h3>ベルヌーイの不等式</h3>
     <p>x ≥ −1 を実数、n ≥ 1 を整数とすると、(1 + x)ⁿ ≥ 1 + nx が成り立ちます。</p>
@@ -64,12 +85,25 @@
   <p>この証明で x ≥ −1 は、掛ける数の符号を保証しています。範囲外へそのまま広げると、たとえば x = −3、n = 3 では左辺は −8、右辺は −8 で等号ですが、x = −4、n = 3 では −27 ≥ −11 となり誤りです。一つの範囲外の例がうまくいっても、前提を外してよい証明にはなりません。</p>
 </section>
 
+<section id="inequalities-repeated-change">
+  <h2>反復倍率の評価と、下限の有効な範囲</h2>
+  <div class="proof"><h3>例題：増減の繰返しを一次の式で保証する</h3><p>量を一回ごとに2%増やす自作模型では、初めを1とした10回後の倍率は1.02<sup>10</sup>です。ベルヌーイの不等式でx=0.02、n=10を選べば1.02<sup>10</sup>≥1+10·0.02=1.20。従って増加は少なくとも20%です。「倍率は正確に1.20」でも「1.20以下」でもありません。二回の時点でも1.02²=1.0404&gt;1.04で、差はx²=0.0004から生じています。</p><p>一回ごとにtの割合を失う場合は0≤t≤1とし、x=−tを代入します。(1−t)<sup>n</sup>≥1−ntなので、失った割合1−(1−t)<sup>n</sup>はnt以下です。t=0.1、n=3なら残る倍率は0.9³=0.729≥0.7、失った割合は0.271≤0.3です。単純に毎回初期量の10%を引く計算より、実際の減少は小さくなります。</p><p>n=20,t=0.1では下限1−nt=−1になります。残る倍率は非負なので、−1以上という保証自体は正しくても粗く、0以上という当然の情報より弱いものです。この場合は二つを合わせて(1−t)<sup>n</sup>≥max(0,1−nt)と書けます。maxは二つのうち大きい方です。評価式が使えることと、欲しい精度に役立つことは別です。</p></div>
+</section>
+
 <section id="inequalities-error">
   <h2>誤差評価とε–δによる入力範囲の選択</h2>
   <p>x² を 4 に近づけたいとします。差を因数分解すると |x² − 4| = |x − 2||x + 2| です。|x − 2| が小さくても、もう一つの因子を放置しては評価が終わりません。まず |x − 2| &lt; 1 とすれば 1 &lt; x &lt; 3 となり、|x + 2| &lt; 5 が得られます。したがって |x² − 4| ≤ 5|x − 2| です。</p>
+  <p>例えば出力の誤差を0.1未満にしたいなら、入力を2から0.02未満の範囲に入れれば、5·0.02=0.1という評価を使えます。この例では0.02 &lt; 1なので、先に求めた係数5の条件も保たれます。一般には、先に指定される出力の許容誤差を ε、こちらが選ぶ入力の許容幅を δ と名付けます。</p>
   <p>ほしい誤差を任意の正の実数 ε とします。δ = min(1, ε/5)、つまり 1 と ε/5 の小さい方を選び、|x − 2| &lt; δ とすれば、|x − 2| &lt; 1 と 5|x − 2| &lt; ε が同時に成り立ちます。よって |x² − 4| &lt; ε です。先に因子を一定値で押さえ、次に誤差の要求へ合わせる。この二段階が、極限の議論の基本になります。</p>
 
   <figure class="concept-figure" id="inequalities-visual-two-bounds" data-visual="inequalities-visual-two-bounds"><svg class="concept-svg" viewBox="0 0 360 430" role="img" aria-labelledby="inequalities-visual-two-bounds-title inequalities-visual-two-bounds-desc"><title id="inequalities-visual-two-bounds-title">入力の許容区間を選ぶと像が出力誤差の帯に入る</title><desc id="inequalities-visual-two-bounds-desc">ε=2,δ=.4の例。先に|x−2|&lt;1で1&lt;x&lt;3を確保し、3&lt;x+2&lt;5からもう一つの因子|x+2|を5で押さえる。入力xは(1.6,2.4)で中心2。正の範囲で二乗した像は(2.56,5.76)となり、要求|x²−4|&lt;2の区間(2,6)へ入る。上下は入力と出力という別の量で縮尺も異なる。端点は含まない。</desc><defs><marker id="inequalities-visual-two-bounds-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--series-1)"/></marker></defs><text x="180" y="30" font-size="22" fill="var(--ink)" text-anchor="middle">入力幅を選び、出力誤差を抑える</text><text x="180" y="67" font-size="22" fill="var(--ink)" text-anchor="middle">入力 δ=min(1,2/5)=0.4</text><text x="180" y="101" font-size="22" fill="var(--ink)" text-anchor="middle">① |x−2|&lt;1 ⇒ 1&lt;x&lt;3</text><text x="180" y="135" font-size="22" fill="var(--ink)" text-anchor="middle">② 3&lt;x+2&lt;5 ⇒ |x+2|&lt;5</text><rect x="60" y="165" width="240" height="38" rx="0" fill="var(--surface-2)"/><rect x="132" y="169" width="96" height="30" rx="0" fill="var(--accent-wash)"/><line x1="45" y1="184" x2="315" y2="184" stroke="var(--ink-3)" stroke-width="2"/><circle cx="132" cy="184" r="6" fill="var(--surface)" stroke="var(--series-2)" stroke-width="3"/><circle cx="228" cy="184" r="6" fill="var(--surface)" stroke="var(--series-2)" stroke-width="3"/><circle cx="180" cy="184" r="4" fill="var(--ink)"/><text x="60" y="175" font-size="22" fill="var(--ink)" text-anchor="middle">1</text><text x="300" y="175" font-size="22" fill="var(--ink)" text-anchor="middle">3</text><text x="132" y="217" font-size="22" fill="var(--ink)" text-anchor="middle">1.6</text><text x="180" y="217" font-size="22" fill="var(--ink)" text-anchor="middle">2</text><text x="228" y="217" font-size="22" fill="var(--ink)" text-anchor="middle">2.4</text><path d="M180 230 L180 243" fill="none" stroke="var(--series-1)" stroke-width="2" marker-end="url(#inequalities-visual-two-bounds-arrow)"/><text x="180" y="271" font-size="22" fill="var(--ink)" text-anchor="middle">二乗後：|x²−4|&lt;2</text><rect x="60" y="315" width="240" height="38" rx="0" fill="var(--accent-wash)"/><rect x="93.6" y="320" width="192" height="28" fill="var(--series-2)" fill-opacity=".18"/><line x1="45" y1="333" x2="315" y2="333" stroke="var(--ink-3)" stroke-width="2"/><circle cx="60" cy="333" r="6" fill="var(--surface)" stroke="var(--series-1)" stroke-width="2.5"/><circle cx="300" cy="333" r="6" fill="var(--surface)" stroke="var(--series-1)" stroke-width="2.5"/><circle cx="93.6" cy="333" r="4.5" fill="var(--surface)" stroke="var(--series-2)" stroke-width="3"/><circle cx="285.6" cy="333" r="4.5" fill="var(--surface)" stroke="var(--series-2)" stroke-width="3"/><text x="93.6" y="307" font-size="22" fill="var(--ink)" text-anchor="middle">2.56</text><text x="285.6" y="307" font-size="22" fill="var(--ink)" text-anchor="middle">5.76</text><text x="60" y="379" font-size="22" fill="var(--ink)" text-anchor="middle">2</text><text x="180" y="379" font-size="22" fill="var(--ink)" text-anchor="middle">4</text><text x="300" y="379" font-size="22" fill="var(--ink)" text-anchor="middle">6</text><text x="180" y="420" font-size="22" fill="var(--ink)" text-anchor="middle">像の区間 ⊂ 目標の区間(2,6)</text></svg><figcaption>δ≤1 により上段の外側の帯 (1,3) に入り、①②から |x+2|&lt;5 が得られます。次に δ≤ε/5 と合わせて |x²−4|&lt;5δ≤ε。これが min の1と5の役割です。内側の端 1.6,2.4 を二乗すると、下段の像の端 2.56,5.76 です。これが目標の端2,6の内側にあると確認できます。ε=2での一例で、一般の δ=min(1,ε/5) の保証は本文の二段階評価から得ます。最も広い許容幅を求めた図ではありません。上下は異なる量・縮尺の数直線で、全て開区間です。</figcaption></figure>
+</section>
+
+<section id="inequalities-input-width">
+  <h2>入力の許容幅：十分な選択と最大の選択</h2>
+  <p>前節でδ=min(1,ε/5)を選んだのは、なるべく広いδを探すためではなく、二つの要求を同時に満たす分かりやすい選択を作るためです。ここでminは小さい方の値です。ε&gt;0なのでδ&gt;0で、どれほど小さい注文にも正の幅を返せます。δは先に与えられたεから選び、その後にその範囲の<strong>すべてのx</strong>で保証します。xごとにδを変えるのではありません。</p>
+  <div class="proof"><h3>例題：二乗の誤差をもう少し鋭く押さえる</h3><p>h=x−2と書きます。するとx²−4=(2+h)²−4=4h+h²=h(4+h)です。|h|&lt;δなら、|4+h|≤4+|h|から|x²−4|≤|h|(4+|h|)&lt;δ(4+δ)。従ってδ(4+δ)=εを満たす正のδを選べば保証できます。</p><p>δ²+4δ−ε=0を解くと、正の解はδ<sub>*</sub>=√(4+ε)−2です。ε&gt;0だから√(4+ε)&gt;2で、確かに正です。ε=0.1ならδ<sub>*</sub>は約0.02485で、前節の0.02より広い幅を使えます。これは丸めた0.02485を保証幅として選ぶという意味ではなく、正確な根号の式で選びます。</p><p>これより大きい幅δを選ぶと、x=2+δ<sub>*</sub>が|x−2|&lt;δを満たしてしまいます。その点ではx²−4=εなので、厳密な目標|x²−4|&lt;εに反します。従ってこの二乗の問題ではδ<sub>*</sub>が最大の対称な許容幅です。境界の点を含まない|x−2|&lt;δ<sub>*</sub>なら問題なく、境界で等号になることと矛盾しません。</p></div>
+  <p>どの問題でも最大幅を求める必要はありません。目的が「要求を満たす幅を一つ示すこと」なら、minを使った幅の方が計算も検証も簡単です。目的が「測定の手間を減らすため、可能な限り広い幅を知ること」なら、鋭さを調べる価値があります。最初に必要な結論を決めてから、評価の精密さを選びます。</p>
 </section>
 
 <details class="column" id="inequalities-column">
@@ -102,6 +136,13 @@
     <details><summary>ヒント2：二つの要求を同時に満たす</summary><p>|x + 1| &lt; 3 を使えます。δ は 1 以下、かつ ε/3 以下にします。</p></details>
     <details><summary>解答</summary><p>δ = min(1, ε/3) とします。ε &gt; 0 より δ &gt; 0 です。|x − 1| &lt; δ なら |x + 1| &lt; 3 なので、|x² − 1| ≤ 3|x − 1| &lt; 3δ ≤ ε です。入力の範囲を、任意に指定された正の誤差に合わせて選べました。</p></details>
   </article>
+  <article class="exercise"><h3>4．誤差の上限を求め、その鋭さを確かめる</h3><p>|e<sub>1</sub>|≤0.03、|e<sub>2</sub>|≤0.02という情報だけから、|e<sub>1</sub>+2e<sub>2</sub>|の最も小さい共通の上限を求めてください。その上限を実現する誤差も挙げてください。さらにe<sub>1</sub>=−2e<sub>2</sub>と分かったら、評価はどう変わりますか。</p><details><summary>ヒント1</summary><p>三角不等式では係数2も絶対値の外に出します。</p></details><details><summary>ヒント2</summary><p>二項が同符号になる端点を選ぶと上限を実現できます。追加条件がある場合は、先に式をまとめます。</p></details><details><summary>解答</summary><p>|e<sub>1</sub>+2e<sub>2</sub>|≤|e<sub>1</sub>|+2|e<sub>2</sub>|≤0.03+0.04=0.07です。e<sub>1</sub>=0.03、e<sub>2</sub>=0.02で等号になるので、全許容誤差に共通の上限をこれより小さくはできません。追加条件の下ではe<sub>1</sub>+2e<sub>2</sub>=0で、鋭い上限は0です。元の上限0.07も偽ではありませんが、既知の関係を使うと改善します。</p></details></article>
+  <article class="exercise"><h3>5．端点を二乗する方針を点検する</h3><p>|x−1|≤2から「−1≤x≤3だから1≤x²≤9」とした解答を診断し、x²が取り得る範囲を正しく求めてください。どこで大小を保つ条件を失いましたか。</p><details><summary>ヒント1</summary><p>区間−1≤x≤3の中にx=0は含まれていますか。</p></details><details><summary>ヒント2</summary><p>区間が0をまたぐので、二乗の最小は端点とは限りません。最大の絶対値も考えます。</p></details><details><summary>解答</summary><p>x=0でx²=0なので1≤x²は偽です。二乗が大小を保つのは非負の範囲であり、−1≤xの両辺へそのまま使えません。全区間で|x|≤3なので0≤x²≤9。0はx=0、9はx=3で取れます。さらに任意の0≤y≤9にはx=√y∈[0,3]を選べるので、取り得る範囲はちょうど[0,9]です。</p></details></article>
+  <article class="exercise"><h3>6．等号点を除いたときの最小値</h3><p>範囲を0&lt;x&lt;3に限ったとき、x+9/xには最小値がありますか。6という下からの保証は正しいか、6を取るか、それより大きい別の最小値があり得るかを分けて説明してください。</p><details><summary>ヒント1</summary><p>x+9/x=6+(x−3)²/xです。等号点x=3は許されません。</p></details><details><summary>ヒント2</summary><p>任意の許されたxに対し、y=(x+3)/2を選ぶとx&lt;y&lt;3です。二つの値の差を因数分解してください。</p></details><details><summary>解答</summary><p>相加平均・相乗平均から常に6以上ですが、x≠3なので実際は6より大きく、6は取りません。さらにy=(x+3)/2なら、(x+9/x)−(y+9/y)=(y−x)(9/(xy)−1)&gt;0です。x,y&gt;0かつxy&lt;9を使いました。従ってどのxからも、許容範囲内でもっと小さい値を作れるので、別の最小値もありません。たとえばx=2なら6.5ですが、y=2.5なら6.1と小さくなります。下から押さえられることだけで最小値の存在は言えません。</p></details></article>
+  <article class="exercise"><h3>7．反復する減少を評価する</h3><p>初めの量を1として毎回2%ずつ減らす自作模型で、8回後の量と失った割合を、ベルヌーイの不等式で評価してください。「8回で正確に16%を失う」という説明は正しいでしょうか。2回の場合を計算して点検してください。</p><details><summary>ヒント1</summary><p>残る倍率は(1−0.02)⁸です。x=−0.02を選びます。</p></details><details><summary>ヒント2</summary><p>残りの下限から1を引くのではなく、1から残りを引いて損失の上限へ直します。</p></details><details><summary>解答</summary><p>0.98⁸≥1−8·0.02=0.84で、残る割合は少なくとも84%、失った割合は1−0.98⁸≤0.16、すなわち高々16%です。正確に16%ではありません。2回なら残り0.98²=0.9604、損失0.0396で、単純に2·0.02=0.04とした値より小さくなります。毎回の2%はその時点の残量に対する割合だからです。不等式の向きと、どの量に対する割合かを確認します。</p></details></article>
+  <article class="exercise"><h3>8．分母も押さえて入力幅を選ぶ</h3><p>ε&gt;0が与えられたとき、|x−2|&lt;δならx≠0かつ|1/x−1/2|&lt;εとなるδ&gt;0を一つ選んでください。分母が0へ近付かないことを先に保証してください。</p><details><summary>ヒント1</summary><p>|x−2|&lt;1なら1&lt;x&lt;3です。差は|x−2|/(2|x|)になります。</p></details><details><summary>ヒント2</summary><p>分母2|x|を2より大きくできるので、|x−2|/2で押さえられます。</p></details><details><summary>解答</summary><p>δ=min(1,2ε)とします。正の二数の小さい方なのでδ&gt;0。|x−2|&lt;δ≤1ならx&gt;1で、x≠0です。また|1/x−1/2|=|x−2|/(2|x|)≤|x−2|/2&lt;δ/2≤ε。先にδ≤1で分母を押さえ、その後δ≤2εで誤差を制御しました。入力を小さくするという説明だけで分母の条件を省かないことが要点です。</p></details></article>
+  <article class="exercise"><h3>9．誤差を二つの測定へ配分する</h3><p>D=3X−2Yを計算し、X,Yの誤差をそれぞれ|e<sub>1</sub>|≤r、|e<sub>2</sub>|≤sとします。誤差の間に追加の関係はありません。Dの誤差を0.04以下へ保証したいとき、(a) r=s=tの場合の最大t、(b) r=2sの場合の最大sと対応するrを求めてください。</p><details><summary>ヒント1</summary><p>最悪の誤差は3r+2sです。引き算の符号は、誤差が打ち消すことを保証しません。</p></details><details><summary>ヒント2</summary><p>(a)は5t≤0.04、(b)は3·2s+2s≤0.04を解きます。大きくできない理由には端点の誤差を使います。</p></details><details><summary>解答</summary><p>|3e<sub>1</sub>−2e<sub>2</sub>|≤3r+2sで、e<sub>1</sub>=r、e<sub>2</sub>=−sにより等号になります。従って保証の必要十分条件は3r+2s≤0.04です。(a) t≤0.04/5=0.008なので最大t=0.008。(b) 8s≤0.04なので最大s=0.005、そのときr=0.01です。検算は3·0.01+2·0.005=0.04。どちらも等号の誤差が可能なので、それぞれの制約内でこれ以上は緩められません。</p></details></article>
+  <article class="exercise"><h3>10．長方形の制約と指定面積を同時に満たす</h3><p>周24cmの長方形の辺をa,b cmとし、2≤a≤5とします。面積の最大値・最小値と、それを取る辺を求めてください。さらに面積32cm²を作る許容された辺をすべて求めてください。</p><details><summary>ヒント1</summary><p>b=12−a、面積はa(12−a)=36−(a−6)²です。</p></details><details><summary>ヒント2</summary><p>2≤a≤5では1≤6−a≤4です。面積32には(a−6)²=4が必要です。</p></details><details><summary>解答</summary><p>1≤(a−6)²≤16なので20≤A≤35です。最大35cm²はa=5,b=7、最小20cm²はa=2,b=10で実現します。32cm²には(a−6)²=4よりa=4または8ですが、8は条件外。従ってa=4,b=8だけです。周は2(4+8)=24、面積は4·8=32と検算できます。正方形a=b=6は元の周の条件では最大でも、この許容範囲には入っていません。</p></details></article>
 </section>
 
 <section id="inequalities-reflection">
@@ -110,5 +151,7 @@
     <li>不等式の両辺に数を掛けるとき、なぜその数の符号を確認しますか。</li>
     <li>最小値の証明に、下からの評価と等号条件の両方が必要なのはなぜですか。</li>
     <li>δ を二つの数の最小値で選ぶのは、どの二つの要求を満たすためですか。</li>
+    <li>誤差の上限が正しいことと、今ある情報の下で鋭いことはどう違いますか。</li>
+    <li>十分な入力幅を一つ選ぶ問題と、最大の入力幅を探す問題では、必要な検証がどう違いますか。</li>
   </ol>
 </section>
