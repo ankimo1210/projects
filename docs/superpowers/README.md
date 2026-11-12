@@ -14,6 +14,12 @@
 | 2026-09-28 | 仕様 | [次の統合候補の個別調査](specs/2026-09-28-next-consolidation-candidates.md) |
 | 2026-09-27 | 計画 | [ワークスペース整理計画](plans/2026-09-27-workspace-cleanup.md) |
 
+## quant-agent-benchmark
+
+| 日付 | 種別 | 文書 |
+|---|---|---|
+| 2026-11-01 | 仕様案 | [コーディングモデル評価計画の Opus レビュー引き継ぎ](specs/2026-11-01-coding-model-evaluation-opus-review-handover.md) |
+
 ## market-research
 
 | 日付 | 種別 | 文書 |

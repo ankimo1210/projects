@@ -18,9 +18,16 @@ project index is in the root [`README.md`](README.md).
   within the project directory you are working on.
 - **Paths:** the repository lives at `/home/kazumasa/projects` in Ubuntu WSL.
   Run Git and build commands in WSL with Linux paths. For Windows-side file
-  links or operations, use `//wsl.localhost/Ubuntu/home/kazumasa/projects/...`
+  operations, use `\\wsl.localhost\Ubuntu\home\kazumasa\projects\...`
   (or the corresponding UNC path for a worktree), and verify the target exists.
   Do not combine Windows drive paths with WSL paths.
+- **Showing paths to the user:** whenever you display a WSL file or directory
+  path in console output, always write it in Windows UNC form, e.g.
+  `\\wsl.localhost\Ubuntu\home\kazumasa\projects\_data\megatech-tracker\hyperscalers.html`,
+  never as `/home/kazumasa/...`. This includes `path:line` references and
+  worktree paths. Convert with `wslpath -w` and check that the file exists.
+  The only exception is a command the user will run inside WSL, which keeps
+  its Linux paths.
 - **Do not inspect by default:** `_data/`, `_logs/`, `_archive/`,
   `_scratch/`, `_docs/` (ephemeral notes), generated outputs
   (`models/*/`, `reports/`, `**/dist/`, `**/build/`), lock files, and
