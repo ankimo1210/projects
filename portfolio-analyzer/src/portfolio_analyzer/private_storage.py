@@ -134,3 +134,41 @@ def refresh_inputs(source: Path, cache: Path, *, connection_root: Path) -> bool:
         _atomic_bytes(cache / name, payload)
     _atomic_bytes(state_file, (json.dumps({"schema_version": 1, "files": hashes}) + "\n").encode())
     return True
+
+
+def publish_reports(source: Path, cache: Path, *, connection_root: Path) -> bool:
+    """Copy complete generated reports back to Drive, preserving newer shared work."""
+    source, cache = source.resolve(), cache.resolve()
+    connection_root = connection_root.resolve()
+    destination = source.parent / "reports"
+    reports = cache.parent / "reports"
+    if not destination.is_relative_to(connection_root):
+        raise ValueError("Drive connection point must contain the report directory")
+    if destination.is_relative_to(reports) or reports.is_relative_to(destination):
+        raise ValueError("Drive and local reports must be separate directories")
+    if not source.is_dir():
+        if connection_root.is_dir():
+            raise ValueError("Input directory is missing from the connected Drive")
+        return False
+
+    required = [
+        reports / "portfolio-dashboard.html",
+        reports / "artifact.json",
+        reports / "pl-daily/latest.html",
+    ]
+    if not all(path.is_file() for path in required):
+        raise ValueError("A generated report is missing; shared reports not updated")
+    files = [*required, *sorted((reports / "pl-daily").glob("pl-*.html"))]
+    pending = []
+    for path in files:
+        payload = path.read_bytes()
+        target = destination / path.relative_to(reports)
+        if target.is_file():
+            if target.read_bytes() == payload:
+                continue
+            if target.stat().st_mtime_ns > path.stat().st_mtime_ns:
+                raise ValueError("A shared report is newer; reports not overwritten")
+        pending.append((target, payload))
+    for target, payload in pending:
+        _atomic_bytes(target, payload)
+    return True

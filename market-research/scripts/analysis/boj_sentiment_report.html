@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>日銀の言葉を、段落から読む — __REPORT_YEAR__</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Public+Sans:wght@400;500;700&family=Zen+Old+Mincho:wght@700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/*__TOKENS__*/
+.topline{display:flex;justify-content:space-between;align-items:center;padding-top:26px;gap:16px;border-bottom:1px solid var(--rule);padding-bottom:16px}
+.topline a{font-size:var(--text-small);color:var(--ink-2)}
+button,input,select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--rule-2);border-radius:7px}
+button{cursor:pointer;padding:8px 14px}button:hover{background:var(--surface-2)}
+.topline button{font-size:var(--text-small);padding:5px 12px}.mast{padding-top:46px}
+h1{font-size:clamp(36px,5.9vw,62px);line-height:1.3}.lede{max-width:780px}
+.notice{border-left:3px solid var(--accent);padding:7px 0 7px 18px;margin-top:26px;max-width:800px;font-size:var(--text-small);color:var(--ink-2)}
+.strip{margin-top:26px}.strip .v{font-family:var(--mono);font-size:32px}.strip .k{font-family:var(--sans);letter-spacing:0}
+section{padding-top:48px}.section-intro{max-width:760px;color:var(--ink-2)}
+.legend{font-family:var(--sans);margin:18px 0}.dot{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:7px}
+.hawk{background:var(--series-1)}.dove{background:var(--series-2)}.neutral{background:var(--rule)}
+.meeting-chart{display:grid;gap:9px;margin:20px 0}.meeting-row{display:grid;grid-template-columns:118px 1fr 220px;align-items:center;gap:18px;width:100%;text-align:left;padding:13px 15px;border:1px solid var(--rule);background:var(--surface)}
+.meeting-row[aria-pressed="true"]{outline:2px solid var(--accent);outline-offset:1px}.meeting-row .date{font:var(--text-small) var(--mono)}
+.stack{display:flex;height:19px;border-radius:3px;overflow:hidden;background:var(--surface-2)}
+.stack>span{min-width:0;display:block}.chart-values{font-size:var(--text-label);text-align:right;font-variant-numeric:tabular-nums}
+.explorer{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r-card);padding:24px;margin-top:24px}
+.filters{display:grid;grid-template-columns:1fr 1.2fr 1fr 1.2fr;gap:14px}.filters label{font-size:var(--text-label);color:var(--ink-2);display:grid;gap:7px}
+.filters select,.filters input[type="search"]{width:100%;min-width:0;padding:9px 10px;font-size:var(--text-small)}
+.search-row{display:flex;align-items:end;gap:18px;margin-top:16px}.search-row>label:first-child{display:grid;gap:7px;flex:1;font-size:var(--text-label)}
+.search-row input[type="search"]{padding:10px;width:100%}.check-label{display:flex;gap:8px;align-items:center;padding-bottom:8px;font-size:var(--text-small)}
+input[type="checkbox"]{accent-color:var(--accent);width:17px;height:17px}.result-meta{display:flex;gap:16px;justify-content:space-between;align-items:center;margin-top:18px;color:var(--ink-2);font-size:var(--text-small)}
+.result-meta p{margin:0}.link-btn{border:0;text-decoration:underline;text-underline-offset:4px;padding:4px 0;color:var(--accent);font-size:var(--text-small)}
+.meeting-source{font-size:var(--text-small);display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:15px;color:var(--ink-3)}
+.paragraphs{margin-top:24px;display:grid;gap:18px}.paragraph{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r-card);padding:24px 28px;border-left:4px solid var(--rule)}
+.paragraph[data-label="hawkish"]{border-left-color:var(--series-1)}.paragraph[data-label="dovish"]{border-left-color:var(--series-2)}
+.para-head{display:flex;gap:10px 20px;align-items:center;justify-content:space-between;flex-wrap:wrap}.para-id{color:var(--ink-3);font:var(--text-label) var(--mono)}
+.para-section{font-size:var(--text-label);color:var(--ink-3);margin-top:7px}.badges{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.badge{font-size:var(--text-label);font-weight:700;border:1px solid var(--rule-2);border-radius:var(--r-chip);padding:2px 11px;color:var(--ink);background:var(--surface-3)}
+.badge.review{border-style:dashed}.ja{font-size:17px;line-height:1.95;margin:18px 0 20px;overflow-wrap:anywhere}
+.probabilities{display:flex;flex-wrap:wrap;gap:8px 22px;font-size:var(--text-small);font-variant-numeric:tabular-nums;color:var(--ink-2);margin-top:10px}
+.probabilities b{font-family:var(--mono);font-weight:500;color:var(--ink)}.probabilities .dot{height:8px;width:8px;margin-right:6px}
+.score-label{font-size:var(--text-label);color:var(--ink-3);margin:0}.prob-bar{height:7px;margin-top:8px;max-width:430px}
+.para-actions{display:flex;justify-content:space-between;align-items:start;gap:18px;margin-top:20px;border-top:1px solid var(--rule);padding-top:14px}
+details{min-width:0}summary{cursor:pointer;font-size:var(--text-small);color:var(--ink-2)}.translation{max-width:760px;font:var(--text-small)/1.8 var(--sans);color:var(--ink-2);overflow-wrap:anywhere;margin:14px 0 0}
+.context-button{flex:none;font-size:var(--text-small);padding:5px 12px}.unscored{font-size:var(--text-small);color:var(--ink-3)}
+.empty{padding:38px;text-align:center;border:1px dashed var(--rule-2);border-radius:var(--r-card)}
+.method{border-top:1px solid var(--rule);margin-top:50px;padding-top:28px}.method>summary{font-size:20px;font-weight:700;color:var(--ink)}
+.method p,.method li{font-size:var(--text-small);max-width:800px}.method code{overflow-wrap:anywhere;white-space:normal}
+.method ul{max-width:800px}.source-table table{font-size:var(--text-small)}.source-table td a{white-space:normal}.source-table td{vertical-align:top}
+.hash{font-family:var(--mono);font-size:var(--text-caption);white-space:normal;overflow-wrap:anywhere;max-width:360px}
+.probe-list{display:grid;gap:10px}.probe{padding:12px 16px;border:1px solid var(--rule);border-radius:8px;background:var(--surface);font-size:var(--text-small)}
+.probe p{margin:0 0 6px}.probe .meta{color:var(--ink-3);font-size:var(--text-label)}
+dialog{width:min(860px,calc(100% - 32px));max-height:90vh;padding:26px;background:var(--ground);color:var(--ink);border:1px solid var(--rule-2);border-radius:var(--r-card)}
+dialog::backdrop{background:var(--ink);opacity:.45}.dialog-head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:22px}
+.dialog-head h2{font-size:24px}.dialog-head button{flex:none;white-space:nowrap}.context-item{padding:18px 20px;margin:14px 0;background:var(--surface);border:1px solid var(--rule);border-radius:8px}
+.context-item.current{border:2px solid var(--accent)}.context-item p{margin:10px 0}.context-item .ja{font-size:16px}.context-label{font-size:var(--text-label);color:var(--ink-3)}
+footer{font-family:var(--sans);font-size:var(--text-small);margin-top:44px}.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.report-nav{display:flex;flex-wrap:wrap;gap:8px 18px}
+.reading-filter:not([hidden]){display:grid;gap:7px;font-size:var(--text-label);color:var(--ink-2)}
+.reading-filter select{padding:9px 10px;font-size:var(--text-small)}
+.reading-note{margin-top:16px;padding:14px 16px;border-left:3px solid var(--rule-2);background:var(--surface-3);border-radius:0 8px 8px 0}
+.reading-note[data-status="changed"]{border-left-color:var(--accent)}
+.reading-note p{margin:5px 0 0;font-size:var(--text-small);overflow-wrap:anywhere}
+.reading-note .evidence{color:var(--ink-3)}
+.comparison-list{display:grid;gap:12px}
+.comparison{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r-card)}
+.comparison summary{padding:14px 18px;font-weight:700;color:var(--ink)}
+.comparison-body{padding:0 18px 18px}
+.comparison-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.comparison-side{padding:14px 16px;background:var(--surface-3);border-radius:8px}
+.comparison-side p{margin:6px 0 12px;font-size:var(--text-small);overflow-wrap:anywhere}
+.comparison-body>p{margin:12px 0 0;color:var(--ink-2);font-size:var(--text-small)}
+@media(max-width:720px){
+  #reading-review table{min-width:0}
+  #reading-review th,#reading-review td{padding:8px 7px;font-size:var(--text-caption)}
+  #reading-review th{white-space:normal}
+}
+@media(max-width:600px){.comparison-grid{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:760px){.meeting-row{grid-template-columns:105px 1fr;gap:8px 12px}.chart-values{grid-column:2;text-align:left}.filters{grid-template-columns:1fr 1fr}.search-row{align-items:stretch;flex-direction:column;gap:10px}.check-label{padding:0}.paragraph{padding:20px}.ja{font-size:16px}.explorer{padding:18px}.para-actions{flex-direction:column;gap:12px}.strip{grid-template-columns:repeat(3,1fr)}.strip>div{padding:16px 12px}.strip .v{font-size:26px}.strip .n{font-size:var(--text-caption)}}
+@media(max-width:420px){.strip{grid-template-columns:1fr}.strip>div{display:grid;grid-template-columns:1fr auto;gap:0 12px}.strip .v{grid-column:2;grid-row:1/3;margin-top:0;align-self:center}.strip .n{margin-top:3px}.filters{gap:12px 8px}.meeting-row{padding:12px;grid-template-columns:96px 1fr}.meeting-row .date{font-size:var(--text-label)}.chart-values{font-size:var(--text-caption)}.result-meta{align-items:start}.para-head{gap:8px}.para-id{font-size:var(--text-caption)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="topline"><nav class="report-nav" aria-label="レポート内の移動"><a id="reading-link" href="#reading-review" hidden>補正と前回比較 ↓</a><a href="#explore">段落を読む ↓</a></nav><button id="theme" type="button" aria-label="表示テーマを切り替える">明暗を切替</button></div>
+<header class="mast">
+  <div class="eyebrow"><b>BOJ / __REPORT_YEAR__</b><span>金融政策決定会合「主な意見」</span><span>BERT 試験分類</span></div>
+  <h1>日銀の言葉を、<br>段落から読む。<span class="sub">タカ派・ハト派・中立。モデルはどの意見を、どう読んだか。</span></h1>
+  <p class="lede" id="finding"></p>
+  <div class="notice">これは米国・カナダの金融政策文書で学習したModernBERT（BERT系）を、日銀の公式英訳に適用した試作です。<strong>日銀での分類精度は未検証</strong>で、簡単な否定表現の誤判定も確認しました。高いモデル出力でも、原文を読んで点検してください。</div>
+  <div class="strip" id="metrics"></div>
+</header>
+
+<section aria-labelledby="overview-title">
+  <h2 id="overview-title">会合ごとの、モデルの読み</h2>
+  <p class="section-intro">「金融政策運営に関する意見」だけを集計。各段落の最大出力のクラスを1件と数えています。バーを選ぶと、その会合の原文に移れます。</p>
+  <div class="legend"><span><i class="dot dove"></i>ハト派</span><span><i class="dot neutral"></i>中立</span><span><i class="dot hawk"></i>タカ派</span><span>右欄は段落数（ハト / 中立 / タカ）</span></div>
+  <div id="meeting-chart" class="meeting-chart" aria-label="会合別の3分類の構成比"></div>
+  <p class="score-label">意見は匿名の要約です。段落数は委員の人数や票数を表しません。経済・物価の段落と政府意見は、この図に含めていません。</p>
+  <div class="note" id="reading-example"></div>
+</section>
+
+<section id="reading-review" aria-labelledby="reading-title" hidden>
+  <h2 id="reading-title">BERT判定を日本語原文で補正</h2>
+  <p class="section-intro" id="reading-summary"></p>
+  <p class="section-intro">原文判定はCodexによる読解の試案です。政策金利の方向と時期、否定がかかる範囲、現在の金融環境を点検しました。金利の方向を決めにくい段落や、資産処分を扱う段落は保留しています。</p>
+  <p class="section-intro" id="reading-criteria" hidden></p>
+  <div class="tw" tabindex="0" aria-label="会合ごとの補正前後">
+    <table>
+      <caption>金融政策運営の段落数</caption>
+      <thead><tr><th scope="col">会合終了日</th><th scope="col">BERT（ハト / 中立 / タカ）</th><th scope="col">原文判定（ハト / 中立 / タカ / 保留）</th><th scope="col">補正</th></tr></thead>
+      <tbody id="reading-table"></tbody>
+    </table>
+  </div>
+  <p><button id="show-corrections" type="button">補正した段落を見る</button></p>
+  <h3>前回会合と同じ論点を読む</h3>
+  <p class="section-intro">隣り合う会合から、同じ論点を扱う匿名の意見の例を選びました。話者の対応は不明です。日付を開くと、その段落と前後の原文を読めます。</p>
+  <div id="comparisons" class="comparison-list"></div>
+</section>
+
+<section id="explore" aria-labelledby="explore-title">
+  <h2 id="explore-title">原文で、判定を確かめる</h2>
+  <p class="section-intro">日本語原文を表示し、評価に使った公式英訳も開けます。「前後を読む」は、絞り込みに隠れた段落も含めて表示します。</p>
+  <div class="explorer">
+    <div class="filters">
+      <label>会合終了日<select id="meeting"><option value="all">すべての会合</option></select></label>
+      <label>文書の区分<select id="section"><option value="policy">金融政策運営</option><option value="economy">経済・物価</option><option value="government">政府意見（分類対象外）</option><option value="all">すべての区分</option></select></label>
+      <label>モデルの判定<select id="label"><option value="all">すべて</option><option value="hawkish">タカ派</option><option value="dovish">ハト派</option><option value="neutral">中立</option></select></label>
+      <label>並び順<select id="sort"><option value="document">原文の順序</option><option value="hawkish">タカ派の出力が高い順</option><option value="dovish">ハト派の出力が高い順</option><option value="margin">判定が拮抗する順</option></select></label>
+    </div>
+    <div class="search-row">
+      <label>原文・英訳から探す<input id="search" type="search" placeholder="例：利上げ、慎重、賃金"></label>
+      <label class="reading-filter" id="reading-control" hidden>原文による補正
+        <select id="reading-status">
+          <option value="all">すべて</option>
+          <option value="reviewed">点検した段落</option>
+          <option value="changed">判定を補正</option>
+          <option value="held">保留</option>
+        </select>
+      </label>
+      <label class="check-label"><input id="review" type="checkbox">判定が拮抗した段落だけ</label>
+    </div>
+    <div class="result-meta"><p id="result-count" role="status" aria-live="polite"></p><button class="link-btn" id="reset" type="button">条件をリセット</button></div>
+    <div id="meeting-source" class="meeting-source"></div>
+  </div>
+  <div id="paragraphs" class="paragraphs"></div>
+</section>
+
+<details class="method" id="method">
+  <summary>分類の読み方・モデル・出典</summary>
+  <h3>3分類と「拮抗」は別の指標</h3>
+  <p>タカ派は金融引締めを支持・示唆する表現、ハト派は金融緩和や引締めへの慎重姿勢を支持・示唆する表現として学習されたクラスです。中立には方向性のない表現だけでなく、単体では周辺文脈なしに方向を決められない文も含まれます。景気の良い・悪いを測る一般的な感情分析とは異なります。</p>
+  <p>各段落は独立して評価し、表示する判定は3クラスのsoftmax出力が最大のクラスです。数値はモデル出力の構成比で、判定の正解確率や利上げ確率ではありません。上位2クラスの差が20ポイント未満なら「拮抗」と表示します。この閾値は点検用の任意設定で、中立への置き換えはしません。</p>
+  <h3>今回はどのBERTを使ったか</h3>
+  <p><a id="model-link" target="_blank" rel="noopener">金融政策向けのModernBERT 3分類モデル（cbsent）</a>を使用。米国・カナダの中央銀行文書での追加事前学習と、FOMC・カナダのラベル付きデータでの学習を経たモデルです。BERTへの入力は日本銀行の公式英訳です。今回の分析では追加学習をしていません。</p>
+  <p>モデルカードにはFOMCのテスト496文における3 seed平均のweighted F1が0.658と記載されています。これは日銀での性能や、この固定revision単体の正解率を示しません。日銀向けの正解ラベルは未作成のため、このレポートには日銀での正解率を載せていません。条件節、否定、据え置きと将来の利上げが併存する文は、特に原文と照らしてください。</p>
+  <p>学習・評価は文単位ですが、このレポートでは箇条書きの段落単位に適用しています。1段落の中で異なる方向の文が混在する場合の妥当性も未検証です。前後を開く操作は読者の点検用で、モデルの入力に前後の段落を追加するものではありません。</p>
+  <p>固定revision：<code id="revision"></code><br><span id="run-meta"></span></p>
+  <h3>簡単な例文での動作点検</h3>
+  <p>以下は本分析用に作成した5例です。「期待」は通常の読解に基づく点検用ラベルで、独立した性能評価ではありません。</p>
+  <div id="probes" class="probe-list"></div>
+  <p>初期候補のECB向けFinBERTは「利上げすべき」を中立とし、CPUでも同じ判定を再現したため採用を見送りました。上の5例ではModernBERTが4例で期待と一致しましたが、「利上げは時期尚早」という否定表現は誤分類しました。5例の一致を性能保証には使いません。学習元のモデルカードも否定文への弱さを報告しています。</p>
+  <h3>対象と集計</h3>
+  <p id="document-range"></p>
+  <p>会合別の割合は金融政策運営の段落数を分母とします。委員別・票数別・発言時間別の重み付けはしていません。将来の政策予測、市場の事前予想との差、当時利用可能だったモデルによる売買検証は対象にしていません。</p>
+  <h3>公表日と原資料</h3>
+  <p>会合終了日と公表日を分けています。本文の取得元は日本銀行です。<a id="boj-index" target="_blank" rel="noopener">__REPORT_YEAR__年の公表一覧</a>から取得しています。</p>
+  <div class="tw source-table"><table><caption>原資料と取得済み原本のハッシュ</caption><thead><tr><th>会合終了日 / 公表日</th><th>原資料</th><th>SHA-256</th></tr></thead><tbody id="sources"></tbody></table></div>
+  <details style="margin-top:22px"><summary>モデルファイルと実行記録</summary><div id="model-files"></div></details>
+</details>
+<footer>出典：日本銀行「金融政策決定会合における主な意見」を加工して作成。分類と集計は本レポートの試算であり、日本銀行による評価ではありません。<br>保存HTMLに原文・英訳・分類結果・出典を埋め込んでいます。閲覧時にモデルの再実行は行いません。</footer>
+</div>
+<dialog id="context"><div class="dialog-head"><h2>前後の段落を読む</h2><button id="close-context" type="button">閉じる</button></div><div id="context-body"></div></dialog>
+<script id="boj-data" type="application/json">__SNAPSHOT__</script>
+<script>
+"use strict";
+const D=JSON.parse(document.getElementById("boj-data").textContent);
+const $=id=>document.getElementById(id);
+const N={dovish:"ハト派",hawkish:"タカ派",neutral:"中立"};
+const C={dovish:"dove",hawkish:"hawk",neutral:"neutral"};
+const S={policy:"金融政策運営",economy:"経済・物価",government:"政府意見"};
+const order=["dovish","neutral","hawkish"];
+const pct=n=>(n*100).toFixed(1)+"%";
+const mk=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;};
+const link=(text,url)=>{const a=mk("a","",text);a.href=url;a.target="_blank";a.rel="noopener";return a;};
+const policy=D.paragraphs.filter(p=>p.section==="policy");
+const paragraphsById = new Map(D.paragraphs.map(p => [p.id, p]));
+const readings = new Map((D.reading_review?.readings ?? []).map(entry => [entry.id, entry]));
+const counts=Object.fromEntries(Object.keys(N).map(k=>[k,policy.filter(p=>p.label===k).length]));
+const latestMeeting = D.meetings.at(-1);
+const period = D.meetings[0].date + "〜" + latestMeeting.date;
+$("finding").textContent=`${period}の金融政策運営に関する${policy.length}段落をBERTで評価すると、タカ派 ${counts.hawkish}件、ハト派 ${counts.dovish}件、中立 ${counts.neutral}件という結果になりました。最新会合分の公表日は${latestMeeting.published_on}です。以下で、その判定を原文まで辿れます。`;
+$("document-range").textContent = `${period}の公表済み${D.meetings.length}会合について、「主な意見」の日本語・公式英訳を取得しました。箇条書き1項目を1段落とし、節・小見出しの位置・段落順を対応づけています。経済・物価と金融政策運営を分類し、政府意見は原文と英訳だけを表示します。`;
+$("boj-index").href = D.index.url;
+const metrics=[["対象の会合",String(D.meetings.length),period],["主な集計の段落",String(policy.length),"金融政策運営に関する意見"],["判定が拮抗",String(policy.filter(p=>p.review).length),"政策段落・上位2分類の差が20pt未満"]];
+for(const [k,v,n]of metrics){const box=mk("div");box.append(mk("span","k",k),mk("span","v",v),mk("span","n",n));$("metrics").append(box);}
+for(const m of D.meetings){const o=mk("option","",m.date);o.value=m.date;$("meeting").append(o);}
+$("meeting").value=D.meetings.at(-1).date;
+function bar(probabilities,cls="stack"){
+  const b=mk("div",cls);b.setAttribute("aria-hidden","true");
+  for(const k of order){const segment=mk("span",C[k]);segment.style.width=(100*probabilities[k])+"%";b.append(segment);}return b;
+}
+for(const m of D.summary){
+  const b=mk("button","meeting-row");b.type="button";b.dataset.meeting=m.meeting;
+  const text=`${m.meeting}：ハト派 ${m.counts.dovish}件、中立 ${m.counts.neutral}件、タカ派 ${m.counts.hawkish}件。合計 ${m.n}段落`;
+  b.title=text;b.setAttribute("aria-label",text);b.setAttribute("aria-pressed","false");
+  const props=Object.fromEntries(order.map(k=>[k,m.counts[k]/m.n]));
+  b.append(mk("span","date",m.meeting),bar(props),mk("span","chart-values",`${m.counts.dovish} / ${m.counts.neutral} / ${m.counts.hawkish}　(n=${m.n})`));
+  b.addEventListener("click", () => {
+    setFilters(m.meeting);
+    $("explore").scrollIntoView({behavior: "smooth"});
+  });
+  $("meeting-chart").append(b);
+}
+function output(p,parent){
+  if(!p.probabilities){parent.append(mk("p","unscored","政府出席者の意見のため、分類・主集計の対象外です。"));return;}
+  parent.append(mk("p","score-label","モデルの3分類出力"));
+  const values=mk("div","probabilities");
+  for(const k of ["hawkish","dovish","neutral"]){const span=mk("span");span.append(mk("i","dot "+C[k]),document.createTextNode(N[k]+" "),mk("b","",pct(p.probabilities[k])));values.append(span);}
+  parent.append(values,bar(p.probabilities,"stack prob-bar"));
+}
+function badges(p){const b=mk("div","badges");b.append(mk("span","badge",p.label?"BERT "+N[p.label]:"分類対象外"));if(p.review)b.append(mk("span","badge review","判定が拮抗"));return b;}
+function translation(p){const details=mk("details");details.append(mk("summary","",p.probabilities?"評価に使った公式英訳":"公式英訳（参考）"),mk("p","translation",p.en));return details;}
+
+function readingStatus(p) {
+  const entry = readings.get(p.id);
+  if (!entry) return "unreviewed";
+  if (entry.label === null) return "held";
+  return entry.label === p.label ? "same" : "changed";
+}
+
+function appendReading(p, parent) {
+  const entry = readings.get(p.id);
+  if (!entry) return;
+  const status = readingStatus(p);
+  const box = mk("div", "reading-note");
+  box.dataset.status = status;
+  const label = entry.label === null ? "保留" : N[entry.label];
+  const title = status === "changed" ? "補正 " + label : "原文判定 " + label;
+  box.append(
+    mk("strong", "", title),
+    mk("p", "evidence", "「" + entry.evidence + "」"),
+    mk("p", "", entry.note)
+  );
+  parent.append(box);
+}
+
+function comparisonSide(p, excerpt, side) {
+  const box = mk("div", "comparison-side");
+  const date = mk("button", "context-button", side + " " + p.meeting);
+  date.type = "button";
+  date.addEventListener("click", () => context(p));
+  const entry = readings.get(p.id);
+  let labels = "BERT " + N[p.label];
+  if (entry) labels += " ／ 原文判定 " + (entry.label === null ? "保留" : N[entry.label]);
+  box.append(date, mk("p", "", "「" + excerpt + "」"), mk("div", "score-label", labels));
+  return box;
+}
+
+function showReadingReview(review) {
+  $("reading-review").hidden = false;
+  $("reading-link").hidden = false;
+  $("reading-control").hidden = false;
+  const checked = policy.filter(p => readings.has(p.id));
+  const changed = checked.filter(p => readingStatus(p) === "changed").length;
+  const held = checked.filter(p => readingStatus(p) === "held").length;
+  $("reading-summary").textContent = review.reviewed_meetings.length + "会合の" +
+    checked.length + "段落を点検し、" + changed + "件を補正、" + held + "件を保留しました。";
+
+  if (review.criteria) {
+    $("reading-criteria").hidden = false;
+    $("reading-criteria").textContent = Object.values(review.criteria).join(" ");
+  }
+  const labels = order;
+  for (const date of review.reviewed_meetings) {
+    const rows = checked.filter(p => p.meeting === date);
+    const modelCounts = labels.map(label => rows.filter(p => p.label === label).length);
+    const readingCounts = [...labels, null].map(
+      label => rows.filter(p => readings.get(p.id).label === label).length
+    );
+    const row = mk("tr");
+    row.append(
+      mk("td", "num", date),
+      mk("td", "num", modelCounts.join(" / ")),
+      mk("td", "num", readingCounts.join(" / ")),
+      mk("td", "num", rows.filter(p => readingStatus(p) === "changed").length + "件")
+    );
+    $("reading-table").append(row);
+  }
+  review.comparisons.forEach((pair, index) => {
+    const details = mk("details", "comparison");
+    details.open = index === 0;
+    const body = mk("div", "comparison-body");
+    const grid = mk("div", "comparison-grid");
+    grid.append(
+      comparisonSide(paragraphsById.get(pair.previous_id), pair.previous_evidence, "前回"),
+      comparisonSide(paragraphsById.get(pair.current_id), pair.current_evidence, "今回")
+    );
+    body.append(grid, mk("p", "", pair.note));
+    details.append(mk("summary", "", pair.topic), body);
+    $("comparisons").append(details);
+  });
+}
+
+function context(p){
+  const rows=D.paragraphs.filter(r=>r.meeting===p.meeting),i=rows.findIndex(r=>r.id===p.id);
+  $("context-body").replaceChildren();
+  for(let j=Math.max(0,i-1);j<=Math.min(rows.length-1,i+1);j++){
+    const r=rows[j],box=mk("div","context-item"+(j===i?" current":""));
+    box.append(mk("div","context-label",`${j===i?"選択中":j<i?"直前":"直後"} · ${r.id} · ${S[r.section]}`),badges(r),mk("p","ja",r.ja));
+    output(r, box);
+    appendReading(r, box);
+    box.append(translation(r));
+    $("context-body").append(box);
+  }
+  $("context").showModal();
+}
+function paragraph(p){
+  const article=mk("article","paragraph");article.id="para-"+p.id;article.dataset.label=p.label||"unscored";
+  const head=mk("div","para-head");head.append(mk("span","para-id",p.id),badges(p));
+  article.append(head,mk("div","para-section",S[p.section]+(p.subsection?" / "+p.subsection:"")),mk("p","ja",p.ja));
+  output(p, article);
+  appendReading(p, article);
+  const actions=mk("div","para-actions"),button=mk("button","context-button","前後を読む");button.type="button";button.addEventListener("click",()=>context(p));
+  actions.append(translation(p),button);article.append(actions);return article;
+}
+function render(){
+  const meeting = $("meeting").value;
+  const section = $("section").value;
+  const label = $("label").value;
+  const query = $("search").value.trim().toLocaleLowerCase();
+  const review = $("review").checked;
+  const reading = $("reading-status").value;
+  const rows = D.paragraphs.filter(p =>
+    (meeting === "all" || p.meeting === meeting) &&
+    (section === "all" || p.section === section) &&
+    (label === "all" || p.label === label) &&
+    (!review || p.review) &&
+    (!query || (p.ja + " " + p.en).toLocaleLowerCase().includes(query)) &&
+    (reading === "all" || (reading === "reviewed" && readings.has(p.id)) ||
+      readingStatus(p) === reading)
+  );
+  const sort=$("sort").value;
+  if(sort==="margin")rows.sort((a,b)=>(a.margin??2)-(b.margin??2));
+  else if(sort!=="document")rows.sort((a,b)=>(b.probabilities?.[sort]??-1)-(a.probabilities?.[sort]??-1));
+  $("paragraphs").replaceChildren(...rows.map(paragraph));
+  if(!rows.length)$("paragraphs").append(mk("p","empty","条件に合う段落はありません。絞り込み条件を変えてください。"));
+  $("result-count").textContent=`${rows.length} 段落を表示 / 原文 ${D.paragraphs.length} 段落`;
+  $("meeting-source").replaceChildren();
+  const m=D.meetings.find(m=>m.date===meeting);
+  if(m)$("meeting-source").append(mk("span","",`公表日 ${m.published_on}`),link("日銀の日本語原文 ↗",m.documents.ja.url),link("公式英訳 ↗",m.documents.en.url));
+  document.querySelectorAll(".meeting-row").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.meeting===meeting)));
+}
+function setFilters(meeting, reading = "all") {
+  $("meeting").value = meeting;
+  $("section").value = "policy";
+  $("label").value = "all";
+  $("sort").value = "document";
+  $("search").value = "";
+  $("review").checked = false;
+  $("reading-status").value = reading;
+  render();
+}
+
+for(const id of ["meeting","section","label","sort","review","reading-status"])$(id).addEventListener("change",render);
+$("search").addEventListener("input",render);
+$("reset").addEventListener("click", () => setFilters(D.meetings.at(-1).date));
+$("show-corrections").addEventListener("click", () => {
+  setFilters("all", "changed");
+  $("explore").scrollIntoView({behavior: "smooth"});
+});
+$("close-context").addEventListener("click",()=>$("context").close());
+$("theme").addEventListener("click",()=>{const dark=document.documentElement.dataset.theme?document.documentElement.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;document.documentElement.dataset.theme=dark?"light":"dark";});
+$("model-link").href="https://huggingface.co/"+D.model.id;
+const example = D.paragraphs.find(p => p.id === "2025-09-19-018") ??
+  D.paragraphs.find(p => readingStatus(p) === "changed");
+if(example){
+  const b=mk("button","context-button","この段落と前後を読む");b.type="button";b.addEventListener("click",()=>context(example));
+  $("reading-example").append(mk("span","lab","原文判定と見比べる例"),mk("p","",`「${example.ja}」という${example.meeting}会合の段落を、モデルは${N[example.label]}（出力 ${pct(example.probabilities[example.label])}）と分類しました。原文と前後の段落から判定を点検できます。`),b);
+} else $("reading-example").hidden = true;
+$("revision").textContent=D.model.revision;
+$("run-meta").textContent=`${D.model.architecture} / Transformers ${D.model.transformers} / PyTorch ${D.model.torch} / ${D.model.device} / ${D.model.dtype}。最大入力 ${D.model.max_tokens} tokens（上限 ${D.model.input_limit}）。入力の切り捨てなし。`;
+for(const p of D.probes){const box=mk("div","probe");box.append(mk("p","",p.text),mk("span","meta",`期待 ${N[p.expected]} → モデル ${N[p.label]}`));$("probes").append(box);}
+for(const m of D.meetings){for(const lang of ["ja","en"]){const doc=m.documents[lang],tr=mk("tr");const date=mk("td","",`${m.date} / ${m.published_on}`),source=mk("td"),hash=mk("td","hash",doc.sha256);source.append(link(lang==="ja"?"日本語原文":"公式英訳",doc.url));tr.append(date,source,hash);$("sources").append(tr);}}
+const records=mk("div");records.append(mk("p","",`推論日時（UTC） ${D.generated_at}。元コードcommit ${D.git_commit}。基準出力を計算したスクリプトのSHA-256 ${D.script_sha256}。`));
+for(const f of D.model.files)records.append(mk("p","hash",`${f.file} / ${f.bytes.toLocaleString()} bytes / SHA-256 ${f.sha256}`));$("model-files").append(records);
+if (D.reading_review) showReadingReview(D.reading_review);
+render();
+</script>
+</body>
+</html>

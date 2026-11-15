@@ -1,0 +1,882 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ハイパースケーラー・トラッカー</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Public+Sans:wght@400;500;700&family=Zen+Old+Mincho:wght@700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/*__TOKENS__*/
+
+/* ---------- tracker: denser than a report ---------- */
+body{line-height:1.7;padding:0 24px 80px}
+.wrap{max-width:1240px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px 24px;flex-wrap:wrap;padding:34px 0 14px}
+.top h1{font-size:clamp(26px,3.2vw,36px);margin:6px 0 0}
+.asof{font-family:var(--mono);font-size:var(--text-caption);color:var(--ink-3);text-align:right;line-height:1.8}
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;align-items:center;position:sticky;top:0;z-index:5;
+  background:var(--ground);padding:10px 0;border-bottom:1px solid var(--rule)}
+nav.tabs a{font-size:var(--text-small);text-decoration:none;color:var(--ink-2);padding:5px 13px;
+  border-radius:var(--r-chip);border:1px solid var(--rule-2)}
+nav.tabs a.co{font-family:var(--mono);font-size:var(--text-label);padding:5px 10px}
+nav.tabs a.on{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+nav.tabs .gap{width:10px}
+section{padding:34px 0 0}
+h2{font-size:clamp(21px,2.3vw,27px)}
+.lead{color:var(--ink-2);margin:8px 0 0;max-width:var(--measure)}
+figure{margin:18px 0 0;padding:20px 22px 14px}
+.figsub{margin-bottom:10px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.grid2 figure{margin-top:16px}
+@media (max-width:900px){.grid2{grid-template-columns:1fr}}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px}
+.chip{font-family:var(--mono);font-size:var(--text-label);line-height:1.6;padding:2px 10px;border:1px solid var(--rule-2);
+  border-radius:var(--r-chip);background:none;color:var(--ink-2);cursor:pointer}
+.chip.on{border-color:var(--ink);color:var(--ink);font-weight:600}
+.chip i{display:inline-block;width:14px;height:4px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.banner{display:block;margin:22px 0 0;padding:14px 18px;background:var(--surface);border:1px solid var(--rule);
+  border-left:3px solid var(--accent-soft);border-radius:var(--r-card);color:var(--ink);text-decoration:none;font-size:var(--text-small)}
+.banner b{font-weight:700}
+.banner .go{color:var(--accent);white-space:nowrap}
+.strip{margin-top:20px}
+.strip .v{font-size:30px;margin-top:8px}
+.strip .v small{font-size:15px;font-weight:600;margin-left:4px}
+.tw{margin-top:18px}
+table{font-size:var(--text-label)}
+th,td{padding:8px 10px}
+th{white-space:normal;line-height:1.4;vertical-align:bottom}
+td.l,th.l{text-align:left}
+td .sub{display:block;font-size:var(--text-caption);color:var(--ink-3);line-height:1.4}
+tr.go{cursor:pointer}
+tr.go:hover td{background:var(--surface-3)}
+th.sort{cursor:pointer;user-select:none}
+th.sort.on{color:var(--ink)}
+.muted{color:var(--ink-3)}
+.caveat{font-size:var(--text-label);color:var(--ink-3);line-height:1.75;margin:10px 0 0;max-width:880px}
+.note{max-width:none}
+footer{margin-top:56px}
+footer li{margin:6px 0;padding-left:16px}
+footer ul{max-width:none;margin:8px 0}
+footer li::before{top:.9em;width:6px}
+.hit{cursor:crosshair}
+.sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:7px;vertical-align:baseline}
+.sw.o{border-radius:50%}
+.chip i.o{width:9px;height:9px;border-radius:50%}
+nav.tabs a.co .sw{width:8px;height:8px;margin-right:5px}
+nav.tabs a.co.on .sw{box-shadow:0 0 0 1.5px var(--ground)}
+h3{margin:34px 0 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow"><b>HYPERSCALER TRACKER</b><span>試作</span></div>
+      <h1>ハイパースケーラーとネオクラウドのクラウド・受注残・設備投資</h1>
+    </div>
+    <div class="asof" id="asof"></div>
+  </header>
+  <nav class="tabs" id="tabs"></nav>
+  <main id="view"></main>
+  <footer id="foot"></footer>
+</div>
+<div id="tip" role="status"></div>
+
+<script id="data" type="application/json">/*__DATA__*/null</script>
+<script>
+"use strict";
+const D = JSON.parse(document.getElementById("data").textContent);
+const CO = Object.fromEntries(D.companies.map(c => [c.ticker, c]));
+// Each company keeps its color from the megatech tracker (Oracle takes Apple's slot).
+const CAT = Object.fromEntries(D.companies.map(c => [c.ticker, `var(--${c.color})`]));
+const sw = t => `<i class="sw" style="background:${CAT[t]}"></i>`;
+// The five hyperscalers and the GPU clouds; each view but the company pages takes one group.
+const HS = D.companies.filter(c => c.group === "hyper");
+const NEO = D.companies.filter(c => c.group === "neo");
+// The next results date, or the last one when Yahoo has not moved on yet.
+function nextOf(c) {
+  const last = c.events[c.events.length - 1];
+  if (c.next_earnings && (!last || c.next_earnings > last.date)) return {date: c.next_earnings, done: false, estimate: c.next_earnings_estimate};
+  return last ? {date: last.date, done: true} : null;
+}
+const MILLION = 1e6;
+
+/* ---------- formatting ---------- */
+const MINUS = "−";
+const sgn = v => (v > 0 ? "+" : v < 0 ? MINUS : "");
+const fmtPct = (v, n = 1) => v == null ? "—" : sgn(v) + Math.abs(v * 100).toFixed(n) + "%";
+const fmtShare = (v, n = 1) => v == null ? "—" : (v * 100).toFixed(n) + "%";
+const fmtMillion = v => v == null ? "—" : (v < 0 ? MINUS : "") + Math.round(Math.abs(v) / MILLION).toLocaleString("en-US");
+// Market cap always reads in trillion dollars so a cross-company column (the
+// comparison table) doesn't mix units the way the adaptive fmtMoney would.
+const fmtCap = v => v == null ? "—" : (v < 0 ? MINUS : "") + (Math.abs(v) / 1e12).toFixed(2) + "Tドル";
+const fmtMoney = v => {
+  if (v == null) return "—";
+  const a = Math.abs(v), sign = v < 0 ? MINUS : "";
+  // Billion is the natural middle step so a near-trillion figure (payer capex)
+  // reads as "691.0Bドル" instead of an unwieldy 6-digit million count.
+  if (a >= 1e12) return sign + (a / 1e12).toFixed(2) + "Tドル";
+  if (a >= 1e9) return sign + (a / 1e9).toFixed(1) + "Bドル";
+  return fmtMillion(v) + "Mドル";
+};
+const fmtX = v => v == null ? "—" : v.toFixed(1) + "倍";
+const fmtPrice = v => v == null ? "—" : "$" + v.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2});
+const fmtMD = s => s ? (+s.slice(5, 7)) + "/" + (+s.slice(8, 10)) : "—";
+const ms = s => Date.parse(s + "T00:00:00Z");
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+
+/* ---------- DOM & SVG helpers (from the claude-report skeleton) ---------- */
+const SVGNS = "http://www.w3.org/2000/svg";
+const CSSATTR = new Set(["fill", "stroke", "font-family"]);
+const el = (t, a = {}) => {
+  const e = document.createElementNS(SVGNS, t);
+  for (const k in a) {
+    const v = String(a[k]);
+    if (CSSATTR.has(k) && v.indexOf("var(") >= 0) e.style.setProperty(k, v); else e.setAttribute(k, a[k]);
+  }
+  return e;
+};
+const txt = (x, y, s, a = {}) => { const t = el("text", {x, y, "font-size": 12, ...a}); t.textContent = s; return t; };
+const h = html => { const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstElementChild; };
+
+const tip = document.getElementById("tip");
+function showTip(text, e) {
+  tip.textContent = text; tip.style.opacity = 1;
+  const w = tip.offsetWidth, hh = tip.offsetHeight;
+  let x = e.clientX + 14, y = e.clientY - hh - 12;
+  if (x + w > innerWidth - 8) x = e.clientX - w - 14;
+  if (y < 8) y = e.clientY + 18;
+  tip.style.left = x + "px"; tip.style.top = y + "px";
+}
+const hideTip = () => { tip.style.opacity = 0; };
+function bind(node, text) {
+  node.addEventListener("pointerenter", e => showTip(text, e));
+  node.addEventListener("pointermove", e => showTip(text, e));
+  node.addEventListener("pointerleave", hideTip);
+  node.classList.add("hit");
+}
+
+/* ---------- charts ---------- */
+let DRAWS = [];
+function chart(host, draw) {
+  const run = () => { host.innerHTML = ""; draw(host, Math.max(320, host.clientWidth)); };
+  DRAWS.push(run); run();
+  return run;
+}
+let resizeTimer;
+addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => DRAWS.forEach(f => f()), 150); });
+
+function niceTicks(lo, hi, n = 4) {
+  if (!(hi > lo)) hi = lo + (Math.abs(lo) || 1);
+  const step0 = (hi - lo) / n, mag = Math.pow(10, Math.floor(Math.log10(step0))), err = step0 / mag;
+  const step = (err >= 7.5 ? 10 : err >= 3.5 ? 5 : err >= 1.5 ? 2 : 1) * mag;
+  const out = [];
+  for (let v = Math.floor(lo / step) * step; v <= Math.ceil(hi / step) * step + step * 1e-9; v += step) out.push(+v.toFixed(10));
+  return out;
+}
+function timeTicks(t0, t1) {
+  const days = (t1 - t0) / 864e5, out = [];
+  const d = new Date(t0); d.setUTCDate(1); d.setUTCHours(0, 0, 0, 0);
+  if (days <= 45) {
+    const w = new Date(t0); w.setUTCHours(0, 0, 0, 0);
+    while (w.getUTCDay() !== 1) w.setUTCDate(w.getUTCDate() + 1);
+    for (; +w <= t1; w.setUTCDate(w.getUTCDate() + 7)) out.push([+w, (w.getUTCMonth() + 1) + "/" + w.getUTCDate()]);
+    return out;
+  }
+  const every = days <= 120 ? 1 : days <= 420 ? 3 : 12;
+  if (every === 12) d.setUTCMonth(0);
+  for (; +d <= t1; d.setUTCMonth(d.getUTCMonth() + every)) {
+    if (+d < t0) continue;
+    const m = d.getUTCMonth() + 1;
+    out.push([+d, every === 12 ? String(d.getUTCFullYear()) : (m === 1 ? d.getUTCFullYear() + "/1" : m + "月")]);
+  }
+  return out;
+}
+
+/* Line chart. cfg: {x:[ms], series:[{name,values,color,width,dash,opacity,label,points}], yfmt,
+   height, yZero, ref, tip(i), markers:[{x, text}], rightPad} */
+function lineChart(host, W, cfg) {
+  const H = cfg.height || 280, m = {l: 58, r: cfg.rightPad ?? 70, t: 14, b: cfg.markers ? 40 : 28};
+  const xs = cfg.x, n = xs.length, iw = W - m.l - m.r, ih = H - m.t - m.b;
+  let lo = Infinity, hi = -Infinity;
+  for (const s of cfg.series) for (const v of s.values) if (v != null && isFinite(v)) { lo = Math.min(lo, v); hi = Math.max(hi, v); }
+  if (cfg.yZero) lo = Math.min(lo, 0);
+  if (cfg.ref != null) { lo = Math.min(lo, cfg.ref); hi = Math.max(hi, cfg.ref); }
+  const ticks = niceTicks(lo, hi, 4); lo = ticks[0]; hi = ticks[ticks.length - 1];
+  const x0 = xs[0], x1 = xs[n - 1];
+  const X = v => m.l + (x1 === x0 ? iw / 2 : (v - x0) / (x1 - x0) * iw);
+  const Y = v => m.t + (1 - (v - lo) / (hi - lo)) * ih;
+  const svg = el("svg", {viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img", "aria-label": cfg.label || ""});
+  for (const t of ticks) {
+    svg.append(el("line", {x1: m.l, x2: m.l + iw, y1: Y(t), y2: Y(t), stroke: "var(--grid)", "stroke-width": 1}));
+    svg.append(txt(m.l - 8, Y(t) + 4, cfg.yfmt(t), {"text-anchor": "end", fill: "var(--ink-3)"}));
+  }
+  if (cfg.ref != null) svg.append(el("line", {x1: m.l, x2: m.l + iw, y1: Y(cfg.ref), y2: Y(cfg.ref), stroke: "var(--rule-2)", "stroke-width": 1}));
+  const xt = cfg.xticks ? cfg.xticks : timeTicks(x0, x1);
+  for (const [v, lab] of xt) {
+    const px = X(v), anchor = px > m.l + iw - 24 ? "end" : px < m.l + 24 ? "start" : "middle";
+    svg.append(txt(px, H - (cfg.markers ? 22 : 8), lab, {"text-anchor": anchor, fill: "var(--ink-3)"}));
+  }
+  const labels = [];
+  for (const s of cfg.series) {
+    let d = "", pen = false, lastI = -1;
+    s.values.forEach((v, i) => {
+      if (v == null || !isFinite(v)) { pen = false; return; }
+      d += (pen ? "L" : "M") + X(xs[i]).toFixed(1) + "," + Y(v).toFixed(1); pen = true; lastI = i;
+    });
+    svg.append(el("path", {d, fill: "none", stroke: s.color, "stroke-width": s.width || 2, "stroke-dasharray": s.dash || "none",
+      "stroke-linejoin": "round", "stroke-linecap": "round", opacity: s.opacity ?? 1}));
+    // quarterly series can have lone quarters (a recast segment), which a path alone would not show
+    if (s.points) s.values.forEach((v, i) => { if (v != null && isFinite(v)) svg.append(el("circle", {cx: X(xs[i]), cy: Y(v), r: 2.5, fill: s.color, opacity: s.opacity ?? 1})); });
+    if (s.label && lastI >= 0) labels.push({y: Y(s.values[lastI]), x: X(xs[lastI]), text: s.label, strong: s.strong, key: s.swatch ? s.color : null, dash: s.dash, opacity: s.opacity ?? 1});
+  }
+  // direct labels at the right end, pushed apart so they never collide
+  labels.sort((a, b) => a.y - b.y);
+  for (let i = 1; i < labels.length; i++) labels[i].y = Math.max(labels[i].y, labels[i - 1].y + 15);
+  for (const L of labels) {
+    if (L.key && L.dash) svg.append(el("line", {x1: L.x + 6, x2: L.x + 17, y1: L.y, y2: L.y, stroke: L.key, "stroke-width": 2, "stroke-dasharray": "3 2"}));
+    else if (L.key) svg.append(el("circle", {cx: L.x + 12, cy: L.y, r: 4, fill: L.key, opacity: L.opacity}));
+    svg.append(txt(L.x + (L.key ? 20 : 8), L.y + 4, L.text, {fill: L.strong ? "var(--ink)" : "var(--ink-2)", "font-weight": L.strong ? 600 : 400}));
+  }
+  if (cfg.markers) {
+    for (const mk of cfg.markers) {
+      if (mk.x < x0 || mk.x > x1) continue;
+      const cx = X(mk.x), y = m.t + ih + 6;
+      const p = el("path", {d: `M${cx - 5},${y + 9}L${cx},${y}L${cx + 5},${y + 9}Z`, fill: "var(--ink-3)"});
+      const hit = el("rect", {x: cx - 8, y: y - 2, width: 16, height: 14, fill: "transparent"});
+      bind(hit, mk.text);
+      svg.append(p, hit);
+    }
+  }
+  if (cfg.tip) {
+    const cross = el("line", {y1: m.t, y2: m.t + ih, stroke: "var(--ink-3)", "stroke-width": 1, opacity: 0});
+    const dots = cfg.series.filter(s => s.dot !== false).map(s => { const c = el("circle", {r: 4, fill: s.color, stroke: "var(--surface)", "stroke-width": 2, opacity: 0}); return [s, c]; });
+    const over = el("rect", {x: m.l, y: m.t, width: iw, height: ih, fill: "transparent"});
+    over.classList.add("hit");
+    over.addEventListener("pointermove", e => {
+      const r = svg.getBoundingClientRect(), px = (e.clientX - r.left) * (W / r.width);
+      const target = x0 + (px - m.l) / iw * (x1 - x0);
+      let a = 0, b = n - 1;
+      while (b - a > 1) { const mid = (a + b) >> 1; if (xs[mid] < target) a = mid; else b = mid; }
+      const i = Math.abs(xs[a] - target) <= Math.abs(xs[b] - target) ? a : b;
+      cross.setAttribute("x1", X(xs[i])); cross.setAttribute("x2", X(xs[i])); cross.setAttribute("opacity", 1);
+      for (const [s, c] of dots) {
+        const v = s.values[i];
+        if (v == null) { c.setAttribute("opacity", 0); continue; }
+        c.setAttribute("cx", X(xs[i])); c.setAttribute("cy", Y(v)); c.setAttribute("opacity", s.opacity ?? 1);
+      }
+      showTip(cfg.tip(i), e);
+    });
+    over.addEventListener("pointerleave", () => { cross.setAttribute("opacity", 0); dots.forEach(([, c]) => c.setAttribute("opacity", 0)); hideTip(); });
+    svg.append(cross, ...dots.map(([, c]) => c), over);
+  }
+  host.append(svg);
+}
+
+/* Bar chart over categories. cfg: {cats, series:[{name,values,color}], stacked, yfmt, tip(i), height} */
+function barChart(host, W, cfg) {
+  const H = cfg.height || 240, m = {l: 58, r: 12, t: 12, b: 28};
+  const n = cfg.cats.length, iw = W - m.l - m.r, ih = H - m.t - m.b;
+  let lo = 0, hi = 0;
+  for (let i = 0; i < n; i++) {
+    if (cfg.stacked) {
+      let pos = 0, neg = 0;
+      for (const s of cfg.series) { const v = s.values[i] || 0; if (v >= 0) pos += v; else neg += v; }
+      hi = Math.max(hi, pos); lo = Math.min(lo, neg);
+    } else for (const s of cfg.series) { const v = s.values[i]; if (v != null) { hi = Math.max(hi, v); lo = Math.min(lo, v); } }
+  }
+  const ticks = niceTicks(lo, hi, 4); lo = ticks[0]; hi = ticks[ticks.length - 1];
+  const Y = v => m.t + (1 - (v - lo) / (hi - lo)) * ih;
+  const svg = el("svg", {viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img"});
+  for (const t of ticks) {
+    svg.append(el("line", {x1: m.l, x2: m.l + iw, y1: Y(t), y2: Y(t), stroke: t === 0 ? "var(--rule-2)" : "var(--grid)", "stroke-width": 1}));
+    svg.append(txt(m.l - 8, Y(t) + 4, cfg.yfmt(t), {"text-anchor": "end", fill: "var(--ink-3)"}));
+  }
+  const band = iw / n, k = cfg.stacked ? 1 : cfg.series.length;
+  const bw = Math.max(2, Math.min(28, (band * 0.72 - 2 * (k - 1)) / k));
+  const every = Math.ceil(n / Math.max(1, Math.floor(iw / 64)));
+  // rounded only at the data end; square at the baseline
+  const bar = (x, y0, y1, w, color) => {
+    const top = Math.min(y0, y1), bot = Math.max(y0, y1), r = Math.min(4, w / 2, bot - top);
+    const d = y1 < y0
+      ? `M${x},${bot}V${top + r}Q${x},${top} ${x + r},${top}H${x + w - r}Q${x + w},${top} ${x + w},${top + r}V${bot}Z`
+      : `M${x},${top}V${bot - r}Q${x},${bot} ${x + r},${bot}H${x + w - r}Q${x + w},${bot} ${x + w},${bot - r}V${top}Z`;
+    return el("path", {d, fill: color});
+  };
+  for (let i = 0; i < n; i++) {
+    const cx = m.l + band * (i + 0.5);
+    const g = el("g");
+    if (cfg.stacked) {
+      let pos = 0;
+      const live = cfg.series.filter(s => (s.values[i] || 0) > 0);
+      live.forEach((s, j) => {
+        const v = s.values[i];
+        const gap = pos > 0 ? 2 : 0;
+        const y0 = Y(pos) - gap, y1 = Y(pos + v);
+        if (y0 - y1 > 0.5) g.append(j === live.length - 1 ? bar(cx - bw / 2, y0, y1, bw, s.color) : el("rect", {x: cx - bw / 2, y: y1, width: bw, height: y0 - y1, fill: s.color}));
+        pos += v;
+      });
+    } else {
+      cfg.series.forEach((s, j) => {
+        const v = s.values[i];
+        if (v == null) return;
+        const x = cx - (k * bw + 2 * (k - 1)) / 2 + j * (bw + 2);
+        g.append(bar(x, Y(0), Y(v), bw, s.color));
+      });
+    }
+    const hit = el("rect", {x: cx - band / 2, y: m.t, width: band, height: ih, fill: "transparent"});
+    if (cfg.tip) bind(hit, cfg.tip(i));
+    g.append(hit);
+    svg.append(g);
+    if (i % every === (n - 1) % every) svg.append(txt(cx, H - 8, cfg.cats[i], {"text-anchor": "middle", fill: "var(--ink-3)"}));
+  }
+  host.append(svg);
+}
+
+/* ---------- shared pieces ---------- */
+const legend = items => `<div class="legend">${items.map(([name, color, kind]) =>
+  `<span><i class="${kind === "sq" ? "sq" : ""}" style="background:${color}${kind === "dash" ? ";background:none;border-top:2px dashed " + color + ";height:0" : ""}"></i>${esc(name)}</span>`).join("")}</div>`;
+// "2026年4–6月" -> "26/4–6"; "2025年12月–2026年2月" -> "25/12–2"
+const qShort = label => label ? label.replace(/^(\d{4})年(\d+)月?–(?:\d{4}年)?(\d+)月$/, (_, y, a, b) => `${y.slice(2)}/${a}–${b}`) : "";
+const yfmtMillion = v => fmtMillion(v);
+const yfmtPct = v => (v * 100).toFixed(0) + "%";
+
+/* ---------- hyperscaler data helpers ---------- */
+const BILLION = 1e9;
+const fmtB = v => v == null ? "—" : (v < 0 ? MINUS : "") + (Math.abs(v) / BILLION).toLocaleString("en-US", {minimumFractionDigits: 1, maximumFractionDigits: 1});
+// decimals only where the ticks need them (the neoclouds' quarters are tenths of a billion)
+const yfmtB = v => (v / BILLION).toLocaleString("en-US", {maximumFractionDigits: 3});
+const fmtYears = v => v == null ? "—" : v.toFixed(1) + "年";
+const CLOUD = HS.filter(c => c.cloud_name);
+const BACKLOG = HS.filter(c => c.rpo_last);
+// Calendar quarters (a fiscal quarter counts where its middle falls), the last 20.
+const CALQ = [...new Set(D.companies.flatMap(c => c.quarters.map(q => q.cal_q)))].sort().slice(-20);
+const qOf = (c, cq) => c.quarters.find(q => q.cal_q === cq) || null;
+const qLab = cq => cq.slice(2).replace("Q", "/Q");
+// the last 20 calendar quarters any of `cos` reports (the neoclouds start in 2024)
+const quartersOf = cos => [...new Set(cos.flatMap(c => c.quarters.map(q => q.cal_q)))].sort().slice(-20);
+const along = (c, f, cqs = CALQ) => cqs.map(cq => { const q = qOf(c, cq); return q ? f(q) : null; });
+// The sum of four consecutive quarters ending with q (null when one is missing).
+function roll(c, q, key) {
+  const i = c.quarters.indexOf(q);
+  if (i < 3) return null;
+  const w = c.quarters.slice(i - 3, i + 1);
+  if ((ms(w[3].end) - ms(w[0].start)) / 864e5 > 380 || w.some(r => r[key] == null)) return null;
+  return w.reduce((s, r) => s + r[key], 0);
+}
+function qLines(host, W, cfg) {
+  const cqs = cfg.cqs || CALQ;
+  // a label a year at desktop width, every other year on a phone
+  const every = W < 560 ? 8 : 4;
+  const ticks = cqs.map((q, i) => [i, qLab(q)]).filter((_, i) => i % every === (cqs.length - 1) % every);
+  lineChart(host, W, {x: cqs.map((_, i) => i), xticks: ticks, height: cfg.height || 270, rightPad: cfg.rightPad ?? 118, ...cfg});
+}
+// f(q, c) gives a company's value in one quarter
+const coSeries = (cos, f, labelFmt, cqs = CALQ) => cos.map(c => {
+  const values = along(c, q => f(q, c), cqs);
+  const last = [...values].reverse().find(v => v != null);
+  return {name: c.ticker, values, color: CAT[c.ticker], width: 2, swatch: true, points: true, label: last == null ? null : `${c.ticker} ${labelFmt(last)}`};
+});
+const tipRows = (cos, i, f, fmt, cqs = CALQ) => `${cqs[i]}\n` + cos.map(c => { const q = qOf(c, cqs[i]); return `${c.ticker.padEnd(6)}${q ? fmt(f(q, c)) : "—"}`; }).join("\n");
+const figure = (title, sub, id, cap, leg = "") => h(`<figure><p class="figtitle">${title}</p><p class="figsub">${sub}</p>${leg}<div id="${id}"></div>${cap ? `<figcaption>${cap}</figcaption>` : ""}</figure>`);
+const grid = (...figs) => { const g = h(`<div class="grid2"></div>`); g.append(...figs); const s = h(`<section style="padding-top:0"></section>`); s.append(g); return s; };
+const goRows = node => node.addEventListener("click", e => { const tr = e.target.closest("tr[data-t]"); if (tr) location.hash = "co/" + tr.dataset.t; });
+const coCell = (c, sub) => `<td class="l">${sw(c.ticker)}<b>${c.ticker}</b><span class="sub">${esc(sub ?? c.name)}</span></td>`;
+function nextCell(c) {
+  const n = nextOf(c);
+  if (!n) return "—";
+  return fmtMD(n.date) + (n.done ? `<span class="sub">発表済み</span>` : n.estimate ? `<span class="sub">未確定</span>` : "");
+}
+
+/* ---------- views ---------- */
+const PERIODS = [["1m", "1か月"], ["3m", "3か月"], ["ytd", "年初来"], ["1y", "1年"], ["5y", "5年"]];
+function periodStart(key) {
+  const last = new Date(ms(D.prices.dates[D.prices.dates.length - 1]));
+  const back = k => {
+    const y = last.getUTCFullYear(), m = last.getUTCMonth() - k;
+    return Date.UTC(y, m, Math.min(last.getUTCDate(), new Date(Date.UTC(y, m + 1, 0)).getUTCDate()));
+  };
+  if (key === "1m") return back(1);
+  if (key === "3m") return back(3);
+  if (key === "ytd") return Date.UTC(last.getUTCFullYear(), 0, 0);
+  if (key === "1y") return back(12);
+  return 0;
+}
+function sliceFrom(key) {
+  const t = periodStart(key);
+  let i = 0;
+  while (i < D.prices.dates.length - 1 && ms(D.prices.dates[i + 1]) <= t) i++;
+  return i;
+}
+const STATE = {period: "1y", focus: null, sort: {key: "market_cap", dir: -1}, coPeriod: "1y"};
+const T = D.totals;
+const names = ts => ts.map(t => CO[t].name).join("・");
+const lacking = (have, among = HS) => among.filter(c => !have.includes(c.ticker));
+
+// Closes rebased to 100 at the start of the period, one line per company, with the S&P 500.
+function priceSection(v, cos, fig, note = "") {
+  const sec = h(`<section>
+    <div class="head"><h2>株価の推移</h2></div>
+    <p class="lead">期間の初日 = 100。会社名を押すとその線を強調する。点線は S&amp;P 500。</p>
+    <div class="chips" id="periods" style="margin-top:14px"></div>
+    <figure><div class="chips" id="names"></div><div id="px"></div>
+    <figcaption><b>Fig ${fig}</b>終値（配当を含まない株価）。線にカーソルを当てると、その日の各社の値が出る。${note}</figcaption></figure></section>`);
+  v.append(sec);
+  const periods = sec.querySelector("#periods"), namesEl = sec.querySelector("#names");
+  const paintPeriods = () => { periods.innerHTML = PERIODS.map(([k, l]) => `<button class="chip ${STATE.period === k ? "on" : ""}" data-k="${k}">${l}</button>`).join(""); };
+  const paintNames = () => {
+    namesEl.innerHTML = cos.map(c => `<button class="chip ${STATE.focus === c.ticker ? "on" : ""}" data-t="${c.ticker}"><i style="background:${CAT[c.ticker]}"></i>${c.ticker}</button>`).join("")
+      + `<span class="chip" style="cursor:default"><i style="background:none;border-top:2px dashed var(--ink-2);height:0"></i>S&amp;P 500</span>`;
+  };
+  const redraw = chart(sec.querySelector("#px"), (host, W) => {
+    const focus = STATE.focus, i0 = sliceFrom(STATE.period), dates = D.prices.dates.slice(i0), x = dates.map(ms);
+    // a company listed after the period starts counts from its first close
+    const norm = key => { const s = D.prices[key].slice(i0), b = s.find(v => v != null); return s.map(v => v == null || !b ? null : v / b * 100); };
+    const series = cos.map(c => {
+      const on = focus === c.ticker, vals = norm(c.ticker), last = vals[vals.length - 1];
+      return {name: c.ticker, values: vals, color: CAT[c.ticker], width: on ? 3 : 1.75, swatch: true,
+        opacity: focus && !on ? 0.25 : 1, label: `${c.ticker} ${fmtPct(last / 100 - 1, 0)}`, strong: on, dot: on || !focus};
+    });
+    series.sort((a, b) => (a.name === focus) - (b.name === focus));
+    const spx = norm("SPX");
+    series.push({name: "S&P 500", values: spx, color: "var(--ink-2)", width: 2, dash: "6 4", swatch: true, label: `S&P ${fmtPct(spx[spx.length - 1] / 100 - 1, 0)}`, dot: false});
+    lineChart(host, W, {x, series, height: 340, ref: 100, rightPad: 104, yfmt: v => v.toFixed(0),
+      tip: i => {
+        const rows = cos.map(c => [c.ticker, series.find(s => s.name === c.ticker).values[i]]).filter(r => r[1] != null).sort((a, b) => b[1] - a[1]);
+        return dates[i] + "\n" + rows.map(([t, v]) => `${t.padEnd(6)}${fmtPct(v / 100 - 1)}`).join("\n") + `\nS&P   ${fmtPct(spx[i] / 100 - 1)}`;
+      }});
+  });
+  paintPeriods(); paintNames();
+  periods.addEventListener("click", e => { const k = e.target.closest("[data-k]"); if (!k) return; STATE.period = k.dataset.k; paintPeriods(); redraw(); });
+  namesEl.addEventListener("click", e => { const t = e.target.closest("[data-t]"); if (!t) return; STATE.focus = STATE.focus === t.dataset.t ? null : t.dataset.t; paintNames(); redraw(); });
+}
+
+function renderOverview(v) {
+  const capexMissing = lacking(T.capex_yoy_have);
+  v.append(h(`<section><div class="head"><h2>AI データセンターに投資する5社</h2></div>
+    <p class="lead">${names(HS.map(c => c.ticker))}。クラウドの売上、顧客と結んだ受注残、それを支える設備投資と減価償却を同じ物差しで並べる。Meta はクラウドを売らず、設備は自社のサービスと AI に使う。GPU を貸し出す新興のクラウド（${names(NEO.map(c => c.ticker))}）は <a href="#neo">ネオクラウド</a>のページへ。</p>
+    <div class="strip">
+      <div><span class="k">5社の設備投資・直近1年</span><span class="v a">${fmtMoney(T.capex_ttm)}</span><span class="n">前年比 ${fmtPct(T.capex_ttm_yoy, 0)}${capexMissing.length ? `（${names(capexMissing.map(c => c.ticker))} を除く）` : ""}。ファイナンスリースでの取得 ${fmtMoney(T.lease_ttm)}（${T.lease_have.length}社）は含まない</span></div>
+      <div><span class="k">設備投資 ÷ 営業CF</span><span class="v">${fmtShare(T.capex_ocf, 0)}</span><span class="n">稼いだ現金のうち設備に回した割合（直近1年）</span></div>
+      <div><span class="k">受注残・${T.rpo_have.length}社</span><span class="v b">${fmtMoney(T.rpo)}</span><span class="n">前年比 ${fmtPct(T.rpo_yoy, 0)}。まだ売上にしていない契約済みの金額（RPO）</span></div>
+      <div><span class="k">クラウド売上・直近の四半期</span><span class="v">${fmtMoney(T.cloud_q)}</span><span class="n">${T.cloud_have.length}社の合計。前年同期比 ${fmtPct(T.cloud_q_yoy, 0)}</span></div>
+    </div></section>`));
+
+  priceSection(v, HS, "1");
+
+
+  const cols = [
+    ["name", "会社", "l"], ["price", "株価"], ["ret_ytd", "年初来"], ["market_cap", "時価総額"],
+    ["cloud_yoy", "クラウド売上の伸び（前年比）"], ["seg_margin", "クラウド部門の営業利益率"],
+    ["rpo", "受注残（Bドル）"], ["rpo_yoy", "受注残の伸び"],
+    ["capex_ttm", "設備投資（直近1年・Bドル）"], ["capex_ttm_yoy", "設備投資の伸び"], ["capex_ocf_ttm", "設備投資÷営業CF"],
+    ["da_ttm_yoy", "減価償却の伸び"], ["fcf_ttm", "FCF（Bドル）"], ["per_ntm", "予想PER"], ["next_earnings", "次の決算"],
+  ];
+  const special = {name: c => c.ticker, cloud_yoy: c => c.cloud_last?.yoy, seg_margin: c => c.segment_last?.margin,
+    rpo: c => c.rpo_last?.value, rpo_yoy: c => c.rpo_last?.yoy, next_earnings: c => (nextOf(c) || {}).date};
+  const val = (c, k) => (special[k] ? special[k](c) : c[k]) ?? null;
+  const cell = (c, k) => ({
+    name: `${sw(c.ticker)}<b>${c.ticker}</b><span class="sub">${esc(c.name)}</span>`, price: fmtPrice(c.price), ret_ytd: fmtPct(c.ret_ytd),
+    market_cap: fmtCap(c.market_cap),
+    cloud_yoy: c.cloud_last ? `${fmtPct(c.cloud_last.yoy)}<span class="sub">${esc(c.cloud_name)} ${esc(qShort(c.cloud_last.label))}</span>` : `<span class="muted">—</span><span class="sub">クラウドなし</span>`,
+    seg_margin: c.segment_last ? `${fmtShare(c.segment_last.margin)}<span class="sub">${esc(c.segment_last.era)}</span>` : "—",
+    rpo: c.rpo_last ? fmtB(c.rpo_last.value) : "—", rpo_yoy: c.rpo_last ? fmtPct(c.rpo_last.yoy, 0) : "—",
+    capex_ttm: `${fmtB(c.capex_ttm)}<span class="sub">${esc(qShort(c.latest_quarter))}まで</span>`, capex_ttm_yoy: fmtPct(c.capex_ttm_yoy, 0),
+    capex_ocf_ttm: fmtShare(c.capex_ocf_ttm, 0), da_ttm_yoy: fmtPct(c.da_ttm_yoy, 0), fcf_ttm: fmtB(c.fcf_ttm),
+    per_ntm: fmtX(c.per_ntm), next_earnings: nextCell(c),
+  })[k];
+  const tsec = h(`<section><div class="head"><h2>5社を同じ物差しで</h2></div>
+    <p class="lead">クラウドと受注残は直近の四半期、設備投資・減価償却・FCF は直近4四半期の合計から。行を押すと企業ページへ。見出しを押すと並べ替え。</p>
+    <div class="tw"><table><thead></thead><tbody></tbody></table></div>
+    <p class="caveat">クラウド売上は会社ごとに範囲が違う（定義は「クラウド事業」のページ）。受注残（RPO）はクラウド以外の契約も含む。設備投資は有形固定資産の取得（現金）で、ファイナンスリースは含まない。予想PER = 株価 ÷ 今後12か月の予想EPS（Yahoo のアナリスト予想）。</p></section>`);
+  v.append(tsec);
+  const thead = tsec.querySelector("thead"), tbody = tsec.querySelector("tbody");
+  const paint = () => {
+    const {key, dir} = STATE.sort;
+    const rows = [...HS].sort((a, b) => {
+      const x = val(a, key), y = val(b, key);
+      if (x == null || y == null) return (x == null) - (y == null);
+      return (x > y ? 1 : x < y ? -1 : 0) * dir;
+    });
+    thead.innerHTML = "<tr>" + cols.map(([k, l, cls]) => `<th class="sort ${cls || ""} ${k === key ? "on" : ""}" data-k="${k}">${l}${k === key ? (dir < 0 ? " ↓" : " ↑") : ""}</th>`).join("") + "</tr>";
+    tbody.innerHTML = rows.map(c => `<tr class="go" data-t="${c.ticker}">` + cols.map(([k, , cls]) => `<td class="${cls || "num"}">${cell(c, k)}</td>`).join("") + "</tr>").join("");
+  };
+  paint();
+  thead.addEventListener("click", e => { const th = e.target.closest("[data-k]"); if (!th) return; const k = th.dataset.k; STATE.sort = {key: k, dir: STATE.sort.key === k ? -STATE.sort.dir : -1}; paint(); });
+  goRows(tbody);
+}
+
+function renderCloud(v) {
+  v.append(h(`<section><div class="head"><h2>クラウド事業</h2></div>
+    <p class="lead">${CLOUD.map(c => esc(c.cloud_name)).join("・")} の売上と、それを含む事業部門の営業利益率。各社とも SEC に出した四半期報告書（10-Q・10-K）の部門・製品別の数字から。</p></section>`));
+  const fGrow = figure("クラウド売上の伸び（前年同期比）", "四半期。決算期のずれは期の中ほどが入る暦四半期に寄せた", "cl-grow",
+    "<b>Fig 2</b>右端の数字は直近の四半期。点にカーソルを当てると各社の値。");
+  const fLevel = figure("クラウド売上", "四半期・Bドル", "cl-level", "<b>Fig 3</b>範囲は会社ごとに違う（下の表）。");
+  v.append(grid(fGrow, fLevel));
+  chart(fGrow.querySelector("#cl-grow"), (host, W) => qLines(host, W, {yfmt: yfmtPct, yZero: true,
+    series: coSeries(CLOUD, q => q.cloud_yoy, x => fmtPct(x, 0)), tip: i => tipRows(CLOUD, i, q => q.cloud_yoy, x => fmtPct(x))}));
+  chart(fLevel.querySelector("#cl-level"), (host, W) => qLines(host, W, {yfmt: yfmtB, yZero: true,
+    series: coSeries(CLOUD, q => q.cloud, x => fmtB(x)), tip: i => tipRows(CLOUD, i, q => q.cloud, x => fmtMoney(x))}));
+
+  // One line per company and era: a redrawn segment is a different business.
+  const eraLines = [];
+  CLOUD.forEach(c => c.eras.forEach((era, k) => {
+    const values = along(c, q => q.segments[era]?.margin ?? null);
+    if (!values.some(x => x != null)) return;
+    const newest = k === c.eras.length - 1, last = [...values].reverse().find(x => x != null);
+    eraLines.push({name: `${c.ticker} ${era}`, values, color: CAT[c.ticker], width: 2, points: true, dash: !newest ? "5 4" : null,
+      swatch: true, label: newest ? `${c.ticker} ${fmtShare(last, 0)}` : null});
+  }));
+  const fSeg = figure("クラウドを含む部門の営業利益率", "四半期。部門の区切りを変えた会社は、変更の前を点線で別の線にした", "cl-seg",
+    `<b>Fig 4</b>${CLOUD.filter(c => c.eras.length > 1).map(c => `${c.name} は ${c.eras.join(" → ")}`).join("、")}。新しい区切りは前年同期の分だけさかのぼって組み替えてあるため、重なる四半期がある。Oracle の部門はクラウドに加えてライセンスの保守サポートを含み、利益率が高く出る。`);
+  v.append(grid(fSeg, (() => {
+    const c = CO.ORCL, ok = c && c.quarters.some(q => q.extra.OCI);
+    if (!ok) return document.createElement("div");
+    const f = figure("Oracle：インフラ（OCI）とアプリ（SaaS）", "四半期・Bドル。2025年3–5月期以降に分けて開示", "cl-orcl",
+      "<b>Fig 5</b>OCI は AI 向けの計算資源の貸し出しを含む。", legend([["OCI", "var(--series-1)"], ["SaaS", "var(--series-2)"]]));
+    chart(f.querySelector("#cl-orcl"), (host, W) => qLines(host, W, {yfmt: yfmtB, yZero: true, rightPad: 16,
+      series: [{name: "OCI", values: along(c, q => q.extra.OCI?.value ?? null), color: "var(--series-1)", points: true},
+               {name: "SaaS", values: along(c, q => q.extra.SaaS?.value ?? null), color: "var(--series-2)", points: true}],
+      tip: i => { const q = qOf(c, CALQ[i]); return `${q ? q.label : CALQ[i]}\nOCI  ${fmtMoney(q?.extra.OCI?.value)}（${fmtPct(q?.extra.OCI?.yoy)}）\nSaaS ${fmtMoney(q?.extra.SaaS?.value)}（${fmtPct(q?.extra.SaaS?.yoy)}）`; }}));
+    return f;
+  })()));
+  chart(fSeg.querySelector("#cl-seg"), (host, W) => qLines(host, W, {yfmt: yfmtPct, yZero: true, series: eraLines,
+    tip: i => `${CALQ[i]}\n` + eraLines.filter(s => s.values[i] != null).map(s => `${s.name.padEnd(24)}${fmtShare(s.values[i])}`).join("\n")}));
+
+  const rows = HS.map(c => {
+    const cl = c.cloud_last, sg = c.segment_last;
+    if (!cl) return `<tr class="go" data-t="${c.ticker}">${coCell(c)}<td class="l" colspan="9"><span class="muted">${esc(c.cloud_def)}</span></td></tr>`;
+    const q = c.quarters.find(r => r.end === sg?.end);
+    const ago = c.quarters[c.quarters.indexOf(q) - 4];
+    const agoM = ago?.segments[sg?.era]?.margin;
+    return `<tr class="go" data-t="${c.ticker}">${coCell(c, c.cloud_name)}
+      <td class="l" style="white-space:normal;min-width:220px">${esc(c.cloud_def)}</td>
+      <td class="l">${esc(cl.label)}</td><td class="num">${fmtB(cl.value)}</td><td class="num">${fmtPct(cl.yoy)}</td>
+      <td class="num">${fmtShare(cl.share, 0)}</td><td class="num">${fmtB(c.cloud_ttm)}</td>
+      <td class="l">${sg ? esc(sg.era) : "—"}</td><td class="num">${sg ? fmtShare(sg.margin) : "—"}</td><td class="num">${agoM != null ? fmtShare(agoM) : "—"}</td></tr>`;
+  }).join("");
+  const t = h(`<section><div class="head"><h2>直近の四半期（Bドル）</h2></div><div class="tw"><table>
+    <thead><tr><th class="l">会社</th><th class="l">クラウド売上の範囲</th><th class="l">四半期</th><th>クラウド売上</th><th>前年比</th><th>売上に占める比率</th><th>直近1年</th><th class="l">部門</th><th>部門の営業利益率</th><th>1年前</th></tr></thead>
+    <tbody>${rows}</tbody></table></div>
+    <p class="caveat">${CO.MSFT ? `Microsoft は Azure 単独の売上を ${esc((CO.MSFT.quarters.find(q => q.extra.Azure) || {}).label || "")} から開示（${fmtMoney((CO.MSFT.quarters.findLast(q => q.extra.Azure) || {extra: {Azure: {}}}).extra.Azure.value)}、前年比 ${fmtPct((CO.MSFT.quarters.findLast(q => q.extra.Azure) || {extra: {Azure: {}}}).extra.Azure.yoy)}）。` : ""}Alphabet の Google Cloud は2020年以前は部門でなく、売上の内訳の数字。部門の営業利益率は各社の部門損益（本社費の配賦の仕方は会社ごとに違う）。</p></section>`);
+  goRows(t.querySelector("tbody"));
+  v.append(t);
+}
+
+function renderCapex(v) {
+  v.append(h(`<section><div class="head"><h2>設備投資と減価償却</h2></div>
+    <p class="lead">データセンターへの投資は数年かけて減価償却費として利益を押し下げる。設備投資の伸びに減価償却の伸びが追いつく様子と、現金の余裕を見る。</p></section>`));
+  // quarters where all five report capex, with the five summed
+  const full = CALQ.map((cq, i) => ({cq, i, rows: HS.map(c => qOf(c, cq))})).filter(r => r.rows.every(q => q && q.capex != null));
+  const fStack = figure("5社の設備投資", "四半期・Bドル。5社がそろった四半期のみ。決算期のずれは近い暦四半期に寄せた", "cx-stack",
+    "<b>Fig 6</b>有形固定資産の取得（現金）。ファイナンスリースは含まない。", legend(HS.map(c => [c.ticker, CAT[c.ticker], "sq"])));
+  // Per company over twelve months: Microsoft and Amazon give quarterly
+  // depreciation only from 2024, too short for a five-company series.
+  const fGrow = figure("設備投資と減価償却の伸び", "直近4四半期の合計の前年比", "cx-grow",
+    "<b>Fig 7</b>設備投資の伸びが減価償却の伸びを上回る間は、将来の減価償却費が積み上がっていく。",
+    legend([["設備投資", "var(--series-1)", "sq"], ["減価償却", "var(--series-2)", "sq"]]));
+  v.append(grid(fStack, fGrow));
+  chart(fStack.querySelector("#cx-stack"), (host, W) => barChart(host, W, {cats: full.map(r => qLab(r.cq)), stacked: true, yfmt: yfmtB, height: 270,
+    series: HS.map((c, k) => ({name: c.ticker, values: full.map(r => r.rows[k].capex), color: CAT[c.ticker]})),
+    tip: i => { const r = full[i]; return `${r.cq}\n` + HS.map((c, k) => `${c.ticker.padEnd(6)}${fmtMoney(r.rows[k].capex)}`).join("\n") + `\n合計  ${fmtMoney(r.rows.reduce((s, q) => s + q.capex, 0))}`; }}));
+  chart(fGrow.querySelector("#cx-grow"), (host, W) => barChart(host, W, {cats: HS.map(c => c.ticker), yfmt: yfmtPct, height: 270,
+    series: [{name: "設備投資", values: HS.map(c => c.capex_ttm_yoy), color: "var(--series-1)"},
+             {name: "減価償却", values: HS.map(c => c.da_ttm_yoy), color: "var(--series-2)"}],
+    tip: i => { const c = HS[i]; return `${c.ticker}（${c.latest_quarter}まで）\n設備投資 ${fmtMoney(c.capex_ttm)}（${fmtPct(c.capex_ttm_yoy, 0)}）\n減価償却 ${fmtMoney(c.da_ttm)}（${fmtPct(c.da_ttm_yoy, 0)}）`; }}));
+
+  const fOcf = figure("設備投資 ÷ 営業CF", "直近4四半期の合計どうし。100% を超えると、本業の現金だけでは投資をまかなえない", "cx-ocf", "<b>Fig 8</b>四半期ごとに4四半期の窓をずらして計算。");
+  const fDa = figure("減価償却 ÷ 売上", "四半期。有形固定資産の減価償却", "cx-da", "<b>Fig 9</b>Microsoft は2024年7–9月期、Amazon は2024年1–3月期から四半期の数字がある（それより前は、無形資産やコンテンツの償却と合わせた数字しか出ていない）。");
+  v.append(grid(fOcf, fDa));
+  const capexOcf = (q, c) => { const a = roll(c, q, "capex"), b = roll(c, q, "ocf"); return a != null && b ? a / b : null; };
+  chart(fOcf.querySelector("#cx-ocf"), (host, W) => qLines(host, W, {yfmt: yfmtPct, yZero: true, ref: 1,
+    series: coSeries(HS, capexOcf, x => fmtShare(x, 0)), tip: i => tipRows(HS, i, capexOcf, x => fmtShare(x, 0))}));
+  chart(fDa.querySelector("#cx-da"), (host, W) => qLines(host, W, {yfmt: yfmtPct, yZero: true,
+    series: coSeries(HS, q => q.da_rev, x => fmtShare(x, 1)), tip: i => tipRows(HS, i, q => q.da_rev, x => fmtShare(x, 1))}));
+
+  const rows = HS.map(c => `<tr class="go" data-t="${c.ticker}">${coCell(c, qShort(c.latest_quarter) + "まで")}
+    <td class="num">${fmtB(c.capex_ttm)}</td><td class="num">${fmtPct(c.capex_ttm_yoy, 0)}</td><td class="num">${fmtB(c.lease_ttm)}</td>
+    <td class="num">${fmtShare(c.capex_rev_ttm, 0)}</td><td class="num">${fmtShare(c.capex_ocf_ttm, 0)}</td>
+    <td class="num">${fmtB(c.da_ttm)}</td><td class="num">${fmtPct(c.da_ttm_yoy, 0)}</td><td class="num">${c.da_ttm ? fmtX(c.capex_ttm / c.da_ttm) : "—"}</td>
+    <td class="num">${fmtB(c.fcf_ttm)}</td><td class="num">${fmtB(c.fcf_after_leases_ttm)}</td><td class="num">${fmtB(c.debt_change_1y)}</td><td class="num">${fmtB(c.net_cash)}</td></tr>`).join("");
+  const t = h(`<section><div class="head"><h2>直近4四半期（Bドル）</h2></div><div class="tw"><table>
+    <thead><tr><th class="l">会社</th><th>設備投資</th><th>前年比</th><th>ファイナンスリースでの取得</th><th>設備投資÷売上</th><th>設備投資÷営業CF</th><th>減価償却</th><th>前年比</th><th>設備投資÷減価償却</th><th>FCF</th><th>FCF（リース返済後）</th><th>借入の増減（1年）</th><th>純現金</th></tr></thead>
+    <tbody>${rows}</tbody></table></div>
+    <p class="caveat">FCF = 営業CF − 設備投資。リース返済後はさらにファイナンスリースの元本返済を引いた値（Amazon が開示する定義に近い）。ファイナンスリースでの取得は、リース契約で手に入れた設備（使用権資産）の額で、現金の設備投資とは別に増える。Microsoft は自社の「設備投資（ファイナンスリースを含む）」としてこれを足して公表している。Meta はこの額を四半期では開示していない。Oracle は四半期の内訳が欠けるため、年度と年初来の数字から直近1年を出した。借入の増減は社債・CP など（リースを除く）。</p></section>`);
+  goRows(t.querySelector("tbody"));
+  v.append(t);
+}
+
+function renderBacklog(v) {
+  v.append(h(`<section><div class="head"><h2>受注残（RPO）</h2></div>
+    <p class="lead">顧客と契約済みで、まだ売上にしていない金額（残存履行義務）。AI の計算資源の長期契約が積み上がると急に増える。Meta は外部に売らないため受注残がない。</p></section>`));
+  const fLvl = figure("受注残", "四半期末・Bドル", "bl-level", "<b>Fig 10</b>Microsoft は法人向け（commercial）がほぼ全額。");
+  const fYrs = figure("受注残 ÷ クラウド売上", "年。四半期末の受注残を、直近4四半期のクラウド売上で割った値", "bl-years",
+    "<b>Fig 11</b>今のクラウド売上の何年分を契約済みか。受注残はクラウド以外（Oracle のライセンス保守など）も含むので、目安。");
+  v.append(grid(fLvl, fYrs));
+  chart(fLvl.querySelector("#bl-level"), (host, W) => qLines(host, W, {yfmt: yfmtB, yZero: true,
+    series: coSeries(BACKLOG, q => q.rpo, x => fmtB(x)), tip: i => tipRows(BACKLOG, i, q => q.rpo, x => fmtMoney(x))}));
+  const years = (q, c) => { const s = roll(c, q, "cloud"); return q.rpo != null && s ? q.rpo / s : null; };
+  chart(fYrs.querySelector("#bl-years"), (host, W) => qLines(host, W, {yfmt: v => v.toFixed(0), yZero: true,
+    series: coSeries(BACKLOG, years, x => fmtYears(x)), tip: i => tipRows(BACKLOG, i, years, x => fmtYears(x))}));
+
+  const rows = BACKLOG.map(c => {
+    const r = c.rpo_last, q = c.quarters.find(x => x.end === r.end), prev = c.quarters[c.quarters.indexOf(q) - 1];
+    const added = prev && prev.rpo != null ? r.value - prev.rpo : null;
+    return `<tr class="go" data-t="${c.ticker}">${coCell(c)}<td class="l">${esc(r.label)}末</td><td class="num">${fmtB(r.value)}</td>
+      <td class="num">${fmtB(added)}</td><td class="num">${fmtPct(r.yoy, 0)}</td><td class="num">${fmtYears(r.years)}</td>
+      <td class="num">${fmtB(c.cloud_ttm)}</td></tr>`;
+  }).join("");
+  const named = HS.flatMap(c => c.named_backlog.map(n => ({c, ...n})));
+  const namedRows = named.map(n => `<tr>${coCell(n.c)}<td class="l">${esc(n.customer.replace(/GroupPBC$/, ""))}</td>
+    <td class="l">${n.kind === "balance" ? `${n.end} 時点の残高` : `${n.start} 〜 ${n.end} の増加`}</td><td class="num">${fmtB(n.value)}</td><td class="l">${n.filed} 提出</td></tr>`).join("");
+  const t = h(`<section><div class="head"><h2>直近の四半期末（Bドル）</h2></div><div class="tw"><table>
+    <thead><tr><th class="l">会社</th><th class="l">時点</th><th>受注残</th><th>前の四半期からの増加</th><th>前年比</th><th>クラウド売上の何年分</th><th>クラウド売上（直近1年）</th></tr></thead>
+    <tbody>${rows}</tbody></table></div>
+    ${named.length ? `<h3>顧客の名前つきで開示された受注残</h3><div class="tw"><table>
+      <thead><tr><th class="l">会社</th><th class="l">顧客</th><th class="l">内容</th><th>金額</th><th class="l">報告書</th></tr></thead><tbody>${namedRows}</tbody></table></div>
+      <p class="caveat">10-Q・10-K の XBRL に顧客名つきで載った数字をそのまま出した。残高と期中の増加は別の注記で、足し引きは合わない場合がある。</p>` : ""}
+    <p class="caveat">受注残は解約できない契約の残り。契約期間は会社ごとに違い、Amazon の大口契約は8〜10年に及ぶ。前の四半期からの増加は、売上として消化した分を差し引いた後の純増。</p></section>`);
+  goRows(t.querySelector("tbody"));
+  v.append(t);
+}
+
+function renderNeo(v) {
+  const N = D.neo_totals;
+  const sum = (cos, k) => cos.reduce((a, c) => a + (c[k] ?? 0), 0);
+  const hsCapexRev = sum(HS, "capex_ttm") / sum(HS, "revenue_ttm");
+  v.append(h(`<section><div class="head"><h2>ネオクラウド</h2></div>
+    <p class="lead">${names(NEO.map(c => c.ticker))}。Nvidia の GPU を並べたデータセンターを、AI の開発会社やハイパースケーラーに数年単位の契約で貸し出す。売上の数倍の設備投資を、主に借入でまかなっている。</p>
+    <div class="strip">
+      <div><span class="k">${NEO.length}社の売上・直近の四半期</span><span class="v a">${fmtMoney(N.revenue_q)}</span><span class="n">前年同期比 ${fmtPct(N.revenue_q_yoy, 0)}</span></div>
+      <div><span class="k">設備投資・直近1年</span><span class="v">${fmtMoney(N.capex_ttm)}</span><span class="n">売上の ${fmtX(N.capex_rev)}。ハイパースケーラー5社は売上の ${fmtShare(hsCapexRev, 0)}</span></div>
+      <div><span class="k">借入</span><span class="v b">${fmtMoney(N.debt)}</span><span class="n">1年で ${fmtMoney(N.debt_change_1y)} 増えた（リースを除く）</span></div>
+      <div><span class="k">支払利息・直近1年</span><span class="v">${fmtMoney(N.interest_ttm)}</span><span class="n">${NEO.length}社の営業損益は ${fmtMoney(N.operating_income_ttm)}</span></div>
+    </div></section>`));
+  priceSection(v, NEO, "12", "CoreWeave は2025年3月の上場、Nebius は2024年10月の取引再開より前の期間では、最初の終値を100とした。");
+
+  const NQ = quartersOf(NEO);
+  const fRev = figure("売上", "四半期・Bドル", "neo-rev", "<b>Fig 13</b>全社の売上。IREN はビットコインのマイニングを含む（AI クラウドだけの数字は企業ページ）。");
+  const fGrow = figure("売上の伸び（前年同期比）", "四半期", "neo-grow", "<b>Fig 14</b>Nebius は Yahoo の四半期の数字が2025年4–6月期からのため、前年比は1点だけ。");
+  v.append(grid(fRev, fGrow));
+  chart(fRev.querySelector("#neo-rev"), (host, W) => qLines(host, W, {cqs: NQ, yfmt: yfmtB, yZero: true,
+    series: coSeries(NEO, q => q.revenue, x => fmtB(x), NQ), tip: i => tipRows(NEO, i, q => q.revenue, x => fmtMoney(x), NQ)}));
+  chart(fGrow.querySelector("#neo-grow"), (host, W) => qLines(host, W, {cqs: NQ, yfmt: yfmtPct, yZero: true,
+    series: coSeries(NEO, q => q.revenue_yoy, x => fmtPct(x, 0), NQ), tip: i => tipRows(NEO, i, q => q.revenue_yoy, x => fmtPct(x, 0), NQ)}));
+
+  // one series per company so each bar takes its company's color
+  const ALL = [...HS, ...NEO];
+  const own = (cos, f) => cos.map((c, k) => ({name: c.ticker, color: CAT[c.ticker], values: cos.map((_, j) => j === k ? f(c) : null)}));
+  const fCx = figure("設備投資 ÷ 売上", "直近4四半期の合計どうし。ハイパースケーラーと並べた", "neo-capex",
+    "<b>Fig 15</b>どちらも全社の売上で割った。ハイパースケーラーは売上の2〜7割、ネオクラウドは売上の数倍を設備に投じている。");
+  const ranked = ALL.filter(c => c.rpo_last?.years != null);
+  const fYrs = figure("受注残 ÷ クラウド売上", "年。四半期末の受注残を、その時点までの1年のクラウド売上で割った", "neo-rpo",
+    `<b>Fig 16</b>${NEO.filter(c => c.rpo_last).map(c => `${c.ticker} は ${esc(c.rpo_last.label)}末`).join("、")}。Nebius は受注残を年1回（20-F）しか出さないため、2025年の売上で割った。IREN は AI クラウドの売上で割った。`);
+  v.append(grid(fCx, fYrs));
+  chart(fCx.querySelector("#neo-capex"), (host, W) => barChart(host, W, {cats: ALL.map(c => c.ticker), stacked: true, yfmt: yfmtPct, height: 260,
+    series: own(ALL, c => c.capex_rev_ttm), tip: i => { const c = ALL[i]; return `${c.ticker}（${c.latest_quarter}まで）\n設備投資 ${fmtMoney(c.capex_ttm)}\n売上     ${fmtMoney(c.revenue_ttm)}\n比率     ${fmtShare(c.capex_rev_ttm, 0)}`; }}));
+  chart(fYrs.querySelector("#neo-rpo"), (host, W) => barChart(host, W, {cats: ranked.map(c => c.ticker), stacked: true, yfmt: v => v.toFixed(0), height: 260,
+    series: own(ranked, c => c.rpo_last.years), tip: i => { const c = ranked[i]; return `${c.ticker}（${c.rpo_last.label}末）\n受注残 ${fmtMoney(c.rpo_last.value)}\n${fmtYears(c.rpo_last.years)}分`; }}));
+
+  const fDebt = figure("借入", "四半期末・Bドル。リースを除く", "neo-debt",
+    "<b>Fig 17</b>CoreWeave は借入の元本（社債と GPU を担保にした借入）。Nebius は Yahoo の総借入からリースを引いた値。IREN は転換社債と、2026年4–6月期からは借入の全額。");
+  const fInt = figure("営業損益と支払利息", "直近4四半期の合計・Bドル", "neo-int",
+    "<b>Fig 18</b>支払利息が営業損益を上回る間は、利払いを本業の利益でまかなえていない。", legend([["営業損益", "var(--series-1)", "sq"], ["支払利息", "var(--series-2)", "sq"]]));
+  v.append(grid(fDebt, fInt));
+  chart(fDebt.querySelector("#neo-debt"), (host, W) => qLines(host, W, {cqs: NQ, yfmt: yfmtB, yZero: true,
+    series: coSeries(NEO, q => q.debt, x => fmtB(x), NQ), tip: i => tipRows(NEO, i, q => q.debt, x => fmtMoney(x), NQ)}));
+  chart(fInt.querySelector("#neo-int"), (host, W) => barChart(host, W, {cats: NEO.map(c => c.ticker), yfmt: yfmtB, height: 260,
+    series: [{name: "営業損益", values: NEO.map(c => c.operating_income_ttm), color: "var(--series-1)"},
+             {name: "支払利息", values: NEO.map(c => c.interest_ttm), color: "var(--series-2)"}],
+    tip: i => { const c = NEO[i]; return `${c.ticker}（${c.latest_quarter}まで）\n営業損益 ${fmtMoney(c.operating_income_ttm)}\n支払利息 ${fmtMoney(c.interest_ttm)}（売上の ${fmtShare(c.interest_rev_ttm, 0)}）`; }}));
+
+  const conc = NEO.filter(c => c.customers_last);
+  const rows = NEO.map(c => {
+    const top = c.customers_last ? Math.max(...Object.values(c.customers_last.shares)) : null;
+    return `<tr class="go" data-t="${c.ticker}">${coCell(c)}
+      <td class="num">${fmtB(c.revenue_last.value)}<span class="sub">${esc(qShort(c.revenue_last.label))}</span></td><td class="num">${fmtPct(c.revenue_last.yoy, 0)}</td>
+      <td class="num">${fmtShare(c.op_margin_ttm, 0)}</td>
+      <td class="num">${c.rpo_last ? fmtB(c.rpo_last.value) + `<span class="sub">${esc(qShort(c.rpo_last.label))}末</span>` : "—"}</td><td class="num">${fmtYears(c.rpo_last?.years)}</td>
+      <td class="num">${fmtB(c.capex_ttm)}</td><td class="num">${fmtShare(c.capex_rev_ttm, 0)}</td>
+      <td class="num">${fmtB(c.debt)}</td><td class="num">${fmtB(c.debt_change_1y)}</td>
+      <td class="num">${fmtB(c.interest_ttm)}</td><td class="num">${fmtShare(c.interest_rev_ttm, 0)}</td>
+      <td class="num">${top == null ? "—" : fmtShare(top, 0) + `<span class="sub">${esc(qShort(c.customers_last.label))}</span>`}</td>
+      <td class="num">${fmtMoney(c.market_cap)}</td><td class="num">${nextCell(c)}</td></tr>`;
+  }).join("");
+  const contracted = NEO.filter(c => c.contracted_last);
+  const t = h(`<section><div class="head"><h2>${NEO.length}社を同じ物差しで（Bドル）</h2></div><div class="tw"><table>
+    <thead><tr><th class="l">会社</th><th>売上（直近の四半期）</th><th>前年比</th><th>営業利益率（1年）</th><th>受注残</th><th>受注残÷クラウド売上</th>
+      <th>設備投資（1年）</th><th>設備投資÷売上</th><th>借入</th><th>借入の増減（1年）</th><th>支払利息（1年）</th><th>支払利息÷売上</th><th>最大の顧客の売上比率</th><th>時価総額</th><th>次の決算</th></tr></thead>
+    <tbody>${rows}</tbody></table></div>
+    <p class="caveat">設備投資は有形固定資産の取得（現金）。ネオクラウドはこのほかにデータセンターを長期のリースで借りている（オペレーティング・リース負債は ${NEO.filter(c => c.operating_lease).map(c => `${c.name} ${fmtMoney(c.operating_lease)}`).join("、")}。借入には含まない）。${contracted.map(c => `${c.name} は受注残（RPO）とは別に、リース契約を含む契約残 ${fmtMoney(c.contracted_last.value)}（${esc(c.contracted_last.label)}末）を開示している。`).join("")}最大の顧客の売上比率は 10-Q の注記（顧客の名前は伏せてある）。</p></section>`);
+  goRows(t.querySelector("tbody"));
+  v.append(t);
+
+  if (conc.length) {
+    conc.forEach(c => {
+      const q = c.quarters.filter(r => r.customers);
+      const letters = [...new Set(q.flatMap(r => Object.keys(r.customers)))].sort();
+      const colors = ["var(--series-1)", "var(--series-2)", "var(--ink-3)", "var(--rule-2)"];
+      const f = figure(`${esc(c.name)}：大口顧客の売上比率`, "四半期。10% 以上の顧客だけが開示される", `neo-cust-${c.ticker}`,
+        `<b>Fig 19</b>顧客の記号（A・B・C）は報告書ごとに振られ、同じ記号が同じ会社とは限らない。2024年通年の顧客 A の比率 62% は、上場時の目論見書が Microsoft について書いた比率と同じ。年度の数字しかない10–12月期は空けた。`,
+        legend(letters.map((l, j) => [`顧客 ${l.replace("Customer", "")}`, colors[j % colors.length], "sq"])));
+      v.append(grid(f));
+      chart(f.querySelector(`#neo-cust-${c.ticker}`), (host, W) => barChart(host, W, {cats: q.map(r => qShort(r.label)), stacked: true, yfmt: yfmtPct, height: 240,
+        series: letters.map((l, j) => ({name: l, values: q.map(r => r.customers[l] ?? null), color: colors[j % colors.length]})),
+        tip: i => `${q[i].label}\n` + letters.filter(l => q[i].customers[l] != null).map(l => `顧客 ${l.replace("Customer", "")}  ${fmtShare(q[i].customers[l], 0)}`).join("\n")}));
+    });
+  }
+}
+
+function renderCompany(v, c) {
+  const q = c.quarters, last = q[q.length - 1];
+  const n = nextOf(c);
+  const nextTxt = !n ? "—" : fmtMD(n.date) + (n.done ? "<small>発表済み</small>" : n.estimate ? "<small>未確定</small>" : "<small>引け後</small>");
+  const cl = c.cloud_last, r = c.rpo_last;
+  v.append(h(`<section><div class="head"><h2>${sw(c.ticker)}${esc(c.name)}（${c.ticker}）</h2></div>
+    <p class="lead">${c.cloud_name ? `${c.cloud_is_revenue ? "売上" : "クラウド"}: ${esc(c.cloud_name)}（${esc(c.cloud_def)}）。` : esc(c.cloud_def) + "。"} ${c.group === "hyper" ? `EPS・市場予想・決算翌日の株価の反応は <a href="tracker.html#co/${c.ticker}">メガテック・トラッカーの企業ページ</a>へ。` : `<a href="#neo">ネオクラウド</a>の1社。`}</p>
+    <div class="strip">
+      <div><span class="k">株価（${D.asof.prices}）</span><span class="v">${fmtPrice(c.price)}</span><span class="n">年初来 ${fmtPct(c.ret_ytd)} ・ 時価総額 ${fmtMoney(c.market_cap)}</span></div>
+      <div><span class="k">${cl ? (c.cloud_is_revenue ? "売上" : esc(c.cloud_name)) + "・" + esc(qShort(cl.label)) : "クラウド"}</span><span class="v a">${cl ? fmtMoney(cl.value) : "—"}</span><span class="n">${cl ? `前年比 ${fmtPct(cl.yoy)}${c.cloud_is_revenue ? "" : ` ・ 売上の ${fmtShare(cl.share, 0)}`}` : "クラウド事業なし"}</span></div>
+      <div><span class="k">受注残${r ? "・" + esc(qShort(r.label)) + "末" : ""}</span><span class="v b">${r ? fmtMoney(r.value) : "—"}</span><span class="n">${r ? `前年比 ${fmtPct(r.yoy, 0)} ・ クラウド売上の ${fmtYears(r.years)}分` : "外部への販売がなく受注残なし"}</span></div>
+      <div><span class="k">設備投資・直近1年</span><span class="v">${fmtMoney(c.capex_ttm)}</span><span class="n">${c.group === "neo" ? `売上の ${fmtShare(c.capex_rev_ttm, 0)}` : `前年比 ${fmtPct(c.capex_ttm_yoy, 0)}`} ・ 営業CF の ${fmtShare(c.capex_ocf_ttm, 0)}</span></div>
+      ${c.group === "neo" ? `<div><span class="k">借入</span><span class="v">${fmtMoney(c.debt)}</span><span class="n">1年で ${fmtMoney(c.debt_change_1y)} 増加 ・ 支払利息 ${fmtMoney(c.interest_ttm)}／年</span></div>` : ""}
+      <div><span class="k">次の決算</span><span class="v">${nextTxt}</span><span class="n">最新の四半期 ${esc(c.latest_quarter)} ・ 予想PER ${fmtX(c.per_ntm)}</span></div>
+    </div></section>`));
+
+  const f = h(`<section><figure><p class="figtitle">株価</p><p class="figsub">ドル・終値。▲ は決算発表（引け後）。▲ にカーソルを当てると翌日の反応</p>
+    <div class="chips" id="cop"></div><div id="cprice"></div>
+    <figcaption><b>Fig 1</b>決算日は SEC への 8-K 提出（項目 2.02）から。${c.events.length ? "" : "この会社は決算を 6-K（外国企業の様式）で出すため、決算日の印はない。"}</figcaption></figure></section>`);
+  v.append(f);
+  const chips = f.querySelector("#cop");
+  const paintChips = () => { chips.innerHTML = PERIODS.map(([k, l]) => `<button class="chip ${STATE.coPeriod === k ? "on" : ""}" data-k="${k}">${l}</button>`).join(""); };
+  const redraw = chart(f.querySelector("#cprice"), (host, W) => {
+    const i0 = sliceFrom(STATE.coPeriod), dates = D.prices.dates.slice(i0), vals = D.prices[c.ticker].slice(i0);
+    lineChart(host, W, {x: dates.map(ms), height: 280, yfmt: v => "$" + v.toFixed(0), rightPad: 16,
+      series: [{name: c.ticker, values: vals, color: CAT[c.ticker], width: 2}],
+      markers: c.events.map(e => ({x: ms(e.date), text: `${e.date} 決算（${e.quarter || "—"}）\n${e.move == null ? "翌日の取引待ち" : `翌日 ${fmtPct(e.move)}（S&P 500 との差 ${fmtPct(e.vs_index)}）`}`})),
+      tip: i => `${dates[i]}\n${fmtPrice(vals[i])}`});
+  });
+  paintChips();
+  chips.addEventListener("click", e => { const k = e.target.closest("[data-k]"); if (!k) return; STATE.coPeriod = k.dataset.k; paintChips(); redraw(); });
+
+  const cats = q.map(r => qShort(r.label));
+  const qx = q.map((_, i) => i), qt = q.map((r, i) => [i, cats[i]]).filter((_, i) => i % 4 === (q.length - 1) % 4);
+  const line = (host, W, cfg) => lineChart(host, W, {x: qx, xticks: qt, height: 240, yZero: true, rightPad: 16, ...cfg});
+  const figs = [];
+  if (c.cloud_name) {
+    const fC = figure(c.cloud_is_revenue ? "売上" : `${esc(c.cloud_name)} の売上`, "四半期・Bドル。棒にカーソルで前年比", "c-cloud");
+    figs.push(fC);
+    chart(fC.querySelector("#c-cloud"), (host, W) => barChart(host, W, {cats, yfmt: yfmtB,
+      series: [{name: "クラウド", values: q.map(r => r.cloud), color: CAT[c.ticker]}],
+      tip: i => `${q[i].label}\n${c.cloud_name} ${fmtMoney(q[i].cloud)}\n前年比 ${fmtPct(q[i].cloud_yoy)}\n売上に占める比率 ${fmtShare(q[i].cloud != null && q[i].revenue ? q[i].cloud / q[i].revenue : null, 0)}`}));
+  }
+  if (c.eras.length) {
+    const fS = figure("部門の営業利益率", `四半期。${c.eras.length > 1 ? "部門の区切りの変更前を点線で分けた" : esc(c.eras[0]) + " 部門"}`, "c-seg", "",
+      c.eras.length > 1 ? legend(c.eras.map((e, k) => [e, CAT[c.ticker], k < c.eras.length - 1 ? "dash" : ""])) : "");
+    figs.push(fS);
+    chart(fS.querySelector("#c-seg"), (host, W) => line(host, W, {yfmt: yfmtPct,
+      series: c.eras.map((era, k) => ({name: era, values: q.map(r => r.segments[era]?.margin ?? null), color: CAT[c.ticker], points: true, dash: k < c.eras.length - 1 ? "5 4" : null})),
+      tip: i => `${q[i].label}\n` + c.eras.filter(e => q[i].segments[e]).map(e => `${e}  ${fmtShare(q[i].segments[e].margin)}（売上 ${fmtMoney(q[i].segments[e].revenue)}）`).join("\n")}));
+  }
+  const hasLease = q.some(r => r.lease != null);
+  const fX = figure("設備投資", `四半期・Bドル${hasLease ? "。ファイナンスリースでの取得を上に積んだ" : ""}`, "c-capex", "",
+    legend([["現金の設備投資", "var(--series-1)", "sq"], ...(hasLease ? [["ファイナンスリース", "var(--series-2)", "sq"]] : [])]));
+  const fD = figure("設備投資・減価償却・営業CF", "四半期・Bドル", "c-da", "", legend([["設備投資", "var(--series-1)"], ["減価償却", "var(--series-2)"], ["営業CF", "var(--ink-3)", "dash"]]));
+  figs.push(fX, fD);
+  chart(fX.querySelector("#c-capex"), (host, W) => barChart(host, W, {cats, stacked: true, yfmt: yfmtB,
+    series: [{name: "設備投資", values: q.map(r => r.capex), color: "var(--series-1)"}, ...(hasLease ? [{name: "リース", values: q.map(r => r.lease), color: "var(--series-2)"}] : [])],
+    tip: i => `${q[i].label}\n設備投資 ${fmtMoney(q[i].capex)}（前年比 ${fmtPct(q[i].capex_yoy, 0)}）` + (hasLease ? `\nリース   ${q[i].lease == null ? "開示なし" : fmtMoney(q[i].lease)}` : "") + `\n売上比   ${fmtShare(q[i].capex_rev, 0)}`}));
+  chart(fD.querySelector("#c-da"), (host, W) => line(host, W, {yfmt: yfmtB,
+    series: [{name: "設備投資", values: q.map(r => r.capex), color: "var(--series-1)"}, {name: "減価償却", values: q.map(r => r.da), color: "var(--series-2)"},
+             {name: "営業CF", values: q.map(r => r.ocf), color: "var(--ink-3)", dash: "5 4", width: 1.5}],
+    tip: i => `${q[i].label}\n設備投資 ${fmtMoney(q[i].capex)}\n減価償却 ${fmtMoney(q[i].da)}（前年比 ${fmtPct(q[i].da_yoy, 0)}）\n営業CF   ${fmtMoney(q[i].ocf)}`}));
+  if (q.some(r => r.debt != null)) {
+    const fB = figure("借入", "四半期末・Bドル。リースを除く。棒にカーソルで支払利息", "c-debt");
+    figs.push(fB);
+    chart(fB.querySelector("#c-debt"), (host, W) => barChart(host, W, {cats, yfmt: yfmtB,
+      series: [{name: "借入", values: q.map(r => r.debt), color: CAT[c.ticker]}],
+      tip: i => `${q[i].label}末\n借入   ${fmtMoney(q[i].debt)}\n支払利息 ${fmtMoney(q[i].interest)}（四半期）`}));
+  }
+  if (c.group === "neo") {
+    const fI = figure("営業損益と支払利息", "四半期・Bドル", "c-int", "", legend([["営業損益", "var(--series-1)"], ["支払利息", "var(--series-2)"]]));
+    figs.push(fI);
+    chart(fI.querySelector("#c-int"), (host, W) => line(host, W, {yfmt: yfmtB,
+      series: [{name: "営業損益", values: q.map(r => r.operating_income), color: "var(--series-1)", points: true},
+               {name: "支払利息", values: q.map(r => r.interest), color: "var(--series-2)", points: true}],
+      tip: i => `${q[i].label}\n営業損益 ${fmtMoney(q[i].operating_income)}（利益率 ${fmtShare(q[i].op_margin, 0)}）\n支払利息 ${fmtMoney(q[i].interest)}`}));
+  }
+  if (c.rpo_last) {
+    const fR = figure("受注残", "四半期末・Bドル", "c-rpo");
+    figs.push(fR);
+    chart(fR.querySelector("#c-rpo"), (host, W) => line(host, W, {yfmt: yfmtB,
+      series: [{name: "受注残", values: q.map(r => r.rpo), color: CAT[c.ticker], points: true}],
+      tip: i => `${q[i].label}末\n受注残 ${fmtMoney(q[i].rpo)}\n前年比 ${fmtPct(q[i].rpo_yoy, 0)}`}));
+  }
+  // company-specific lines with at least a year of figures (AWS capex, Oracle OCI)
+  const extras = [...new Set(q.flatMap(r => Object.keys(r.extra)))].filter(k => q.filter(r => r.extra[k]).length >= 4);
+  if (extras.length) {
+    const cols2 = ["var(--series-1)", "var(--series-2)"];
+    const fE = figure(extras.map(esc).join("・"), "四半期・Bドル", "c-extra", "", legend(extras.map((k, j) => [k, cols2[j % 2]])));
+    figs.push(fE);
+    chart(fE.querySelector("#c-extra"), (host, W) => line(host, W, {yfmt: yfmtB,
+      series: extras.map((k, j) => ({name: k, values: q.map(r => r.extra[k]?.value ?? null), color: cols2[j % 2], points: true})),
+      tip: i => `${q[i].label}\n` + extras.map(k => `${k} ${fmtMoney(q[i].extra[k]?.value)}（${fmtPct(q[i].extra[k]?.yoy, 0)}）`).join("\n")}));
+  }
+  v.append(grid(...figs));
+
+  const recent = [...q].reverse().slice(0, 12);
+  const cloudCols = c.cloud_name && !c.cloud_is_revenue;
+  const qrows = recent.map(r => {
+    // the newest era with this quarter; named when the segments were redrawn
+    const era = c.eras.filter(e => r.segments[e]).pop(), seg = era ? r.segments[era] : null;
+    const eraNote = seg && c.eras.length > 1 ? `<span class="sub">${esc(era)}</span>` : "";
+    return `<tr><td class="l">${esc(r.label)}</td><td class="num">${fmtB(r.revenue)}</td><td class="num">${fmtPct(r.revenue_yoy)}</td><td class="num">${fmtShare(r.op_margin)}</td>
+    ${cloudCols ? `<td class="num">${fmtB(r.cloud)}</td><td class="num">${fmtPct(r.cloud_yoy)}</td><td class="num">${seg ? fmtShare(seg.margin) + eraNote : "—"}</td>` : ""}
+    ${c.rpo_last ? `<td class="num">${fmtB(r.rpo)}</td>` : ""}
+    <td class="num">${fmtB(r.capex)}</td><td class="num">${fmtB(r.lease)}</td><td class="num">${fmtB(r.da)}</td><td class="num">${fmtB(r.ocf)}</td><td class="num">${fmtB(r.fcf)}</td>
+    <td class="num">${fmtB(r.debt)}</td><td class="num">${fmtMillion(r.interest)}</td></tr>`;
+  }).join("");
+  v.append(h(`<section><div class="head"><h2>四半期の数字（Bドル）</h2></div><div class="tw"><table>
+    <thead><tr><th class="l">四半期</th><th>売上</th><th>前年比</th><th>営業利益率</th>${cloudCols ? `<th>${esc(c.cloud_name)}</th><th>前年比</th><th>部門の営業利益率</th>` : ""}${c.rpo_last ? "<th>受注残</th>" : ""}<th>設備投資</th><th>ファイナンスリース</th><th>減価償却</th><th>営業CF</th><th>FCF</th><th>借入</th><th>支払利息（Mドル）</th></tr></thead>
+    <tbody>${qrows}</tbody></table></div>
+    <p class="caveat">${c.source === "yahoo"
+      ? "Nebius は四半期の決算を 6-K（外国企業の様式）で出し、XBRL がない。四半期の数字は Yahoo Finance の財務諸表（2025年4–6月期から）、受注残は年次報告書（20-F）の XBRL から。借入は Yahoo の総借入からリースを引いた値。"
+      : "SEC EDGAR の XBRL から。売上・営業CF・設備投資・支払利息は companyfacts、クラウド・部門・受注残・減価償却は各四半期報告書の XBRL から。第4四半期は年度の数字から第1〜3四半期を差し引いた。"}${c.notes.map(esc).join("")}</p></section>`));
+}
+
+/* ---------- router ---------- */
+function renderTabs(key) {
+  const main = [["overview", "一覧"], ["cloud", "クラウド事業"], ["capex", "設備投資と減価償却"], ["backlog", "受注残"], ["neo", "ネオクラウド"]];
+  const coTab = c => `<a class="co ${key === "co/" + c.ticker ? "on" : ""}" href="#co/${c.ticker}">${sw(c.ticker)}${c.ticker}</a>`;
+  document.getElementById("tabs").innerHTML = main.map(([k, l]) => `<a href="#${k}" class="${key === k ? "on" : ""}">${l}</a>`).join("")
+    + `<span class="gap"></span>` + HS.map(coTab).join("") + `<span class="gap"></span>` + NEO.map(coTab).join("")
+    + `<span class="gap"></span><a href="tracker.html">メガテック・トラッカー →</a>`;
+}
+function route() {
+  let key = location.hash.slice(1) || "overview";
+  if (key.startsWith("co/") && !CO[key.slice(3)]) key = "overview";
+  renderTabs(key);
+  DRAWS = []; hideTip();
+  const v = document.getElementById("view"); v.innerHTML = "";
+  if (key === "cloud") renderCloud(v);
+  else if (key === "capex") renderCapex(v);
+  else if (key === "backlog") renderBacklog(v);
+  else if (key === "neo") renderNeo(v);
+  else if (key.startsWith("co/")) renderCompany(v, CO[key.slice(3)]);
+  else renderOverview(v);
+}
+document.getElementById("asof").innerHTML = `株価 ${D.asof.prices} 終値<br>作成 ${D.asof.built}`;
+document.getElementById("foot").innerHTML = `<b style="font-family:var(--mono);letter-spacing:.1em">データと定義</b><ul>
+  <li>決算の数字: SEC EDGAR の XBRL。売上・営業CF・設備投資・借入は companyfacts、クラウド売上・部門損益・受注残・減価償却は各社の 10-Q／10-K の XBRL（部門・製品別の数字は companyfacts に入らない）。四半期報告書が出るまで、発表直後の四半期は入らない。</li>
+  <li>クラウド売上の範囲: ${CLOUD.map(c => `${esc(c.cloud_name)} = ${esc(c.cloud_def)}`).join("。")}。</li>
+  <li>受注残: 残存履行義務（RPO、まだ売上にしていない契約済みの金額）。Microsoft・Alphabet・Amazon・Oracle の全社の値。</li>
+  <li>減価償却: 有形固定資産の減価償却（us-gaap:Depreciation）。キャッシュフロー計算書の「減価償却費」の行は、Microsoft が無形資産の償却など、Amazon がコンテンツやリースの償却を含むため使わない。Alphabet は2023年まで「減価償却と処分時の減損」。</li>
+  <li>ネオクラウド: CoreWeave と IREN は SEC の XBRL（IREN は2025年6月期から米国の様式の 10-K・10-Q）。Nebius は四半期の決算を 6-K で出し XBRL がないため、四半期の数字は Yahoo Finance の財務諸表、受注残は 20-F。支払利息は損益計算書の値（CoreWeave は受取利息を差し引いた純額）。IREN の減価償却は無形資産の償却を含む。</li>
+  <li>株価・市場予想: Yahoo Finance（終値・アナリスト予想の平均）。決算日: 発表済みは SEC の 8-K（項目 2.02、引け後の提出）、予定は Yahoo（ニューヨークの日付）。</li></ul>`;
+addEventListener("hashchange", () => { route(); scrollTo(0, 0); });
+route();
+</script>
+</body>
+</html>

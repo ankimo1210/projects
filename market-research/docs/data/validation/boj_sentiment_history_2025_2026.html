@@ -1,0 +1,381 @@
+<style>
+/* ============================================================
+   claude-report — workspace default style for HTML reports
+   ------------------------------------------------------------
+   Inline this whole file into a <style> block. Artifacts must be
+   self-contained; only Google Fonts may be linked externally:
+
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?\
+family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&\
+family=Public+Sans:wght@400;500;700&\
+family=Zen+Old+Mincho:wght@700;900&\
+family=Zen+Kaku+Gothic+New:wght@400;500;700&\
+family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+   Chart colors are validated (dataviz six checks) on both surfaces:
+     light  #C05C33 / #2A6DA6  on #FAF9F5   — ALL CHECKS PASS
+     dark   #D2704E / #5093DD  on #262624   — ALL CHECKS PASS
+   Categorical --cat-1..8 (one fixed color per entity, e.g. per company):
+     light on #FAF9F5           — PASS; contrast WARN on cat-3/4/5
+                                  (2.67 / 2.06 / 2.56:1) → direct labels or a table
+     dark  on #262624 / #1A1917 — ALL CHECKS PASS
+   Adjacent pairs only (lines, bars, stacks). Scatter, maps and small
+   multiples (--pairs all) carry at most three of them.
+   Re-run the validator before changing any --series-* or --cat-* value.
+   ============================================================ */
+
+:root{
+  color-scheme: light;
+  /* surfaces & ink */
+  --ground:#F0EEE6; --surface:#FAF9F5; --surface-2:#E9E6DB; --surface-3:#F5F3EC;
+  --ink:#141413; --ink-2:#3F3C36; --ink-3:#625D54;
+  --rule:#BDB6A7; --rule-2:#8A8171;
+  /* brand accent */
+  --accent:#A64725; --accent-soft:#D97757; --accent-wash:#F7EBE3;
+  /* chart series (validated) */
+  --series-1:#C05C33; --series-2:#2A6DA6;
+  /* categorical, fixed order: blue orange aqua yellow magenta green violet red */
+  --cat-1:#2A78D6; --cat-2:#EB6834; --cat-3:#1BAF7A; --cat-4:#EDA100;
+  --cat-5:#E87BA4; --cat-6:#008300; --cat-7:#6250D6; --cat-8:#E34948;
+  --grid:#D0C9BB;
+  /* sequential ramp, light -> dark */
+  --s1:#F4E7DD; --s2:#EBD2C0; --s3:#DFB79E; --s4:#D0997A;
+  --s5:#BE7B58; --s6:#AA6140; --s7:#8F4A2C; --s8:#71351E;
+  /* type */
+  --serif:"Source Serif 4","Zen Old Mincho",Georgia,'Hiragino Mincho ProN',"Yu Mincho",serif;
+  /* JP-first: Japanese punctuation (——, 〜, 「」) must come from the JP face,
+     or a doubled em dash breaks into two disconnected strokes.
+     For an English-only document, swap the first two families. */
+  --sans:"Zen Kaku Gothic New","Public Sans",'Hiragino Sans',"Yu Gothic",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  /* Readable at 100% zoom: captions never below 12px. Keep muted text
+     above 4.5:1 on every surface; do not reduce opacity to de-emphasize it. */
+  --text-body:16px; --text-small:14px; --text-label:13px; --text-caption:12px;
+  /* shape */
+  --r-card:12px; --r-chip:999px; --r-mark:3px;
+  --measure:660px; --wide:1080px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --ground:#1A1917; --surface:#262624; --surface-2:#32302C; --surface-3:#201F1D;
+    --ink:#F4F2EC; --ink-2:#D1CBC0; --ink-3:#B3AA9D;
+    --rule:#6D6559; --rule-2:#8D8272;
+    --accent:#E08A6A; --accent-soft:#D2704E; --accent-wash:#332822;
+    --series-1:#D2704E; --series-2:#5093DD;
+    --cat-1:#3987E5; --cat-2:#D95926; --cat-3:#199E70; --cat-4:#C98500;
+    --cat-5:#D55181; --cat-6:#008300; --cat-7:#9085E9; --cat-8:#E66767;
+    --grid:#4B453E;
+    --s1:#2B2724; --s2:#3A2E28; --s3:#4B352C; --s4:#5F3D30;
+    --s5:#764936; --s6:#8F573B; --s7:#AA6A45; --s8:#C88056;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#1A1917; --surface:#262624; --surface-2:#32302C; --surface-3:#201F1D;
+  --ink:#F4F2EC; --ink-2:#D1CBC0; --ink-3:#B3AA9D;
+  --rule:#6D6559; --rule-2:#8D8272;
+  --accent:#E08A6A; --accent-soft:#D2704E; --accent-wash:#332822;
+  --series-1:#D2704E; --series-2:#5093DD;
+  --cat-1:#3987E5; --cat-2:#D95926; --cat-3:#199E70; --cat-4:#C98500;
+  --cat-5:#D55181; --cat-6:#008300; --cat-7:#9085E9; --cat-8:#E66767;
+  --grid:#4B453E;
+  --s1:#2B2724; --s2:#3A2E28; --s3:#4B352C; --s4:#5F3D30;
+  --s5:#764936; --s6:#8F573B; --s7:#AA6A45; --s8:#C88056;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground); color:var(--ink);
+  font-family:var(--sans); font-size:var(--text-body); line-height:1.9;
+  margin:0; padding:0 24px 120px; -webkit-font-smoothing:antialiased;
+  font-feature-settings:"palt" 1;
+}
+.wrap{max-width:var(--wide);margin:0 auto}
+.col{max-width:var(--measure)}
+
+/* ---------- masthead ---------- */
+.mast{padding:72px 0 40px}
+.eyebrow{font-family:var(--mono);font-size:var(--text-caption);font-weight:500;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--ink-3);display:flex;gap:8px 16px;flex-wrap:wrap;align-items:baseline}
+.eyebrow b{color:var(--accent);font-weight:600}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(38px,6.6vw,68px);
+  line-height:1.12;letter-spacing:0;margin:22px 0 0;text-wrap:balance}
+h1 .sub{display:block;font-family:var(--sans);font-size:clamp(16px,2vw,21px);
+  font-weight:500;line-height:1.7;color:var(--ink-2);margin-top:22px}
+.lede{max-width:var(--measure);margin:26px 0 0;color:var(--ink-2);font-size:16.5px}
+.lede strong{color:var(--ink);font-weight:700}
+
+/* ---------- key-number strip ---------- */
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));
+  gap:12px;margin:40px 0 0}
+.strip>div{background:var(--surface);border:1px solid var(--rule);
+  border-radius:var(--r-card);padding:20px 20px 22px}
+.strip .k{font-family:var(--mono);font-size:var(--text-label);letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-3);display:block}
+.strip .v{font-family:var(--serif);font-weight:700;font-size:38px;line-height:1.15;
+  display:block;margin-top:12px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.strip .v.a{color:var(--accent)}
+.strip .v.b{color:var(--series-2)}
+.strip .n{font-size:var(--text-small);color:var(--ink-3);display:block;margin-top:8px;line-height:1.65}
+
+/* ---------- sections ---------- */
+section{padding:72px 0 0}
+.head{display:flex;gap:18px;align-items:baseline;margin-bottom:6px}
+.step{font-family:var(--mono);font-size:var(--text-label);font-weight:600;color:var(--accent);
+  letter-spacing:.1em;padding-top:8px;flex:none}
+h2{font-family:var(--serif);font-weight:700;font-size:clamp(25px,3.3vw,34px);
+  line-height:1.4;margin:0;text-wrap:balance}
+h3{font-weight:700;font-size:15.5px;margin:44px 0 10px;letter-spacing:.02em}
+p{margin:16px 0}.col p{max-width:var(--measure)}
+strong{font-weight:700}
+em{font-style:normal;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);padding:0 2px}
+a{color:var(--accent);text-underline-offset:3px}
+code{font-family:var(--mono);font-size:.87em;background:var(--surface-2);
+  padding:2px 7px;border-radius:var(--r-mark);color:var(--ink-2)}
+ul{max-width:var(--measure);padding-left:0;list-style:none;margin:20px 0}
+ul li{position:relative;padding-left:24px;margin:14px 0}
+ul li::before{content:"";position:absolute;left:3px;top:.78em;width:8px;height:2px;
+  border-radius:1px;background:var(--accent-soft)}
+
+/* ---------- ornament (Claude asterisk motif) ---------- */
+.burst{display:block;width:22px;height:22px;margin:64px auto 0;opacity:.5}
+.burst path{stroke:var(--accent-soft);stroke-width:1.4;stroke-linecap:round}
+
+/* ---------- figures ---------- */
+figure{margin:36px 0 0;background:var(--surface);border:1px solid var(--rule);
+  border-radius:var(--r-card);padding:26px 26px 20px}
+.figtitle{font-weight:700;font-size:15.5px;margin:0 0 3px;letter-spacing:.01em}
+.figsub{font-size:var(--text-small);color:var(--ink-3);margin:0 0 18px;line-height:1.65}
+figcaption{font-size:var(--text-small);color:var(--ink-2);line-height:1.8;margin-top:16px;
+  padding-top:14px;border-top:1px solid var(--rule)}
+figcaption b{font-family:var(--mono);font-size:var(--text-caption);letter-spacing:.08em;
+  text-transform:uppercase;color:var(--accent);font-weight:600;margin-right:10px}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+svg{display:block;max-width:100%;height:auto}
+svg text{font-family:var(--mono);fill:var(--ink-2)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;
+  font-family:var(--mono);font-size:var(--text-label);color:var(--ink-2);margin:14px 0 6px}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:14px;height:3px;border-radius:2px;display:inline-block}
+.legend i.sq{width:11px;height:11px;border-radius:2px}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;margin:30px 0 0;border:1px solid var(--rule);
+  border-radius:var(--r-card);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:var(--text-small);min-width:520px}
+th,td{padding:10px 14px;text-align:right;border-bottom:1px solid var(--rule);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+th{font-family:var(--mono);font-size:var(--text-label);letter-spacing:.04em;text-transform:uppercase;
+  color:var(--ink-2);font-weight:600;background:var(--surface-3)}
+th:first-child,td:first-child{text-align:left}
+td.num{font-family:var(--mono)}
+tbody tr:last-child td{border-bottom:none}
+tr.hl td{background:var(--accent-wash);font-weight:700}
+caption{caption-side:top;text-align:left;padding:16px 14px 10px;font-size:var(--text-label);
+  color:var(--ink-3);font-family:var(--mono);letter-spacing:.03em}
+
+/* ---------- callout ---------- */
+.note{background:var(--surface);border:1px solid var(--rule);
+  border-left:3px solid var(--accent-soft);border-radius:var(--r-card);
+  padding:18px 22px;margin:32px 0;max-width:var(--measure)}
+.note .lab{font-family:var(--mono);font-size:var(--text-label);letter-spacing:.08em;
+  text-transform:uppercase;color:var(--accent);font-weight:600}
+.note p{margin:8px 0 0;font-size:15.5px;line-height:1.85}
+
+footer{margin-top:80px;padding-top:24px;border-top:1px solid var(--rule);
+  font-family:var(--mono);font-size:var(--text-caption);color:var(--ink-3);line-height:2.1}
+
+/* ---------- tooltip ---------- */
+#tip{position:fixed;pointer-events:none;opacity:0;transition:opacity .1s;
+  background:var(--ink);color:var(--ground);font-family:var(--mono);font-size:var(--text-label);
+  line-height:1.7;padding:9px 12px;border-radius:8px;z-index:99;white-space:pre;
+  box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.hit{cursor:crosshair}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (max-width:640px){
+  body{padding:0 16px 80px}
+  figure{padding:18px 15px 14px}
+  .mast{padding-top:48px}
+}
+
+body{padding:0;background:var(--surface)}
+#boj-policy-history{padding:0;color:var(--ink);font-family:var(--sans);font-size:var(--text-small);line-height:1.65}
+#boj-policy-history h2{font-family:var(--serif);font-size:24px;margin:0 0 6px;line-height:1.4}
+#boj-policy-history p{margin:6px 0}
+#boj-policy-history .history-controls{display:flex;flex-wrap:wrap;gap:12px 20px;margin:16px 0}
+#boj-policy-history label{display:grid;gap:4px;flex:1;min-width:140px}
+#boj-policy-history select{width:100%;max-width:100%;font:inherit;color:var(--ink);background:var(--surface)}
+#boj-policy-history .history-meta{color:var(--ink-2);font-size:var(--text-caption)}
+#boj-policy-history .history-plot{width:100%;min-width:0;touch-action:pan-y}
+#boj-policy-history svg{display:block;width:100%;font-family:var(--sans);font-size:var(--text-caption)}
+#boj-policy-history .history-detail{display:grid;gap:3px;margin-top:8px;padding-top:10px;border-top:1px solid var(--rule);font-variant-numeric:tabular-nums}
+#boj-policy-history .history-key{display:inline-block;width:16px;height:3px;vertical-align:middle;background:var(--series-1);margin-right:5px}
+#boj-policy-history .history-key.rate{background:var(--series-2)}
+@media(pointer:coarse){#boj-policy-history select{min-height:44px;font-size:16px}}
+</style>
+<section id="boj-policy-history" aria-label="日銀のセンチメントと決定金利の履歴">
+  <h2>日銀センチメントと決定金利</h2>
+  <p class="history-meta">2025年１月〜2026年10月の15会合 · 政策運営のBERT判定（補正前）</p>
+  <div class="history-controls">
+    <label>センチメントの表示日
+      <select id="history-date" class="form-select">
+        <option value="published_on">主な意見の公表日</option>
+        <option value="meeting">会合日で比較（事後）</option>
+      </select>
+    </label>
+    <label>会合を選ぶ
+      <select id="history-meeting" class="form-select"></select>
+    </label>
+  </div>
+  <p id="history-timing" class="history-meta">上段は公表日、下段は金利の決定日で表示しています。</p>
+  <div class="history-plot"></div>
+  <div class="history-detail" aria-live="polite" aria-atomic="true"></div>
+  <p class="history-meta">指数は（タカ派の段落数 − ハト派の段落数）÷ 政策運営の全段落数 × 100。＋がタカ派寄り、−がハト派寄りです。０は両者の差がないことを表します。</p>
+  <p class="history-meta">金利は無担保コール翌日物の誘導目標を決定日から表示。主な意見は会合後の公表で、金利予測の成績を示す図ではありません。段落数は委員数や票数とは異なります。</p>
+  <script type="application/json" id="boj-history-data">{"as_of":"2026-11-11","model":{"id":"Woochachino/cbsent","revision":"21c60231755d79fe9566bb8f0bfd08bd78233ce5"},"rows":[{"meeting":"2025-01-24","published_on":"2025-02-03","n":14,"counts":{"dovish":1,"hawkish":8,"neutral":5},"balance":50.0,"rate_percent":0.5,"decision_url":"https://www.boj.or.jp/mopo/mpmdeci/state_2025/k250124a.htm","opinion_url":"https://www.boj.or.jp/mopo/mpmsche_minu/opinion_2025/opi250124.htm"},{"meeting":"2025-03-19","published_on":"2025-03-28","n":13,"counts":{"dovish":3,"hawkish":3,"neutral":7},"balance":0.0,"rate_percent":0.5,"decision_url":"https://www.boj.or.jp/mopo/mpmdeci/state_2025/k250319a.htm","opinion_url":"https://www.boj.or.jp/mopo/mpmsche_minu/opinion_2025/opi250319.htm"},{"meeting":"2025-05-01","published_on":"2025-05-13","n":12,"counts":{"dovish":3,"hawkish":2,"neutral":7},"balance":-8.333333333333334,"rate_percent":0.5,"decision_url":"https://www.boj.or.jp/mopo/mpmdeci/state_2025/k250501a.htm","opinion_url":"https://www.boj.or.jp/mopo/mpmsche_minu/opinion_2025/opi250501.htm"},{"meeting":"2025-06-17","published_on":"2025-06-25","n":17,"counts":{"dovish":6,"hawkish":5,"neutral":6},"balance":-5.882352941176471,"rate_percent":0.5,"decision_url":"https://www.boj.or.jp/mopo/mpmdeci/state_2025/k250617a.htm","opinion_url":"https://www.boj.or.jp/mopo/mpmsche_minu/opinion_2025/opi250617.htm"},{"meeting":"2025-07-31","published_on":"2025-08-08","n":13,"counts":{"dovish":1,"hawkish":5,"neutral":7},"balance":30.76923076923077,"rate_percent":0.5,"decision_url":"https://www.boj.or.jp/mopo/mpmdeci/state_2025/k250731a.htm","opinion_url":"https://www.boj.or.jp/mopo/mpmsche_minu/opinion_2025/opi250731.htm"},{"meeting":"2025-09-19","published_on":"2025-09-30","n":16,"counts":{"dovish":3,"hawkish":6,"neutral":7},"balance":18.75,"rate_percent":0.5,"decision_url":"https://www.boj.or.jp/mopo/mpmdeci/state_2025/k250919a.htm","opinion_url":"https://www.boj.or.jp/mopo/mpmsche_minu/opinion_2025/opi250919.htm"},{"meeting":"2025-10-30","published_on":"2025-11-10","n":13,"counts":{"dovish":1,"hawkish":5,"neutral":7},"balance":30.76923076923077,"rate_percent":0.5,"decision_url":"https://www.boj.or.jp/mopo/mpmdeci/state_2025/k251030a.htm","opinion_url":"https://www.boj.or.jp/mopo/mpmsche_minu/opinion_2025/opi251030.htm"},{"meeting":"2025-12-19","published_on":"2025-12-29","n":18,"counts":{"dovish":2,"hawkish":7,"neutral":9},"balance":27.77777777777778,"rate_percent":0.75,"decision_url":"https://www.boj.or.jp/mopo/mpmdeci/state_2025/k251219a.htm","opinion_url":"https://www.boj.or.jp/mopo/mpmsche_minu/opinion_2025/opi251219.htm"},{"meeting":"2026-01-23","published_on":"2026-02-02","n":15,"counts":{"dovish":4,"hawkish":9,"neutral":2},"balance":33.333333333333336,"rate_percent":0.75,"decision_url":"https://www.boj.or.jp/mopo/mpmdeci/state_2026/k260123a.htm","opinion_url":"https://www.boj.or.jp/mopo/mpmsche_minu/opinion_2026/opi260123.htm"},{"meeting":"2026-03-19","published_on":"2026-03-30","n":11,"counts":{"dovish":1,"hawkish":9,"neutral":1},"balance":72.72727272727273,"rate_percent":0.75,"decision_url":"https://www.boj.or.jp/mopo/mpmdeci/state_2026/k260319a.htm","opinion_url":"https://www.boj.or.jp/mopo/mpmsche_minu/opinion_2026/opi260319.htm"},{"meeting":"2026-04-28","published_on":"2026-05-12","n":15,"counts":{"dovish":1,"hawkish":11,"neutral":3},"balance":66.66666666666667,"rate_percent":0.75,"decision_url":"https://www.boj.or.jp/mopo/mpmdeci/mpr_2026/k260428a.pdf","opinion_url":"https://www.boj.or.jp/mopo/mpmsche_minu/opinion_2026/opi260428.pdf"},{"meeting":"2026-06-16","published_on":"2026-06-24","n":17,"counts":{"dovish":8,"hawkish":7,"neutral":2},"balance":-5.882352941176471,"rate_percent":1.0,"decision_url":"https://www.boj.or.jp/mopo/mpmdeci/mpr_2026/k260616a.pdf","opinion_url":"https://www.boj.or.jp/mopo/mpmsche_minu/opinion_2026/opi260616.pdf"},{"meeting":"2026-07-31","published_on":"2026-08-10","n":13,"counts":{"dovish":1,"hawkish":8,"neutral":4},"balance":53.84615384615385,"rate_percent":1.0,"decision_url":"https://www.boj.or.jp/mopo/mpmdeci/mpr_2026/k260731a.pdf","opinion_url":"https://www.boj.or.jp/mopo/mpmsche_minu/opinion_2026/opi260731.pdf"},{"meeting":"2026-09-18","published_on":"2026-10-01","n":17,"counts":{"dovish":3,"hawkish":11,"neutral":3},"balance":47.05882352941177,"rate_percent":1.25,"decision_url":"https://www.boj.or.jp/mopo/mpmdeci/mpr_2026/k260918a.pdf","opinion_url":"https://www.boj.or.jp/mopo/mpmsche_minu/opinion_2026/opi260918.pdf"},{"meeting":"2026-10-30","published_on":"2026-11-10","n":15,"counts":{"dovish":1,"hawkish":6,"neutral":8},"balance":33.333333333333336,"rate_percent":1.25,"decision_url":"https://www.boj.or.jp/mopo/mpmdeci/mpr_2026/k261030a.pdf","opinion_url":"https://www.boj.or.jp/mopo/mpmsche_minu/opinion_2026/opi261030.pdf"}],"inputs":[{"file":"boj_sentiment_2025_2026-11-10.html","sha256":"310103956ee2523e9dac28eb4640e14e3b18d847f4f23378f5755b089240cb7d"},{"file":"boj_sentiment_2026.html","sha256":"f31aab35efa0d36157151c0cd705ed6ffa47e1fa657b5dc3a00bf580654b76a5"}],"rates_sha256":"37315a4bfccdf55886bad548baad8af703df2d4419cefb52b927deebcc5139fe"}</script>
+</section>
+<script>
+(() => {
+  'use strict';
+  const root = document.getElementById('boj-policy-history');
+  const payload = JSON.parse(root.querySelector('#boj-history-data').textContent);
+  const rows = payload.rows;
+  const plot = root.querySelector('.history-plot');
+  const detail = root.querySelector('.history-detail');
+  const time = root.querySelector('#history-date');
+  const picker = root.querySelector('#history-meeting');
+  const timing = root.querySelector('#history-timing');
+  const ns = 'http://www.w3.org/2000/svg';
+  const number = new Intl.NumberFormat('ja-JP', {maximumFractionDigits:1});
+  const signed = v => (v > 0 ? '+' : '') + number.format(v);
+  const stamp = d => Date.parse(d + 'T00:00:00+09:00');
+  const shortDate = d => d.slice(2).replaceAll('-', '/');
+  let selected = rows.length - 1;
+  let coordinates = null;
+  rows.forEach((row, i) => {
+    const option = document.createElement('option');
+    option.value = String(i);
+    option.textContent = row.meeting.replaceAll('-', '/') + ' 会合';
+    picker.append(option);
+  });
+  picker.value = String(selected);
+
+  function el(tag, attrs={}, style={}, text='') {
+    const item = document.createElementNS(ns, tag);
+    Object.entries(attrs).forEach(([k,v]) => item.setAttribute(k, v));
+    Object.assign(item.style, style);
+    if (text) item.textContent = text;
+    return item;
+  }
+  function readout() {
+    const row = rows[selected];
+    detail.replaceChildren();
+    const lines = [
+      row.meeting.replaceAll('-', '/') + ' 会合 · 主な意見 ' + row.published_on.replaceAll('-', '/') + ' 公表',
+      'BERT指数 ' + signed(row.balance) + ' ／ タカ ' + row.counts.hawkish + '・ハト ' + row.counts.dovish + '・中立 ' + row.counts.neutral + '（' + row.n + '段落）',
+      '決定金利 ' + row.rate_percent.toFixed(2) + '％程度'
+    ];
+    lines.forEach((line,i) => {
+      const p = document.createElement(i === 0 ? 'strong' : 'div');
+      p.textContent = line;
+      detail.append(p);
+    });
+  }
+  function draw() {
+    const width = Math.max(260, Math.floor(plot.getBoundingClientRect().width));
+    const height = 440;
+    const left = 44, right = width - 18;
+    const top = {start:36, end:195}, bottom = {start:265, end:390};
+    const min = stamp(rows[0].meeting);
+    const max = Math.max(...rows.map(row => stamp(row.published_on)));
+    const x = day => left + (stamp(day) - min) / (max - min) * (right-left);
+    const ySentiment = value => top.end - (value+100)/200 * (top.end-top.start);
+    const rateMax = Math.max(1.5, Math.ceil(Math.max(...rows.map(r=>r.rate_percent))*2)/2);
+    const yRate = value => bottom.end - value/rateMax * (bottom.end-bottom.start);
+    const svg = el('svg', {width, height, viewBox:'0 0 '+width+' '+height, role:'img', 'aria-labelledby':'history-svg-title history-svg-description'});
+    svg.append(el('title', {id:'history-svg-title'}, {}, '日銀のBERTセンチメントと決定金利の推移'));
+    svg.append(el('desc', {id:'history-svg-description'}, {}, '上段はタカ派段落比率からハト派段落比率を引いた指数。下段は各会合で決めた無担保コール翌日物の誘導目標を階段状に表示。会合選択欄から各数値を確認できます。'));
+    const line = (x1,y1,x2,y2,style={}) => svg.append(el('line',{x1,y1,x2,y2}, {stroke:'var(--grid)',strokeWidth:1,...style}));
+    const text = (value,px,py,attrs={}) => svg.append(el('text',{x:px,y:py,...attrs},{fill:'var(--ink-2)'},value));
+    text('BERTセンチメント指数', left, 17);
+    svg.append(el('line', {x1:left-24,y1:13,x2:left-8,y2:13}, {stroke:'var(--series-1)',strokeWidth:3}));
+    [-100,0,100].forEach(value => {
+      const y=ySentiment(value);
+      line(left,y,right,y,value===0?{stroke:'var(--rule-2)'}:{});
+      text(signed(value),left-7,y+4,{'text-anchor':'end'});
+    });
+    text('決定金利（年率％）', left, 242);
+    svg.append(el('line', {x1:left-24,y1:238,x2:left-8,y2:238}, {stroke:'var(--series-2)',strokeWidth:3}));
+    for(let value=0;value<=rateMax+0.001;value+=0.5){
+      const y=yRate(value);
+      line(left,y,right,y);
+      text(number.format(value),left-7,y+4,{'text-anchor':'end'});
+    }
+    line(left,top.start,left,top.end,{stroke:'var(--rule-2)'});
+    line(left,bottom.start,left,bottom.end,{stroke:'var(--rule-2)'});
+    let path='';
+    rows.forEach((row,i)=>{path+=(i?' L ':'M ')+x(row[time.value])+' '+ySentiment(row.balance);});
+    svg.append(el('path',{d:path},{fill:'none',stroke:'var(--series-1)',strokeWidth:2}));
+    let ratePath='M '+x(rows[0].meeting)+' '+yRate(rows[0].rate_percent);
+    rows.slice(1).forEach(row=>{ratePath+=' H '+x(row.meeting)+' V '+yRate(row.rate_percent);});
+    ratePath+=' H '+right;
+    svg.append(el('path',{d:ratePath},{fill:'none',stroke:'var(--series-2)',strokeWidth:2}));
+    rows.forEach((row,i)=>{
+      const common={'data-tooltip':row.meeting+' 会合：指数 '+signed(row.balance)+'、決定金利 '+row.rate_percent.toFixed(2)+'％'};
+      svg.append(el('circle',{cx:x(row[time.value]),cy:ySentiment(row.balance),r:i===selected?5:3,...common},{fill:'var(--series-1)'}));
+      svg.append(el('rect',{x:x(row.meeting)-3,y:yRate(row.rate_percent)-3,width:6,height:6,...common},{fill:'var(--series-2)'}));
+    });
+    const chosen=rows[selected];
+    line(x(chosen[time.value]),top.start,x(chosen[time.value]),top.end,{stroke:'var(--ink-3)',strokeDasharray:'3 4',pointerEvents:'none'});
+    line(x(chosen.meeting),bottom.start,x(chosen.meeting),bottom.end,{stroke:'var(--ink-3)',strokeDasharray:'3 4',pointerEvents:'none'});
+    const candidates = width < 500 ? ['2026-01-01'] : ['2025-04-01','2025-07-01','2025-10-01','2026-01-01','2026-04-01','2026-07-01'];
+    const ticks = [rows[0].meeting, ...candidates.filter(day=>stamp(day)>min&&stamp(day)<max), rows[rows.length-1].published_on];
+    ticks.forEach((day,i)=>{
+      const pos=x(day);
+      line(pos,bottom.end,pos,bottom.end+5,{stroke:'var(--rule-2)'});
+      const label = i===0||i===ticks.length-1 ? shortDate(day) : day.slice(2,7).replace('-','/');
+      text(label,pos,414,{'text-anchor':i===0?'start':i===ticks.length-1?'end':'middle'});
+    });
+    coordinates={left,right,x,top,bottom};
+    plot.replaceChildren(svg);
+    readout();
+  }
+  function select(index) {
+    if(index===selected)return;
+    selected=index;
+    picker.value=String(index);
+    draw();
+  }
+  plot.addEventListener('pointermove', event=>{
+    if(event.pointerType==='touch'||!coordinates)return;
+    const bounds=plot.getBoundingClientRect();
+    const px=event.clientX-bounds.left,py=event.clientY-bounds.top;
+    const key=py<coordinates.bottom.start?'published_on':'meeting';
+    const field=key==='published_on'?time.value:'meeting';
+    if(px<coordinates.left||px>coordinates.right)return;
+    let nearest=0,distance=Infinity;
+    rows.forEach((row,i)=>{const d=Math.abs(coordinates.x(row[field])-px);if(d<distance){distance=d;nearest=i;}});
+    select(nearest);
+  });
+  plot.addEventListener('click', event=>{
+    if(!coordinates)return;
+    const bounds=plot.getBoundingClientRect();
+    const px=event.clientX-bounds.left,py=event.clientY-bounds.top;
+    const field=py<coordinates.bottom.start?time.value:'meeting';
+    let nearest=0,distance=Infinity;
+    rows.forEach((row,i)=>{const d=Math.abs(coordinates.x(row[field])-px);if(d<distance){distance=d;nearest=i;}});
+    select(nearest);
+  });
+  picker.addEventListener('change',()=>select(Number(picker.value)));
+  time.addEventListener('change',()=>{
+    timing.textContent=time.value==='meeting'
+      ? '主な意見を会合日に戻して表示する事後比較です。当日に公表済みだった情報ではありません。'
+      : '上段は公表日、下段は金利の決定日で表示しています。';
+    draw();
+  });
+  new ResizeObserver(draw).observe(plot);
+  draw();
+})();
+</script>

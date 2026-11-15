@@ -2,6 +2,7 @@
 
 import ast
 import json
+import os
 from pathlib import Path
 
 import pytest
@@ -145,3 +146,66 @@ def test_missing_input_directory_is_not_an_offline_drive(tmp_path):
     source.rename(source.with_name("data-renamed"))
     with pytest.raises(ValueError, match="missing"):
         refresh(source, cache)
+
+
+def prepare_report_publication(tmp_path):
+    _refresh, source, cache = prepare_refresh(tmp_path)
+    reports = cache.parent / "reports"
+    (reports / "pl-daily").mkdir(parents=True)
+    for name, content in {
+        "portfolio-dashboard.html": "current allocation dashboard",
+        "artifact.json": '{"synthetic": true}',
+        "pl-daily/latest.html": "current daily report",
+        "pl-daily/pl-2026-11-12.html": "current daily report",
+        "refresh.log": "local diagnostics",
+    }.items():
+        (reports / name).write_text(content, encoding="utf-8")
+    return source, cache, reports, source.parent / "reports", source.parents[2]
+
+
+def test_report_publication_updates_shared_reports_without_copying_diagnostics(tmp_path):
+    from portfolio_analyzer.private_storage import publish_reports
+
+    source, cache, reports, destination, drive = prepare_report_publication(tmp_path)
+    publish_reports(source, cache, connection_root=drive)
+    assert (destination / "portfolio-dashboard.html").read_text() == "current allocation dashboard"
+    assert (destination / "pl-daily/latest.html").read_text() == "current daily report"
+    assert (destination / "pl-daily/pl-2026-11-12.html").read_text() == "current daily report"
+    assert json.loads((destination / "artifact.json").read_text()) == {"synthetic": True}
+    assert not (destination / "refresh.log").exists()
+    assert (source / "portfolio.private.json").read_text() == "synthetic-portfolio.private.json"
+    assert (reports / "refresh.log").is_file()
+
+
+def test_report_publication_preserves_newer_shared_work_before_copying_any_file(tmp_path):
+    from portfolio_analyzer.private_storage import publish_reports
+
+    source, cache, reports, destination, drive = prepare_report_publication(tmp_path)
+    destination.mkdir()
+    shared = destination / "portfolio-dashboard.html"
+    shared.write_text("newer report from another machine")
+    newer = (reports / "portfolio-dashboard.html").stat().st_mtime + 60
+    os.utime(shared, (newer, newer))
+    with pytest.raises(ValueError, match="newer"):
+        publish_reports(source, cache, connection_root=drive)
+    assert shared.read_text() == "newer report from another machine"
+    assert not (destination / "artifact.json").exists()
+
+
+def test_report_publication_waits_for_complete_outputs(tmp_path):
+    from portfolio_analyzer.private_storage import publish_reports
+
+    source, cache, reports, destination, drive = prepare_report_publication(tmp_path)
+    (reports / "artifact.json").unlink()
+    with pytest.raises(ValueError, match="missing"):
+        publish_reports(source, cache, connection_root=drive)
+    assert not destination.exists()
+
+
+def test_report_publication_does_not_create_an_offline_drive(tmp_path):
+    from portfolio_analyzer.private_storage import publish_reports
+
+    source, cache, _reports, destination, drive = prepare_report_publication(tmp_path)
+    drive.rename(drive.with_name("disconnected"))
+    assert publish_reports(source, cache, connection_root=drive) is False
+    assert not destination.exists()

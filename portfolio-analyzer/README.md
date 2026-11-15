@@ -11,6 +11,8 @@
 公開資料に基づく論点と検証方法を記録しています。個人の保有額・配分を含むレポートは
 レポ外のDriveまたは通常ローカルコピーに保存します。
 [実データの保存先とWindows・Macの初回設定](docs/private-data.md)を参照してください。
+Windowsの定時実行では、入力を同期して日次・メイン両方のレポートを生成し、
+Driveの同じプロジェクト配下へ反映します。実ポジション・取引の取得は別操作です。
 
 ## 現在できること
 
@@ -121,7 +123,8 @@ uv run --no-sync python portfolio-analyzer/scripts/daily_pl_report.py \
   --copy-to /mnt/c/Users/<user>/Documents/pl-daily   # 省略可
 ```
 
-出力は `dist/pl-daily/pl-<基準日>.html` と `dist/pl-daily/latest.html`（既定はダーク配色、右上で切替）、
+出力は `<private-data>/../reports/pl-daily/pl-<基準日>.html` と同じ場所の `latest.html`
+（外部入力の設定がない場合は `dist/pl-daily/`、既定はダーク配色、右上で切替）、
 履歴は `<private-data>/mtm-history.private.jsonl`（1 日 1 行、同じ基準日は上書き）。構成は上から
 
 - **ヘッドライン**: 総資産、日次損益、含み損益（原価既知分）、期間損益（全口座・入金控除後、既定 365 日）、

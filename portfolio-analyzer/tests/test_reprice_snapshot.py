@@ -200,6 +200,68 @@ def test_reprice_does_not_mutate_the_input(snapshot: dict, quotes: dict) -> None
     assert json.dumps(snapshot, ensure_ascii=False, sort_keys=True) == before
 
 
+def test_repricing_preserves_pending_history_without_aliasing_the_input(snapshot, quotes):
+    snapshot["capture_status"] = {"history_reconciled": False, "default_inputs_updated": True}
+    result = reprice_snapshot.reprice(snapshot, quotes, Decimal("159.794"), "2026-08-31")
+    assert result.get("capture_status", {}).get("history_reconciled") is False
+    result["capture_status"]["history_reconciled"] = True
+    assert snapshot["capture_status"]["history_reconciled"] is False
+
+
+@pytest.mark.parametrize("reconciled,expected_units", [(False, 1), (True, 1.5), (None, 1.5)])
+def test_repricing_cli_does_not_add_unreconciled_dc_trades(
+    snapshot, quotes, tmp_path, monkeypatch, reconciled, expected_units
+):
+    from io import BytesIO
+
+    if reconciled is not None:
+        snapshot["capture_status"] = {"history_reconciled": reconciled}
+    source = tmp_path / "snapshot.json"
+    source.write_text(json.dumps(snapshot), encoding="utf-8")
+    holding = tmp_path / "holding.json"
+    holding.write_text(
+        json.dumps(
+            {
+                "account_id": "dc",
+                "symbol": "HAPPY_AGING_40",
+                "ticker": "FUND:1",
+                "nav_csv_url": "https://example.invalid/nav",
+                "anchor": {"as_of": "2026-08-14", "units": 10000, "contributions_jpy": 1000},
+            }
+        ),
+        encoding="utf-8",
+    )
+    trades = tmp_path / "trades.tsv"
+    trades.write_text("2026/08/20\t2026/08/22\tFund\t5000\t0.02\t100\t買 掛金\n", encoding="utf-8")
+    target = tmp_path / "repriced.json"
+    monkeypatch.setattr(
+        "sys.argv",
+        [
+            "reprice_snapshot.py",
+            "--input",
+            str(source),
+            "--output",
+            str(target),
+            "--as-of",
+            "2026-08-31",
+            "--dc-holding",
+            str(holding),
+            "--dc-transactions",
+            str(trades),
+        ],
+    )
+    monkeypatch.setattr(
+        reprice_snapshot,
+        "download_closes",
+        lambda *_: {**quotes, "JPY=X": {"close": Decimal(150), "date": "2026-08-31"}},
+    )
+    monkeypatch.setattr("urllib.request.urlopen", lambda *a, **kw: BytesIO(b"2026/08/31,200\n"))
+    reprice_snapshot.main()
+    result = json.loads(target.read_text(encoding="utf-8"))
+    dc = next(p for p in result["positions"] if p["account_id"] == "dc")
+    assert dc["quantity"] == expected_units
+
+
 def test_last_final_close_skips_a_bar_still_trading() -> None:
     from datetime import datetime
     from zoneinfo import ZoneInfo

@@ -568,154 +568,167 @@ def closes(path: Path) -> pd.DataFrame:
     return prices
 
 
+def company_block(
+    ticker: str,
+    name: str,
+    group: str,
+    prices: pd.DataFrame,
+    weights: dict,
+    history: dict,
+    today: date,
+    *,
+    rows: list[dict] | None = None,
+    annual_ends: list[str] | None = None,
+) -> dict:
+    """One company's figures; `rows` and `annual_ends` stand in where SEC lacks quarters."""
+    spx = prices["^GSPC"].dropna()
+    asof = prices.index[-1]
+    cf = load(f"companyfacts_{ticker}.json")
+    sub = load(f"submissions_{ticker}.json")
+    y = load(f"yahoo_{ticker}.json")
+    splits = y.get("splits", [])
+    rows = rows or company_quarters(cf, splits)
+    px = prices[ticker].dropna()
+
+    # Results come at least five days after a quarter closes (Oracle, the
+    # quickest here, takes about nine). Tesla's delivery figures, filed under
+    # the same item a day or two after the close, sometimes after hours, do not.
+    ends = [*(r["end"] for r in rows), (d(rows[-1]["end"]) + timedelta(days=91)).isoformat()]
+    events = []
+    for day, accepted in earnings_events(sub):
+        closed = [e for e in ends if 5 <= (d(day) - d(e)).days <= 75]
+        if not closed:
+            continue
+        row = next((r for r in rows if r["end"] == closed[-1]), None)
+        if row:
+            quarter = row["label"]
+        elif closed[-1] == ends[-1]:
+            # out before its 10-Q: the quarter after the last one in the SEC facts
+            quarter = quarter_label((d(rows[-1]["end"]) + timedelta(days=1)).isoformat(), ends[-1])
+        else:
+            quarter = None
+        # A release counts from its 8-K; the reaction waits for the next close.
+        rx = reaction(px, spx, day) or {"session": None, "move": None, "vs_index": None}
+        events.append({"date": day, "accepted": accepted, **rx, "quarter": quarter})
+
+    snaps = history.get(ticker, [])
+    checks = revenue_checks(rows, events, snaps)
+    current = next((r for r in y["revenue_estimate"] if r.get("period") == "0q"), None)
+    now_q = estimate_quarter(rows, events, current, today)
+
+    # trailing P/E through time: price over TTM diluted EPS known at that date
+    eps_steps = []
+    for i in range(3, len(rows)):
+        ni = ttm(rows, "net_income", i)
+        sh = rows[i]["shares"]
+        # rows from Yahoo (Nebius) carry no filing date, so no P/E history
+        if ni is not None and sh and rows[i]["available"]:
+            eps_steps.append((pd.Timestamp(rows[i]["available"]), ni / sh))
+    weekly = week_ends(px[px.index >= asof - pd.DateOffset(years=5)]).dropna()
+    per_series = []
+    for t, p in weekly.items():
+        known = [e for at, e in eps_steps if at <= t]
+        if known:
+            # A loss-making TTM has no P/E; None breaks the line instead of bridging it.
+            per = _r(p / known[-1], 2) if known[-1] > 0 else None
+            per_series.append([t.date().isoformat(), per])
+    eps_ttm = eps_steps[-1][1] if eps_steps else None
+
+    annual_ends = annual_ends or [
+        e
+        for (s, e) in merged(cf, FLOWS["revenue"], "USD", duration=True)
+        if 350 <= (d(e) - d(s)).days + 1 <= 380
+    ]
+    # the fiscal year after the last 10-K in the SEC facts
+    fy_end = d(max(annual_ends)) + timedelta(days=364)
+    # Yahoo moves its current year on once the fourth quarter is reported,
+    # before the 10-K reaches the SEC facts (a week or more for Broadcom,
+    # Micron and Oracle); its own last reported quarter says when.
+    reported = [r["quarter"][:10] for r in y["earnings_history"] if r.get("epsActual") is not None]
+    fy0_end = fy_end
+    if reported and d(max(reported)) >= fy_end - timedelta(days=10):
+        fy0_end += timedelta(days=364)
+    eps_ntm = ntm_eps(y["earnings_estimate"], fy0_end, today)
+
+    last = rows[-1]
+    price = float(px.iloc[-1])
+    year_start = px[px.index < pd.Timestamp(asof.year, 1, 1)]
+    one_year = px[px.index <= asof - pd.DateOffset(years=1)]
+    info = y["info"]
+    return {
+        "ticker": ticker,
+        "name": name,
+        "group": group,
+        "price": _r(price, 2),
+        "chg_1d": _r(price / float(px.iloc[-2]) - 1),
+        "ret_ytd": _r(price / float(year_start.iloc[-1]) - 1) if len(year_start) else None,
+        "ret_1y": _r(price / float(one_year.iloc[-1]) - 1) if len(one_year) else None,
+        "market_cap": info.get("marketCap"),
+        "spy_weight": _r(weights.get(ticker)),
+        "per_ttm": _r(price / eps_ttm, 2) if eps_ttm and eps_ttm > 0 else None,
+        "per_ntm": _r(price / eps_ntm, 2) if eps_ntm and eps_ntm > 0 else None,
+        "eps_ntm": _r(eps_ntm, 3),
+        "eps_ttm": _r(eps_ttm, 3),
+        "yahoo_trailing_pe": _r(info.get("trailingPE"), 2),
+        "yahoo_forward_pe": _r(info.get("forwardPE"), 2),
+        "next_earnings": (y.get("next_earnings") or {}).get("date"),
+        "next_earnings_estimate": (y.get("next_earnings") or {}).get("estimate"),
+        "fiscal_year_end": fy_end.isoformat(),
+        "consensus_from": snaps[0]["taken"] if snaps else None,
+        # Yahoo keeps a reported quarter as its current one for a while.
+        "estimate_quarter": None
+        if now_q is None
+        else {
+            "label": now_q["label"],
+            "end": now_q["end"],
+            "released": now_q["release"] is not None,
+        },
+        "latest_quarter": last["label"],
+        "latest_end": last["end"],
+        "rev_yoy": _r(last["rev_yoy"]),
+        "op_margin_ttm": _r(_ratio(ttm(rows, "operating_income"), ttm(rows, "revenue"))),
+        "capex_rev_ttm": _r(_ratio(ttm(rows, "capex"), ttm(rows, "revenue"))),
+        "revenue_ttm": ttm(rows, "revenue"),
+        "ocf_ttm": ttm(rows, "ocf"),
+        "capex_ttm": ttm(rows, "capex"),
+        "fcf_ttm": ttm(rows, "fcf"),
+        "net_income_ttm": ttm(rows, "net_income"),
+        "returns_ttm": _add(ttm(rows, "buybacks"), ttm(rows, "dividends")),
+        "liquid": last["liquid"],
+        "debt": last["debt"],
+        "net_cash": _sub(last["liquid"], last["debt"]),
+        "debt_change_1y": _sub(last["debt"], rows[-5]["debt"]) if len(rows) > 4 else None,
+        "quarters": [
+            {
+                k: (_r(v, 6) if isinstance(v, float) else v)
+                for k, v in r.items()
+                if k not in ("available", "debt_with_leases")
+            }
+            for r in rows[-20:]
+        ],
+        "notes": data_notes(rows[-20:]),
+        "events": events[-12:],
+        "eps_history": y["earnings_history"],
+        "estimates": {
+            "eps": y["earnings_estimate"],
+            "revenue": y["revenue_estimate"],
+        },
+        "per_series": per_series,
+        "revenue_checks": checks,
+    }
+
+
 def build() -> dict:
     prices = closes(RAW / "prices.csv")
-    spx = prices["^GSPC"].dropna()
     asof = prices.index[-1]
     today = datetime.now(JST).date()
     weights, spy_asof = spy_weights()
     history = consensus_history()
 
-    companies = []
-    for ticker, name, group in COMPANIES:
-        cf = load(f"companyfacts_{ticker}.json")
-        sub = load(f"submissions_{ticker}.json")
-        y = load(f"yahoo_{ticker}.json")
-        splits = y.get("splits", [])
-        rows = company_quarters(cf, splits)
-        px = prices[ticker].dropna()
-
-        # Results come at least five days after a quarter closes (Oracle, the
-        # quickest here, takes about nine). Tesla's delivery figures, filed under
-        # the same item a day or two after the close, sometimes after hours, do not.
-        ends = [*(r["end"] for r in rows), (d(rows[-1]["end"]) + timedelta(days=91)).isoformat()]
-        events = []
-        for day, accepted in earnings_events(sub):
-            closed = [e for e in ends if 5 <= (d(day) - d(e)).days <= 75]
-            if not closed:
-                continue
-            row = next((r for r in rows if r["end"] == closed[-1]), None)
-            if row:
-                quarter = row["label"]
-            elif closed[-1] == ends[-1]:
-                # out before its 10-Q: the quarter after the last one in the SEC facts
-                quarter = quarter_label(
-                    (d(rows[-1]["end"]) + timedelta(days=1)).isoformat(), ends[-1]
-                )
-            else:
-                quarter = None
-            # A release counts from its 8-K; the reaction waits for the next close.
-            rx = reaction(px, spx, day) or {"session": None, "move": None, "vs_index": None}
-            events.append({"date": day, "accepted": accepted, **rx, "quarter": quarter})
-
-        snaps = history.get(ticker, [])
-        checks = revenue_checks(rows, events, snaps)
-        current = next((r for r in y["revenue_estimate"] if r.get("period") == "0q"), None)
-        now_q = estimate_quarter(rows, events, current, today)
-
-        # trailing P/E through time: price over TTM diluted EPS known at that date
-        eps_steps = []
-        for i in range(3, len(rows)):
-            ni = ttm(rows, "net_income", i)
-            sh = rows[i]["shares"]
-            if ni is not None and sh:
-                eps_steps.append((pd.Timestamp(rows[i]["available"]), ni / sh))
-        weekly = week_ends(px[px.index >= asof - pd.DateOffset(years=5)]).dropna()
-        per_series = []
-        for t, p in weekly.items():
-            known = [e for at, e in eps_steps if at <= t]
-            if known:
-                # A loss-making TTM has no P/E; None breaks the line instead of bridging it.
-                per = _r(p / known[-1], 2) if known[-1] > 0 else None
-                per_series.append([t.date().isoformat(), per])
-        eps_ttm = eps_steps[-1][1] if eps_steps else None
-
-        annual_ends = [
-            e
-            for (s, e) in merged(cf, FLOWS["revenue"], "USD", duration=True)
-            if 350 <= (d(e) - d(s)).days + 1 <= 380
-        ]
-        # the fiscal year after the last 10-K in the SEC facts
-        fy_end = d(max(annual_ends)) + timedelta(days=364)
-        # Yahoo moves its current year on once the fourth quarter is reported,
-        # before the 10-K reaches the SEC facts (a week or more for Broadcom,
-        # Micron and Oracle); its own last reported quarter says when.
-        reported = [
-            r["quarter"][:10] for r in y["earnings_history"] if r.get("epsActual") is not None
-        ]
-        fy0_end = fy_end
-        if reported and d(max(reported)) >= fy_end - timedelta(days=10):
-            fy0_end += timedelta(days=364)
-        eps_ntm = ntm_eps(y["earnings_estimate"], fy0_end, today)
-
-        last = rows[-1]
-        price = float(px.iloc[-1])
-        year_start = px[px.index < pd.Timestamp(asof.year, 1, 1)]
-        one_year = px[px.index <= asof - pd.DateOffset(years=1)]
-        info = y["info"]
-        companies.append(
-            {
-                "ticker": ticker,
-                "name": name,
-                "group": group,
-                "price": _r(price, 2),
-                "chg_1d": _r(price / float(px.iloc[-2]) - 1),
-                "ret_ytd": _r(price / float(year_start.iloc[-1]) - 1) if len(year_start) else None,
-                "ret_1y": _r(price / float(one_year.iloc[-1]) - 1) if len(one_year) else None,
-                "market_cap": info.get("marketCap"),
-                "spy_weight": _r(weights[ticker]),
-                "per_ttm": _r(price / eps_ttm, 2) if eps_ttm and eps_ttm > 0 else None,
-                "per_ntm": _r(price / eps_ntm, 2) if eps_ntm and eps_ntm > 0 else None,
-                "eps_ntm": _r(eps_ntm, 3),
-                "eps_ttm": _r(eps_ttm, 3),
-                "yahoo_trailing_pe": _r(info.get("trailingPE"), 2),
-                "yahoo_forward_pe": _r(info.get("forwardPE"), 2),
-                "next_earnings": (y.get("next_earnings") or {}).get("date"),
-                "next_earnings_estimate": (y.get("next_earnings") or {}).get("estimate"),
-                "fiscal_year_end": fy_end.isoformat(),
-                "consensus_from": snaps[0]["taken"] if snaps else None,
-                # Yahoo keeps a reported quarter as its current one for a while.
-                "estimate_quarter": None
-                if now_q is None
-                else {
-                    "label": now_q["label"],
-                    "end": now_q["end"],
-                    "released": now_q["release"] is not None,
-                },
-                "latest_quarter": last["label"],
-                "latest_end": last["end"],
-                "rev_yoy": _r(last["rev_yoy"]),
-                "op_margin_ttm": _r(_ratio(ttm(rows, "operating_income"), ttm(rows, "revenue"))),
-                "capex_rev_ttm": _r(_ratio(ttm(rows, "capex"), ttm(rows, "revenue"))),
-                "revenue_ttm": ttm(rows, "revenue"),
-                "ocf_ttm": ttm(rows, "ocf"),
-                "capex_ttm": ttm(rows, "capex"),
-                "fcf_ttm": ttm(rows, "fcf"),
-                "net_income_ttm": ttm(rows, "net_income"),
-                "returns_ttm": _add(ttm(rows, "buybacks"), ttm(rows, "dividends")),
-                "liquid": last["liquid"],
-                "debt": last["debt"],
-                "net_cash": _sub(last["liquid"], last["debt"]),
-                "debt_change_1y": _sub(last["debt"], rows[-5]["debt"]) if len(rows) > 4 else None,
-                "quarters": [
-                    {
-                        k: (_r(v, 6) if isinstance(v, float) else v)
-                        for k, v in r.items()
-                        if k not in ("available", "debt_with_leases")
-                    }
-                    for r in rows[-20:]
-                ],
-                "notes": data_notes(rows[-20:]),
-                "events": events[-12:],
-                "eps_history": y["earnings_history"],
-                "estimates": {
-                    "eps": y["earnings_estimate"],
-                    "revenue": y["revenue_estimate"],
-                },
-                "per_series": per_series,
-                "revenue_checks": checks,
-            }
-        )
+    companies = [
+        company_block(ticker, name, group, prices, weights, history, today)
+        for ticker, name, group in COMPANIES
+    ]
 
     saved = [datetime.fromisoformat(s["taken"]) for snaps in history.values() for s in snaps]
     return {

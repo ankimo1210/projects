@@ -23,6 +23,7 @@ files these two write.
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import sys
 from datetime import UTC, date, datetime
@@ -214,7 +215,7 @@ def reprice(
     dates = {ticker: quote["date"] for ticker, quote in quotes.items()}
     dates.update({fund["ticker"]: fund["date"] for fund in funds.values()})
     stale = {ticker: day for ticker, day in dates.items() if day != as_of}
-    return {
+    result = {
         "snapshot_name": f"{as_of} 再評価スナップショット",
         "base_currency": snapshot.get("base_currency", "JPY"),
         "repricing": {
@@ -233,6 +234,11 @@ def reprice(
         "accounts": accounts,
         "positions": positions,
     }
+    if "capture_status" in snapshot:
+        result["capture_status"] = copy.deepcopy(snapshot["capture_status"])
+        if (snapshot["capture_status"] or {}).get("history_reconciled") is False:
+            result["snapshot_name"] += "（履歴照合待ち）"
+    return result
 
 
 def parse_args() -> argparse.Namespace:
@@ -258,7 +264,9 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def load_funds(args: argparse.Namespace) -> dict[tuple[str, str], dict[str, Any]]:
+def load_funds(
+    args: argparse.Namespace, *, history_pending: bool = False
+) -> dict[tuple[str, str], dict[str, Any]]:
     """The DC fund's quote for ``args.as_of``, or nothing (and a note) when it cannot be had."""
     import urllib.request
 
@@ -267,7 +275,11 @@ def load_funds(args: argparse.Namespace) -> dict[tuple[str, str], dict[str, Any]
         return {}
     holding = json.loads(holding_path.read_text(encoding="utf-8"))
     tx_path = Path(args.dc_transactions)
-    trades = dcplan.parse_trades(dcplan.decode(tx_path.read_bytes())) if tx_path.exists() else []
+    trades = (
+        dcplan.parse_trades(dcplan.decode(tx_path.read_bytes()))
+        if tx_path.exists() and not history_pending
+        else []
+    )
     request = urllib.request.Request(holding["nav_csv_url"], headers={"User-Agent": "Mozilla/5.0"})
     try:
         with urllib.request.urlopen(request, timeout=30) as response:
@@ -304,7 +316,10 @@ def main() -> None:
     quotes = download_closes([*tickers, FX_SYMBOL], start_date, end_date)
     fx = quotes.pop(FX_SYMBOL)["close"].quantize(FX_DECIMALS)
 
-    funds = load_funds(args)
+    funds = load_funds(
+        args,
+        history_pending=(snapshot.get("capture_status") or {}).get("history_reconciled") is False,
+    )
     repriced = reprice(snapshot, quotes, fx, args.as_of, funds=funds)
     target = (
         Path(args.output)

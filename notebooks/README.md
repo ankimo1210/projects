@@ -14,6 +14,10 @@
 | `vector_analogy/` | ベクトル類似度の可視化実験（自己完結ミニプロジェクト） |
 | `launch_streamlit_from_notebook.ipynb` | ノートブックから Streamlit を起動するパターンメモ |
 
+## 調査メモ
+
+- [都心ブランド賃貸の比較と議論メモ](docs/tokyo-premium-rental-discussion-2026-11-01.md) — 赤溜を基準にした赤坂・広尾・三田・ラ・トゥールの比較と、募集・成約データの読み方。11月14日の募集・出典・比較差分は日付別に保存（HTMLレポートは従来版）。
+
 ## 過去世代のノート
 
 旧世代の不動産投資シミュ（`real_estate_investment_sim_0..2`, `_simulator`, `_gen_re_sim*.py` 生成スクリプト）は [old_real_estate_sim](../_archive/notebooks/old_real_estate_sim/) に、Streamlit ミニアプリは [real_estate_app](../_archive/notebooks/real_estate_app/) に退避済みです。退避理由と後継は [アーカイブ索引](../_archive/README.md) を参照してください。

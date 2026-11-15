@@ -1,0 +1,29 @@
+<div class="scale-heading"><div><h2>規模を変えると、何が変わるか。</h2><p>Fashion-MNISTの服・靴・バッグ10分類。同じデータと学習回数で比べた、このPCでの実測。</p></div><span class="pill" id="scale-date">計測結果</span></div>
+<p id="scale-hardware" class="hardware-line mono"></p>
+<p id="scale-empty" class="small" hidden>比較はまだ計測していません。READMEのコマンドで実行してから結果を取り込んでください。</p>
+<div id="scale-evidence">
+  <div class="scale-previews" id="scale-previews" aria-label="分類する10種類の画像"></div>
+  <div class="metrics scale-metrics" aria-label="規模比較の概要">
+    <div class="metric"><span>比較した規模</span><strong id="scale-model-count">—</strong><small id="scale-run-count">—</small></div>
+    <div class="metric"><span>パラメータ数の範囲</span><strong id="scale-parameter-range">—</strong><small>線形モデルから深いMLPまで</small></div>
+    <div class="metric"><span>テスト正解率の範囲</span><strong id="scale-accuracy-range">—</strong><small>各モデルのseed平均</small></div>
+    <div class="metric"><span>最大の割当VRAMピーク</span><strong id="scale-memory">—</strong><small>PyTorch · 入力・学習・評価を含む</small></div>
+  </div>
+  <p class="scale-protocol small" id="scale-protocol"></p>
+
+  <div class="scale-chart-grid">
+    <section class="panel plot-panel"><h2>大きくすると、正解率は上がるか</h2><p class="small">横軸：パラメータ数（対数） / 縦軸：テスト正解率。縦棒はseed間の標本標準偏差。</p><div class="canvas-wrap"><canvas id="scale-capacity" class="scale-chart" role="img" aria-label="パラメータ数とテスト正解率の関係"></canvas><div id="scale-capacity-tip" class="chart-tip" hidden></div></div></section>
+    <section class="panel plot-panel"><h2>どの規模からGPUが効くか</h2><div class="legend"><span><i class="class-zero"></i><span id="scale-cpu-label">CPU</span></span><span><i class="class-one"></i><span id="scale-gpu-label">GPU</span></span></div><p class="small">更新1回の時間（ms、対数軸）。データは各デバイスに配置済み。小さいほど速い。</p><div class="canvas-wrap"><canvas id="scale-cost" class="scale-chart" role="img" aria-label="各規模のCPUとGPUの学習更新時間"></canvas><div id="scale-cost-tip" class="chart-tip" hidden></div></div></section>
+  </div>
+
+  <section class="panel scale-results"><div class="panel-head"><div><h2>精度とコストを並べる</h2><p class="small">± はseed間の標本標準偏差。学習時間は全epochの学習・検証・checkpoint保存を含む平均。画像読込・初期評価・最終テストは除く。</p></div><button id="scale-export" type="button" class="quiet">全計測結果を保存 ↓</button></div><div class="scale-table-wrap"><table class="scale-table"><thead><tr><th scope="col">モデル</th><th scope="col">パラメータ</th><th scope="col">テスト正解率</th><th scope="col">学習時間</th><th scope="col">GPU/CPU速度比</th><th scope="col">割当VRAMピーク</th></tr></thead><tbody id="scale-table-body"></tbody></table></div><p id="scale-findings" class="small"></p></section>
+
+  <section class="panel plot-panel scale-learning"><div class="panel-head"><div><h2>学習の進み方を比べる</h2><p class="small">epoch 1以降の検証正解率・seed平均。最終テストは学習曲線に使用しない。</p></div><label class="inline-label" for="scale-xaxis">横軸<select id="scale-xaxis"><option value="epoch">epoch（同じ学習回数）</option><option value="time">経過秒（評価時間を含む）</option></select></label></div><div class="legend" id="scale-model-legend"></div><div class="canvas-wrap"><canvas id="scale-learning" class="scale-wide-chart" role="img" aria-label="5規模の検証正解率をepochまたは経過時間で比較"></canvas><div id="scale-learning-tip" class="chart-tip" hidden></div></div></section>
+
+  <section class="panel scale-detail"><div class="panel-head"><div><h2>ひとつの実行を詳しく見る</h2><p class="small" id="scale-detail-meta"></p></div><div class="scale-detail-controls"><label for="scale-model">モデル<select id="scale-model"></select></label><label for="scale-seed">初期化seed<select id="scale-seed"></select></label></div></div><div class="scale-chart-grid"><div><h3>学習と検証の損失</h3><div class="legend"><span><i class="class-zero"></i>学習</span><span><i class="class-one dashed"></i>検証</span></div><div class="canvas-wrap"><canvas id="scale-loss" class="scale-chart" role="img" aria-label="選択した実行の学習損失と検証損失"></canvas><div id="scale-loss-tip" class="chart-tip" hidden></div></div></div><div><h3>最終テストの混同行列</h3><p class="small">行：正解 / 列：予測 · 数字は点数 · 色は各行に占める割合。</p><div class="canvas-wrap"><canvas id="scale-confusion" class="scale-confusion" role="img" aria-label="選択した実行の10クラス混同行列"></canvas><div id="scale-confusion-tip" class="chart-tip" hidden></div></div></div></div></section>
+
+  <details class="panel methods"><summary>条件・測定方法・再実行</summary><div class="method-content"><p>公式学習60,000枚を学習50,000／検証10,000に層化分割。画像の平均・標準偏差は学習分だけで推定。公式テスト10,000枚は、各実行で検証損失が最小になったepochの重みを復元した後に一度評価しました。</p><p>同じ分割、同じseedごとのミニバッチ順序、同じ学習率と更新回数を使用。隠れ層はReLU。モデルごとのハイパーパラメータ探索は行っていません。全モデルが十分に収束した比較とは限らず、より長い学習やCNN・転移学習では結果が変わります。</p><p>CPU/GPUの時間比較は独立した同形モデルで順伝播・逆伝播・Adam更新を測定。データ転送・評価は除外し、5回warmupの後、10更新×3回の最小平均時間を採用。CUDAは測定の前後に同期します。小さなモデルでは起動のオーバーヘッドが効きます。</p><p>float32、TF32なし。VRAMはPyTorchの最大割当量で、ドライバや他アプリを含むGPU全体の消費量ではありません。時間は他アプリの負荷・電力制御でも変わります。seed間の誤差棒は学習のばらつきであり、母集団に対する信頼区間ではありません。</p><p>HTMLは保存済みの実測結果を表示します。GPUで再学習するにはWSLのリポジトリルートで次を実行してください。結果は小さなJSONのみを保存し、画像・中間配列・学習済み重みは追加保存しません。</p><pre tabindex="0"><code>OMP_NUM_THREADS=4 OPENBLAS_NUM_THREADS=4 MKL_NUM_THREADS=4 \
+  uv run --no-sync python -m nn_textbook.scale_experiment
+python3 analytics/neural_net/playground/build.py \
+  --import-comparison _data/analytics/neural_net/scale-comparison/latest.json</code></pre><p><a href="https://github.com/zalandoresearch/fashion-mnist" target="_blank" rel="noopener noreferrer">Fashion-MNISTの出典 ↗</a> · <a href="https://docs.pytorch.org/docs/stable/notes/cuda.html" target="_blank" rel="noopener noreferrer">CUDAの同期・メモリ測定 ↗</a></p><p id="scale-provenance" class="small mono"></p></div></details>
+</div>

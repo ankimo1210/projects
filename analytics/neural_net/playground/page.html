@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ja" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="手書き数字をCNNで認識し、特徴抽出・推論・学習更新を可視化。GPUでの規模比較と、ブラウザで学習する決定境界も観察。">
+  <title>ニューラルネット実験室</title>
+  <style>/*__TOKENS__*/
+/*__STYLES__*/
+/*__COMPARISON_STYLE__*/
+/*__INSPECTOR_STYLE__*/
+/*__DIGIT_STYLE__*/</style>
+</head>
+<body>
+<div class="lab">
+  <header class="lab-header">
+    <div>
+      <div class="lab-label"><svg viewBox="0 0 32 24" aria-hidden="true"><path d="M5 5 16 12 5 20M16 12 27 5M16 12 27 20"/><circle cx="5" cy="5" r="3"/><circle cx="5" cy="20" r="3"/><circle cx="16" cy="12" r="3"/><circle cx="27" cy="5" r="3"/><circle cx="27" cy="20" r="3"/></svg> ANALYTICS / NEURAL NETWORKS</div>
+      <h1>ニューラルネット実験室</h1>
+      <p class="intro">数字を読む。特徴を追う。学習と推論の計算を、目で確かめる。</p>
+    </div>
+    <button id="theme" class="quiet" type="button" aria-pressed="false">ダーク表示</button>
+  </header>
+
+  <nav class="mode-tabs" role="tablist" aria-label="実験のモード"><button id="mode-digits" role="tab" aria-selected="true" aria-controls="digits-view" type="button">手書き数字を読む</button><button id="mode-playground" role="tab" aria-selected="false" aria-controls="playground-view" type="button">学習と推論を観察</button><button id="mode-comparison" role="tab" aria-selected="false" aria-controls="comparison-view" type="button">このPCで規模比較</button></nav>
+  <section id="digits-view" role="tabpanel" aria-labelledby="mode-digits">/*__DIGIT__*/</section>
+  <section id="comparison-view" role="tabpanel" aria-labelledby="mode-comparison" hidden>/*__COMPARISON__*/</section>
+  <div class="workspace" id="playground-view" role="tabpanel" aria-labelledby="mode-playground" hidden>
+    <aside aria-label="実験の設定">
+    <details class="settings panel" id="settings-panel" open>
+      <summary>実験をつくる</summary>
+      <div class="settings-content">
+      <p class="small">設定を変えると、同じseedで最初から。</p>
+      <fieldset>
+        <legend>データ</legend>
+        <label for="dataset">分類する形</label>
+        <select id="dataset"><option value="moons">三日月</option><option value="circles">同心円</option><option value="xor">XOR（対角の点群）</option></select>
+        <div class="dataset-preview" aria-hidden="true"><canvas id="dataset-preview"></canvas></div>
+        <label for="noise">点のばらつき <output id="noise-value" for="noise">0.14</output></label>
+        <input id="noise" type="range" min="0" max="0.3" step="0.02" value="0.14">
+        <div class="range-labels"><span>くっきり</span><span>重なりが多い</span></div>
+        <label for="seed">乱数seed</label>
+        <input id="seed" type="number" min="0" max="999999" step="1" value="42" required>
+      </fieldset>
+      <fieldset>
+        <legend>ネットワーク</legend>
+        <label for="depth">隠れ層の数</label>
+        <select id="depth"><option value="0">0（線形モデル）</option><option value="1">1層</option><option value="2" selected>2層</option><option value="3">3層</option></select>
+        <label for="width">1層のニューロン数</label>
+        <select id="width"><option value="4">4</option><option value="8" selected>8</option><option value="16">16</option></select>
+        <label for="activation">活性化関数</label>
+        <select id="activation"><option value="tanh">tanh</option><option value="relu">ReLU</option></select>
+      </fieldset>
+      <fieldset>
+        <legend>学習</legend>
+        <label for="lr">学習率</label>
+        <select id="lr"><option value="0.001">0.001</option><option value="0.003">0.003</option><option value="0.01" selected>0.01</option><option value="0.03">0.03</option><option value="0.1">0.1</option></select>
+        <label for="l2">L2正則化</label>
+        <select id="l2"><option value="0">なし</option><option value="0.0001" selected>0.0001（弱）</option><option value="0.01">0.01（強）</option></select>
+        <p class="small">Adam · 全360点で1回更新 = 1 epoch</p>
+      </fieldset>
+      <div class="split-note"><strong>600点を分けて使う</strong><div class="split-bar" aria-hidden="true"><i></i><i></i><i></i></div><p>学習 360 · 検証 120 · テスト 120<br>各集合のクラス比は 1 : 1</p></div>
+      </div>
+    </details>
+    </aside>
+
+    <main>
+      <div class="toolbar panel">
+        <div class="run-buttons"><button id="start" class="primary" type="button">▶ 学習を開始</button><button id="step" type="button">1 epoch</button><button id="reset" class="quiet" type="button">リセット</button></div>
+        <label class="inline-label" for="speed">学習の速さ<select id="speed"><option value="slow">ゆっくり</option><option value="normal" selected>標準</option><option value="fast">速い</option></select></label>
+        <div class="run-progress"><span id="run-status" role="status" aria-live="polite">準備完了</span><span class="mono"><b id="epoch">0</b> / 1,000 epoch</span></div>
+        <progress id="progress" max="1000" value="0" aria-label="学習の進捗"></progress>
+      </div>
+
+      <div class="metrics" aria-label="現在の評価指標">
+        <div class="metric"><span>学習の損失</span><strong id="train-loss">—</strong><small>BCE · 小さいほどよい</small></div>
+        <div class="metric"><span>検証の正解率</span><strong id="val-accuracy">—</strong><small id="val-count">— / 120点</small></div>
+        <div class="metric"><span>線形モデルの正解率</span><strong id="baseline-accuracy">—</strong><small>検証120点 · 比較基準</small></div>
+        <div class="metric test-metric"><span>最終テストの正解率</span><strong id="test-accuracy" class="locked">未評価</strong><small id="test-count">学習を終えてから開く</small></div>
+      </div>
+
+      <section class="panel model-panel">
+        <div class="panel-head"><div><h2>空間を変形して、境界をつくる</h2><p id="architecture" class="small">2 → 8 → 8 → 1</p></div><span id="parameters" class="pill mono">— params</span></div>
+        <div class="model-actions"><div class="trace-actions"><button id="trace-play" type="button">▶ この点の推論を追う</button><button id="trace-next" class="quiet" type="button">次の層へ →</button><button id="pin-point" class="quiet" aria-pressed="false" type="button">点を固定</button></div><span id="trace-phase" class="small" aria-live="polite">全層を同時に表示</span></div>
+        <p class="small">各地図は同じ x₁・x₂ の空間。ニューロンを選ぶと、どの入力を足し合わせたかを下で確認できます。</p>
+        <div class="model-scroll" tabindex="0" aria-label="入力から出力へのネットワーク。狭幅では横にスクロールできます。">
+          <div class="model-flow" id="model-flow">
+            <svg id="network-links" aria-hidden="true"></svg>
+            <div id="network" role="group" aria-label="入力と各隠れ層の反応地図"></div>
+            <div class="model-output" id="model-output">
+              <button id="output-neuron" type="button" class="output-node" aria-pressed="true">出力 · sigmoid <strong id="probe-probability" class="mono">—</strong></button>
+              <label class="inline-label" for="points">表示する点<select id="points"><option value="train">学習 360点</option><option value="validation" selected>検証 120点</option><option value="test" disabled>テスト 120点</option></select></label>
+              <div class="canvas-wrap"><canvas id="boundary" tabindex="0" role="img" aria-describedby="point-help" aria-label="位置x1とx2に対する予測確率。クリックで点を固定、矢印キーで位置を選択"></canvas><svg id="probe-overlay" aria-hidden="true"><path id="probe-marker"/></svg><div id="boundary-tip" class="chart-tip" hidden></div></div>
+              <div class="probability-legend"><span>P(クラス1) = 0</span><i></i><span>1</span></div>
+              <div class="prediction-track"><i id="prediction-bar"></i></div>
+              <p id="probe" class="probe mono"></p>
+            </div>
+          </div>
+        </div>
+        <div class="legend"><span><i class="class-zero"></i>負の値・重み</span><span><i class="class-one"></i>正の値・重み</span><span>太い線 = 大きい重み</span><span>地図の色は ±1 で飽和（出力は確率0〜1）</span></div>
+        <p id="point-help" class="small">出力図に触れて1点を観察。クリック/タップで固定し、矢印キーでも動かせます。点の ○ / ◆ は正解クラス0 / 1、太い輪郭は誤分類。推論を追う間は重みを固定します。</p>
+      </section>
+
+      <section class="panel computation-panel">
+        <div class="panel-head"><div><h2 id="neuron-title">出力ニューロンの計算</h2><p class="small">選んだ1点の順伝播。寄与 = 前の層の値 × 接続の重み。</p></div><span id="neuron-value" class="pill mono"></span></div>
+        <p id="neuron-equation" class="neuron-equation mono"></p>
+        <div class="contribution-wrap"><table class="contribution-table"><thead><tr><th scope="col">前の層の入力</th><th scope="col">値 a</th><th scope="col">重み w</th><th scope="col">寄与 a × w</th></tr></thead><tbody id="contribution-body"></tbody></table></div>
+        <p class="small">行を選ぶと、その接続を強調します。推論では重みは変わりません。</p>
+      </section>
+
+      <section class="panel update-panel"><div class="panel-head"><div><h2>1回の学習で、何が変わったか</h2><p id="update-context" class="small">「1 epoch」で学習360点を使った実際の更新を表示します。</p></div></div><div class="update-stages"><div><span class="update-number">1 · 順伝播と損失</span><strong id="update-loss" class="mono">—</strong><p class="small">学習360点の平均BCE</p></div><div><span class="update-number">2 · 逆伝播</span><strong id="update-gradient" class="mono">—</strong><p id="update-gradient-note" class="small">選んだ重みの勾配（L2込み）</p></div><div><span class="update-number">3 · Adamで更新</span><strong id="update-weight" class="mono">—</strong><p id="update-weight-note" class="small">更新前 → 更新後の重み</p></div></div></section>
+
+      <div class="curves">
+        <section class="panel plot-panel"><h2>損失は下がっているか</h2><div class="legend"><span><i class="class-zero"></i>学習</span><span><i class="class-one dashed"></i>検証</span></div><div class="canvas-wrap"><canvas id="loss-chart" class="curve" role="img" aria-label="epochに対する学習と検証の二値交差エントロピー損失"></canvas><div id="loss-tip" class="chart-tip" hidden></div></div><p class="small">同じ重みで、更新後に両集合のBCEを計測。L2項は含みません。</p></section>
+        <section class="panel plot-panel"><h2>未知の点も分けられるか</h2><div class="legend"><span><i class="class-zero"></i>学習</span><span><i class="class-one dashed"></i>検証</span><span><i class="baseline-line"></i>線形の検証</span></div><div class="canvas-wrap"><canvas id="accuracy-chart" class="curve" role="img" aria-label="epochに対する学習と検証の正解率および線形モデルの検証正解率"></canvas><div id="accuracy-tip" class="chart-tip" hidden></div></div><p id="comparison" class="small">—</p></section>
+      </div>
+
+      <section class="panel evaluation">
+        <div class="panel-head"><div><h2>最後に、テストで確かめる</h2><p class="small">重みの更新にも設定の比較にも使っていない120点で、現在のモデルを一度評価します。</p></div><button id="finalize" type="button" disabled>学習を終えてテストを評価</button></div>
+        <p id="test-status" class="small" aria-live="polite">1 epoch以上学習すると評価できます。評価すると、この実行の学習は終了します。</p>
+        <div id="test-results" hidden>
+          <div class="evaluation-grid"><div class="confusion-wrap"><table class="confusion"><caption>混同行列 · 行：正解 / 列：予測</caption><thead><tr><th scope="col">正解 ＼ 予測</th><th scope="col">0</th><th scope="col">1</th></tr></thead><tbody><tr><th scope="row">0</th><td id="cm-00">—</td><td id="cm-01">—</td></tr><tr><th scope="row">1</th><td id="cm-10">—</td><td id="cm-11">—</td></tr></tbody></table></div><div class="test-summary"><p id="test-comparison"></p><p id="test-loss" class="mono"></p><p class="small">閾値は0.5。設定を変えてテスト結果を繰り返し見比べると、独立した最終評価ではなくなります。</p></div></div>
+        </div>
+      </section>
+
+      <details class="panel methods"><summary>実験の読み方と、計算しているコード</summary><div class="method-content"><div class="method-grid"><div><h3>まず、この順に試す</h3><ol><li>初期設定で学習し、曲がる境界を見る。</li><li>隠れ層を0にし、直線で分ける限界を見る。</li><li>同心円やXOR、点のばらつきを変える。</li><li>検証の損失が増え始めたら学習を止め、最後にテストする。</li></ol></div><div><h3>学習と評価の約束</h3><p>seedで固定した合成600点をクラスごとに分割。平均と標準偏差は学習360点だけで求めます。検証120点は曲線と設定の比較、テスト120点は最後の評価に使います。</p><p>比較基準は隠れ層なしのロジスティック回帰。学習360点だけをAdam、学習率0.03、正則化なし、400 epochで学習済みです。予測確率は校正を検証していません。</p></div></div><h3>学習エンジンの実コード（JavaScript）</h3><p class="small">順伝播 → BCEの勾配 → 逆伝播 → Adam更新。ライブラリによる計算の省略はありません。</p><pre tabindex="0" aria-label="学習エンジンのソースコード"><code id="source-code"></code></pre></div></details>
+      <div class="bottom-actions"><p class="small">設定・全epochの指標・最終評価をJSONで保存できます。</p><button id="export" class="quiet" type="button">実験結果を保存 ↓</button></div>
+      <noscript><p>この実験室の学習とグラフ表示にはJavaScriptが必要です。</p></noscript>
+    </main>
+  </div>
+  <footer>MNISTの画像認識 / Fashion-MNISTの実測比較 / 合成データのブラウザ学習 · seed固定 · オフライン表示<br>関連する既存の実験室：<a href="https://playground.tensorflow.org/" target="_blank" rel="noopener noreferrer">TensorFlow Playground ↗</a> · 本ページのコードは独立した実装です。</footer>
+</div>
+<script id="engine-source">/*__ENGINE__*/</script>
+<script>/*__INSPECTOR_APP__*/</script>
+<script id="digit-data" type="application/json">/*__DIGIT_DATA__*/</script>
+<script>/*__DIGIT_ENGINE__*/</script>
+<script>/*__DIGIT_APP__*/</script>
+<script id="scale-data" type="application/json">/*__SCALE_DATA__*/</script>
+<script>/*__COMPARISON_APP__*/</script>
+<script>/*__APP__*/</script>
+</body>
+</html>

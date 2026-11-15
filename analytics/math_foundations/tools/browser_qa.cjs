@@ -117,7 +117,7 @@ async function main(config) {
         response.writeHead(404, { 'Content-Type': 'text/plain' }); response.end('Not found'); return;
       }
       response.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store',
-        'Content-Security-Policy': "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'none'; connect-src 'none'; form-action 'none'; base-uri 'none'" });
+        'Content-Security-Policy': "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; font-src data:; connect-src 'none'; form-action 'none'; base-uri 'none'" });
       response.end(request.method === 'HEAD' ? undefined : pages.get(name));
     });
     await new Promise((resolve, reject) => { server.once('error', reject); server.listen(0, '127.0.0.1', resolve); });
@@ -210,6 +210,31 @@ async function main(config) {
           [...svg.outerHTML.matchAll(/var\((--[\w-]+)\s*\)/g)].map(match => match[1]))
           .filter(token => !getComputedStyle(document.documentElement).getPropertyValue(token).trim());
         const math = [...document.querySelectorAll('main math')].filter(element => !hidden(element));
+        const mathTargets = [...document.querySelectorAll('main math,.formula,.math,.table-math')].filter(element => !hidden(element));
+        const mathFontLoaded = [...document.fonts].some(face => face.family.replaceAll('"', '') === 'Latin Modern Math' && face.status === 'loaded');
+        const simple = document.querySelector('#linear-eigenvalues-directions math');
+        const simpleFences = simple ? [...simple.querySelectorAll('mo')].filter(element => ['(', ')'].includes(element.textContent)) : [];
+        const population = document.querySelector('#linear-eigenvalues-population math');
+        const matrixRatios = population ? [...population.querySelectorAll('mo')].filter(element => element.textContent === '(').map(element => {
+          const table = [...element.parentElement.children].find(child => child.tagName === 'mtable');
+          return table ? { fence: rect(element).height, content: rect(table).height, em: parseFloat(getComputedStyle(element).fontSize) } : null;
+        }).filter(Boolean) : [];
+        const ordinaryCases = { 'linear-eigenvalues.html': 4, 'variance.html': 0,
+          'joint-distributions.html': 0, 'linear-orthogonality.html': 1, 'discrete-counting.html': 0,
+          'vector-surfaces.html': 0, 'conditional-probability.html': 0, 'numerical-bisection.html': 0,
+          'approximation.html': 0 };
+        const ordinaryIndex = ordinaryCases[location.pathname.split('/').pop()];
+        const ordinary = ordinaryIndex === undefined ? null : document.querySelectorAll('main math')[ordinaryIndex];
+        const ordinaryFences = ordinary ? [...ordinary.querySelectorAll('mo')].filter(element =>
+          ['(', ')', '[', ']', '|', '‖'].includes(element.textContent.trim())).map(element => {
+            const box = rect(element), em = parseFloat(getComputedStyle(element).fontSize);
+            return { token: element.textContent.trim(), heightEm: box.height / em, widthEm: box.width / em };
+          }) : [];
+        const typography = { ordinaryCase: ordinaryIndex !== undefined, ordinaryFences,
+          targets: mathTargets.length, loaded: mathFontLoaded,
+          families: [...new Set(mathTargets.map(element => getComputedStyle(element).fontFamily))],
+          simpleMaxEm: simpleFences.length ? Math.max(...simpleFences.map(element => rect(element).height / parseFloat(getComputedStyle(element).fontSize))) : null,
+          matrixRatios };
         const sectionMenu = document.querySelector('.section-menu');
         const visible = element => !!element && element.getBoundingClientRect().width > 0 && element.getBoundingClientRect().height > 0
           && getComputedStyle(element).visibility !== 'hidden' && getComputedStyle(element).display !== 'none' && !hidden(element);
@@ -218,7 +243,7 @@ async function main(config) {
           h1: [...document.querySelectorAll('h1')].map(element => ({ text: element.textContent, rect: rect(element) })),
           mainLength: document.querySelector('main')?.innerText.length || 0,
           math: { count: math.length, total: document.querySelectorAll('main math').length, native: CSS.supports('math-style', 'normal'), invalidBoxes: math.map(rect).filter(r => r.width <= 0 || r.height <= 0) },
-          duplicateIds: [...new Set(duplicates)], menuOpen: document.querySelector('.chapter-menu')?.open, labs, staticFigures,
+          typography, duplicateIds: [...new Set(duplicates)], menuOpen: document.querySelector('.chapter-menu')?.open, labs, staticFigures,
           conceptTables,
           chapterSummaryVisible: visible(document.querySelector('.chapter-menu > summary')),
           mathHint: { count: mathHints.length, texts: mathHints.map(element => element.textContent.trim()), visible: mathHints.map(visible) },
@@ -233,6 +258,16 @@ async function main(config) {
       check(state.scrollWidth <= state.width + 1, 'page-horizontal-overflow', { viewport: state.width, scroll: state.scrollWidth }, where);
       check(!state.duplicateIds.length, 'duplicate-ids', state.duplicateIds, where);
       check(state.math.native && !state.math.invalidBoxes.length, 'mathml-render', state.math, where);
+      if (state.typography.targets) check(state.typography.loaded && state.typography.families.every(family => family.startsWith('"Latin Modern Math"')),
+        'math-font-embedded-and-loaded', state.typography, where);
+      if (state.typography.ordinaryCase) check(state.typography.ordinaryFences.length > 0
+        && state.typography.ordinaryFences.every(fence => fence.heightEm <= 1.5 && fence.widthEm <= 0.65),
+        'ordinary-fences-intrinsic-size-and-spacing', state.typography.ordinaryFences, where);
+      if (state.typography.simpleMaxEm !== null) {
+        check(state.typography.simpleMaxEm <= 1.5, 'simple-fences-ignore-neighboring-fractions', state.typography, where);
+        check(state.typography.matrixRatios.length === 3 && state.typography.matrixRatios.every(row => row.fence <= row.content * 1.8 && row.fence >= row.em * 1.5),
+          'matrix-fences-follow-their-own-matrix', state.typography.matrixRatios, where);
+      }
       check(!state.undefinedSvgTokens.length, 'svg-color-tokens-defined', state.undefinedSvgTokens, where);
       if (state.width <= 760) check(state.menuOpen === false, 'mobile-menu-initially-closed', state.menuOpen, where);
       else if (where.page !== 'index.html') check(state.chapterSummaryVisible, 'desktop-chapter-menu-summary-visible', null, where);
@@ -1030,6 +1065,7 @@ async function main(config) {
       for (const name of known) {
         current = { page: name };
         await staticPage.goto(origin + '/' + name, { waitUntil: 'load' });
+        await staticPage.evaluate(() => document.fonts.ready);
         const record = await staticPage.evaluate(() => ({ page: location.pathname.slice(1), h1: document.querySelector('h1')?.innerText,
           bodyLength: document.querySelector('main')?.innerText.length, exercises: document.querySelectorAll('article.exercise').length,
           answers: [...document.querySelectorAll('article.exercise details')].filter(element => element.querySelector('summary')?.textContent === '解答').length,
@@ -1037,12 +1073,15 @@ async function main(config) {
             [...exercise.querySelectorAll('details > summary')].map(summary => summary.textContent.trim())),
           noscripts: [...document.querySelectorAll('main noscript')].map(element => element.innerText),
           mathCount: document.querySelectorAll('main math').length,
+          mathFontTargets: [...document.querySelectorAll('main math,.formula,.math,.table-math')].filter(element => element.getBoundingClientRect().height > 0).length,
+          mathFontLoaded: [...document.fonts].some(face => face.family.replaceAll('"', '') === 'Latin Modern Math' && face.status === 'loaded'),
           mathHint: [...document.querySelectorAll('.chapter-header .math-scroll-hint')].map(element => ({
             text: element.textContent.trim(), visible: element.getBoundingClientRect().width > 0 && element.getBoundingClientRect().height > 0 })),
           labCount: document.querySelectorAll('[data-lab]').length,
           conceptFigures: [...document.querySelectorAll('figure.concept-figure svg')].map(svg => ({ width: svg.getBoundingClientRect().width, height: svg.getBoundingClientRect().height, title: svg.querySelector('title')?.textContent })),
           conceptTables: [...document.querySelectorAll('table.concept-table')].map(table => ({ width: table.getBoundingClientRect().width, caption: table.caption?.textContent.trim() })) }));
         check(!!record.h1 && record.bodyLength > 150, 'nojs-readable-body', record, current);
+        if (record.mathFontTargets) check(record.mathFontLoaded, 'nojs-embedded-math-font', record.mathFontLoaded, current);
         const expected = exercisesByPage.get(name) || 0;
         check(record.exercises === expected && record.answers === expected, 'nojs-chapter-exercises-and-answers', { ...record, expected }, current);
         check(record.exerciseSummaries.every(summaries => summaries.length === 3

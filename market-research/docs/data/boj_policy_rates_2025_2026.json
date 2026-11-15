@@ -1,0 +1,143 @@
+{
+  "schema": 1,
+  "as_of": "2026-11-11",
+  "metric": "無担保コールレート（オーバーナイト物）の誘導目標",
+  "unit": "percent per year",
+  "sources": [
+    {
+      "date": "2025-01-24",
+      "url": "https://www.boj.or.jp/mopo/mpmdeci/state_2025/k250124a.htm",
+      "file": "2025-01-24.htm",
+      "target_percent": 0.5,
+      "sha256": "13a03719ab005c17ad7570a97ed2ba95a8c022e19018c5689a12002b7414bdd5",
+      "bytes": 52093,
+      "evidence": "無担保コールレート(オーバーナイト物)を、0.5%程度で推移するよう促す"
+    },
+    {
+      "date": "2025-03-19",
+      "url": "https://www.boj.or.jp/mopo/mpmdeci/state_2025/k250319a.htm",
+      "file": "2025-03-19.htm",
+      "target_percent": 0.5,
+      "sha256": "b29054b6ff06d1c0a9df25c68d4016865e88bea4db6e90fc551ad9dcfc93041c",
+      "bytes": 49082,
+      "evidence": "無担保コールレート(オーバーナイト物)を、0.5%程度で推移するよう促す"
+    },
+    {
+      "date": "2025-05-01",
+      "url": "https://www.boj.or.jp/mopo/mpmdeci/state_2025/k250501a.htm",
+      "file": "2025-05-01.htm",
+      "target_percent": 0.5,
+      "sha256": "5095e6d0b958dd351a2bbf9e6b5cb7bd645d4fb036e15df8ade82a400a903a5a",
+      "bytes": 46342,
+      "evidence": "無担保コールレート(オーバーナイト物)を、0.5%程度で推移するよう促す"
+    },
+    {
+      "date": "2025-06-17",
+      "url": "https://www.boj.or.jp/mopo/mpmdeci/state_2025/k250617a.htm",
+      "file": "2025-06-17.htm",
+      "target_percent": 0.5,
+      "sha256": "6f88c711a38ea16323222aa351f220d99b7e44983a8e2bcea0933fea8d5b331c",
+      "bytes": 54808,
+      "evidence": "無担保コールレート(オーバーナイト物)を、0.5%程度で推移するよう促す"
+    },
+    {
+      "date": "2025-07-31",
+      "url": "https://www.boj.or.jp/mopo/mpmdeci/state_2025/k250731a.htm",
+      "file": "2025-07-31.htm",
+      "target_percent": 0.5,
+      "sha256": "9521bc70906e9c5794dcf7a427b5e1f881b24b4c46f204077e97571e75037a1b",
+      "bytes": 46593,
+      "evidence": "無担保コールレート(オーバーナイト物)を、0.5%程度で推移するよう促す"
+    },
+    {
+      "date": "2025-09-19",
+      "url": "https://www.boj.or.jp/mopo/mpmdeci/state_2025/k250919a.htm",
+      "file": "2025-09-19.htm",
+      "target_percent": 0.5,
+      "sha256": "146071da5cc29e3bc51b59e343b29f2c8c6c82fc8304eb59b6202ea6c18838b0",
+      "bytes": 56498,
+      "evidence": "無担保コールレート(オーバーナイト物)を、0.5%程度で推移するよう促す"
+    },
+    {
+      "date": "2025-10-30",
+      "url": "https://www.boj.or.jp/mopo/mpmdeci/state_2025/k251030a.htm",
+      "file": "2025-10-30.htm",
+      "target_percent": 0.5,
+      "sha256": "14f001b52c9ba1166d56b3fe9db28dc948c151f9b8ed3fd6a9d07dc4e63e509d",
+      "bytes": 47015,
+      "evidence": "無担保コールレート(オーバーナイト物)を、0.5%程度で推移するよう促す"
+    },
+    {
+      "date": "2025-12-19",
+      "url": "https://www.boj.or.jp/mopo/mpmdeci/state_2025/k251219a.htm",
+      "file": "2025-12-19.htm",
+      "target_percent": 0.75,
+      "sha256": "af268cad2b2de978e72eaaef30bdd4286663ca97299016b09686049040abfce6",
+      "bytes": 54376,
+      "evidence": "無担保コールレート(オーバーナイト物)を、0.75%程度で推移するよう促す"
+    },
+    {
+      "date": "2026-01-23",
+      "url": "https://www.boj.or.jp/mopo/mpmdeci/state_2026/k260123a.htm",
+      "file": "2026-01-23.htm",
+      "target_percent": 0.75,
+      "sha256": "4e1ce422e3565bf4c7676a2d519a751535e47b2e89c92e2bfb87cd4a2b7a2fa4",
+      "bytes": 46948,
+      "evidence": "無担保コールレート(オーバーナイト物)を、0.75%程度で推移するよう促す"
+    },
+    {
+      "date": "2026-03-19",
+      "url": "https://www.boj.or.jp/mopo/mpmdeci/state_2026/k260319a.htm",
+      "file": "2026-03-19.htm",
+      "target_percent": 0.75,
+      "sha256": "19e8d59e7fc8eb82278057bc510781c67f372102d0507bbe48c74fb60a50c817",
+      "bytes": 51600,
+      "evidence": "無担保コールレート(オーバーナイト物)を、0.75%程度で推移するよう促す"
+    },
+    {
+      "date": "2026-04-28",
+      "url": "https://www.boj.or.jp/mopo/mpmdeci/mpr_2026/k260428a.pdf",
+      "file": "2026-04-28.pdf",
+      "target_percent": 0.75,
+      "sha256": "cbcbf0006934b02b2b3cf0634d41249ecc6f2ad71ca2599f50636992bb243ea8",
+      "bytes": 132944,
+      "evidence": "無担保コールレート(オーバーナイト物)を、0.75%程度で推移するよう促す"
+    },
+    {
+      "date": "2026-06-16",
+      "url": "https://www.boj.or.jp/mopo/mpmdeci/mpr_2026/k260616a.pdf",
+      "file": "2026-06-16.pdf",
+      "target_percent": 1.0,
+      "sha256": "fca6cdfc3487fbe515039bf7a60aa3ef09684ad0e0a481edf212c4cc0e8a2ab9",
+      "bytes": 215357,
+      "evidence": "無担保コールレート(オーバーナイト物)を、1.0%程度で推移するよう促す"
+    },
+    {
+      "date": "2026-07-31",
+      "url": "https://www.boj.or.jp/mopo/mpmdeci/mpr_2026/k260731a.pdf",
+      "file": "2026-07-31.pdf",
+      "target_percent": 1.0,
+      "sha256": "d0305677d4775a6a1d71c78f90e0491eed0d070eb2eeef5be84dd50a02f28ca5",
+      "bytes": 140828,
+      "evidence": "無担保コールレート(オーバーナイト物)を、1.0%程度で推移するよう促す"
+    },
+    {
+      "date": "2026-09-18",
+      "url": "https://www.boj.or.jp/mopo/mpmdeci/mpr_2026/k260918a.pdf",
+      "file": "2026-09-18.pdf",
+      "target_percent": 1.25,
+      "sha256": "83f22629fc8ec792b6c32460f07933018b09aba3179f1145f74b8062ec2524b9",
+      "bytes": 224369,
+      "evidence": "無担保コールレート(オーバーナイト物)を、1.25%程度で推移するよう促す"
+    },
+    {
+      "date": "2026-10-30",
+      "url": "https://www.boj.or.jp/mopo/mpmdeci/mpr_2026/k261030a.pdf",
+      "file": "2026-10-30.pdf",
+      "target_percent": 1.25,
+      "sha256": "b1b4c402582c1633299f39a62d4d3da6f77fb6d1322825acd2f341a68376f07d",
+      "bytes": 156134,
+      "evidence": "無担保コールレート(オーバーナイト物)を、1.25%程度で推移するよう促す"
+    }
+  ]
+}
