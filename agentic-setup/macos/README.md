@@ -13,6 +13,7 @@
 | `claude/settings.json` | `~/.claude/settings.json` | statusLine のパスが Mac 用。`swift-lsp` プラグイン、`modelSettings` の opus-5 xhigh を含む |
 | `codex/config.toml` | `~/.codex/config.toml` | ollama プロファイル、marketplaces、computer-use の notify を含み WSL 版とはほぼ別物 |
 | `karabiner/*.json` | `~/.config/karabiner/assets/complex_modifications/` | 下記「Karabiner-Elements」参照 |
+| [`network-monitor/`](network-monitor/README.md) | `~/Library/Application Support/NetworkMonitor/`・`~/Library/LaunchAgents/` | 疎通 15 秒・実効速度 5 分ごと、DNS・HTTPS・Wi-Fi 状態の定期監視 |
 
 `claude/statusline-command.sh` はマシン固有のパスを含まないため親ディレクトリの
 ものをそのまま使える。`settings.json` の `statusLine.command` だけが
