@@ -1,0 +1,56 @@
+{
+  "as_of": "2026-11-15",
+  "currency": "JPY",
+  "model_status": "latest_chat_sensitivity_not_demand_forecast_or_formal_accounts",
+  "origin": "直前のこのチャットの収入目安を再現するため今回機械可読化",
+  "anchor_source": "artifacts/one-ginza-detail-v1/calculations.json::middle_case.monthly_outflow_reference_yen",
+  "anchor_monthly_cash_yen": 11431197.2304,
+  "wages_no_vat_yen": 3740000,
+  "reference_anchor_visits_month": 6000,
+  "assumed_tax_rate": 0.1,
+  "variable_cost_ex_yen_per_visit": 350,
+  "advertising_ex_yen_month": 300000,
+  "card_rate_on_gross_sales": 0.03,
+  "operating_days_month": 30,
+  "average_spend_incl_tax_cases": [
+    3000,
+    3300,
+    3850,
+    4400
+  ],
+  "daily_visits_cases": [
+    100,
+    120,
+    150,
+    200,
+    250
+  ],
+  "capacity_scenario": {
+    "concurrent_people": 40,
+    "hours_day": 14,
+    "average_stay_hours": 2
+  },
+  "actual_demand_forecast": null,
+  "actual_owner_takehome": null,
+  "limitations": [
+    "給与以外の既存支出を一括で10%税抜参考換算。保険/積立/委託等の実際の税区分・控除は未精査。",
+    "350円/客は6000人/月時点の総額を保つ集約固定/変動分割。水/電気/ガス/リネン等への明細配賦は未済。元の明示リネンは180円税込/客。",
+    "販促月30万と決済3%は追加仮定。旧ONE GINZA月次に含む増床20万を再加算しない。",
+    "償却・借入元利返済・法人税前。正式PL/CF・需要予測・個人手取りではない。",
+    "40人/14h/2hは条件仮定。営業許可/時間承諾/ピーク処理を確認した値ではない。"
+  ],
+  "benchmark_sources": [
+    {
+      "publisher": "サウナ東京公式",
+      "url": "https://sauna-tokyo.jp/access",
+      "checked_at": "2026-11-15",
+      "facts": "2時間は平日2600/土日3100、4時間3300/3800という当日の読取。価格予測/平均実現単価ではない。"
+    },
+    {
+      "publisher": "国税庁",
+      "url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shohi/6451.htm",
+      "checked_at": "2026-11-15",
+      "facts": "給与等は課税仕入れから除かれるという一般説明。個別モデルの税務処理の認定ではない。"
+    }
+  ]
+}

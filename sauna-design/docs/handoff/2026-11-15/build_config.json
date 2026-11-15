@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "as_of": "2026-11-15",
+  "output_name": "chatgpt-handoff-v1",
+  "archive_name": "sauna-chatgpt-handoff-2026-11-15.zip",
+  "package_folder": "sauna-chatgpt-handoff-2026-11-15",
+  "output_budget_bytes": 2147483648,
+  "archive_budget_bytes": 500000000,
+  "memory_estimate_mib_upper": 256,
+  "source_extensions": [
+    ".md",
+    ".json",
+    ".csv",
+    ".py",
+    ".mjs",
+    ".js",
+    ".sh",
+    ".html",
+    ".css",
+    ".txt",
+    ".toml",
+    ".yaml",
+    ".yml"
+  ],
+  "current_design_versions": [
+    "fable-v8",
+    "fable-v9"
+  ],
+  "history_design_versions": [
+    "fable-v3",
+    "fable-v4",
+    "fable-v5",
+    "fable-v6",
+    "fable-v7"
+  ],
+  "full_artifact_families": [
+    "architecture-v1",
+    "cost-v1",
+    "property-v1",
+    "candidate-search-v1",
+    "candidate-search-v2",
+    "candidate-detail-v1",
+    "candidate-search-v3",
+    "one-ginza-detail-v1",
+    "reference-v2"
+  ],
+  "native_reference_version": "fable-v7",
+  "handoff_documents": {
+    "START_HERE.md": "00_START_HERE.md",
+    "HANDOFF.md": "01_HANDOFF.md",
+    "DESIGN_AND_ENGINEERING.md": "02_DESIGN_AND_ENGINEERING.md",
+    "FINANCE_AND_PROPERTY.md": "03_FINANCE_AND_PROPERTY.md",
+    "DATA_DICTIONARY.md": "04_DATA_DICTIONARY.md",
+    "ASSET_GUIDE.md": "05_ASSET_GUIDE.md"
+  },
+  "excluded_scopes": [
+    "raw Fable jsonl/端末・実行ログ/スナップショット",
+    "GPU試写/parent_check/再描画中間データ",
+    "旧v3〜v6のネイティブモデル一式（本番画像/図面/manifest/検証JSONは収録）",
+    "配布用の重複ZIP・.blend1・キャッシュ・.git・.env",
+    "他プロジェクト・global secrets/settings"
+  ],
+  "session_backup_name": "68de4adc-db0a-4644-a3a5-9be5012127a3.jsonl",
+  "estimated_disk_note": "現在の選択のraw+ZIP+一時ZIP+メタデータを計測して2GiB以内、ZIP500MB未満を実行時に確認。モデル再生成/配列展開なし。"
+}

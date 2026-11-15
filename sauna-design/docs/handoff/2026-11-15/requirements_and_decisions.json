@@ -1,0 +1,237 @@
+{
+  "as_of": "2026-11-15",
+  "classes": {
+    "user_confirmed": "ユーザーの明示希望・選択",
+    "implemented_concept": "模型へ実装、実物件の成立は未確認",
+    "calculation_assumption": "作者の計算仮条件。採用確定/測定/予測としない",
+    "superseded": "履歴として残す旧条件",
+    "unknown": "未決/未取得"
+  },
+  "requirements": [
+    {
+      "id": "U01",
+      "domain": "事業",
+      "statement": "男性専用1系統、館内同時40人を計画",
+      "evidence_class": "user_confirmed",
+      "qualification": "営業定員の認定でない"
+    },
+    {
+      "id": "U02",
+      "domain": "サ室",
+      "statement": "3室、主室約20人と定期アウフグース",
+      "evidence_class": "user_confirmed",
+      "qualification": "20人のまま出入り・座りやすさを改善"
+    },
+    {
+      "id": "U03",
+      "domain": "サ室",
+      "statement": "セルフロウリュ＋高温ドライ",
+      "evidence_class": "user_confirmed",
+      "qualification": "型式/能力/施工は未選定"
+    },
+    {
+      "id": "U04",
+      "domain": "主室",
+      "statement": "中央ストーブを囲む",
+      "evidence_class": "user_confirmed",
+      "qualification": "大きな水平タオル回転・20位置・通路の同時成立は未確認"
+    },
+    {
+      "id": "U05",
+      "domain": "意匠",
+      "statement": "全体暗め・暖色間接光、目線をぶつけない休憩",
+      "evidence_class": "user_confirmed",
+      "qualification": "監視・清掃・避難/照度との照合は残る"
+    },
+    {
+      "id": "U06",
+      "domain": "意匠",
+      "statement": "自然で控えめな曲線・斜め、装飾過多を避ける",
+      "evidence_class": "user_confirmed",
+      "qualification": "V5以降に反映"
+    },
+    {
+      "id": "U07",
+      "domain": "サ室",
+      "statement": "1室にテレビ",
+      "evidence_class": "user_confirmed",
+      "qualification": "高温ドライへ仮実装、耐熱/冷却/点検は未確定"
+    },
+    {
+      "id": "U08",
+      "domain": "浴室",
+      "statement": "造り付けの椅子",
+      "evidence_class": "user_confirmed",
+      "qualification": "2位置として概念実装"
+    },
+    {
+      "id": "U09",
+      "domain": "浴槽",
+      "statement": "水風呂2槽、立つ深槽と座る槽",
+      "evidence_class": "user_confirmed",
+      "qualification": "原型水深1.2/0.6mは設計仮定"
+    },
+    {
+      "id": "U10",
+      "domain": "浴槽",
+      "statement": "炭酸泉1槽",
+      "evidence_class": "user_confirmed",
+      "qualification": "37℃は作者仮定"
+    },
+    {
+      "id": "U11",
+      "domain": "休憩",
+      "statement": "浴室内中心、椅子と寝転び、着衣は待合程度",
+      "evidence_class": "user_confirmed",
+      "qualification": "現在24か所、40人全員の席を確保した状態ではない"
+    },
+    {
+      "id": "U12",
+      "domain": "外気浴",
+      "statement": "可能なら追加、屋内のみで成立",
+      "evidence_class": "user_confirmed",
+      "qualification": "物件のテラス/屋外占有権は未取得"
+    },
+    {
+      "id": "U13",
+      "domain": "改良",
+      "statement": "小さい水風呂で空く場所は休憩増設へ",
+      "evidence_class": "user_confirmed",
+      "qualification": "V8で寝椅子4の離れへ"
+    },
+    {
+      "id": "U14",
+      "domain": "改良",
+      "statement": "サブサウナを規格通りにしない",
+      "evidence_class": "user_confirmed",
+      "qualification": "セルフ3高さ/ドライ寝座等を実装"
+    },
+    {
+      "id": "U15",
+      "domain": "運用",
+      "statement": "休憩満席の逃げ場・集中動線を重視",
+      "evidence_class": "user_confirmed",
+      "qualification": "待機/溢れ・死角は未解決"
+    },
+    {
+      "id": "U16",
+      "domain": "水温",
+      "statement": "10℃/16℃を計算用の仮条件",
+      "evidence_class": "user_confirmed",
+      "qualification": "最終営業温度の認定でない"
+    },
+    {
+      "id": "U17",
+      "domain": "製品",
+      "statement": "LIXILサーモタイル スレートⅡ・浴室床タイプ候補",
+      "evidence_class": "user_confirmed",
+      "qualification": "色/ST-33N/施工・安全は仮"
+    },
+    {
+      "id": "U18",
+      "domain": "製品",
+      "statement": "METOS ZIEL/ZL-300を主ストーブ比較候補",
+      "evidence_class": "user_confirmed",
+      "qualification": "外形1台モデル、正式な型式/台数/離隔/能力選定なし"
+    },
+    {
+      "id": "U19",
+      "domain": "予算",
+      "statement": "当初1〜2億円は総額",
+      "evidence_class": "superseded",
+      "qualification": "現在上限一旦解除。賃貸主仮定で購入価格は未定"
+    },
+    {
+      "id": "U20",
+      "domain": "予算",
+      "statement": "物件比較のため予算上限一旦解除",
+      "evidence_class": "user_confirmed",
+      "qualification": "budget_cap_yen:null"
+    },
+    {
+      "id": "U21",
+      "domain": "立地",
+      "statement": "山手線又は千代田線の駅から広告徒歩10分以内",
+      "evidence_class": "user_confirmed",
+      "qualification": "実歩行計測/ホーム動線は別"
+    },
+    {
+      "id": "U22",
+      "domain": "物件",
+      "statement": "CIRCLES∞大崎といちご神宮前を今回から除外",
+      "evidence_class": "user_confirmed",
+      "qualification": "同一別媒体広告を復活させない"
+    },
+    {
+      "id": "U23",
+      "domain": "時間",
+      "statement": "朝から22〜23時ごろまでを希望",
+      "evidence_class": "user_confirmed",
+      "qualification": "朝開始時刻未定、物件の承諾なし"
+    },
+    {
+      "id": "U24",
+      "domain": "進め方",
+      "statement": "現時点で建築士へ頼まずAIが段階検討",
+      "evidence_class": "user_confirmed",
+      "qualification": "資格者判断/行政承認・構造/消防等の未取得を消さない"
+    },
+    {
+      "id": "U25",
+      "domain": "制作",
+      "statement": "Fable/highで実3D、方式変更可、同じ会話を消さない",
+      "evidence_class": "user_confirmed",
+      "qualification": "uuid68de4adc-db0a-4644-a3a5-9be5012127a3"
+    },
+    {
+      "id": "U26",
+      "domain": "GPU",
+      "statement": "ゲーム中は一時保留、その後再開を許可",
+      "evidence_class": "user_confirmed",
+      "qualification": "現在の恒久禁止ではない。今回新描画なし"
+    },
+    {
+      "id": "U27",
+      "domain": "品質",
+      "statement": "画像と3Dの隔たりを縮め、実モデルと同一モデル描画",
+      "evidence_class": "user_confirmed",
+      "qualification": "写真貼付け/画像ビューアを実3Dにしない"
+    },
+    {
+      "id": "I01",
+      "domain": "原型",
+      "statement": "20×14m=280㎡、15区画",
+      "evidence_class": "implemented_concept",
+      "qualification": "物件の実測・柱/躯体/避難を含む成立面積ではない"
+    },
+    {
+      "id": "I02",
+      "domain": "席",
+      "statement": "主20/セルフ6/ドライ4、休憩24",
+      "evidence_class": "implemented_concept",
+      "qualification": "姿勢/静止位置の検討値、営業定員でない"
+    },
+    {
+      "id": "A01",
+      "domain": "収益",
+      "statement": "3300円/30日/350円変動/決済3%/販促30万",
+      "evidence_class": "calculation_assumption",
+      "qualification": "実単価/需要/経費配賦の実証なし"
+    },
+    {
+      "id": "A02",
+      "domain": "時間",
+      "statement": "9〜23時=14h・平均滞在2hの収容感度",
+      "evidence_class": "calculation_assumption",
+      "qualification": "希望時間の許可・滞在実績でない"
+    },
+    {
+      "id": "X01",
+      "domain": "不明",
+      "statement": "初期発言の125mmの対象",
+      "evidence_class": "unknown",
+      "qualification": "壁厚/管径の採用値に変換しない"
+    }
+  ],
+  "priority": "最新ユーザーの希望/このhandoffを旧文書の時点記録より優先し、根拠不明は保留"
+}
