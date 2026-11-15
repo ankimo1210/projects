@@ -1,0 +1,104 @@
+{
+  "as_of": "2026-11-15",
+  "scope": "東京都・男性40人・280㎡・3サ室・水風呂2槽＋炭酸泉。公開募集案内の比較で、募集継続/空室・用途承諾・収まり・設備再利用は未照会。",
+  "assumptions": {
+    "tax": 0.1,
+    "preopening_paid_months": 5,
+    "runway_months": 3,
+    "broker_months_base_rent_gross": 1,
+    "guarantee_months_total_gross": 1,
+    "saving_scenarios_direct_yen": [0, 7000000, 12000000],
+    "budget_yen": 200000000,
+    "property_extras_status": "未見積。構造/基礎・建物共用消防・受変電/公共本管・屋外機権限・面積超過分の内装・譲渡料等を0円確定としない。参考総額には未算入。",
+    "reuse_status": "全候補未確認。700/1200万円は全工種の純減額を確保した比較仮定。再利用済みや値引き取得を意味しない。",
+    "deposit_basis": "掲載保証金月数×税抜家賃本体を参考計算。月数の基準/消費税/償却時課税は要確認。保証金の支払全額を一度計上し、償却分を再加算しない。",
+    "monthly_basis": "⑥の家賃以外の月次支出を維持。200人/日等は設備/運転計算の仮定で需要予測ではない。多摩地域の水道等実契約・交通/集客差は未反映。",
+    "fee_basis": "礼金・保証金は掲載月数を使用。未公表の仲介は本体家賃税込1か月、初回保証料は固定費税込1か月と仮定。保険/保証更新等の実額は未取得。⑦探索式の保証料0.7か月から比較用に変更。"
+  },
+  "candidates": [
+    {
+      "id": "C01", "name": "いづみハイツ竹ノ塚 1階B", "group": "比較対象", "address": "東京都足立区島根2-32-21",
+      "area_m2": 346.56, "floor": "1階B / RC地上12階", "access": "国道4号ロードサイド。掲載は島根町バス停徒歩2分。駅近として評価しない。",
+      "structure_age": "RC / 1975年3月", "rent_published": "税込88万円/月", "common_published": "管理費－ / 共益費なし",
+      "rent_ex_yen": 800000, "common_ex_for_reference_yen": 0, "common_confirmed_none": true,
+      "deposit_months": 6, "key_months_for_reference": 1, "key_published": "1.1か月。税込表示か基準家賃の定義は要確認。標準88万円、税込家賃×1.1なら96.8万円。",
+      "deposit_writeoff": "償却1か月。保証金全額計上の中に含める。", "lease": "普通借家3年 / 更新料新賃料1.1か月",
+      "condition": "現状渡し / 空 / 即引渡しの表示", "listing_date": null, "next_update": null,
+      "availability": "公開募集ページあり。掲載更新日なし。現時点の空室・募集継続は未照会。",
+      "restrictions": "飲食店舗不可・24時間営業不可。浴場/サウナの可否は記載なし。高天井は2.5m以上の表示のみ。",
+      "reuse_listed": "既存温浴設備・浴槽・ピット・ろ過冷却設備の記載なし。共益費なし、駐車場有、別途倉庫15.61㎡の表示。",
+      "reuse_conditions": "住居上階を含む建物での浴場用途・掘削/防水・支持経路・管理規約・排気排熱/騒音・割当給排水/受電の書面確認が先。一般内装は温浴向け再利用を算定できない。",
+      "first_check": "浴場用途と掘削/屋外機設置の承諾、断面/床支持資料、営業時間。",
+      "priority_reason": "23区内で面積・賃料が探索条件に近い。支持/ピット・住宅との共存条件は未確認。",
+      "extra_fee_sensitivity_yen": 88000,
+      "sources": [{"url": "https://search.acre-corp.co.jp/contents.php?c=rent_property_info&id=i01ksp2h84sqksnydx919dj673y", "publisher": "ACRE 店舗deサーチ", "checked_at": "2026-11-15", "property_no": "260605001", "checked_fields": "区画/面積/税込賃料/共益費なし/保証金・礼金・償却/契約/用途制限/現況"}]
+    },
+    {
+      "id": "C02", "name": "唐木田センタービル 1階B", "group": "比較対象", "address": "東京都多摩市唐木田1-53-9",
+      "area_m2": 318.94, "floor": "1階B / RC地上6階（建物仕様表）", "access": "唐木田駅 徒歩1分",
+      "structure_age": "RC / 1993年1月", "rent_published": "税抜71万円/月", "common_published": "税抜34万円/月",
+      "rent_ex_yen": 710000, "common_ex_for_reference_yen": 340000, "common_confirmed_none": false,
+      "deposit_months": 4, "key_months_for_reference": 1, "key_published": "1か月。月数計算の基準は要確認。",
+      "deposit_writeoff": "記載なし。返還/償却の実条件は未取得。", "lease": "契約種別/期間は取得ページで未確認",
+      "condition": "事務所仕様。建物案内に個別空調・男女別トイレ・低層クリニック。", "listing_date": null, "next_update": null,
+      "availability": "1階Bの公開募集案内あり。現時点の空室・募集継続は未照会。",
+      "restrictions": "用途・仕様は賃貸オフィス/事務所。浴場利用・営業時間・ピット工事の承諾は未確認。",
+      "reuse_listed": "建物案内の個別空調・トイレ・EV2基。温浴設備の記載なし。床荷重300kg/㎡の一般案内を浴槽支持の根拠にしない。",
+      "reuse_conditions": "一般空調は湿気/塩素/温度への適合・機齢・区画専用能力が必要。トイレ既存でも給排水の浴場容量を意味しない。支持/掘削/竪管/排熱経路を図面確認。",
+      "first_check": "事務所区画での浴場用途と床下工事が認められるか。共益費の対象と専用設備の割当。",
+      "priority_reason": "駅前・面積に余地あり。共益費込みで月額115.5万円税込、事務所からの用途転換が大きな条件。",
+      "extra_fee_sensitivity_yen": 0,
+      "sources": [{"url": "https://www.chintai-jimusho.com/building/56716/", "publisher": "賃貸事務所ドットコム", "checked_at": "2026-11-15", "property_no": "376786-B / 1階Bの行", "checked_fields": "1階B318.94㎡/賃料71万＋共益費34万税別/敷4礼1/住所駅/事務所仕様/建物設備"}]
+    },
+    {
+      "id": "C03", "name": "八王子市川口町 貸工場（原島貸工場）", "group": "比較対象", "address": "東京都八王子市川口町1483-3",
+      "area_m2": 380.55, "floor": "平屋", "access": "西八王子駅 徒歩72分（掲載）。車利用を含む集客検証が必要。",
+      "structure_age": "軽量鉄骨 / 1974年6月", "rent_published": "税抜50万円/月", "common_published": "未記載。参考計算に共益費は未算入。",
+      "rent_ex_yen": 500000, "common_ex_for_reference_yen": 0, "common_confirmed_none": false,
+      "deposit_months": 1, "key_months_for_reference": 1, "key_published": "主要掲載1か月、別仲介掲載2か月と相違。2か月なら参考総額＋55万円。",
+      "deposit_writeoff": "保証金/償却欄－。条件未取得。", "lease": "期間3年 / 契約種別欄－",
+      "condition": "空家 / 入居相談。準工業地域・駐車場・シャッター・トイレ。", "listing_date": "2026-08-21", "next_update": "2026-09-04",
+      "availability": "公開案内あり。ただし次回更新予定日経過。現時点の空室・募集継続は未照会。",
+      "restrictions": "工場/倉庫の掲載。浴場への用途転換、掘削、耐震/防火/避難、屋外設備設置は未確認。",
+      "reuse_listed": "トイレ・シャッター・駐車場。温浴設備の記載なし。平屋であってもピット施工や荷重支持が可能とは限らない。",
+      "reuse_conditions": "土間/基礎/地下埋設物・排水インバート・水圧流量・電源/熱源・敷地境界/駐車場契約を確認。380㎡全体の追加内装費は算定していない。",
+      "first_check": "募集継続、浴場への用途/工事承諾、土間基礎と屋外設備設置範囲、共益費と礼金の相違。",
+      "priority_reason": "賃料・保証金が低い比較候補。駅から遠く、旧工場の建物改修費と需要が大きな不確実性。",
+      "extra_fee_sensitivity_yen": 550000,
+      "sources": [
+        {"url": "https://www.souko-ing21.com/s_r_1195/", "publisher": "倉庫ing21", "checked_at": "2026-11-15", "property_no": "RHS-t195", "checked_fields": "380.55㎡平屋/所在地/税抜賃料50万/敷1礼1/仲介1.1/築年月/現況/更新日"},
+        {"url": "https://l-777.jp/detail.php?id=44112", "publisher": "貸倉庫・貸工場マート", "checked_at": "2026-11-15", "property_no": "44112", "checked_fields": "同所在地/面積/原島貸工場名/礼金2か月の相違"}
+      ]
+    },
+    {
+      "id": "C04", "name": "YSビル新館 1階", "group": "比較対象", "address": "東京都東大和市向原6丁目",
+      "area_m2": 330.58, "floor": "1階 / 鉄骨造2階建", "access": "東大和市駅 徒歩2分",
+      "structure_age": "鉄骨造 / 2000年8月（調査担当が一次詳細を再確認）", "rent_published": "税込110万円/月", "common_published": "税込11万円/月",
+      "rent_ex_yen": 1000000, "common_ex_for_reference_yen": 100000, "common_confirmed_none": false,
+      "deposit_months": 6, "key_months_for_reference": 1, "key_published": "1か月。基準/税込扱いは要確認。",
+      "deposit_writeoff": "敷引1か月。保証金支払全額に含め再加算しない。", "lease": "定期借家5年。再契約可否/条件未確認。",
+      "condition": "貸主自用店舗。引渡時期・状態・分割相談。", "listing_date": "2026-09-09", "next_update": "2026-11-11",
+      "availability": "公開募集案内あり。次回更新予定日経過。現時点の空室/自用解消・募集継続は未照会。",
+      "restrictions": "フィットネス・歯科不可。浴場の可否は記載なし。天高2.5m以上の案内だけでは梁下3mは確認できない。",
+      "reuse_listed": "一般店舗設備・貨物/乗用EV等の案内。浴槽/ピット/ろ過冷却設備の記載なし。",
+      "reuse_conditions": "貸主の浴場用途承諾を最初に確認。ピット支持・外部排気/排熱・区画への設備容量のほか、5年後の再契約/原状回復条件が投資回収に影響。",
+      "first_check": "浴場許可、5年定借の再契約/原状回復、引渡条件、床下工事・屋外設備承諾。",
+      "priority_reason": "駅近で面積は近いが、固定費と5年定借に注意。1200万円純減の比較でも予算余白は小さい。",
+      "extra_fee_sensitivity_yen": 0,
+      "sources": [{"url": "https://www.connectplan.jp/kasi-tenpo/detail-65e2a5e456643576013aefa1/", "publisher": "コネクトプラン", "checked_at": "2026-11-15", "property_no": "65e2a5e456643576013aefa1", "checked_fields": "調査担当が公開詳細を確認：330.58㎡1階/税込110万＋管理11万/敷6礼1敷引1/定借5年/業種制限/日付"}]
+    }
+  ],
+  "holds": [
+    {"name": "田中貸事務所", "area_floor": "330㎡ / 名称は1階だが他掲載に2階・階欄空欄", "rent": "70万円＋5500円。課税表示の不整合あり", "why": "階・税込税抜・募集継続を確定できず主比較から保留。保証金3か月。浴場/再利用未確認。", "url": "https://www.cross-rd.co.jp/bkndetail/3464920594/room108475710/"},
+    {"name": "竹の塚5丁目・ジョイプラザ相当区画", "area_floor": "280.99㎡ / 1階、地下階あり", "rent": "税込132万円/月、その他費用未確認", "why": "保証金12か月・解約引20%。計画280㎡に面積余裕がなく地下階上の支持/ピットも未確認。条件が重く優先しない。", "url": "https://www.tenant-shop.com/detail/e-156267/"},
+    {"name": "豊勢金町ビルB1", "area_floor": "314.49㎡ / B1", "rent": "税込125.57万円＋共益費20.9286万円/月", "why": "公開掲載と満室表示が競合。地下避難・排気/排熱/更新経路未確認。現在募集中とは扱わない。", "url": "https://www.oasis-estate.jp/building/54831"}
+  ],
+  "excluded": [
+    {"name": "練馬4丁目現況銭湯", "why": "約65坪=約215㎡で現280㎡案に不足。更新/空室と設備状態未確認。", "url": "https://www.0213.biz/detail.php?id=42665"},
+    {"name": "奥戸7丁目 元公衆浴場", "why": "成約済 / 182㎡。現候補に含めない。", "url": "https://tokyo.logicoro.jp/biz/room-90406/"},
+    {"name": "白金3丁目 温浴店舗", "why": "成約済 / 169㎡。現候補に含めない。", "url": "https://www.inuki-honpo.jp/rent/11513171936/"},
+    {"name": "御徒町 元サウナ", "why": "成約済表示 / 1502㎡、過去賃料550万円。設備撤去済の情報で再利用を期待しない。", "url": "https://skeleton-office.tokyo/rentals/tyo-23-15-1/"},
+    {"name": "元八王子町1丁目 元コンビニ", "why": "成約済。330.65㎡・低賃料でも現候補に含めない。", "url": "https://tokyo.logicoro.jp/biz/room-189847/"},
+    {"name": "あきる野市平沢東 大型店舗", "why": "10/27更新で成約済。現候補に含めない。", "url": "https://hakomono.jp/s_r_5297/"}
+  ]
+}

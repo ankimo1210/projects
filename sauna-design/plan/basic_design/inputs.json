@@ -1,0 +1,523 @@
+{
+  "revision": "architecture-v1",
+  "date": "2026-11-15",
+  "scope": [
+    "①前提整理",
+    "②断面比較",
+    "③平面・動線",
+    "④設備計画",
+    "⑤要件照合"
+  ],
+  "jurisdiction": null,
+  "site": null,
+  "parameters": [
+    {
+      "id": "wc_ACH", "value": 10, "unit": "回/h", "status": "計画仮定",
+      "source": "初期排気条件・法定換気回数の断定ではない", "checked_at": "2026-11-15"
+    },
+    {
+      "id": "plant_ACH", "value": 6, "unit": "回/h", "status": "計画仮定",
+      "source": "初期の換気目安。別計算の発熱3kW・温度差8℃では不足するため、これだけで選定しない", "checked_at": "2026-11-15"
+    },
+    {
+      "id": "occupancy",
+      "value": 40,
+      "unit": "人",
+      "status": "ユーザー指定",
+      "source": "会話",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "rest_positions",
+      "value": 24,
+      "unit": "位置",
+      "status": "既存モデル実測",
+      "source": "V8内訳15+4+3+2",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "event_people",
+      "value": 20,
+      "unit": "人",
+      "status": "ユーザー指定",
+      "source": "会話・約20人",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "deep_C",
+      "value": 10,
+      "unit": "℃",
+      "status": "ユーザー指定の仮条件",
+      "source": "2026-11-15回答",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "seated_C",
+      "value": 16,
+      "unit": "℃",
+      "status": "ユーザー指定の仮条件",
+      "source": "2026-11-15回答",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "carbon_C",
+      "value": 37,
+      "unit": "℃",
+      "status": "計画仮定",
+      "source": "低温炭酸泉の計算用条件・未選定",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "main_C",
+      "value": 90,
+      "unit": "℃",
+      "status": "計画仮定",
+      "source": "温度性能は未確認",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "self_C",
+      "value": 85,
+      "unit": "℃",
+      "status": "計画仮定",
+      "source": "温度性能は未確認",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "dry_C",
+      "value": 100,
+      "unit": "℃",
+      "status": "計画仮定",
+      "source": "温度性能は未確認",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "bath_air_C",
+      "value": 28,
+      "unit": "℃",
+      "status": "計画仮定",
+      "source": "温湿度計算用",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "bath_RH",
+      "value": 0.6,
+      "unit": "比率",
+      "status": "計画仮定",
+      "source": "温湿度計算用",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "dry_air_C",
+      "value": 25,
+      "unit": "℃",
+      "status": "計画仮定",
+      "source": "空調・給気計算用",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "outside_summer_C",
+      "value": 32,
+      "unit": "℃",
+      "status": "計画仮定",
+      "source": "外気感度条件・東京の法定設計外気ではない",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "outside_summer_RH",
+      "value": 0.7,
+      "unit": "比率",
+      "status": "計画仮定",
+      "source": "外気感度条件",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "outside_winter_C",
+      "value": 5,
+      "unit": "℃",
+      "status": "計画仮定",
+      "source": "外気感度条件",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "outside_winter_RH",
+      "value": 0.5,
+      "unit": "比率",
+      "status": "計画仮定",
+      "source": "外気感度条件",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "soffit_z",
+      "value": 3,
+      "unit": "m",
+      "status": "計画仮定",
+      "source": "V8構造高さを仮の梁下に読み替えた比較条件・現地値なし",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "slab_top_z",
+      "value": -0.2,
+      "unit": "m",
+      "status": "計画仮定",
+      "source": "仕上床FL=0基準・現地値なし",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "service_depth",
+      "value": 0.35,
+      "unit": "m",
+      "status": "計画仮定",
+      "source": "湿式主ダクト内法600x250mm＋保温50mm＋吊り余裕50mmの仮包絡。初期0.30mから0.35mへ更新。交差部は別途。",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "pool_assembly",
+      "value": 0.25,
+      "unit": "m",
+      "status": "計画仮定",
+      "source": "浴槽底下地・支持・保温等の包絡・施工断面未確定",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "min_headroom_screen",
+      "value": 2.1,
+      "unit": "m",
+      "status": "計画仮定",
+      "source": "比較用の頭上目安・法定基準の断定ではない",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "wall_U",
+      "value": 0.4,
+      "unit": "W/(㎡K)",
+      "status": "計画仮定",
+      "source": "断熱・熱橋未設計",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "sauna_ACH",
+      "value": 6,
+      "unit": "回/h",
+      "status": "他社メーカー資料参考",
+      "source": "S04 Harvia・METOSへの適合未確認",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "bath_ACH",
+      "value": 10,
+      "unit": "回/h",
+      "status": "計画仮定",
+      "source": "湿式部の感度計算8/10/12",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "locker_ACH",
+      "value": 6,
+      "unit": "回/h",
+      "status": "計画仮定",
+      "source": "初期換気条件",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "rest_ACH",
+      "value": 3,
+      "unit": "回/h",
+      "status": "計画仮定",
+      "source": "初期換気条件",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "warmup_h",
+      "value": 2,
+      "unit": "h",
+      "status": "計画仮定",
+      "source": "サ室昇温時間",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "water_cooldown_h",
+      "value": 4,
+      "unit": "h",
+      "status": "計画仮定",
+      "source": "開業前に常温水25℃を冷却",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "fill_water_C",
+      "value": 25,
+      "unit": "℃",
+      "status": "計画仮定",
+      "source": "冷水槽初期充填水の高温側感度条件",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "cold_feed_C",
+      "value": 15,
+      "unit": "℃",
+      "status": "計画仮定",
+      "source": "給湯原水・冬期5℃の感度を別計算",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "hot_store_C",
+      "value": 60,
+      "unit": "℃",
+      "status": "計画仮定",
+      "source": "給湯蓄熱の計算条件・衛生運用未確定",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "shower_C",
+      "value": 40,
+      "unit": "℃",
+      "status": "計画仮定",
+      "source": "混合給湯の計算条件",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "shower_fixtures",
+      "value": 6,
+      "unit": "組",
+      "status": "既存モデルの計画数",
+      "source": "洗い場6組・現地設備なし",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "shower_l_min",
+      "value": 8,
+      "unit": "L/min/組",
+      "status": "計画仮定",
+      "source": "器具未選定",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "shower_simultaneous",
+      "value": 3,
+      "unit": "組",
+      "status": "計画仮定",
+      "source": "3/6組のピーク条件",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "shower_min_visit",
+      "value": 3,
+      "unit": "分/人",
+      "status": "計画仮定",
+      "source": "日量算出用・利用時間の推奨ではない",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "day_visitors",
+      "value": 200,
+      "unit": "人/日",
+      "status": "計画仮定",
+      "source": "150/200/300の感度・集客予測ではない",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "open_hours",
+      "value": 16,
+      "unit": "h/日",
+      "status": "計画仮定",
+      "source": "運転負荷比較用",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "bath_turnovers",
+      "value": 2,
+      "unit": "回/h",
+      "status": "計画仮定",
+      "source": "S03参考・法令/機器選定の確定値ではない",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "deep_user_heat",
+      "value": 2,
+      "unit": "kW",
+      "status": "計画仮定",
+      "source": "人体・開放面等の維持負荷をまとめた余裕・実測なし",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "seated_user_heat",
+      "value": 1.5,
+      "unit": "kW",
+      "status": "計画仮定",
+      "source": "維持負荷余裕・実測なし",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "carbon_hold_heat",
+      "value": 3,
+      "unit": "kW",
+      "status": "計画仮定",
+      "source": "保温負荷余裕・実測なし",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "chiller_COP",
+      "value": 3,
+      "unit": "比率",
+      "status": "計画仮定",
+      "source": "低水温でのメーカー能力表未取得",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "dhw_COP",
+      "value": 3,
+      "unit": "比率",
+      "status": "計画仮定",
+      "source": "全電化比較用・メーカー条件未取得",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "moisture_internal",
+      "value": 4,
+      "unit": "kg/h",
+      "status": "計画仮定",
+      "source": "浴槽等蒸発・利用者由来の感度2/4/6・実測なし",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "power_factor",
+      "value": 0.9,
+      "unit": "比率",
+      "status": "計画仮定",
+      "source": "受電kVA比較・実負荷で要確認",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "electrical_reserve",
+      "value": 0.2,
+      "unit": "比率",
+      "status": "計画仮定",
+      "source": "容量の比較用余裕",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "main_wood_kg",
+      "value": 900,
+      "unit": "kg",
+      "status": "計画仮定",
+      "source": "内装・ベンチの熱容量包絡・材種と実量未確認",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "self_wood_kg",
+      "value": 430,
+      "unit": "kg",
+      "status": "計画仮定",
+      "source": "内装・ベンチ包絡",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "dry_wood_kg",
+      "value": 380,
+      "unit": "kg",
+      "status": "計画仮定",
+      "source": "内装・ベンチ包絡",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "main_stone_kg",
+      "value": 100,
+      "unit": "kg",
+      "status": "計画仮定",
+      "source": "総質量161kgから石量を推定した値ではない",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "self_stone_kg",
+      "value": 60,
+      "unit": "kg",
+      "status": "計画仮定",
+      "source": "機器未選定",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "dry_stone_kg",
+      "value": 30,
+      "unit": "kg",
+      "status": "計画仮定",
+      "source": "機器未選定",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "main_loyly_l_h",
+      "value": 6,
+      "unit": "L/h",
+      "status": "計画仮定",
+      "source": "負荷計算用・実施量の指示ではない",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "self_loyly_l_h",
+      "value": 3,
+      "unit": "L/h",
+      "status": "計画仮定",
+      "source": "負荷計算用",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "main_door_kw",
+      "value": 1.5,
+      "unit": "kW",
+      "status": "計画仮定",
+      "source": "扉開閉負荷包絡",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "sub_door_kw",
+      "value": 0.5,
+      "unit": "kW",
+      "status": "計画仮定",
+      "source": "扉開閉負荷包絡",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "water_density",
+      "value": 1000,
+      "unit": "kg/m³",
+      "status": "物理計算用近似",
+      "source": "温度による密度差を無視",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "water_cp",
+      "value": 4.186,
+      "unit": "kJ/(kg K)",
+      "status": "物理計算用近似",
+      "source": "温度依存を無視",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "fresh_makeup_l_person",
+      "value": 20,
+      "unit": "L/人",
+      "status": "計画仮定",
+      "source": "日量の余裕条件・衛生基準の断定ではない",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "backwash_day_m3",
+      "value": 1,
+      "unit": "m³/日",
+      "status": "計画仮定",
+      "source": "機器選定・運用未確定",
+      "checked_at": "2026-11-15"
+    }
+  ],
+  "unknowns": [
+    "所在地と管轄",
+    "建物用途・階・構造図・検査済証",
+    "梁下・柱・スラブと基礎・地下水",
+    "掘削/スラブ変更と防水の許可",
+    "給水圧・受電・ガス・排水接続レベル",
+    "外部排熱/排気・騒音条件",
+    "メーカー施工図と離隔",
+    "ろ過器等の能力曲線・揚程",
+    "実際の温湿度負荷と人流",
+    "アクセス/避難/消防設備の適用条件"
+  ]
+}

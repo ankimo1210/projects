@@ -1,0 +1,20 @@
+{
+  "checked":"2026-11-15",
+  "sources":[
+    {"id":"A00","title":"作成者の計画予算仮定","url":"","basis":"取引見積りなし。工種別の予算幅・工数/調達条件を仮置き。施工業者の実勢価格やメーカー定価とは扱わない","confidence":"低・見積待ち"},
+    {"id":"A01","title":"承認済V8と建築基本計画①〜⑤","url":"","basis":"architecture-v1/calculations/basis.json、design_balances.json、設備表。数量はモデル又は明記した仮数量。法適合は未確認","confidence":"数量一部確認・仕様未定"},
+    {"id":"C01","title":"LIXIL IFT-300/ST-33N","url":"https://www.biz-lixil.com/product/tile/1229/ift-300-st-33n/","basis":"2026年8月改定の検索索引：27,900円/㎡、24,260円/10枚ケース、税別施工別。元URLは新サイトへ転送。直接現行原表取得未済の参考値。低/基準の仕入価格は別の仮定","confidence":"検索索引参考・再確認必要"},
+    {"id":"C02","title":"METOS ZIEL","url":"https://metos.co.jp/products/ziel","basis":"公式に公開価格なし。ZL300外形/24.8kW候補。今回の主66.2m³への適用/台数/離隔は未選定。価格は全てA00予算枠","confidence":"仕様参考・価格未取得"},
+    {"id":"C03","title":"NORITZ 業務用ろ過システム","url":"https://for-biz.noritz.co.jp/products/roka/roka1.html","basis":"RAF42N2〜4m³/h230.14万円、RAF112N7〜11m³/h460.24万円税別本体。NC/温泉用RAO/パッケージ合計と区別。低温/炭酸水適合未確認。計上値は調達仮定で成約価格でない","confidence":"公表定価参考・適合未確認"},
+    {"id":"C04","title":"ORION チラー簡易選定","url":"https://www.orionkikai.co.jp/product/chiller/selection/","basis":"清水/指定不凍液、能力は設定温度/外気/流量で照合、安全率120%案内。浴槽水の直接接続や型式採用を承認していない","confidence":"選定条件のみ確認"},
+    {"id":"C05","title":"アズワン ORION RKE5500C-V","url":"https://axel.as-1.co.jp/asone/d/68-0794-86/","basis":"販売者公表標準229万円税別、20.5kW級の比較価格。10℃で19.70kWを満たす選定結果でない","confidence":"販売者公開価格参考"},
+    {"id":"C06","title":"三商 ORION RKE1500C-VRA-G2","url":"https://san-web.co-sansyo.co.jp/sanweb/d/43-0569","basis":"販売者公表定価116万円税別、6.1kWは水温20℃/室温25℃。今回16℃/6.27kWを満たす扱いにしない","confidence":"販売者公開価格参考"},
+    {"id":"C07","title":"アレイカ価格表","url":"https://www.areika-hanbai.info/price.html","basis":"業務用はオープン価格。家庭用価格を4.356m³の業務槽へ流用せず予算枠で計上","confidence":"価格未取得"},
+    {"id":"C08","title":"TEPCO 2026年11月高圧単価表","url":"https://www.tepco.co.jp/ep/corporate/plan_h/pdf/202611minaoshisiryou.pdf","basis":"4ページ関東ベーシック：税込基本2651.50円/kW月、電力量17.47円/kWh。燃料/市場/再エネ別。今回従量25/28/34円は賦課金等込みの感度仮定。契約可否/基本力率補正未確認","confidence":"公表単価・契約未定"},
+    {"id":"C09","title":"東京都23区 水道料金表","url":"https://www.waterworks.metro.tokyo.lg.jp/tetsuduki/ryokin/keisan_23?area=23ku","basis":"一般用50mm月額税別基本20720円、最初の1000m³まで372円/m³。普通浴場優遇を適用しない","confidence":"公表料金・口径未定"},
+    {"id":"C10","title":"東京都下水道料金表","url":"https://www.gesui.metro.tokyo.lg.jp/living/fee/keisan/ryokinhyo","basis":"一般汚水の逓増料金。700m³/月税別182680円。蒸しぶろ等の特殊公衆浴場へ浴場汚水優遇を自動適用しない","confidence":"公表料金・契約未定"},
+    {"id":"C11","title":"国税庁No6225 家賃・保証金","url":"https://www.nta.go.jp/taxes/shiraberu/taxanswer/shohi/6225.htm","basis":"事業用家賃/返還なし礼金等は課税、返還保証金は対価に該当しない。今回は全額返還保証金を仮定、償却があれば別途費用化","confidence":"制度確認・契約未定"},
+    {"id":"C12","title":"アットホーム 2026年度上期貸店舗市況","url":"https://www.athome.co.jp/corporate/news/data/market/kashitenpo-2026-firsthalf/","basis":"東京9エリア5〜50坪/駅徒歩10分以内の中央値。84.7坪サウナ可能物件に転用不可。賃料100/150/220万円はA00の仮定で市況推定でない","confidence":"参考市況・対象不一致"},
+    {"id":"C13","title":"ORION チラー仕様","url":"https://www.orionkikai.co.jp/technology/lp/chiller/","basis":"標準20.5/6.1kW級の能力比較。設定水温・外気条件が今回と異なる","confidence":"仕様参考"}
+  ]
+}

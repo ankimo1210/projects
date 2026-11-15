@@ -1,0 +1,13 @@
+[
+ {"id":"A01","title":"凍結した建築基本計画①〜⑤","url":"","checked":"2026-11-15","scope":"寸法/仮断面/質量在庫/設備比較。実物件・構造安全・法適合ではない"},
+ {"id":"M00","title":"凍結した⑥cost-v1費用試算","url":"","checked":"2026-11-15","scope":"基準2.2625億・目標例1.9824億。取引見積なし、各単価は主に作成者の予算枠"},
+ {"id":"D00","title":"物件探索用の作成者判断・仮定","url":"","checked":"2026-11-15","scope":"賃料/保証金/募集面積/梁下/継続期間等の探索目標。法定最低や市場調達保証でない"},
+ {"id":"P01","title":"東京都・公衆浴場よくある質問","url":"https://www.hokeniryo.metro.tokyo.lg.jp/kankyo/eisei/yokujyou/yokujyou_faq","checked":"2026-11-15","scope":"構造設備と変更は所在地の保健所へ照合。個別の管轄・適用は未確認"},
+ {"id":"P02","title":"港区・公衆浴場の手続き","url":"https://www.city.minato.tokyo.jp/kankyoueiseishidou/kuse/egyokyoka/tetsuzuki/yokujo.html","checked":"2026-11-15","scope":"港区の申請/設計段階相談と資料の例。東京全域に手続きを自動適用しない"},
+ {"id":"P03","title":"港区・サウナ基準改正2026-10-13施行","url":"https://www.city.minato.tokyo.jp/kankyoueiseishidou/documents/202610jyoureikaisei.html","checked":"2026-11-15","scope":"温度表示/内部確認/呼出/扉/緊急対応の港区の基準例。他区への自動適用なし"},
+ {"id":"P04","title":"国交省・建築物の改修における建築基準法のポイント","url":"https://www.mlit.go.jp/jutakukentiku/content/001911322.pdf","checked":"2026-11-15","scope":"2025年11月更新資料。用途変更/改修/避難/構造等の適用は既存用途や規模で個別照合"},
+ {"id":"P05","title":"東京都・火災予防条例","url":"https://www.reiki.metro.tokyo.lg.jp/reiki/reiki_honbun/g101RG00002311.html","checked":"2026-11-15","scope":"サウナ熱源・停止制御・消防/使用手続きの適用照合。所轄範囲と既存設備は未確認"},
+ {"id":"P06","title":"METOS ZIEL公式","url":"https://metos.co.jp/products/ziel","checked":"2026-11-15","scope":"候補外形/保守。主室の採用機種/能力/メーカー離隔は未選定"},
+ {"id":"P07","title":"ORIONチラー選定","url":"https://www.orionkikai.co.jp/product/chiller/selection/","checked":"2026-11-15","scope":"実水温/外気/流量で能力照合。屋外機外形と必要離隔は正式選定後"},
+ {"id":"P08","title":"国税庁No6225 家賃と保証金","url":"https://www.nta.go.jp/taxes/shiraberu/taxanswer/shohi/6225.htm","checked":"2026-11-15","scope":"返還保証金と非返還費用・事業用賃料の税区分。個別契約の税込実額へ置換"}
+]

@@ -1,0 +1,456 @@
+{
+  "as_of": "2026-11-15",
+  "scope": "大崎CIRCLES∞1F・いちご神宮前B1-102を今回の候補から除外。山手線又は千代田線の駅から広告徒歩10分以内で、新しい公開募集を調査。予算上限は一旦解除したまま。",
+  "budget_cap_yen": null,
+  "baseline": {
+    "area_m2": 280,
+    "footprint_m": [
+      20,
+      14
+    ],
+    "customers_concept": 40,
+    "sauna_rooms": 3,
+    "baths": {
+      "cold_deep_c": 10,
+      "cold_seated_c": 16,
+      "carbonated": 1
+    },
+    "deep_water_m": 1.2,
+    "seated_and_carbon_water_m": 0.6,
+    "power_gas_case_kva_approx": 103,
+    "unapproved_reuse_saving_applied_yen": 0
+  },
+  "methodology": [
+    "広告の駅・路線・徒歩分数を個別照合。京葉線東京6分を山手線ホーム6分とは読み替えず、二重橋前7分を採用。",
+    "1Fを含む複数階合計、按分を含む募集面積、専有面積という広告表示と実測有効面積を区別。",
+    "公開ページの閲覧継続と現時点の空室保証は別。検索キャッシュと実ブラウザが異なるときは矛盾を記録。",
+    "浴場用途・ピット支持・容量・再利用減額は証拠がないのでnull。飲食可を浴場可にしない。",
+    "地上階候補と店舗系媒体を並行調査し、現原型に不適又は募集相違の物件は数合わせで追加しない。網羅的な全流通在庫の調査ではない。",
+    "外部への照会・会員登録・予約・申込は実施しない。新規Fable/GPU実行なし。"
+  ],
+  "sources": [
+    {
+      "id": "G1",
+      "url": "https://www.oasis-estate.jp/building/29728/235470",
+      "publisher": "アースウィンド Oasis",
+      "checked_at": "2026-11-15",
+      "method": "web＋実ブラウザ",
+      "facts": "ONE GINZA B1-101分割案、専有表示347.21㎡105.03坪、賃料/共益相談、保証12月、仲介1月、礼/償却相談、定借期間相談、2027年10月、天井3500mm、内装管理2万円/坪＋開業販促1.5万円/坪。サービス営業時間11〜20時。実ブラウザは募集中、web抽出は募集終了と募集中が同居。"
+    },
+    {
+      "id": "G2",
+      "url": "https://www.oasis-estate.jp/building/29728",
+      "publisher": "アースウィンド Oasis",
+      "checked_at": "2026-11-15",
+      "method": "web＋実ブラウザ",
+      "facts": "B1一括632.08㎡、分割347.21㎡/265.58㎡を掲載。いずれも2027年10月入居、賃料相談/保証12月。分割合計612.79㎡と一括には19.29㎡差。按分の説明なし。サイト全体更新日11/13は物件の空室確認日ではない。"
+    },
+    {
+      "id": "G3",
+      "url": "https://www.oasis-estate.jp/building/29728/235466",
+      "publisher": "アースウィンド Oasis",
+      "checked_at": "2026-11-15",
+      "method": "web、子エージェントによる照合",
+      "facts": "一括632.08㎡の個別ページは募集終了と募集中が同居。天井3500mm/保証12月/2027年10月/内装管理・販促費の案内。"
+    },
+    {
+      "id": "G4",
+      "url": "https://one-ginza.jp/access/",
+      "publisher": "ONE GINZA 施設公式",
+      "checked_at": "2026-11-15",
+      "method": "web",
+      "facts": "銀座1-8-19、JR有楽町京橋口5分。ショップ11〜20時/飲食11〜23時、A/C入口9〜23時。サウナ営業時間の承認ではない。"
+    },
+    {
+      "id": "G5",
+      "url": "https://search.sunfrt.co.jp/building/15337/",
+      "publisher": "サンフロンティア不動産",
+      "checked_at": "2026-11-15",
+      "method": "web、子エージェントによる照合",
+      "facts": "ONE GINZA B1一括632.08㎡を相談賃料で掲載。JR有楽町7分と公式5分の差はあるが、どちらも10分以内。"
+    },
+    {
+      "id": "G6",
+      "url": "https://one-ginza.jp/floor/",
+      "publisher": "ONE GINZA 施設公式",
+      "checked_at": "2026-11-15",
+      "method": "子エージェントによるweb照合",
+      "facts": "現B1に飲食テナント掲載。即時空室と扱わない。"
+    },
+    {
+      "id": "O1",
+      "url": "https://www.inshokuten.com/bukken/bukkens/403581",
+      "publisher": "飲食店ドットコム 公開募集",
+      "checked_at": "2026-11-15",
+      "method": "web＋実ブラウザ",
+      "facts": "大手町1、B1 353.72㎡107坪、丸ノ内線大手町2分/京葉線東京6分/千代田線二重橋前7分、賃料相談、居抜き譲渡相談、飲食可。営業時間制限あり。ビル名・専用/共用面積・契約費は公開ゲスト画面で不明。"
+    },
+    {
+      "id": "H1",
+      "url": "https://www.inshokuten.com/bukken/bukkens/401031",
+      "publisher": "飲食店ドットコム 公開募集",
+      "checked_at": "2026-11-15",
+      "method": "web＋実ブラウザ",
+      "facts": "内幸町1、千代田線日比谷3分、B1 280.99㎡85坪、賃料229.075万円で税区分未確認、元日本料理店譲渡0円。企画料賃料1月、保証料固定費1.5月、定借年数相談/途中解約不可、看板料/トマホーク費一部別途。"
+    },
+    {
+      "id": "H2",
+      "url": "https://www.temposmart.jp/estates/pref/13/station/1319",
+      "publisher": "テンポスマート",
+      "checked_at": "2026-11-15",
+      "method": "子エージェントによるweb照合",
+      "facts": "同タイトル・B1/280.99㎡の転載を確認。実名・専用面積・空室の独立確認には至らない。"
+    },
+    {
+      "id": "S1",
+      "url": "https://www.chintai-jimusho.com/line_363/tb85_200/opt_740/?th=10",
+      "publisher": "賃貸事務所ドットコム",
+      "checked_at": "2026-11-15",
+      "method": "実ブラウザで千代田線/85〜200坪/1階・店舗相談/徒歩10分を検索",
+      "facts": "1階フィルタでも1〜複数階合計が混入。松濤は前回候補、EDGEは時間/設備が原型に不利、他は複数階合計。"
+    },
+    {
+      "id": "S2",
+      "url": "https://www.inshokuten.com/bukken/kanto/bukkens/list/?form%5Bsearch_area_from%5D=80&form%5Bsearch_area_to%5D=200&form%5Bsearch_floor%5D%5B%5D=4&form%5Bsearch_floor%5D%5B%5D=1&form%5Bsearch_food_flag%5D=1&form%5Bsearch_local%5D=23ward&form%5Bsearch_walk_minutes%5D=4&form%5Bsort%5D=create_date_desc",
+      "publisher": "飲食店ドットコム",
+      "checked_at": "2026-11-15",
+      "method": "実ブラウザで検索条件/一覧と個別詳細を確認",
+      "facts": "東京23区・80〜200坪・B1/1F・徒歩10分の一覧。路線条件と280㎡以上/単一階は個別に再判定。神宮前6の2件は307.93㎡/93.15坪で既除外の同区画とみなし、新候補にしない。"
+    },
+    {
+      "id": "E1",
+      "url": "https://www.jokyu.jp/kasi-tenpo/detail-6a61979e9811ca1f627b3707/",
+      "publisher": "上級",
+      "checked_at": "2026-11-15",
+      "method": "子エージェントによるweb照合",
+      "facts": "TK巣鴨365.13㎡は1〜4階の合計。現280㎡単一区画案では除外。"
+    },
+    {
+      "id": "E2",
+      "url": "https://www.inshokuten.com/bukken/bukkens/406396",
+      "publisher": "飲食店ドットコム",
+      "checked_at": "2026-11-15",
+      "method": "web",
+      "facts": "内神田3/神田2分、306.46㎡は1〜6階一括。単一階原型の候補にしない。"
+    },
+    {
+      "id": "E3",
+      "url": "https://www.inshokuten.com/bukken/bukkens/407382",
+      "publisher": "飲食店ドットコム",
+      "checked_at": "2026-11-15",
+      "method": "web",
+      "facts": "千駄ヶ谷3/原宿9分、328.85㎡は1〜3階合計。単一階原型の候補にしない。"
+    },
+    {
+      "id": "E4",
+      "url": "https://search.sunfrt.co.jp/floor/11251/43591/",
+      "publisher": "サンフロンティア不動産",
+      "checked_at": "2026-11-15",
+      "method": "子エージェントによるweb照合",
+      "facts": "EDGE南青山1F375.54㎡/表参道8〜9分は、平日8〜20時・土日祝閉館・ガスなし・天井2500mm。現運営/設備原型に合わず除外。"
+    },
+    {
+      "id": "E5",
+      "url": "https://www.officeiten.jp/detail/3/30026/708806.html",
+      "publisher": "オフィス移転",
+      "checked_at": "2026-11-15",
+      "method": "子エージェントによるweb照合",
+      "facts": "THE AION南青山6-10-12/1F388.96㎡の旧掲載条件は税込賃料776.556万円、保証12月。募集継続に他社差があり、現行候補に数えない。"
+    },
+    {
+      "id": "E6",
+      "url": "https://theatre-inc.com/minamiaoyama_office_mn0025/",
+      "publisher": "THEATRE",
+      "checked_at": "2026-11-15",
+      "method": "子エージェントによるweb照合",
+      "facts": "同THE AION候補に2026/10/16募集終了の表示。"
+    },
+    {
+      "id": "E7",
+      "url": "https://www.chintai-jimusho.com/building/8207/42034/",
+      "publisher": "賃貸事務所ドットコム",
+      "checked_at": "2026-11-15",
+      "method": "子エージェントによるweb照合",
+      "facts": "アカサカセブンスアヴェニュー1F519.34㎡の案内。税込固定費432.025万円、定借2年。申込/終了表示の他社差があり保留。"
+    },
+    {
+      "id": "E8",
+      "url": "https://find-office.com/search/area/C3_153?f_all=1&t=5",
+      "publisher": "FIND OFFICE",
+      "checked_at": "2026-11-15",
+      "method": "子エージェントによるweb照合",
+      "facts": "アカサカセブンスアヴェニュー1Fは申込表示。前記の空室情報との相違を保持。"
+    },
+    {
+      "id": "E9",
+      "url": "https://www.cbre.co.jp/properties/retail/p-113113116888/s-2206964",
+      "publisher": "CBRE",
+      "checked_at": "2026-11-15",
+      "method": "子エージェントによるweb照合",
+      "facts": "ENetial代官山1F391.57㎡、税込賃料521.136万円/保証10月。JR恵比寿11分で他社10分と相違。"
+    },
+    {
+      "id": "E10",
+      "url": "https://tokyorent.jp/search/vacancy/196556/",
+      "publisher": "ケン TokyoRent",
+      "checked_at": "2026-11-15",
+      "method": "子エージェントによるweb照合",
+      "facts": "ENetial代官山のJR恵比寿10分表示。CBRE11分/モリモト13分との差を未解消。"
+    },
+    {
+      "id": "E11",
+      "url": "https://www.at-clinic.jp/detail/216991/216991_1/",
+      "publisher": "at-clinic",
+      "checked_at": "2026-11-15",
+      "method": "子エージェントによるweb照合",
+      "facts": "ENetial代官山の募集終了表示。他社募集継続との相違により保留。"
+    },
+    {
+      "id": "E12",
+      "url": "https://www.inshokuten.com/bukken/bukkens/400370",
+      "publisher": "飲食店ドットコム",
+      "checked_at": "2026-11-15",
+      "method": "子エージェントによるweb照合",
+      "facts": "千駄木1/千駄木6分、1F265㎡で280㎡原型には不足。"
+    }
+  ],
+  "properties": [
+    {
+      "id": "YC01",
+      "name": "ONE GINZA B1-101 分割案",
+      "address": "東京都中央区銀座1-8-19",
+      "url": "https://www.oasis-estate.jp/building/29728/235470",
+      "source_ids": [
+        "G1",
+        "G2",
+        "G4",
+        "G5",
+        "G6"
+      ],
+      "matching_access": {
+        "line": "JR山手線",
+        "station": "有楽町",
+        "advertised_walk_minutes": 5,
+        "source_id": "G4",
+        "note": "公式は京橋口5分、仲介7分。いずれも10分以内。"
+      },
+      "floor": "B1",
+      "single_floor": true,
+      "advertised_area_m2": 347.21,
+      "advertised_tsubo": 105.03,
+      "area_label": "専有面積の広告表示",
+      "common_allocated_area_m2": null,
+      "usable_net_measured_area_m2": null,
+      "availability": "分割ページの実ブラウザは募集中、建物一覧も掲載。web抽出には募集終了文が混在。空室・分割募集の有効性は未照会。",
+      "available_from_published": "2027-10",
+      "rent_ex_yen": null,
+      "rent_published_yen": null,
+      "common_ex_yen": null,
+      "deposit_months_published": 12,
+      "deposit_base_confirmed": false,
+      "key_money_months": null,
+      "lease": "定期借家、期間相談",
+      "height_m_published": 3.5,
+      "oneoff_fees": {
+        "interior_management_per_tsubo_yen": 20000,
+        "opening_promotion_per_tsubo_yen": 15000,
+        "tax_status": null,
+        "total_nominal_yen": 3676050
+      },
+      "operating_hours": "仲介のサービス店舗案内は11〜20時。飲食11〜23時/入口9〜23時をサウナへ自動適用しない。例外承諾未取得。",
+      "bath_use_consent": null,
+      "structural_support_verified": null,
+      "pit_verified": null,
+      "allocated_utility_capacity_verified": null,
+      "verified_reuse_saving_yen": null,
+      "actual_project_total_yen": null,
+      "fit": "広告面積では280㎡より67.21㎡大きいが、分割境界・柱・共用按分・床下/支持・設備・避難未確認。20×14m原型が入るとは未判定。",
+      "priority": "条件確認対象。早期開業や夜間営業を望む場合は入居時期/時間が先の判定項目。",
+      "alternate_same_building": {
+        "area_m2": 632.08,
+        "tsubo": 191.2,
+        "url": "https://www.oasis-estate.jp/building/29728/235466",
+        "same_building_not_extra_candidate": true,
+        "note": "分割案と一括は代替。2区画を別建物として数えず、一括超過面積の改装費を280㎡基準で賄えるとは扱わない。"
+      }
+    },
+    {
+      "id": "YC02",
+      "name": "大手町1丁目 B1飲食区画（実名非公開）",
+      "address": "東京都千代田区大手町1丁目・番地非公開",
+      "url": "https://www.inshokuten.com/bukken/bukkens/403581",
+      "source_ids": [
+        "O1"
+      ],
+      "matching_access": {
+        "line": "東京メトロ千代田線",
+        "station": "二重橋前",
+        "advertised_walk_minutes": 7,
+        "source_id": "O1",
+        "note": "丸ノ内線大手町2分も掲載。京葉線東京6分を山手線ホームまでの時間に置換しない。"
+      },
+      "floor": "B1",
+      "single_floor": true,
+      "advertised_area_m2": 353.72,
+      "advertised_tsubo": 107,
+      "area_label": "募集面積。専用/共用の区別未確認",
+      "common_allocated_area_m2": null,
+      "usable_net_measured_area_m2": null,
+      "availability": "2026/10/2登録の個別募集を11/15に実ブラウザでも閲覧。現空室は未照会。",
+      "available_from_published": null,
+      "rent_ex_yen": null,
+      "rent_published_yen": null,
+      "common_ex_yen": null,
+      "deposit_months_published": null,
+      "key_money_months": null,
+      "lease": null,
+      "height_m_published": null,
+      "former_use": "飲食区画・居抜き、譲渡価格相談",
+      "operating_hours": "営業時間制限あり。具体的時間・土日・専用入口の条件は未確認。",
+      "bath_use_consent": null,
+      "structural_support_verified": null,
+      "pit_verified": null,
+      "allocated_utility_capacity_verified": null,
+      "verified_reuse_saving_yen": null,
+      "actual_project_total_yen": null,
+      "fit": "広告面積では73.72㎡の差だが、共用按分と寸法図がなく有効面積/幅/奥行きは未判定。飲食既存の排水・排気が温浴負荷に使える根拠なし。",
+      "priority": "条件確認対象。先にビル実名・営業時間・浴場相談可否・専用区画図を確認。"
+    },
+    {
+      "id": "YC03",
+      "name": "内幸町1丁目 B1日本料理店居抜き（実名非公開）",
+      "address": "東京都千代田区内幸町1丁目・番地非公開",
+      "url": "https://www.inshokuten.com/bukken/bukkens/401031",
+      "source_ids": [
+        "H1",
+        "H2"
+      ],
+      "matching_access": {
+        "line": "東京メトロ千代田線",
+        "station": "日比谷",
+        "advertised_walk_minutes": 3,
+        "source_id": "H1"
+      },
+      "floor": "B1",
+      "single_floor": true,
+      "advertised_area_m2": 280.99,
+      "advertised_tsubo": 85,
+      "area_label": "募集面積。専用/共用の区別未確認",
+      "common_allocated_area_m2": null,
+      "usable_net_measured_area_m2": null,
+      "availability": "2026/9/8登録の個別募集を11/15に実ブラウザでも閲覧。現空室は未照会。",
+      "available_from_published": null,
+      "rent_published_yen": 2290750,
+      "rent_tax_status": null,
+      "rent_ex_yen": null,
+      "common_ex_yen": null,
+      "deposit_months_published": null,
+      "key_money_months": null,
+      "lease": "定期借家・年数相談・途中解約不可",
+      "height_m_published": null,
+      "former_use": "日本料理店",
+      "transfer_fee_published_yen": 0,
+      "other_published_fees": {
+        "planning_rent_months": 1,
+        "guarantee_fixed_cost_months": 1.5,
+        "sign_fee_yen": null,
+        "tomahawk_share_yen": null
+      },
+      "operating_hours": null,
+      "bath_use_consent": null,
+      "structural_support_verified": null,
+      "pit_verified": null,
+      "allocated_utility_capacity_verified": null,
+      "verified_reuse_saving_yen": null,
+      "actual_project_total_yen": null,
+      "fit": "280㎡に対し余裕0.99㎡のみ。柱/壁/共用按分等の損失で不足し得るため原型の主要候補にはしない。",
+      "priority": "補欠・面積確認を先行。無償居抜きは浴場設備再利用や改装減額0円の証拠ではない。"
+    }
+  ],
+  "excluded_or_held": [
+    {
+      "name": "CIRCLES∞大崎1F",
+      "status": "ユーザー指定で今回から除外",
+      "source": "ユーザー最新指示/既存09文書"
+    },
+    {
+      "name": "いちご神宮前B1-102",
+      "status": "ユーザー指定で今回から除外。共用按分控除後約210.5㎡。同面積の別媒体広告を再候補にしない。",
+      "source": "ユーザー最新指示/既存09文書"
+    },
+    {
+      "name": "TK巣鴨",
+      "status": "1〜4F合計365.13㎡。現単一階原型では除外。",
+      "source_ids": [
+        "E1"
+      ]
+    },
+    {
+      "name": "神田2分・内神田3",
+      "status": "1〜6F合計306.46㎡。現単一階原型では除外。",
+      "source_ids": [
+        "E2"
+      ]
+    },
+    {
+      "name": "原宿9分・千駄ヶ谷3",
+      "status": "1〜3F合計328.85㎡。現単一階原型では除外。",
+      "source_ids": [
+        "E3"
+      ]
+    },
+    {
+      "name": "EDGE南青山1F",
+      "status": "土日祝閉館/ガスなし/天井2.5mのため原型/運営条件から除外。",
+      "source_ids": [
+        "E4"
+      ]
+    },
+    {
+      "name": "THE AION1F",
+      "status": "募集終了/掲載継続の相違で保留。旧賃料を現行の確定条件にしない。",
+      "source_ids": [
+        "E5",
+        "E6"
+      ]
+    },
+    {
+      "name": "アカサカセブンスアヴェニュー1F",
+      "status": "申込/空室情報の相違・定借2年のため保留。",
+      "source_ids": [
+        "E7",
+        "E8"
+      ]
+    },
+    {
+      "name": "ENetial代官山1F",
+      "status": "JR恵比寿10/11/13分と募集継続/終了の相違。徒歩条件の適合を確定せず保留。",
+      "source_ids": [
+        "E9",
+        "E10",
+        "E11"
+      ]
+    },
+    {
+      "name": "千駄木1・1F",
+      "status": "265㎡で280㎡原型に不足。",
+      "source_ids": [
+        "E12"
+      ]
+    }
+  ],
+  "cost_policy": {
+    "actual_total_for_all_candidates": null,
+    "no_unsecured_saving": true,
+    "frozen_cost_sha256": "6279A612E658C49887FC6A99FDCAC52D4D1C3F9061B4453A0D45FFB4FDBE94C7",
+    "reference_constant_yen": 193701982.04305,
+    "construction_direct_multiplier": 1.3915,
+    "reference_only": "既存280㎡基準から税抜月額150/200/300万円、仮保証金6/12月、仮礼なし、共益未算入、前開業5月/売上控除なし運転3月/保証1月/仲介1月を比較。募集額・各物件の見積や総額ではない。",
+    "omitted_unknowns": "実共益・礼/償却等・物件別追加費・余剰面積工事・新設受変電/主要構造/本管/共用消防等。ONE GINZAの管理販促費は別記。日比谷の企画料/保証1.5月は共通仮契約表へ混ぜない。"
+  },
+  "next_steps": [
+    "YC01は2027年10月引渡/時間の許容を先に評価。YC02はビル実名/専用区画/営業時間を確認。YC03は専用有効面積で足りなければ見送り。",
+    "資料依頼に進む場合は、募集継続/実賃料共益/全初期費用/定借期間/浴場工事可否、専用平面/断面/構造図、給排水・電力/ガス・排熱/屋外機・地下浸水/排水を取得する。外部送信は未実施。",
+    "成立条件が取れた区画のみ280㎡案を寸法で当て込み、基準84項目との差額と物件固有費を再計算、その後同じFable会話で物件別3Dへ。"
+  ]
+}

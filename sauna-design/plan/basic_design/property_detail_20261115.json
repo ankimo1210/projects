@@ -1,0 +1,72 @@
+{
+  "as_of": "2026-11-15",
+  "scope": "大崎Y01/神宮前Y03の詳細調査。最新指示により2億円の上限を一旦解除し必要資金を比較。40人/3サ室/3槽/現280㎡案は無断変更しない。",
+  "budget_cap_yen": null,
+  "previous_budget_reference_yen": 200000000,
+  "baseline": {
+    "plan": "plan/plan_a.json の20m×14m原型とV8/V9",
+    "area_m2": 280,
+    "deep_water_m": 1.2,
+    "seated_and_carbon_water_m": 0.6,
+    "slab_to_support_depth_m": 1.31,
+    "electrical_gas_case_kva_approx": 103,
+    "cost": "cost-v1/calculations.json base。価格は著者の予算仮定を含み工事見積ではない。1,200万円等の未確保減額を今回は使わない。"
+  },
+  "sources": [
+    {"id":"O1","url":"https://mec-circlesribbon.com/osaki/floor/first-floor.php","publisher":"三菱地所 CIRCLES RIBBON公式","checked_at":"2026-11-15","method":"webと実ブラウザ","facts":"1F289.28㎡・内装家具付き事務所/専用テラス/天井2750mm/OA50mm/電気約50VA毎㎡/耐荷重350kg毎㎡。計画段階で変更可能との注記。"},
+    {"id":"O2","url":"https://mec-circlesribbon.com/osaki/overview/","publisher":"CIRCLES RIBBON公式","checked_at":"2026-11-15","method":"web","facts":"用途事務所、B2地上9階、2027年3月改修予定。1Fの天井/荷重とOA仕様。"},
+    {"id":"O3","url":"https://office.mecyes.co.jp/office/detail/13/13109/a25fC000001EMCzQAO/a27fC000000dKGbQAM","publisher":"三菱地所リアルエステートサービス","checked_at":"2026-11-15","method":"実ブラウザを優先。検索キャッシュとの矛盾を保持。","facts":"検索取得は旧1F相談賃料/預託6月/2027年4月入居だが、実ブラウザではerror/office404へ遷移し掲載終了と表示。成約/満室と断定はしない。"},
+    {"id":"O4","url":"https://office.mecyes.co.jp/office/detail/13/13109/a25fC000001EMCzQAO","publisher":"三菱地所リアルエステートサービス","checked_at":"2026-11-15","method":"実ブラウザ","facts":"公式物件サイトの最新空室リンク先も掲載終了の表示。"},
+    {"id":"O5","url":"https://mec-circlesribbon.com/lib/cmn_img/osaki/floor/first-floor/sec02_map.png","publisher":"CIRCLES RIBBON公式","checked_at":"2026-11-15","method":"公式ページの観測済み画像をpageAssetsで取得しview_imageで確認","facts":"1200×651。貸室と共用入口/EV/階段/テラス、柱/段差のある事務所配置。寸法線なし。正確な内法の計測/280㎡矩形の実嵌合は未実施。"},
+    {"id":"O6","url":"https://www.mec.co.jp/news/detail/2026/07/01_mec260701_circlesribbon","publisher":"三菱地所ニュースリリース2026年7月1日","checked_at":"2026-11-15","method":"web","facts":"大崎はマルチテナントオフィスへの改修事業。温浴用途の承諾を示さない。"},
+    {"id":"J1","url":"https://search.sunfrt.co.jp/floor/2967/54060/","publisher":"サンフロンティア不動産","checked_at":"2026-11-15","method":"webと実ブラウザで同じ備考を照合","facts":"B1-102 93.15坪/307.93㎡に階段・廊下・トイレ按分29.46坪を含む。スケルトン、重飲食不可、定借期間相談、賃料共益込相談/保証金相談/礼なし。更新2026年9月17日。浴場可否の回答ではない。"},
+    {"id":"J2","url":"https://office.mecyes.co.jp/office/detail/13/13113/a2510000000QVLpAAO/a27fC000001LxSlQAK","publisher":"三菱地所リアルエステートサービス","checked_at":"2026-11-15","method":"webと実ブラウザ","facts":"現行掲載はB1 307.93㎡、賃料共益込/預託相談、即日、天井2615mm、セントラル空調。画像の赤枠区画は右側の不整形な一部で、地下階全体ではない。"},
+    {"id":"J3","url":"https://www.kencorp.co.jp/office/properties/106198/1061980011/","publisher":"ケン・コーポレーション","checked_at":"2026-11-15","method":"web","facts":"同区画B1-102店舗/スケルトン、賃料・敷金相談/礼なし/定借。情報更新2026年10月22日。地下用直接導線の案内は避難適合の確認ではない。"},
+    {"id":"J4","url":"https://hataraba.com/buildings/40054","publisher":"HATARABA","checked_at":"2026-11-15","method":"前回2026年11月15日の検索取得記録を引継ぎ、現条件の確定には不採用。","facts":"預託10月・天高4110mmの掲載は他社の相談/2615mmと差がある。高さの測定部位と現在契約条件は未確認。"},
+    {"id":"L1","url":"https://www.city.shibuya.tokyo.jp/jigyosha/jigyo-eisei/kankyo-eisei/yokujo.html","publisher":"渋谷区","checked_at":"2026-11-15","method":"公式行政案内","facts":"サウナを含むその他の公衆浴場と営業許可/構造設備・維持管理基準。事前相談等の実行/許可はしていない。"},
+    {"id":"L2","url":"https://www.hokeniryo.metro.tokyo.lg.jp/kankyo/eisei/yokujyou/yokujyou_faq","publisher":"東京都保健医療局","checked_at":"2026-11-15","method":"公式行政案内","facts":"公衆浴場経営は営業許可が必要。所在地管轄の保健所へ照会する案内。特定物件の営業承認ではない。"}
+  ],
+  "properties": [
+    {
+      "id":"Y01","name":"CIRCLES∞大崎 1階","published_area_m2":289.28,
+      "availability":"貸主側の実ページは掲載終了。旧キャッシュから現在の募集継続を確定できない。",
+      "actual_rent_ex_yen":null,"actual_deposit_yen":null,"actual_project_total_yen":null,
+      "bath_use_consent":null,"public_bath_approval":null,"verified_reuse_saving_yen":null,
+      "fit":"未成立。平面は共用コア/段差・柱に対応した再配置が必要。床荷重/床下/容量が現仕様と整合しない。",
+      "published_load_kg_m2":350,"published_ceiling_m":2.75,"published_power_va_m2":50,
+      "power_scope_warning":"面積積は約14.46kVA。照明/コンセント/動力/空調等の適用範囲が未照合で、建物全体の受変電容量とは断定しない。103kVA計画との単純差を工事数量に使わない。",
+      "support_warning":"1.2m水深の水単独は1200kg毎㎡。掲載350kg毎㎡との比較は構造スクリーニングで、構造安全の判定や補強可能の証明ではない。槽/人/仕上/集中荷重と支持経路は別検討。",
+      "judgment":"現280㎡・40人・3室3槽案の実物件化対象として優先を下げる。予算上限解除だけでは解消しない。"
+    },
+    {
+      "id":"Y03","name":"いちご神宮前ビル B1-102","published_area_m2":307.93,
+      "published_tsubo":93.15,"common_allocation_tsubo":29.46,
+      "net_area_formula":"(93.15-29.46)*400/121。壁芯/内法/測定位置の確定は未実施。",
+      "availability":"現行公開掲載あり。募集継続と即引渡の実条件は未照会。",
+      "actual_rent_ex_yen":null,"actual_deposit_yen":null,"actual_project_total_yen":null,
+      "bath_use_consent":null,"public_bath_approval":null,"verified_reuse_saving_yen":null,
+      "fit":"按分控除後約210.5㎡で現280㎡のままは入らない。共用トイレ等を専用浴室/休憩/機械室へ自由に改造できるとは扱わない。",
+      "redesign_status":"専用区画約25%縮小に合わせた別設計が必要。40人/3サ室/3槽を保持できるかは未算定。人数を面積比で自動減算しない。",
+      "height_load_utilities":"天高2615/4110mm資料差、床支持・床下/基礎・割当給排水/受電/ガス・地下排熱排気/避難は未確定。",
+      "judgment":"現行間取りを維持する物件として見送り。小型別案を選ぶ場合のみ再検討。予算上限解除では面積不足は解消しない。"
+    }
+  ],
+  "financial_comparison": {
+    "meaning":"280㎡・40人・3サ室3槽の原計画を維持する資金感度。同じ規模・同じ賃料を置いた比較。2物件の成約見積/実際に施工可能な計画の総額ではない。神宮前210㎡への縮小費でもない。",
+    "actual_rent_status":"2物件とも実募集額は取得できない。非公開を0円/推定市場価格へ置換しない。",
+    "tax":0.1,"preopening_paid_months":5,"runway_months":3,
+    "broker_gross_base_rent_months":1,"guarantee_gross_total_rent_months":1,
+    "unsecured_saving_direct_yen":0,
+    "rent_total_ex_yen_scenarios":[1500000,2000000,2500000,3000000],
+    "extra_direct_yen_scenarios":[0,20000000,50000000],
+    "extra_meaning":"既存基準の工種を超える直接追加工事枠を仮に置く感度。必要工事額の査定/見積/最大費用/成立の保証ではない。構造/本管/受変電/共用消防等の可否と価格は不明。基準工事内の支出と重複加算しない。",
+    "terms":[
+      {"case_id":"O-hypothesis","label":"大崎旧預託6月を仮置き","deposit_months":6,"key_months":1,"qualification":"敷6月は旧掲載。礼1月/仲介1月/保証1月、共益込一体家賃を仮定。掲載終了後の実条件は未取得。"},
+      {"case_id":"J-hypothesis","label":"神宮前預託10月を仮置き","deposit_months":10,"key_months":0,"qualification":"敷10月は一社資料のみ、主要社は相談。礼なしの掲載。仲介1月/保証1月、共益込一体家賃を仮定。"}
+    ],
+    "formula":"base_construction + soft + deposit + key + broker + guarantee + 5*gross_rent + 3*(nonrent_monthly+gross_rent) + 1.3915*extra_direct",
+    "not_priced":"構造等の必要改修費・設備増強可否、融資費、退去時原状回復、契約期間後の再契約/回収、210㎡への全面再設計、未確定の家賃外月次増。"
+  },
+  "remaining":"この2物件で現案が成立するとの結論は出さない。確定賃料/用途回答には外部照会が必要。照会文案をローカルで準備し送信しない。",
+  "model_view":{"url":"http://127.0.0.1:8789/viewer/","revision":"V9・物件未定の原型","checked_live":true,"displayed_to_user":true,"candidate_specific_model":false}
+}

@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>サウナV9 建築統合原型 — 軽量3Dビュー</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #111; color: #e8e2d8; font-family: system-ui, sans-serif; }
+  #bar { position: fixed; left: 0; right: 0; top: 0; padding: 10px 14px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; background: rgba(17,17,17,.82); z-index: 2; }
+  #bar button { background: #2a2622; color: inherit; border: 1px solid #4a433a; border-radius: 6px; padding: 8px 14px; font-size: 14px; cursor: pointer; }
+  #bar button[aria-pressed="true"] { background: #6b4a2a; border-color: #b9834d; }
+  #note { font-size: 12px; opacity: .8; margin-left: auto; max-width: 46ch; }
+  #status { position: fixed; left: 14px; bottom: 12px; font-size: 13px; z-index: 2; }
+  canvas { display: block; width: 100vw; height: 100vh; }
+</style>
+</head>
+<body>
+<div id="bar" role="group" aria-label="視点">
+  <button data-view="overview" aria-pressed="true">全体</button>
+  <button data-view="main" aria-pressed="false">メインサウナ</button>
+  <button data-view="mainEntry" aria-pressed="false">メイン（入口から）</button>
+  <button data-view="mainTop" aria-pressed="false">メイン（真上）</button>
+  <button data-view="rest" aria-pressed="false">休憩（席側）</button>
+  <button data-view="restAisle" aria-pressed="false">休憩（通路）</button>
+  <button data-view="overflow" aria-pressed="false">予備の腰掛け</button>
+  <button data-view="bath" aria-pressed="false">浴室の造り付け席</button>
+  <button data-view="self" aria-pressed="false">セルフロウリュ</button>
+  <button data-view="selfSeat" aria-pressed="false">セルフ（席から）</button>
+  <button data-view="dry" aria-pressed="false">高温ドライ（TV）</button>
+  <button data-view="drySeats" aria-pressed="false">ドライ（席を正面から）</button>
+  <button data-view="water" aria-pressed="false">水風呂</button>
+  <button data-view="annex" aria-pressed="false">休憩の離れ</button>
+  <button data-view="annexPool" aria-pressed="false">離れと水風呂</button>
+  <button data-view="bathTop" aria-pressed="false">浴室・サブ室（真上）</button>
+  <button id="ceilings" aria-pressed="false">天井</button>
+  <button id="study" aria-pressed="false">建築検討線・仮の寸法</button>
+  <button id="people" aria-pressed="false" title="着席と動作の各場面を重ねた確認例です。表示数は同時利用人数ではありません。">人体・動作の例</button>
+  <span id="note">V9は物件未定の20×14m・床下型Aの原型です。GLBの照明・素材はCycles画像と異なります。</span>
+</div>
+<div id="status" role="status">モデルを読み込み中…</div>
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+               "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+
+const status = document.getElementById('status');
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.15;
+document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0d0c0b);
+const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.05, 200);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+
+// Blender (x east, y north, z up) -> three (x, z, -y)
+const B = (x, y, z) => new THREE.Vector3(x, z, -y);
+scene.add(new THREE.HemisphereLight(0xffe2c0, 0x2a2420, 1.1));
+for (const [x, y, z, p] of [[3, 11.5, 2.2, 28], [3, 6.3, 2.5, 30], [8, 5, 2.5, 18], [9, 8.6, 2.5, 34], [13.5, 8.6, 2.5, 34], [14.5, 12.2, 2.5, 22],
+                           [13.5, 5, 2.5, 22], [7.7, 12.2, 2.1, 14], [11, 12.2, 2.1, 14], [2, 1.8, 2.5, 18], [7.7, 1.8, 2.5, 24], [13, 1.8, 2.5, 14], [15.6, 1.8, 2.5, 12], [18.5, 7, 2.5, 30]]) {
+  const l = new THREE.PointLight(0xffb070, p, 9, 1.6);
+  l.position.copy(B(x, y, z));
+  scene.add(l);
+}
+const views = {
+  overview: { pos: B(10, -6.5, 21), target: B(10, 6.6, 0), ceilings: false, fov: 50 },
+  main: { pos: B(0.5, 9.37, 1.5), target: B(4.6, 13.76, 1.1), ceilings: true, fov: 62 },
+  mainEntry: { pos: B(4.16, 9.24, 1.55), target: B(4.42, 13.0, 0.8), ceilings: true, fov: 78 },
+  mainTop: { pos: B(3.0, 11.3, 13.5), target: B(3.0, 11.5, 0), ceilings: false, fov: 40 },
+  overflow: { pos: B(12.30, 9.02, 1.5), target: B(14.25, 10.75, 0.8), ceilings: true, fov: 70 },
+  water: { pos: B(16.05, 9.9, 1.5), target: B(9.0, 8.25, 1.0), ceilings: true, fov: 62 },
+  rest: { pos: B(2.63, 3.93, 1.55), target: B(2.78, 6.4, 0.9), ceilings: true, fov: 78 },
+  restAisle: { pos: B(0.30, 6.43, 1.5), target: B(7.0, 6.40, 1.0), ceilings: true, fov: 62 },
+  bath: { pos: B(12.25, 10.10, 1.5), target: B(17.0, 8.55, 0.9), ceilings: true, fov: 62 },
+  self: { pos: B(7.80, 10.80, 1.55), target: B(6.70, 13.55, 0.9), ceilings: true, fov: 80 },
+  selfSeat: { pos: B(6.45, 11.50, 1.27), target: B(9.25, 13.35, 0.9), ceilings: true, fov: 78 },
+  dry: { pos: B(11.22, 10.80, 1.60), target: B(11.02, 13.9, 1.0), ceilings: true, fov: 82 },
+  drySeats: { pos: B(12.25, 12.05, 1.55), target: B(9.60, 12.62, 0.9), ceilings: true, fov: 82 },
+  annex: { pos: B(6.42, 7.776, 1.5), target: B(10.7, 7.776, 0.8), ceilings: true, fov: 76 },
+  annexPool: { pos: B(9.05, 10.22, 1.55), target: B(12.35, 7.35, 0.8), ceilings: true, fov: 78 },
+  bathTop: { pos: B(11.5, 10.05, 15.5), target: B(11.5, 10.25, 0), ceilings: false, fov: 40 },
+};
+const ceilings = [];
+const study = [];
+const people = [];          // CHECK_ nodes: assumed bodies in the main sauna, the two small saunas, the cold pools and the rest annex (hidden until the button is pressed)
+const framedViews = new Set(['overview', 'mainTop', 'bathTop']);
+let currentView = null;
+
+function positionCamera(name) {
+  const v = views[name];
+  camera.position.copy(v.pos);
+  if (framedViews.has(name)) {
+    const distanceScale = Math.max(1, 1.4 / camera.aspect);
+    camera.position.sub(v.target).multiplyScalar(distanceScale).add(v.target);
+  }
+  controls.target.copy(v.target);
+}
+
+function setView(name) {
+  currentView = name;
+  const v = views[name];
+  positionCamera(name);
+  camera.fov = v.fov;
+  camera.updateProjectionMatrix();
+  showCeilings(v.ceilings);
+  for (const b of document.querySelectorAll('#bar button[data-view]')) b.setAttribute('aria-pressed', String(b.dataset.view === name));
+  controls.update();
+}
+for (const b of document.querySelectorAll('#bar button[data-view]')) b.addEventListener('click', () => setView(b.dataset.view));
+function layerToggle(id, objects) {
+  const button = document.getElementById(id);
+  function show(on) {
+    for (const object of objects) object.visible = on;
+    button.setAttribute('aria-pressed', String(on));
+  }
+  button.addEventListener('click', () => show(button.getAttribute('aria-pressed') !== 'true'));
+  return show;
+}
+const showCeilings = layerToggle('ceilings', ceilings);
+const showPeople = layerToggle('people', people);
+const showStudy = layerToggle('study', study);
+
+function applyLinkedView() {
+  const [name, ...layers] = location.hash.slice(1).split('+');
+  setView(Object.hasOwn(views, name) ? name : 'overview');
+  showPeople(layers.includes('people'));
+  showStudy(layers.includes('study'));
+}
+
+const loader = new GLTFLoader();
+const draco = new DRACOLoader();
+draco.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/libs/draco/');
+loader.setDRACOLoader(draco);
+loader.load('../model/sauna_a_v9_light.glb', (gltf) => {
+  gltf.scene.traverse((o) => {
+    if (o.name && o.name.startsWith('V9_')) study.push(o);
+    if (o.name && o.name.startsWith('CEIL_')) ceilings.push(o);
+    if (o.name && o.name.startsWith('CHECK_')) people.push(o);
+    if (o.isMesh && o.material && o.material.transparent) o.material.depthWrite = false;
+  });
+  scene.add(gltf.scene);
+  applyLinkedView();
+  status.textContent = 'ドラッグで回転、ホイールで拡大、右ドラッグで移動。';
+  document.body.dataset.ready = '1';
+}, (e) => { if (e.total) status.textContent = `モデルを読み込み中… ${Math.round(100 * e.loaded / e.total)}%`; },
+   (err) => { status.textContent = 'モデルの読み込みに失敗しました: ' + err.message; status.setAttribute('role', 'alert'); });
+
+addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+  if (framedViews.has(currentView)) {
+    positionCamera(currentView);
+    controls.update();
+  }
+});
+addEventListener('hashchange', applyLinkedView);
+renderer.setAnimationLoop(() => { controls.update(); renderer.render(scene, camera); });
+</script>
+</body>
+</html>

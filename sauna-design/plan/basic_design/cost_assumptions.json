@@ -1,0 +1,32 @@
+{
+  "date":"2026-11-15",
+  "currency":"JPY",
+  "range_labels":["条件良好・低位","基準予算","上振れ"],
+  "bounds_note":"同じ280㎡・3サ室・3槽の条件付き予算幅。統計的信頼区間でも成約見積でもない。低位は条件良好な物件と調達が揃う仮定。上位は絶対上限ではない。",
+  "profiles":{
+    "low":{"contractor_rate":0.08,"contingency_rate":0.10,"rent_ex_tax":1000000,"deposit_months":6,"construction_months":4,"key_money_months":0,"broker_months":1,"guarantee_months":0.5,"visitors_day":150,"operating_days":30,"staff_per_shift":2.5,"coverage_hours":18,"loaded_hourly_pay":1800,"management_month":400000,"power_contract_kw":100,"power_kwh":18000,"power_variable_incl_tax":25,"gas_m3":1400,"gas_unit_incl_tax":150,"laundry_per_guest_incl_tax":140},
+    "base":{"contractor_rate":0.10,"contingency_rate":0.15,"rent_ex_tax":1500000,"deposit_months":10,"construction_months":5,"key_money_months":1,"broker_months":1,"guarantee_months":0.7,"visitors_day":200,"operating_days":30,"staff_per_shift":3,"coverage_hours":18,"loaded_hourly_pay":2000,"management_month":500000,"power_contract_kw":110,"power_kwh":23000,"power_variable_incl_tax":28,"gas_m3":1800,"gas_unit_incl_tax":170,"laundry_per_guest_incl_tax":180},
+    "high":{"contractor_rate":0.12,"contingency_rate":0.20,"rent_ex_tax":2200000,"deposit_months":12,"construction_months":6,"key_money_months":2,"broker_months":1,"guarantee_months":1,"visitors_day":300,"operating_days":30,"staff_per_shift":3.5,"coverage_hours":18,"loaded_hourly_pay":2300,"management_month":650000,"power_contract_kw":140,"power_kwh":32000,"power_variable_incl_tax":34,"gas_m3":2400,"gas_unit_incl_tax":210,"laundry_per_guest_incl_tax":230}
+  },
+  "common":{"tax_rate":0.10,"electric_basic_incl_tax":2651.5,"water_other_m3_day":3,"misc_month_low":350000,"misc_month_base":550000,"misc_month_high":850000},
+  "unpriced_exclusions":[
+    "土地建物購入・新築工事（賃貸案とは別方式。価格未定）",
+    "主要梁/柱/基礎・建物全体の構造補強、地下水処理（局所ピット枠を超える工事）",
+    "石綿等有害物質の除去（調査枠のみ計上）",
+    "新設キュービクル・道路本管給水/下水/ガス大改修（区画接続枠を超える工事）",
+    "建物全体の消防/第二避難経路/共用バリアフリー改修、区画外長距離排気や屋上補強",
+    "居抜き営業権譲渡代、融資手数料・利息・借入返済、取得不動産税、撤退時の原状回復費"
+  ],
+  "target_to_200m":{
+    "rent_ex_tax":1200000,"deposit_months":6,
+    "direct_savings":{"適合する既存ピットの再利用":2000000,"既存幹管・受電・換気等の再利用":5000000,"他工種の仕様整理・調達調整":5000000},
+    "condition":"物件未取得・交渉未実施の目標例。直接工事合計1200万円減、月家賃120万円、保証金6か月。3サ室/3槽/休憩/予備費15%/運転3か月は維持。再利用と調達減額を同じ工事で重ねない。"
+  },
+  "alternative_allowances":[
+    {"id":"existing_pit","label":"既存ピット・支持を適合確認の上で再使用","delta_direct_low":-3000000,"delta_direct_high":-1500000,"condition":"P01/P02の重複分を控除。槽本体は残す。取得差額/修理費未定"},
+    {"id":"hp_replace_gas","label":"ガス給湯を業務用HPへ置換","delta_direct_low":1500000,"delta_direct_high":4500000,"condition":"G01/G03を除いてHPへ代替した純差額仮定。室外機/受電条件とCOP要確認。両熱源を全額加算しない"},
+    {"id":"reusable_mep","label":"適合する既存幹管・換気・電源の一部を再利用","delta_direct_low":-9000000,"delta_direct_high":-3000000,"condition":"既存性能/残寿命/所有区分を確認してE03/G05/G08/V01の重複範囲のみ控除。ピット再使用と別工種"},
+    {"id":"raised_B","label":"床上げ断面B","delta_direct_low":null,"delta_direct_high":null,"condition":"頭上1.34mと階段干渉。現280㎡平面では採用不可のため費用成立案から除外"},
+    {"id":"hybrid_C","label":"併用断面C","delta_direct_low":null,"delta_direct_high":null,"condition":"頭上2.04mと階段干渉。平面/階高変更の再設計後に数量と差額を算定"}
+  ]
+}

@@ -1,0 +1,119 @@
+[
+  {
+    "id": "S01",
+    "title": "港区・サウナ設備基準改正",
+    "url": "https://www.city.minato.tokyo.jp/kankyoueiseishidou/documents/202610jyoureikaisei.html",
+    "jurisdiction": "港区",
+    "effective": "2026-10-13",
+    "checked_at": "2026-11-15",
+    "notes": "内部確認・非常呼出・内側からの開放・緊急対応。管轄未定のため参考照合。"
+  },
+  {
+    "id": "S02",
+    "title": "厚生労働省・衛生等管理要領の改正",
+    "url": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc9645&dataType=1",
+    "jurisdiction": "全国の行政指導資料",
+    "effective": "2026-04-01",
+    "checked_at": "2026-11-15",
+    "notes": "水質/清掃/換気等の管理。地方条例への適用と章の照合が必要。"
+  },
+  {
+    "id": "S03",
+    "title": "厚生労働省・レジオネラ対策資料",
+    "url": "https://www.mhlw.go.jp/topics/bukyoku/kenkou/legionella/about.html",
+    "jurisdiction": "全国の技術参考",
+    "effective": "現行公表資料",
+    "checked_at": "2026-11-15",
+    "notes": "ろ過の参考下限1回/hと通常例1.5〜3回/hを記載。採用値2回/hは計画仮定。"
+  },
+  {
+    "id": "S04",
+    "title": "Harvia・電気サウナの換気",
+    "url": "https://support.harvia.com/hc/en-gb/articles/21953036825628-Ventilation-in-the-sauna",
+    "jurisdiction": "他社メーカー参考",
+    "effective": "2026-01-29更新",
+    "checked_at": "2026-11-15",
+    "notes": "6回/hを比較条件の根拠に使う。給排気位置はMETOS施工図・管轄基準との照合待ち。"
+  },
+  {
+    "id": "S05",
+    "title": "METOS・ZIEL公式",
+    "url": "https://metos.co.jp/products/ziel",
+    "jurisdiction": "メーカー製品情報",
+    "effective": "現行公表資料",
+    "checked_at": "2026-11-15",
+    "notes": "ロックセットの上方取外しに保守空間が必要。外形近似と室への適用を区別。"
+  },
+  {
+    "id": "S06",
+    "title": "港区・公衆浴場の手続き",
+    "url": "https://www.city.minato.tokyo.jp/kankyoueiseishidou/kuse/egyokyoka/tetsuzuki/yokujo.html",
+    "jurisdiction": "港区",
+    "effective": "2025-10-30更新",
+    "checked_at": "2026-11-15",
+    "notes": "平面・断面、換気、給排水系統などの申請資料を確認。まだ提出は行わない。"
+  },
+  {
+    "id": "S07",
+    "title": "国土交通省・建築基準法の基本事項",
+    "url": "https://www.mlit.go.jp/jutakukentiku/content/001911322.pdf",
+    "jurisdiction": "全国",
+    "effective": "資料版の現行性は手続時に再確認",
+    "checked_at": "2026-11-15",
+    "notes": "用途変更・特殊建築物200㎡超などは既存用途/用途部分/例外を含めて要判定。"
+  },
+  {
+    "id": "S08",
+    "title": "東京都・火災予防条例",
+    "url": "https://www.reiki.metro.tokyo.lg.jp/reiki/reiki_honbun/g101RG00002311.html",
+    "jurisdiction": "東京都・所轄範囲要確認",
+    "effective": "現行例規・取得時点",
+    "checked_at": "2026-11-15",
+    "notes": "サウナの異常加熱遮断、設備設置・使用関係の手続きを照合。"
+  },
+  {
+    "id": "S09",
+    "title": "東京消防庁・火気設備設置届出様式",
+    "url": "https://www.tfd.metro.tokyo.lg.jp/content/000032197.pdf",
+    "jurisdiction": "東京消防庁の手続き",
+    "effective": "現行公開様式・適用は所轄確認待ち",
+    "checked_at": "2026-11-15",
+    "notes": "仕様・配置・制御・ダクト等の添付資料を整理。旧審査PDFは取得時404のため基準の根拠に使わない。"
+  },
+  {
+    "id": "S10",
+    "title": "国土交通省・バリアフリー資料",
+    "url": "https://www.mlit.go.jp/jutakukentiku/jutakukentiku_house_fr_000049.html",
+    "jurisdiction": "全国/自治体の条例上乗せ要確認",
+    "effective": "現行公表資料",
+    "checked_at": "2026-11-15",
+    "notes": "出入口・経路・WC・浴室へのアクセスを条件別に照合。"
+  },
+  {
+    "id": "S11",
+    "title": "LIXIL・サーモタイル",
+    "url": "https://www.lixil.co.jp/lineup/tile/interior_floor/thermotile/",
+    "jurisdiction": "メーカー製品情報",
+    "effective": "現行公表資料",
+    "checked_at": "2026-11-15",
+    "notes": "浴室床候補の用途。サ室床・浴槽内張・ストーブ下へ適合を拡張しない。"
+  },
+  {
+    "id": "S12",
+    "title": "消防庁・サウナ施設の安全対策通知",
+    "url": "https://www.fdma.go.jp/laws/tutatsu/items/a7ebe9ae2511d3c3a530e19358e08faa174ba7fc.pdf",
+    "jurisdiction": "全国・行政への助言",
+    "effective": "2026-04-21",
+    "checked_at": "2026-11-15",
+    "notes": "連絡・駆けつけと緊急時の扉の機能を検討。営業体制を未定のまま済みにしない。"
+  },
+  {
+    "id": "V8",
+    "title": "既存V8のモデル・共有座標・検証と今回の仮定",
+    "url": "docs/V8_DESIGN.md / docs/PRODUCT_SELECTION.md / plan/basic_design/inputs.json",
+    "jurisdiction": "プロジェクト内部の検討資料",
+    "effective": "2026-11-15の基準版",
+    "checked_at": "2026-11-15",
+    "notes": "法令やメーカー承認の根拠ではない。モデル実測と未確定の計画仮定を区別する。"
+  }
+]

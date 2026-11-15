@@ -1,0 +1,418 @@
+{
+  "as_of": "2026-11-15",
+  "subject": "ONE GINZA B101分割案",
+  "budget_cap_yen": null,
+  "user_scope": {
+    "men_only": true,
+    "customers_concept": 40,
+    "sauna_rooms": 3,
+    "cold_baths": 2,
+    "carbonated_bath": 1,
+    "prototype_area_m2": 280,
+    "prototype_footprint_m": [
+      20,
+      14
+    ],
+    "desired_opening": "朝（開始時刻は未確定）",
+    "desired_closing": "22〜23時ごろ",
+    "hours_source": "このターンのユーザー回答。9時開店に確定したとは扱わない。",
+    "preserve_fable_session": true
+  },
+  "decision": "面積上は検討余地があるが、朝〜22/23時の営業/退館・浴場用途・深槽支持/床下の3条件を確認するまで契約/物件別3Dへ進めない。現20×14m配置の嵌合は未確定。",
+  "sources": [
+    {
+      "id": "G01",
+      "url": "https://www.oasis-estate.jp/building/29728/235470",
+      "publisher": "アースウィンド Oasis",
+      "method": "webと実ブラウザ",
+      "facts": "B101分割案105.03坪347.21㎡、賃料共益相談、保証12月、仲介1月、礼/償却相談、定借期間相談、2027年10月入居可能、天井3500mm/セントラル空調/室外男女別トイレ。内装管理2万円/坪、開業販促1.5万円/坪。実ブラウザは募集中、web抽出は終了と募集中が併存。",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "G02",
+      "url": "https://search.sunfrt.co.jp/floor/15337/54721/",
+      "publisher": "サンフロンティア不動産",
+      "method": "webと実ブラウザ",
+      "facts": "B101347.21㎡105.03坪、飲食店舗。賃料/共益/預託/礼/償却/期間/入居は相談。更新2026-10-08。Oasisの12月/2027年10月を独立確認するものではない。",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "G03",
+      "url": "https://www.oasis-estate.jp/img/uploads/indoors/235470/8Q1KaPu7LC1790922856.jpg",
+      "publisher": "アースウィンド Oasis 公開募集図面",
+      "method": "子がリンク発見、親が元画像取得・view_imageで視覚確認、実ブラウザのimg src/1024×478を照合",
+      "local_file": "sources/oasis-b101-b102-plan.jpg",
+      "facts": "左B101105.03坪と右B10280.33坪の色枠。業種飲食。給水40A/排水100A/ガス80Aを両区画欄に明記。B101は柱型と折れがあり共用EV/エスカレーター等のコアに接する。細寸法・管底・接続位置・荷重/電力/風量・工事権限を確定できない。",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "G04",
+      "url": "https://one-ginza.jp/access/",
+      "publisher": "ONE GINZA施設公式",
+      "method": "web",
+      "facts": "JR有楽町京橋口5分。A/C入口9〜23時。B入口は掲載された10〜12Fの店舗時間に準拠しB1への経路根拠なし。飲食11〜23/ショップ11〜20。",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "G05",
+      "url": "https://one-ginza.jp/shop/12/",
+      "publisher": "ONE GINZA施設公式 WeArt銀座",
+      "method": "web、親が本文再読",
+      "facts": "6Fの音楽教室は平日10〜22/土日9〜21。サービス11〜20を全店一律上限とはしない。ただしB1浴場の時間例外承諾ではない。",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "G06",
+      "url": "https://one-ginza.jp/shop/3/",
+      "publisher": "ONE GINZA施設公式 俺のイタリアン",
+      "method": "子のweb確認",
+      "facts": "現B1飲食テナントの営業案内。早朝/23時後のB1店舗の権利を示さない。",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "G07",
+      "url": "https://one-ginza.jp/shop/4/",
+      "publisher": "ONE GINZA施設公式 俺のフレンチ",
+      "method": "子のweb確認",
+      "facts": "現B1飲食テナントの営業案内。現テナント継続と2027年10月募集を区別する。",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "G08",
+      "url": "https://jll-rm.co.jp/records/one-ginza/",
+      "publisher": "JLLリテールマネジメント",
+      "method": "webと子の照合",
+      "facts": "テナント運営管理・リーシング・販促・経理を受託。HOURS9〜23（店舗別）。実質所有者/契約貸主/浴場承諾者をこの記載だけで確定しない。",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "G09",
+      "url": "https://jll-rm.co.jp/inquiry/",
+      "publisher": "JLLリテールマネジメント",
+      "method": "公開問合せページをwebで読取のみ",
+      "facts": "店舗出店の相談窓口を確認。フォーム入力/送信・電話等は実施せず。",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "G10",
+      "url": "https://www.orix.co.jp/grp/pdf/newsroom/newsrelease/141028_ORIXJ.pdf",
+      "publisher": "ORIX 2014-10-28開業資料",
+      "method": "web、元PDF保存後pdftotextで建物概要を再読",
+      "local_file": "sources/orix-opening-20141028.pdf",
+      "facts": "地上12/地下3、S一部RC。現仲介の地下2と相違。B1が土間や最下階とは扱わず、直下の実用途/断面・床伏は未取得。2014年資料を現在の所有/契約条件には使用しない。",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "G11",
+      "url": "https://www.city.chuo.lg.jp/documents/3364/yokujyoutebiki.pdf",
+      "publisher": "中央区保健所 その他の公衆浴場の手続き",
+      "method": "web、元PDFを保存し該当ページをCPU描画/view_imageで照合",
+      "local_file": "sources/chuo-public-bath-procedure.pdf",
+      "facts": "設計段階で平面図等を用いた保健所相談、建築・消防との並行相談、申請・検査・許可の手順。ONE GINZAの浴場許可を意味しない。",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "G12",
+      "url": "https://search.sunfrt.co.jp/images/bukken/G/G_110582m_main.jpg",
+      "publisher": "サンフロンティア公開図",
+      "method": "元画像保存/view_image",
+      "local_file": "sources/sunfrt-b101-floorplan.jpg",
+      "facts": "300×300の低解像度平面。全体のコア等の概形を確認したが寸法算定には用いず。",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "G13",
+      "url": "https://www.oasis-estate.jp/building/29728/235466",
+      "publisher": "アースウィンド Oasis",
+      "method": "webと前段の読取を照合",
+      "facts": "一括632.08㎡191.20坪の代替募集。B101と別建物として数えず、費用を280㎡のまま流用しない。",
+      "checked_at": "2026-11-15"
+    },
+    {
+      "id": "G14",
+      "url": "https://search.sunfrt.co.jp/floor/15337/54720/",
+      "publisher": "サンフロンティア不動産",
+      "method": "子のweb照合",
+      "facts": "一括632.08㎡は賃料/共益/契約等相談、更新2026-10-08。",
+      "checked_at": "2026-11-15"
+    }
+  ],
+  "published": {
+    "address": "東京都中央区銀座1-8-19",
+    "floor": "B1-B101分割案",
+    "advertised_area_m2": 347.21,
+    "advertised_tsubo": 105.03,
+    "area_label": "専有面積という広告表示。実測有効面積ではない。",
+    "matching_access": {
+      "station": "JR山手線有楽町",
+      "walk_minutes": 5,
+      "source_id": "G04"
+    },
+    "availability": "複数の一次仲介で公開掲載継続。実ブラウザは募集中、web抽出文に終了表示も混在。現在の空室/分割提供は未照会。末尾の他区画一覧に自身がないことを独立の募集終了根拠にはしない。",
+    "rent_ex_yen": null,
+    "common_ex_yen": null,
+    "actual_lease_initial_cash_yen": null,
+    "actual_total_project_cash_yen": null,
+    "oasis_terms": {
+      "deposit_months": 12,
+      "deposit_base_confirmed": false,
+      "broker_months": 1,
+      "key_money_months": null,
+      "amortization": null,
+      "available_from": "2027-10",
+      "available_from_is_guarantee": false,
+      "lease_type": "定期借家",
+      "lease_years": null,
+      "ceiling_m": 3.5,
+      "ceiling_measurement_reference": null,
+      "air_conditioning": "セントラル",
+      "toilet": "室外男女別"
+    },
+    "sunfrt_terms": {
+      "rent": "相談",
+      "common": "相談",
+      "deposit": "相談",
+      "available_from": "相談",
+      "lease_period": "相談",
+      "updated_at": "2026-10-08"
+    },
+    "facility_fees": {
+      "interior_management_yen_per_tsubo": 20000,
+      "opening_promotion_yen_per_tsubo": 15000,
+      "total_nominal_yen": 3676050,
+      "tax_status": null,
+      "guarantor_required": true,
+      "guarantee_amount": null
+    },
+    "utilities_on_plan": {
+      "water_nominal_a": 40,
+      "waste_nominal_a": 100,
+      "gas_nominal_a": 80,
+      "flow_pressure_meter_capacity_verified": false,
+      "power_kva": null,
+      "ventilation_m3h": null,
+      "floor_load_kg_m2": null
+    },
+    "published_use_on_plan": "飲食",
+    "bath_use_consent": null,
+    "public_bath_permit": null,
+    "verified_reuse_saving_yen": null
+  },
+  "hours": {
+    "generic_oasis": {
+      "service": "11〜20",
+      "food": "11〜23"
+    },
+    "facility_entrances": {
+      "A": "9〜23",
+      "C": "9〜23",
+      "B": "掲載10〜12F店舗の営業時間に準拠。B1アクセス未確認"
+    },
+    "verified_nonfood_exception": {
+      "tenant": "WeArt銀座6F",
+      "weekdays": "10〜22",
+      "weekends": "9〜21"
+    },
+    "desired_hours_approved": false,
+    "inquiry_items": [
+      "朝の開店時刻7/8/9時等の可否（希望開始時刻自体は未定）",
+      "22/23時の利用終了・最終受付・最終退館",
+      "清掃・搬入・設備保守・緊急入館",
+      "営業終了後の循環/除湿/放熱等の運転・音・館空調停止時対応"
+    ],
+    "conclusion": "サービスは一律20時上限と断定しない。現B1の朝営業・サウナの時間例外と権利は未確認。23時の入口閉鎖を23時まで営業できる根拠にも使わない。"
+  },
+  "geometry": {
+    "program_source": "plan/plan_a.json",
+    "program_rooms": [
+      {
+        "id": "entry",
+        "area_m2": 14.4
+      },
+      {
+        "id": "change",
+        "area_m2": 27
+      },
+      {
+        "id": "wc",
+        "area_m2": 10.08
+      },
+      {
+        "id": "staff",
+        "area_m2": 9.72
+      },
+      {
+        "id": "plant",
+        "area_m2": 21
+      },
+      {
+        "id": "linen",
+        "area_m2": 9
+      },
+      {
+        "id": "service",
+        "area_m2": 12
+      },
+      {
+        "id": "main",
+        "area_m2": 30
+      },
+      {
+        "id": "self",
+        "area_m2": 12.25
+      },
+      {
+        "id": "dry",
+        "area_m2": 10.5
+      },
+      {
+        "id": "carbon",
+        "area_m2": 15.75
+      },
+      {
+        "id": "water",
+        "area_m2": 44
+      },
+      {
+        "id": "rest",
+        "area_m2": 32.4
+      },
+      {
+        "id": "restExt",
+        "area_m2": 13.05
+      },
+      {
+        "id": "wash",
+        "area_m2": 18.85
+      }
+    ],
+    "program_groups": [
+      {
+        "name": "サ室3室",
+        "area_m2": 52.75
+      },
+      {
+        "name": "水風呂・炭酸泉・洗い場と浴室動線",
+        "area_m2": 78.6
+      },
+      {
+        "name": "休憩2区画",
+        "area_m2": 45.45
+      },
+      {
+        "name": "受付・更衣・洗面WC",
+        "area_m2": 51.48
+      },
+      {
+        "name": "機械室・保守・リネン・スタッフ",
+        "area_m2": 51.72
+      }
+    ],
+    "advertised_area_surplus_m2": 67.21,
+    "advertised_surplus_to_prototype_ratio": 0.24003571428571427,
+    "advertised_loss_allowance_ratio": 0.19357161372080298,
+    "observations": [
+      "B101は図面左側の不整形な色枠で、B102や共用コアとは別区画",
+      "柱型・折れと出入口/共用部に合わせて再配置が必要。20×14mをそのまま移植して収まるとは未判定"
+    ],
+    "measured_clear_width_m": null,
+    "measured_clear_depth_m": null,
+    "verified_usable_area_m2": null,
+    "prototype_fit_verified": false,
+    "support": {
+      "deep_water_m": 1.2,
+      "seated_and_carbon_m": 0.6,
+      "water_only_deep_kg_m2": 1200,
+      "water_only_seated_kg_m2": 600,
+      "prototype_slab_to_support_m": 1.31,
+      "prototype_mass_t": {
+        "deep": 8.87,
+        "seated": 4.82,
+        "carbon": 9.94
+      },
+      "notes": "元の仮在庫質量であり、実躯体/基礎・階段/支持脚の構造計算ではない。全床へ平均化しない。"
+    },
+    "section_screen": {
+      "available_height_assumed_m": 3.5,
+      "service_band_m": 0.35,
+      "A_head_m": 3.15,
+      "B_head_m": 1.84,
+      "C_head_m": 2.54,
+      "B_raise_m": 1.31,
+      "C_raise_m": 0.61,
+      "C_underfloor_m": 0.7,
+      "not_building_measurement": true,
+      "notes": "掲載天井3.5mを利用可能梁下と仮定する感度にすぎない。実天井/梁下/床レベル不明。B/Cは元平面に階段干渉があり、値が足りても採用成立とはしない。"
+    },
+    "post_split_egress_verified": false,
+    "egress_required_evidence": "B101出口から地上までの避難計画図、防火区画、閉館時の施錠/解錠運用を取得し40人利用・夜間退館の条件を建築/消防と照合。公開図の階段が使えるとは未判定。"
+  },
+  "services_screen": {
+    "water_daily_m3_assumption": 23.04,
+    "shower_six_mixed_lmin_assumption": 48,
+    "all_bath_volume_m3_assumption": 10.2384,
+    "simultaneous_empty_30min_ls": 5.688,
+    "gas_dhw_kw_approx": 170,
+    "electric_gas_case_kva_approx": 103,
+    "bath_exhaust_m3h_approx": 2083,
+    "plant_vent_m3h_approx": 1120,
+    "heat_rejection_kw_approx": 34.6,
+    "note": "口径と流量/能力は別。以前の給水50mmは料金仮定で能力必須条件ではなく、40Aだけで不可にしない。全槽30分排水は比較条件で同時排水を強制しない。再利用を確定減額にしない。"
+  },
+  "estimate": {
+    "actual_total_yen": null,
+    "price_status": "公開賃料が非公開のため仮条件の資金感度。募集賃料予測・施工見積・確率幅ではない。",
+    "prototype_baseline_frozen": "cost-v1/calculations.json",
+    "assumed_rate_ex_yen_per_tsubo_month": [
+      20000,
+      30000,
+      40000
+    ],
+    "common_ex_yen_month_assumed": 300000,
+    "deposit_net_rent_months_assumed": 12,
+    "key_money_net_rent_months_assumed": 1,
+    "broker_gross_base_rent_months_assumed": 1,
+    "guarantee_gross_fixed_months_assumed": 1,
+    "preopen_paid_months": 5,
+    "runway_months": 3,
+    "extra_area_direct_yen_assumed": 10000000,
+    "extra_area_note": "広告347.21−原型280=67.21㎡へ簡素な一般仕上げ/天井/照明/一般空調等の追加枠。見積数量/確定単価ではなく、3サ室/3槽を面積比例増額しない。",
+    "building_incremental_direct_yen_cases": [
+      0,
+      20000000,
+      50000000
+    ],
+    "zero_case_label": "建物対応追加を未算入",
+    "incremental_note": "元84項目に含む局所ピット・接続等を重複加算しない追加枠。支持や改修が承諾/実現可能とは認定しない。",
+    "additional_nonrent_yen_month_assumed": 200000,
+    "facility_fee_tax_rate_assumed": 0.1,
+    "direct_addition_multiplier": 1.3915,
+    "excluded_unknowns": [
+      "実賃料/共益/保証基準/償却・礼・歩合・反復販促費・指定工事の差",
+      "主要構造/受変電/本管/共用消防等の未査定分（追加枠を超える場合あり）",
+      "2027年以降の価格改定、借入利息/返済・取得費・撤退原状回復",
+      "現地/メーカー/構造・行政・貸主の成立確認"
+    ],
+    "note": "保証金全額は返還/償却条件未確認の現金預託として一度計上。売上を運転資金から相殺しない。200人/日等の旧運営仮定を需要予測にしない。"
+  },
+  "next_gate": [
+    "B101分割の募集継続・条件表と浴場相談可否・朝〜22/23時の営業/入退館承諾",
+    "寸法入り専用平面・求積・断面・床伏/荷重・支持/ピットの改修権限",
+    "分割後の避難計画図（B101出口→地上、防火区画/閉館時施錠・解錠）と建築/消防の照合",
+    "給排水/ガスの実容量と電力/排熱・B工事/指定工事費",
+    "成立する区画のみ原型を再配置し物件別見積/資金/3Dへ"
+  ],
+  "external_contact": {
+    "recipient_intended": "JLLリテールマネジメント リーシングご担当者（掲載仲介への照会も可）",
+    "destination_verified": "https://jll-rm.co.jp/inquiry/",
+    "draft": "docs/basic_design/one-ginza-inquiry.md",
+    "sent": false,
+    "registration": false,
+    "appointment": false
+  },
+  "fable_gpu": {
+    "new_run": false,
+    "existing_session_preserved": true,
+    "property_specific_model_created": false
+  }
+}
