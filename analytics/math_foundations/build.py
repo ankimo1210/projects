@@ -1,16 +1,120 @@
 """Build the catalogued mathematics reader using only the standard library."""
 
+import base64
 import html
 import json
 import os
 import re
 from pathlib import Path
+from xml.parsers import expat
 
 ROOT = Path(__file__).resolve().parent
 WORKSPACE = ROOT.parents[1]
 CATALOG = json.loads((ROOT / "catalog.json").read_text(encoding="utf-8"))
 CHAPTERS = CATALOG["chapters"]
 BOOKS = CATALOG["books"]
+
+
+def group_math_fences(fragment: str) -> str:
+    """Keep fence size and spacing local while retaining source text verbatim."""
+
+    def group(match: re.Match) -> str:
+        data = match[0].encode("utf-8")
+        parser = expat.ParserCreate()
+        stack, insertions = [], {}
+        rows = {"math", "mrow", "mtd", "msqrt", "mstyle", "mpadded", "mphantom", "merror"}
+        closing = {")": "(", "]": "[", "}": "{", "⟩": "⟨", "⌉": "⌈", "⌋": "⌊"}
+        tall_tags = {"mfrac", "mtable", "msqrt", "mroot", "munder", "munderover"}
+        large_operators = {"∑", "∏", "∫", "∬", "∭", "∮", "⋃", "⋂"}
+
+        def start(name, attributes):
+            node = {
+                "name": name,
+                "attributes": attributes,
+                "start": parser.CurrentByteIndex,
+                "children": [],
+                "text": "",
+            }
+            if stack:
+                stack[-1]["children"].append(node)
+            stack.append(node)
+
+        def text(value):
+            if stack and stack[-1]["name"] == "mo":
+                stack[-1]["text"] += value
+
+        def end(_name):
+            node = stack.pop()
+            index = parser.CurrentByteIndex
+            node["end"] = data.index(b">", index) + 1 if data[index : index + 2] == b"</" else index
+            node["tall"] = (
+                node["name"] in tall_tags
+                or node["text"].strip() in large_operators
+                or any(child["tall"] for child in node["children"])
+            )
+            if node["name"] not in rows:
+                return
+            children, opened, pairs, bars = node["children"], [], [], {}
+            for index, child in enumerate(children):
+                token = child["text"].strip() if child["name"] == "mo" else ""
+                if token in closing.values():
+                    opened.append((token, index))
+                elif token in closing:
+                    if not opened or opened[-1][0] != closing[token]:
+                        opened.clear()
+                        continue
+                    _, first = opened.pop()
+                    pairs.append((first, index))
+                elif token in {"|", "‖", "∥"} and child["attributes"].get("form") != "infix":
+                    # Distinct conventional brackets have distinct scopes. A lone
+                    # conditional/evaluation/divisibility bar is never paired.
+                    key = (tuple(first for _, first in opened), token)
+                    bars.setdefault(key, []).append(index)
+            for positions in bars.values():
+                if len(positions) % 2 == 0:
+                    pairs.extend(zip(positions[::2], positions[1::2], strict=True))
+            for first, last in pairs:
+                if first != 0 or last != len(children) - 1:
+                    left, right = children[first]["start"], children[last]["end"]
+                    insertions[left] = insertions.get(left, b"") + b"<mrow>"
+                    insertions[right] = b"</mrow>" + insertions.get(right, b"")
+                if not any(child["tall"] for child in children[first + 1 : last]):
+                    for child in (children[first], children[last]):
+                        if "stretchy" not in child["attributes"]:
+                            position = data.index(b">", child["start"])
+                            insertions[position] = (
+                                insertions.get(position, b"") + b' stretchy="false"'
+                            )
+
+        parser.StartElementHandler = start
+        parser.CharacterDataHandler = text
+        parser.EndElementHandler = end
+        parser.Parse(data, True)
+        pieces, last = [], 0
+        for position, markup in sorted(insertions.items()):
+            pieces.extend((data[last:position], markup))
+            last = position
+        pieces.append(data[last:])
+        return b"".join(pieces).decode("utf-8")
+
+    return re.sub(r"<math\b[^>]*>.*?</math>", group, fragment, flags=re.S)
+
+
+def math_font_css() -> str:
+    """Embed the unmodified TeX-family font and its license for offline pages."""
+    folder = ROOT / "assets/fonts"
+    font = base64.b64encode((folder / "latinmodern-math.otf").read_bytes()).decode("ascii")
+    license_text = (folder / "GUST-FONT-LICENSE.txt").read_text(encoding="utf-8")
+    return (
+        "/* Latin Modern Math 1.959. Copyright 2012–2014 B. Jackowski, "
+        "P. Strzelczyk and P. Pianowski.\n"
+        "Unmodified font and complete upstream distribution: https://ctan.org/pkg/lm-math\n"
+        + license_text
+        + "*/\n"
+        '@font-face{font-family:"Latin Modern Math";'
+        f'src:url("data:font/otf;base64,{font}") format("opentype");'
+        "font-style:normal;font-weight:400;font-display:swap}\n"
+    )
 
 
 def escape(value: str) -> str:
@@ -71,6 +175,7 @@ def build(output: Path | None = None) -> list[Path]:
     css = (
         (WORKSPACE / "docs/templates/claude-report/tokens.css").read_text(encoding="utf-8")
         + "\n"
+        + math_font_css()
         + (ROOT / "assets/style.css").read_text(encoding="utf-8")
     )
     scripts = "\n".join(
@@ -111,7 +216,7 @@ def build(output: Path | None = None) -> list[Path]:
         book = next(b for b in BOOKS if b["id"] == chapter["book"])
         peers = [c for c in CHAPTERS if c["book"] == chapter["book"]]
         index = peers.index(chapter)
-        body = (ROOT / "chapters" / f"{slug}.html").read_text(encoding="utf-8")
+        body = group_math_fences((ROOT / "chapters" / f"{slug}.html").read_text(encoding="utf-8"))
         sections = re.findall(r'<section\s+id="([^"]+)"[^>]*>\s*<h2>(.*?)</h2>', body, flags=re.S)
         toc = "".join(
             f'<a href="#{escape(anchor)}">{re.sub("<[^>]+>", "", label)}</a>'

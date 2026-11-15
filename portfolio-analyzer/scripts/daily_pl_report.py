@@ -345,6 +345,34 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
         ibkr.parse_transactions(tx_path.read_text(encoding="utf-8-sig")) if tx_path.exists() else []
     )
     ledger_account = str((ledger or {}).get("account_id", "global_broker"))
+    history_pending = (snapshot.get("capture_status") or {}).get("history_reconciled") is False
+    if history_pending:
+        # A current balance is usable before its intervening trades are reconciled.
+        # Keep the old files intact, but never replay them as the new holdings' history.
+        transactions = []
+        current_basis = []
+        for position in snapshot["positions"]:
+            if (
+                position["account_id"] != ledger_account
+                or position["currency"] != "JPY"
+                or position.get("quantity") is None
+                or position.get("average_cost") is None
+                or position.get("average_cost_currency") != "JPY"
+            ):
+                continue
+            quantity = Decimal(str(position["quantity"]))
+            average_cost = Decimal(str(position["average_cost"]))
+            current_basis.append(
+                {
+                    "symbol": position["symbol"],
+                    "quantity": quantity,
+                    "average_cost": average_cost,
+                    "average_trade_fx": 1,
+                    "cost_basis_jpy": quantity * average_cost,
+                    "commission_jpy": 0,
+                }
+            )
+        ledger = {"account_id": ledger_account, "holdings": current_basis}
     jp_path = Path(args.jp_transactions)
     jp_rows = (
         jpbroker.parse_transactions(jpbroker.decode(jp_path.read_bytes()))
@@ -357,7 +385,7 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
     dc_tx_path = Path(args.dc_transactions)
     dc_trades = (
         dcplan.parse_trades(dcplan.decode(dc_tx_path.read_bytes()))
-        if dc_holding and dc_tx_path.exists()
+        if dc_holding and dc_tx_path.exists() and not history_pending
         else []
     )
     dc_nav: list[tuple[str, Decimal]] = []
@@ -375,6 +403,16 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
         json.loads(reference_path.read_text(encoding="utf-8")) if reference_path.exists() else {}
     )
     source_warnings = []
+    if history_pending:
+        source_warnings.append(
+            "保有・現金は更新済みですが、海外証券の売買とDC掛金は履歴未照合です。"
+            "古い履歴を最新残高へ延長せず、全口座の期間・開設来損益と税引後値を未計算にしています。"
+            "日次損益は現在数量を固定した評価差です。"
+        )
+        source_warnings.append(
+            "保有・残高の確認日: "
+            + "、".join(f"{a.get('name', a['id'])} {a['as_of']}" for a in snapshot["accounts"])
+        )
     factor_risk = None
     factor_estimates_path = PROJECT_ROOT / "data" / "factor_estimates.json"
     if reference and factor_estimates_path.exists():
@@ -440,15 +478,23 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
         snapshot, quotes, fx_quote, [x for x in (ledger, jp_ledger, dc_ledger) if x]
     )
     year_start = f"{as_of[:4]}-01-01"
-    tax_pool = mtm.net_tax(
-        rows,
-        realized_ytd_jpy=ibkr.realized_since(transactions, year_start)
-        + jpbroker.taxable_realized_since(jp_rows, year_start),
-        carryforward_loss_jpy=Decimal(
-            str((snapshot.get("tax") or {}).get("carryforward_loss_jpy", 0))
-        ),
-    )
+    tax_pool = None
+    if not history_pending:
+        tax_pool = mtm.net_tax(
+            rows,
+            realized_ytd_jpy=ibkr.realized_since(transactions, year_start)
+            + jpbroker.taxable_realized_since(jp_rows, year_start),
+            carryforward_loss_jpy=Decimal(
+                str((snapshot.get("tax") or {}).get("carryforward_loss_jpy", 0))
+            ),
+        )
     summary = mtm.summarize(snapshot, rows)
+    if history_pending:
+        for scope in (summary, *summary.accounts.values()):
+            scope.total_after_tax_jpy = None
+            scope.day_pnl_after_tax_jpy = None
+            scope.unrealized_after_tax_jpy = None
+            scope.unrealized_tax_jpy = None
     meta = {
         "as_of": as_of,
         "generated_at": generated_at,
@@ -700,7 +746,7 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
                 for i, v in enumerate(marks)
             ]
             label, mode = (
-                f"評価額の変化（{dates[base_i] if base_i is not None else '基準日不明'} 比・原価なし）",
+                f"評価額の変化（{dates[base_i] if base_i is not None else '基準日不明'} 比・現在数量固定）",
                 "value",
             )
             trades = []
@@ -758,6 +804,7 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
             + "。全口座の履歴集計は未計算です。"
         )
     quality = {
+        "history_reconciliation_pending": history_pending,
         "historical_pnl_exact": not paths.aggregate_fx_adjustments
         and not any(v is None for v in pnl[wi:]),
         "aggregate_fx_adjustments": [
@@ -805,7 +852,11 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
             "yfinance の異常な終値を除外（前後の水準から桁違い）: "
             + "、".join(f"{c} {'・'.join(d)}" for c, d in sorted(dropped.items()))
         )
-    tax_text = mtm.tax_note(snapshot, rows, tax_pool)
+    tax_text = (
+        "売買履歴未照合のため、年内実現損益・見込み税額・税引後値は未計算です。"
+        if history_pending
+        else mtm.tax_note(snapshot, rows, tax_pool)
+    )
     if tax_text:
         notes.append(tax_text)
 

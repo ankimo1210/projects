@@ -6,10 +6,11 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
+      # Preserve the original bytes of the bundled upstream math-font documents.
       - id: trailing-whitespace
-        exclude: '\.(ipynb|md)$'
+        exclude: '(\.(ipynb|md)$|^analytics/math_foundations/assets/fonts/(GUST-FONT-LICENSE|README-Latin-Modern-Math)\.txt$)'
       - id: end-of-file-fixer
-        exclude: '\.(ipynb|md)$'
+        exclude: '(\.(ipynb|md)$|^analytics/math_foundations/assets/fonts/(GUST-FONT-LICENSE|README-Latin-Modern-Math)\.txt$)'
       - id: check-yaml
         exclude: '^(.*/templates/.*\.ya?ml|.*\.code-workspace)$'
       - id: check-toml

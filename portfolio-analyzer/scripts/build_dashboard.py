@@ -90,6 +90,8 @@ def parse_args() -> argparse.Namespace:
 def main() -> int:
     args = parse_args()
     portfolio = load_portfolio(args.input)
+    capture = json.loads(args.input.read_text(encoding="utf-8")).get("capture_status") or {}
+    history_pending = capture.get("history_reconciled") is False
     issues = validate_portfolio(portfolio)
     if issues:
         for issue in issues:
@@ -152,7 +154,7 @@ def main() -> int:
             proposal_source_path = "provided proposal JSON"
     ledger = None
     ledger_source_path = "data/ibkr-ledger.private.json"
-    if args.ledger is not None:
+    if args.ledger is not None and not history_pending:
         if not args.ledger.is_file():
             print(f"ERROR: ledger not found: {args.ledger}", file=sys.stderr)
             return 1
@@ -161,6 +163,8 @@ def main() -> int:
             ledger_source_path = args.ledger.resolve().relative_to(PROJECT_ROOT).as_posix()
         except ValueError:
             ledger_source_path = "provided ledger JSON"
+    elif args.ledger is not None:
+        print("WARNING: transaction history is unreconciled; omitting the old ledger's P&L")
     artifact = build_artifact(
         portfolio,
         analysis_reference=analysis_reference,

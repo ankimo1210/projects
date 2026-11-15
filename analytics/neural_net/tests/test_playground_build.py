@@ -94,3 +94,31 @@ def test_scale_snapshot_rejects_missing_ui_metadata_and_invalid_costs(tmp_path):
         path.write_text(json.dumps(data))
         with pytest.raises(ValueError):
             module.load_snapshot(path)
+
+
+def test_digit_snapshot_checks_weights_updates_metrics_and_validation_selection(tmp_path):
+    spec = importlib.util.spec_from_file_location("playground_build", PLAYGROUND / "build.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    original = json.loads((PLAYGROUND / "digit-results.json").read_text())
+    assert module.load_digits(PLAYGROUND / "digit-results.json") == original
+    variants = []
+    bad_weights = deepcopy(original)
+    bad_weights["models"][0]["history"][0]["weights"]["conv1.weight"] = "AAAA"
+    variants.append(bad_weights)
+    bad_update = deepcopy(original)
+    bad_update["models"][0]["history"][1]["update"]["after"] = original["models"][0]["history"][0][
+        "weights"
+    ]["conv1.weight"]
+    variants.append(bad_update)
+    bad_selection = deepcopy(original)
+    bad_selection["models"][0]["best_epoch"] = 0
+    variants.append(bad_selection)
+    bad_metrics = deepcopy(original)
+    bad_metrics["models"][0]["test"]["correct"] += 1
+    variants.append(bad_metrics)
+    for i, variant in enumerate(variants):
+        target = tmp_path / f"digits-{i}.json"
+        target.write_text(json.dumps(variant))
+        with pytest.raises(ValueError):
+            module.load_digits(target)

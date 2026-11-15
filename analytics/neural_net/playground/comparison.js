@@ -11,17 +11,18 @@
   let colors, capacityMarks = [], costMarks = [], learningMarks = [], lossMarks = [], confusionView;
 
   function switchMode(mode) {
-    for (const value of ['comparison', 'playground']) {
+    for (const value of ['digits', 'playground', 'comparison']) {
       $(`mode-${value}`).setAttribute('aria-selected', String(mode === value));
       $(`${value}-view`).hidden = mode !== value;
     }
     window.dispatchEvent(new Event('lab-mode-change'));
   }
-  for (const mode of ['comparison', 'playground']) {
+  const modes = ['digits', 'playground', 'comparison'];
+  for (const mode of modes) {
     $(`mode-${mode}`).addEventListener('click', () => switchMode(mode));
     $(`mode-${mode}`).addEventListener('keydown', event => {
       if (['ArrowLeft', 'ArrowRight'].includes(event.key)) {
-        const other = mode === 'comparison' ? 'playground' : 'comparison';
+        const other = modes[(modes.indexOf(mode) + (event.key === 'ArrowRight' ? 1 : modes.length - 1)) % modes.length];
         switchMode(other); $(`mode-${other}`).focus(); event.preventDefault();
       }
     });

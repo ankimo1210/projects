@@ -3,12 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="このPCでニューラルネットの規模・精度・学習コストを比較。GPUでの実測結果と、ブラウザで学習する決定境界の実験室。">
+  <meta name="description" content="手書き数字をCNNで認識し、特徴抽出・推論・学習更新を可視化。GPUでの規模比較と、ブラウザで学習する決定境界も観察。">
   <title>ニューラルネット実験室</title>
   <style>/*__TOKENS__*/
 /*__STYLES__*/
 /*__COMPARISON_STYLE__*/
-/*__INSPECTOR_STYLE__*/</style>
+/*__INSPECTOR_STYLE__*/
+/*__DIGIT_STYLE__*/</style>
 </head>
 <body>
 <div class="lab">
@@ -16,14 +17,15 @@
     <div>
       <div class="lab-label"><svg viewBox="0 0 32 24" aria-hidden="true"><path d="M5 5 16 12 5 20M16 12 27 5M16 12 27 20"/><circle cx="5" cy="5" r="3"/><circle cx="5" cy="20" r="3"/><circle cx="16" cy="12" r="3"/><circle cx="27" cy="5" r="3"/><circle cx="27" cy="20" r="3"/></svg> ANALYTICS / NEURAL NETWORKS</div>
       <h1>ニューラルネット実験室</h1>
-      <p class="intro">規模を変える。学習を観察する。精度と計算コストを、このPCで確かめる。</p>
+      <p class="intro">数字を読む。特徴を追う。学習と推論の計算を、目で確かめる。</p>
     </div>
     <button id="theme" class="quiet" type="button" aria-pressed="false">ダーク表示</button>
   </header>
 
-  <nav class="mode-tabs" role="tablist" aria-label="実験のモード"><button id="mode-playground" role="tab" aria-selected="true" aria-controls="playground-view" type="button">学習と推論を観察</button><button id="mode-comparison" role="tab" aria-selected="false" aria-controls="comparison-view" type="button">このPCで規模比較</button></nav>
+  <nav class="mode-tabs" role="tablist" aria-label="実験のモード"><button id="mode-digits" role="tab" aria-selected="true" aria-controls="digits-view" type="button">手書き数字を読む</button><button id="mode-playground" role="tab" aria-selected="false" aria-controls="playground-view" type="button">学習と推論を観察</button><button id="mode-comparison" role="tab" aria-selected="false" aria-controls="comparison-view" type="button">このPCで規模比較</button></nav>
+  <section id="digits-view" role="tabpanel" aria-labelledby="mode-digits">/*__DIGIT__*/</section>
   <section id="comparison-view" role="tabpanel" aria-labelledby="mode-comparison" hidden>/*__COMPARISON__*/</section>
-  <div class="workspace" id="playground-view" role="tabpanel" aria-labelledby="mode-playground">
+  <div class="workspace" id="playground-view" role="tabpanel" aria-labelledby="mode-playground" hidden>
     <aside aria-label="実験の設定">
     <details class="settings panel" id="settings-panel" open>
       <summary>実験をつくる</summary>
@@ -126,10 +128,13 @@
       <noscript><p>この実験室の学習とグラフ表示にはJavaScriptが必要です。</p></noscript>
     </main>
   </div>
-  <footer>Fashion-MNISTの実測比較 / 合成データのブラウザ学習 · seed固定 · オフライン表示<br>関連する既存の実験室：<a href="https://playground.tensorflow.org/" target="_blank" rel="noopener noreferrer">TensorFlow Playground ↗</a> · 本ページのコードは独立した実装です。</footer>
+  <footer>MNISTの画像認識 / Fashion-MNISTの実測比較 / 合成データのブラウザ学習 · seed固定 · オフライン表示<br>関連する既存の実験室：<a href="https://playground.tensorflow.org/" target="_blank" rel="noopener noreferrer">TensorFlow Playground ↗</a> · 本ページのコードは独立した実装です。</footer>
 </div>
 <script id="engine-source">/*__ENGINE__*/</script>
 <script>/*__INSPECTOR_APP__*/</script>
+<script id="digit-data" type="application/json">/*__DIGIT_DATA__*/</script>
+<script>/*__DIGIT_ENGINE__*/</script>
+<script>/*__DIGIT_APP__*/</script>
 <script id="scale-data" type="application/json">/*__SCALE_DATA__*/</script>
 <script>/*__COMPARISON_APP__*/</script>
 <script>/*__APP__*/</script>

@@ -1,15 +1,132 @@
 """Build an offline, single-file dashboard from the editable sources."""
 
 import argparse
+import base64
 import json
 import math
 import statistics
+import struct
 from datetime import datetime
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 TOKENS = HERE.parents[2] / "docs/templates/claude-report/tokens.css"
 SNAPSHOT = HERE / "benchmark-results.json"
+DIGITS = HERE / "digit-results.json"
+
+
+def load_digits(path: Path) -> dict:
+    """Reject corrupt MNIST checkpoints before replacing the delivered snapshot."""
+    data = json.loads(path.read_text(encoding="utf-8"))
+
+    def require(condition):
+        if not condition:
+            raise ValueError("Inconsistent digit experiment")
+
+    try:
+        require(data["schema_version"] == 1 and data["status"] == "complete")
+        require(data["config"]["epochs"] >= 1 and data["config"]["normalization"] == "pixel / 255")
+        require(data["hardware"]["gpu"] and data["source_sha256"])
+        require(
+            [data["data"][key] for key in ["train", "validation", "test"]] == [50000, 10000, 10000]
+        )
+        require(
+            data["config"]["matmul_precision"] == data["config"]["convolution_precision"] == "ieee"
+        )
+        require(len(data["data"]["input_sha256"]) == 4 and len(data["data"]["split_sha256"]) == 64)
+        samples = data["data"]["examples"]
+        ids = {sample["id"] for sample in samples}
+        require(len(ids) == len(samples) >= 30)
+        for sample in samples:
+            require(
+                0 <= sample["label"] <= 9
+                and len(base64.b64decode(sample["pixels"], validate=True)) == 784
+            )
+
+        def tensor(encoded, length):
+            raw = base64.b64decode(encoded, validate=True)
+            require(
+                len(raw) == length * 4
+                and all(math.isfinite(value[0]) for value in struct.iter_unpack("<f", raw))
+            )
+
+        def metrics(value, size):
+            matrix = value["confusion"]
+            require(len(matrix) == 10 and all(len(row) == 10 for row in matrix))
+            require(all(type(n) is int and n >= 0 for row in matrix for n in row))
+            require(sum(map(sum, matrix)) == value["n"] == size)
+            require(sum(matrix[i][i] for i in range(10)) == value["correct"])
+            require(math.isclose(value["accuracy"], value["correct"] / size, abs_tol=1e-12))
+            require(math.isfinite(value["loss"]) and value["loss"] >= 0)
+
+        require(len(data["models"]) == 2 and len({model["id"] for model in data["models"]}) == 2)
+        for model in [data["baseline"], *data["models"]]:
+            history = model["history"]
+            require([row["epoch"] for row in history] == list(range(data["config"]["epochs"] + 1)))
+            require(
+                model["best_epoch"]
+                == min(history[1:], key=lambda row: row["validation"]["loss"])["epoch"]
+            )
+            metrics(model["test"], 10000)
+            require(math.isfinite(model["fit_seconds"]) and model["fit_seconds"] > 0)
+            for row in history:
+                metrics(row["train"], 50000)
+                metrics(row["validation"], 10000)
+            if "channels" not in model:
+                require(model["parameters"] == 7850)
+                continue
+            c1, c2 = model["channels"]
+            require(c1 > 0 and c2 > 0)
+            lengths = {
+                "conv1.weight": c1 * 25,
+                "conv1.bias": c1,
+                "conv2.weight": c2 * c1 * 9,
+                "conv2.bias": c2,
+                "head.weight": c2 * 250,
+                "head.bias": 10,
+            }
+            require(sum(lengths.values()) == model["parameters"])
+            for row in history:
+                for name, length in lengths.items():
+                    tensor(row["weights"][name], length)
+                if row["epoch"] == 0:
+                    require(row["update"] is None)
+                    continue
+                update = row["update"]
+                require(
+                    update["after"] == row["weights"]["conv1.weight"]
+                    and update["bias_after"] == row["weights"]["conv1.bias"]
+                )
+                require(
+                    0 < update["batch_size"] <= data["config"]["batch_size"]
+                    and update["optimizer_step"] > 0
+                )
+                require(
+                    all(
+                        math.isfinite(update[key]) and update[key] >= 0
+                        for key in ["loss_before", "loss_after"]
+                    )
+                )
+                for key in ["before", "gradient", "after"]:
+                    tensor(update[key], c1 * 25)
+                    tensor(update["bias_" + key], c1)
+            require(set(model["error_ids"]).issubset(ids))
+            oracle = model["verification"]
+            require(oracle["sample_id"] in ids and 0 <= oracle["class"] < 10)
+            require(len(oracle["logits"]) == len(oracle["probabilities"]) == 10)
+            require(all(math.isfinite(v) for v in oracle["logits"]))
+            require(
+                all(0 <= v <= 1 for v in oracle["probabilities"])
+                and math.isclose(sum(oracle["probabilities"]), 1, abs_tol=1e-6)
+            )
+            for encoded, length in zip(
+                oracle["features"], [c1 * 576, c1 * 144, c2 * 100, c2 * 25], strict=True
+            ):
+                tensor(encoded, length)
+            tensor(oracle["input_gradient"], 784)
+    except (KeyError, TypeError, ValueError, IndexError, struct.error) as error:
+        raise ValueError("Invalid digit experiment snapshot") from error
+    return data
 
 
 def load_snapshot(path: Path) -> dict:
@@ -177,6 +294,13 @@ def render() -> str:
         "/*__SCALE_DATA__*/",
         json.dumps(snapshot, ensure_ascii=False, allow_nan=False).replace("<", "\\u003c"),
     )
+    digits = load_digits(DIGITS) if DIGITS.exists() else None
+    html = html.replace(
+        "/*__DIGIT_DATA__*/",
+        json.dumps(digits, ensure_ascii=False, allow_nan=False, separators=(",", ":")).replace(
+            "<", "\\u003c"
+        ),
+    )
     for marker, path in {
         "TOKENS": TOKENS,
         "STYLES": HERE / "styles.css",
@@ -187,6 +311,10 @@ def render() -> str:
         "COMPARISON_APP": HERE / "comparison.js",
         "INSPECTOR_STYLE": HERE / "inspector.css",
         "INSPECTOR_APP": HERE / "inspector.js",
+        "DIGIT": HERE / "digits.html",
+        "DIGIT_STYLE": HERE / "digits.css",
+        "DIGIT_ENGINE": HERE / "digits-engine.js",
+        "DIGIT_APP": HERE / "digits.js",
     }.items():
         html = html.replace(f"/*__{marker}__*/", path.read_text(encoding="utf-8"))
     return html
@@ -200,7 +328,13 @@ def main() -> None:
     parser.add_argument(
         "--import-comparison", type=Path, help="Validate and retain a completed result snapshot"
     )
+    parser.add_argument("--import-digits", type=Path, help="Validate and retain MNIST checkpoints")
     args = parser.parse_args()
+    if args.import_digits:
+        if args.check:
+            parser.error("--check cannot import a result")
+        load_digits(args.import_digits)
+        DIGITS.write_text(args.import_digits.read_text(encoding="utf-8"), encoding="utf-8")
     if args.import_comparison:
         if args.check:
             parser.error("--check cannot import a result")
@@ -214,7 +348,7 @@ def main() -> None:
         print("Dashboard is up to date and self-contained")
     else:
         output.write_text(expected, encoding="utf-8")
-        print(f"Built {output} ({len(expected.encode('utf-8')):,} bytes)")
+        print(f"Built dashboard ({len(expected.encode('utf-8')):,} bytes)")
 
 
 if __name__ == "__main__":

@@ -1,11 +1,79 @@
 # ニューラルネット実験室
 
-[index.html](index.html) をブラウザで開き、**「学習と推論を観察」→「学習を開始」**で動かす。
+[index.html](index.html) をブラウザで開く。最初の**「手書き数字を読む」**では、実際のMNIST認識を試せる。
+**「学習と推論を観察」→「学習を開始」**では、合成データの境界をその場で学習する。
 入力 → 隠れ層 → 出力をつないだ図で、各ニューロンの反応地図が学習と一緒に変わる。
 **「このPCで規模比較」**に切り替えると、GPUで計測した5規模の結果を比較できる。
 HTMLはサーバー・追加パッケージ・外部通信なしで表示できる。
 規模比較の再学習はPython/PyTorchでこのPCのGPUを使い、結果をHTMLに取り込む。
 既存の [統合ポータル](../../report/README.md) の学習済みフレーム再生に対し、こちらは設定を変えて再学習できる。
+
+## 実際の問題: 手書き数字を読む
+
+MNISTの28×28画素から0〜9を分類する。Chromeなど通常のブラウザで単体HTMLを開ける。
+
+1. 検証画像を選ぶか、「自分で描く / 消す」を押して数字を描く。予測確率と全層の反応が即時に変わる。
+2. 「学習を最初から再生」で、未学習から8epochまで**実際に保存した重み**を再生する。
+   スライダーで任意のepochを選べる。GPUでの再学習は下のPythonコマンドを使う。
+3. 「推論を追う」「次の層へ」で、入力、畳み込み、ReLU、最大値pool、全結合・softmaxを6段階で追う。
+   この間は学習再生を止め、重みを固定する。
+4. 第1層の特徴マップの1マスを選び、入力の5×5、フィルタの25重み、各積、和とbias、ReLUを照合する。
+   入力画像の橙枠はその5×5の範囲。さらに2×2からどの最大値が残るかを数値で確認できる。
+5. 重みのマスを選び、そのepochの最後の学習80枚による実勾配とAdam更新前後を見る。
+6. 0〜9の確率の棒を選ぶと、そのクラスのlogitへの全特徴の寄与の和、絶対値上位6特徴、残りの合計、入力勾配を表示する。
+7. 「このモデルが間違えた例」では、検証で選んだ重みが誤分類した最初の12検証画像を試す。
+
+手描きは縦横比を保って最大20×20へ縮小し、28×28上で重心を中央に寄せる。
+空白入力は推論の候補を表示せず、描画待ちにする。画像・筆跡は送信も学習への追加もしない。
+特徴マップは段階内の最大値で色を正規化するため、epoch間の色の濃さから絶対値を比較しない。
+入力の感度は `∂logit / ∂画素` で、青の画素を少し明るくすると選択クラスのlogitが上がる。
+確率の校正や、手描きへの一般化性能は検証していない。
+
+### 実測と評価の分離
+
+既存のMNISTキャッシュを追加ダウンロードなしで使用。
+公式学習60,000枚からseed42の固定層化分割で学習50,000/検証10,000枚を作り、
+公式テスト10,000枚は検証交差エントロピー最小のepochを選んだ後にモデルごとに1回だけ評価する。
+全モデルはseed11、8epoch、batch256、Adam lr0.001、正則化なし、入力は画素/255。
+GPU計算はfloat32で行い、行列積とcuDNN畳み込みの精度を両方 `ieee` に指定する。
+
+| モデル | 構造 | パラメータ | 検証正解率 | 最終テスト正解率 | 学習・評価時間 | 割当VRAMピーク |
+|---|---|---:|---:|---:|---:|---:|
+| 線形分類器 | 784→10 | 7,850 | 91.73% | 92.18% | 1.54秒 | 277.6MiB |
+| CNN 小 | 4→8フィルタ | 2,410 | 96.37% | 96.89% | 2.57秒 | 294.2MiB |
+| CNN 中 | 12→24フィルタ | 8,938 | 98.12% | 98.31% | 2.64秒 | 332.3MiB |
+
+いずれも選択epochは8。RTX 5080 / PyTorch 2.11.0+cu128での単一seedの実測で、
+時間は初期評価を除く学習、学習/検証集合の評価、再生用の記録を含む。
+単発時間には固定費もあるため、2規模の速度の優劣は断定しない。
+CNN 小は重みの共有によって、線形分類器より少ないパラメータでも精度を高めている。
+
+CNNは `Conv5×5 → ReLU → MaxPool2×2 → Conv3×3 → ReLU → MaxPool2×2 → Linear10`。
+各マップの形は28→24→12→10→5で、最終特徴数はフィルタ数×25。
+保存する画像は検証集合の各クラス先頭3枚と各CNNの先頭12誤分類例だけ。
+検証/テストの混同行列、入力4ファイル・分割・コードのSHA256、条件・機器情報も記録する。
+
+### 数値実装と再現
+
+Python/PyTorchが学習し、`digits-engine.js` が外部依存なしで畳み込み・pool・全結合・softmax・入力勾配を計算する。
+JavaScriptの演算はfloat64で、同じfloat32重みを用いたCPU/PyTorch float64の参照値と全特徴・logit・勾配を照合する。
+学習時のGPU float32のlogitとも照合する。poolの同値/近接値では丸めで選ばれる位置と微分が変わり得るため、
+有限差分の勾配検証には同値を避けた入力を使う。
+行列積と畳み込みの精度設定が別である点は[PyTorch CUDA仕様](https://docs.pytorch.org/docs/stable/notes/cuda)も参照。
+
+```bash
+# Run at the repository root in WSL. Uses cached MNIST, no downloads.
+OMP_NUM_THREADS=4 OPENBLAS_NUM_THREADS=4 MKL_NUM_THREADS=4 \
+  uv run --no-sync python -m nn_textbook.digit_experiment
+python3 analytics/neural_net/playground/build.py \
+  --import-digits _data/analytics/neural_net/digit-lab/latest.json
+node --test analytics/neural_net/playground/digits-engine.test.cjs
+```
+
+作業出力rootは `_data/analytics/neural_net/digit-lab/` の一つ。
+`latest.json` は約0.90MBで、取り込み検証後に `digit-results.json` へ必要な再生用重みと結果を残す。
+単体HTMLは約1.15MB。別のモデルファイルや巨大な中間配列は保存しない。
+データ出典: [MNIST](https://yann.lecun.org/exdb/mnist/)、[torchvision MNIST](https://docs.pytorch.org/vision/stable/generated/torchvision.datasets.MNIST.html)。
 
 ## モデル・学習・推論を追う
 
@@ -75,7 +143,7 @@ python3 analytics/neural_net/playground/build.py \
 `--import-comparison` は完了状態・全モデル/seed・行列/指標・時間・VRAM集計・表示metadataを検証してから
 `benchmark-results.json` に最終snapshotを残す。入力4ファイルのSHA256、分割とコードのSHA256も含む。
 画像の追加コピー・中間配列・学習済み重みは保存しない。
-本計測のJSONは約0.86MB、単体HTMLは約0.32MB。
+本計測のJSONは約0.86MB。MNISTも含む現在の単体HTMLは約1.15MB。
 
 任意の試運転例：
 
@@ -127,6 +195,9 @@ OMP_NUM_THREADS=4 OPENBLAS_NUM_THREADS=4 MKL_NUM_THREADS=4 \
 | `engine.js` | PRNG、合成データ、標準化、MLP、逆伝播、Adam、評価・履歴 |
 | `app.js` | 学習操作、Canvas/SVG描画、テーマ、JSON保存 |
 | `inspector.js` / `inspector.css` | ニューロン地図・接続・寄与・直前の更新を連動表示 |
+| `digits.html` / `digits.js` / `digits.css` | 手描き認識・CNNの全層・学習再生・寄与・実更新を連動 |
+| `digits-engine.js` / `digits-engine.test.cjs` | 独立したCNN数値実装とPyTorch/有限差分による照合 |
+| `digit-results.json` | MNISTの再生用重み・実測・検証画像・数値参照値 |
 | `comparison.html` / `comparison.js` / `comparison.css` | PCでのモデル規模比較、表・曲線・seed別の詳細 |
 | `benchmark-results.json` | 実測結果・入力ハッシュ・条件の最終snapshot |
 | `page.html` / `styles.css` | 編集用の画面とレイアウト |
@@ -135,13 +206,14 @@ OMP_NUM_THREADS=4 OPENBLAS_NUM_THREADS=4 MKL_NUM_THREADS=4 \
 | `STATUS.md` | 完了条件、進捗、検証結果 |
 
 GPU実験の本体は [`../src/nn_textbook/scale_experiment.py`](../src/nn_textbook/scale_experiment.py)。
+MNISTの実験は [`../src/nn_textbook/digit_experiment.py`](../src/nn_textbook/digit_experiment.py)。
 
 リポジトリルート（WSL）から：
 
 ```bash
 python3 analytics/neural_net/playground/build.py
 python3 analytics/neural_net/playground/build.py --check
-node --test analytics/neural_net/playground/engine.test.cjs
+node --test analytics/neural_net/playground/engine.test.cjs analytics/neural_net/playground/digits-engine.test.cjs
 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 \
   uv run --no-sync pytest analytics/neural_net/tests -q
 ```

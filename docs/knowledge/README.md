@@ -19,3 +19,4 @@
 - [yfinance の日本株・業種 ETF のデータの誤り（2026-10-19）](2026-10-19-yfinance-japan-data-errors.md) — NEXT FUNDS の配当の日付のずれ・1629.T の分割と価格の誤り・8303 の配当・分割の日の配当・行と営業日の欠けと、その見つけ方と直し方
 - [Windows の GPU 応答停止と画面崩れ（2026-10-28）](2026-10-28-windows-gpu-timeout.md) — NVIDIA の LiveKernelEvent 141、ドライバー 621.01（10-25 導入）の既知の不具合と戻し先、WSL からの調べ方、再起動後の確認手順、写真バックアップのエラー調査の引継ぎ
 - [OpenAI と Anthropic API の検証と引き継ぎ（2026-11-01）](2026-11-01-openai-anthropic-api-handoff.md) — API の疎通・検索付き CPI 調査、残高照会の権限エラー、API と管理画面の確認結果の区別
+- [Claude Code で Fable にレビューを依頼する（2026-11-11）](2026-11-11-fable-review.md) — Opus と同じ引き継ぎ文書を使う Fable 5.2 のレビュー手順と `high` の指定

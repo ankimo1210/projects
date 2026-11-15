@@ -1,4 +1,4 @@
-"""Refresh the WSL copy of shared Drive inputs without copying model settings."""
+"""Refresh shared inputs or publish generated reports between Windows and WSL."""
 
 from __future__ import annotations
 
@@ -15,6 +15,7 @@ from portfolio_analyzer.private_storage import (  # noqa: E402
     INPUT_FILES,
     _external,
     data_dir,
+    publish_reports,
     refresh_inputs,
 )
 
@@ -31,6 +32,9 @@ def main() -> int:
         type=Path,
         help="Drive mount point; Windows defaults to the source volume root",
     )
+    parser.add_argument(
+        "--reports", action="store_true", help="publish generated local reports to Drive"
+    )
     args = parser.parse_args()
     try:
         source = _external(PROJECT_ROOT, data_dir(PROJECT_ROOT))
@@ -40,14 +44,20 @@ def main() -> int:
             if os.name != "nt":
                 raise ValueError("Specify the Drive connection point on this platform")
             connection = Path(source.anchor)
-        online = refresh_inputs(source, cache, connection_root=connection)
+        sync = publish_reports if args.reports else refresh_inputs
+        online = sync(source, cache, connection_root=connection)
     except (ValueError, OSError):
         print(
-            "Private input refresh stopped: check Drive, missing files or local edits.",
+            "Private sync stopped: check Drive, missing files or newer/local edits.",
             file=sys.stderr,
         )
         return 2
-    print(json.dumps({"source_available": online, "verified_local_inputs": len(INPUT_FILES)}))
+    details = (
+        {"reports_published": online}
+        if args.reports
+        else {"source_available": online, "verified_local_inputs": len(INPUT_FILES)}
+    )
+    print(json.dumps(details))
     return 0
 
 

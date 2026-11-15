@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>サウナA案 v3 — 確認用の軽量ビュー</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #111; color: #e8e2d8; font-family: system-ui, sans-serif; }
+  #bar { position: fixed; left: 0; right: 0; top: 0; padding: 10px 14px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; background: rgba(17,17,17,.82); z-index: 2; }
+  #bar button { background: #2a2622; color: inherit; border: 1px solid #4a433a; border-radius: 6px; padding: 8px 14px; font-size: 14px; cursor: pointer; }
+  #bar button[aria-pressed="true"] { background: #6b4a2a; border-color: #b9834d; }
+  #note { font-size: 12px; opacity: .8; margin-left: auto; max-width: 46ch; }
+  #status { position: fixed; left: 14px; bottom: 12px; font-size: 13px; z-index: 2; }
+  canvas { display: block; width: 100vw; height: 100vh; }
+</style>
+</head>
+<body>
+<div id="bar" role="group" aria-label="視点">
+  <button data-view="overview" aria-pressed="true">全体（天井なし）</button>
+  <button data-view="main" aria-pressed="false">メインサウナ</button>
+  <button data-view="water" aria-pressed="false">水風呂</button>
+  <button data-view="rest" aria-pressed="false">休憩</button>
+  <span id="note">座標確認用のリアルタイム表示です。間接光・屈折・手続き素材は再現されません。画質の評価は renders/ の Cycles 描画で行ってください。</span>
+</div>
+<div id="status" role="status">モデルを読み込み中…</div>
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+               "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+
+const status = document.getElementById('status');
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.15;
+document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0d0c0b);
+const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.05, 200);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+
+// Blender (x east, y north, z up) -> three (x, z, -y)
+const B = (x, y, z) => new THREE.Vector3(x, z, -y);
+scene.add(new THREE.HemisphereLight(0xffe2c0, 0x2a2420, 1.1));
+for (const [x, y, z, p] of [[3, 11.5, 2.2, 28], [3, 6.3, 2.5, 30], [8, 5, 2.5, 18], [9, 8.6, 2.5, 34], [13.5, 8.6, 2.5, 34], [14.5, 12.2, 2.5, 22],
+                           [13.5, 5, 2.5, 22], [7.7, 12.2, 2.1, 14], [11, 12.2, 2.1, 14], [2, 1.8, 2.5, 18], [7.7, 1.8, 2.5, 24], [13, 1.8, 2.5, 14], [15.6, 1.8, 2.5, 12], [18.5, 7, 2.5, 30]]) {
+  const l = new THREE.PointLight(0xffb070, p, 9, 1.6);
+  l.position.copy(B(x, y, z));
+  scene.add(l);
+}
+const views = {
+  overview: { pos: B(10, -6.5, 21), target: B(10, 6.6, 0), ceilings: false, fov: 50 },
+  main: { pos: B(0.5, 9.37, 1.5), target: B(4.6, 13.76, 1.1), ceilings: true, fov: 62 },
+  water: { pos: B(16.05, 9.9, 1.5), target: B(9.0, 8.25, 1.0), ceilings: true, fov: 62 },
+  rest: { pos: B(0.42, 6.3, 1.5), target: B(7.0, 6.22, 1.0), ceilings: true, fov: 62 },
+};
+const ceilings = [];
+function setView(name) {
+  const v = views[name];
+  camera.position.copy(v.pos);
+  controls.target.copy(v.target);
+  camera.fov = v.fov;
+  camera.updateProjectionMatrix();
+  for (const o of ceilings) o.visible = v.ceilings;
+  for (const b of document.querySelectorAll('#bar button')) b.setAttribute('aria-pressed', String(b.dataset.view === name));
+  controls.update();
+}
+for (const b of document.querySelectorAll('#bar button')) b.addEventListener('click', () => setView(b.dataset.view));
+
+const loader = new GLTFLoader();
+const draco = new DRACOLoader();
+draco.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/libs/draco/');
+loader.setDRACOLoader(draco);
+loader.load('../model/sauna_a_v3.glb', (gltf) => {
+  gltf.scene.traverse((o) => {
+    if (o.name && o.name.startsWith('CEIL_')) ceilings.push(o);
+    if (o.isMesh && o.material && o.material.transparent) o.material.depthWrite = false;
+  });
+  scene.add(gltf.scene);
+  status.textContent = 'ドラッグで回転、ホイールで拡大、右ドラッグで移動。';
+  setView('overview');
+  document.body.dataset.ready = '1';
+}, (e) => { if (e.total) status.textContent = `モデルを読み込み中… ${Math.round(100 * e.loaded / e.total)}%`; },
+   (err) => { status.textContent = 'モデルの読み込みに失敗しました: ' + err.message; status.setAttribute('role', 'alert'); });
+
+addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
+if (location.hash) addEventListener('load', () => setTimeout(() => views[location.hash.slice(1)] && setView(location.hash.slice(1)), 0));
+renderer.setAnimationLoop(() => { controls.update(); renderer.render(scene, camera); });
+</script>
+</body>
+</html>

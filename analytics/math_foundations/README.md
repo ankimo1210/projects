@@ -32,7 +32,7 @@
 python3 analytics/math_foundations/build.py
 ```
 
-生成された [site/index.html](site/index.html) をブラウザで開きます。CSS・JSは各ページに埋め込まれ、数式はブラウザ標準のMathMLで表示します。ネットワーク、サーバ、外部フォント、数式描画サービスは不要です。現在のChrome・Edge・FirefoxなどMathMLに対応するブラウザを使用してください。
+生成された [site/index.html](site/index.html) をブラウザで開きます。CSS・JSとLatin Modern Mathフォントを各ページに埋め込み、数式はブラウザ標準のMathMLで表示します。ネットワーク、サーバ、外部フォント、数式描画サービスは不要です。現在のChrome・Edge・FirefoxなどMathMLに対応するブラウザを使用してください。
 
 102ページを同じフォルダに置けば、本文・図・演習は持ち運べます。既存教材へ進むリンクは、リポジトリ内のビルド済みHTMLを参照します。未ビルドの教材は入口に「準備中」と表示し、リンクは付けません。既存教材が未ビルドの場合は、リポジトリルートの `make books` で生成してください（既存教材の依存環境が必要です）。生成後にこの教科書も再生成するとリンクが有効になります。
 
@@ -49,10 +49,13 @@ python3 analytics/math_foundations/build.py
 | `assets/reader.js` | 表示テーマと、画面幅に応じた目次の開閉 |
 | `tools/serve.py` | WSL共有パスで開けないときのローカル閲覧。入口から既存教材へ進むリンクも保つ |
 | `tools/browser_qa.cjs` | 現行102ページ版の実ブラウザ表示・操作・JavaScript無効時の任意QA |
+| `tools/math_typography_qa.cjs` | 単体HTMLのオフライン・JavaScript無効・画面/印刷用表示で、数学フォントと通常のカッコ・縦棒を検証 |
 | `tools/figure_ink_qa.cjs` | 文字と線を別に描画して図中の重なり候補を検出。画像で裁定し、意図しない交差を防ぐ |
 | `assets/style.css`、`template.html` | 共通の読み物レイアウトとナビゲーション |
 | `build.py` | 共通カラートークンを含めた102ページの生成 |
 | `site/` | 再生成可能な出力。Git管理しない |
+
+数式の字体はTeXのComputer Modern系であるLatin Modern Mathに固定します。元フォントとライセンスは [assets/fonts/](assets/fonts/README.md) に同梱し、フォントをインストールしなくてもオフラインで数式の英数字・演算子にこの字体を使います。日本語やフォントに未収録のUnicode上付き・下付き文字などは本文または環境の字体で補います。生成時にはカッコの対応範囲をMathMLのmrowで明示し、外側にある分数や行列へ釣られて伸びることを防ぎます。絶対値とノルムの対応する縦棒も局所化し、条件付き確率の単独の縦棒は対にしません。通常のカッコは字体本来の幅と高さを使い、行列や分数を囲むカッコ自体は、その内容に合わせて伸縮します。
 
 本文の原本はHTML断片です。 数式中の比較記号 `<` も `&lt;` と書きます。ASCII英字が続くとHTMLタグとして解釈され、本文や解答が欠けるためです。現在の実験はブラウザ内で完結するため、配布ノートブックはまだありません。ノートブックは、今後Pythonによる発展実験が必要になった章で任意の付録として追加します。
 
@@ -120,6 +123,14 @@ node analytics/math_foundations/tools/browser_qa.cjs --self-test
 MATH_QA_MODULE=/path/to/playwright-core \
 MATH_QA_BROWSER=/path/to/chrome \
 node analytics/math_foundations/tools/browser_qa.cjs
+```
+
+数式の字体と括弧だけを確認する場合は、同じ既存環境で次を使えます。9ページを直接開き、JavaScript無効の画面表示・印刷用表示の18状態で、通常の括弧・絶対値・ノルムの高さと余白、埋込みフォント、外部要求がないことを検証します。物理的な印刷結果の検査ではありません。
+
+```bash
+node analytics/math_foundations/tools/math_typography_qa.cjs \
+  --module /path/to/playwright-core --browser /path/to/chrome \
+  --output _data/math-foundations/math-typography-qa
 ```
 
 現行102ページを幅1280/390/320と明暗の612状態で確認し、全概念図/比較表の表示と文字・記号・NoJS/表の横スクロール、全37実験・前後移動・章内目次・画面幅切替・ヒントと解答・キー操作・JavaScript無効時の本文と目次も検証します。生成HTMLだけをローカルで配信し、終了時にサーバとブラウザを閉じます。通信・スクリプト・検証の失敗は非零終了にします。

@@ -1,0 +1,50 @@
+{
+ "_note": "A案の区画座標（m）。x=東, y=北, 原点=南西角。旧版 sauna-a-interior-3d-v2.html の埋め込みJSONから転記。寸法はすべて仮で、構造・法規・設備・費用は未検証。",
+ "width": 20, "height": 14, "wallThickness": 0.16, "structureHeight": 3.0, "doorHeight": 2.05,
+ "rooms": [
+  {"id": "entry", "name": "受付・下足・待合", "rect": [0, 0, 4, 3.6], "ceiling": 2.7, "floor": "dry"},
+  {"id": "change", "name": "更衣室", "rect": [4, 0, 7.5, 3.6], "ceiling": 2.7, "floor": "dry"},
+  {"id": "wc", "name": "洗面・WC", "rect": [11.5, 0, 2.8, 3.6], "ceiling": 2.7, "floor": "dry"},
+  {"id": "staff", "name": "スタッフ・事務", "rect": [14.3, 0, 2.7, 3.6], "ceiling": 2.7, "floor": "dry"},
+  {"id": "plant", "name": "機械室・設備領域", "rect": [17, 0, 3, 7], "ceiling": 2.7, "floor": "dry"},
+  {"id": "linen", "name": "リネン・清掃庫", "rect": [17, 7, 3, 3], "ceiling": 2.7, "floor": "dry"},
+  {"id": "service", "name": "保守・搬入領域", "rect": [17, 10, 3, 4], "ceiling": 2.7, "floor": "dry"},
+  {"id": "main", "name": "メインサウナ", "rect": [0, 9, 6, 5], "ceiling": 2.4, "floor": "dry"},
+  {"id": "self", "name": "セルフロウリュ", "rect": [6, 10.5, 3.5, 3.5], "ceiling": 2.3, "floor": "dry"},
+  {"id": "dry", "name": "高温ドライ", "rect": [9.5, 10.5, 3, 3.5], "ceiling": 2.3, "floor": "dry"},
+  {"id": "carbon", "name": "炭酸泉", "rect": [12.5, 10.5, 4.5, 3.5], "ceiling": 2.7, "floor": "wet"},
+  {"id": "water", "name": "水風呂2槽・浴室内動線", "rect": [6, 6.5, 11, 4], "ceiling": 2.7, "floor": "wet"},
+  {"id": "rest", "name": "休憩・椅子と寝転び", "rect": [0, 3.6, 6, 5.4], "ceiling": 2.7, "floor": "damp"},
+  {"id": "restExt", "name": "休憩の延長区画", "rect": [6, 3.6, 4.5, 2.9], "ceiling": 2.7, "floor": "damp"},
+  {"id": "wash", "name": "洗い場・浴室導入", "rect": [10.5, 3.6, 6.5, 2.9], "ceiling": 2.7, "floor": "wet"}
+ ],
+ "walls": [[0,3.6,17,3.6],[4,0,4,3.6],[11.5,0,11.5,3.6],[14.3,0,14.3,3.6],[17,0,17,14],[0,9,6,9],[6,6.5,6,14],[6,6.5,10.5,6.5],[10.5,3.6,10.5,6.5],[6,10.5,12.5,10.5],[9.5,10.5,9.5,14],[12.5,10.5,12.5,14],[0,0,20,0],[20,0,20,14],[20,14,0,14],[0,14,0,0],[17,7,20,7],[17,10,20,10]],
+ "addedWalls": [
+  {"seg": [10.5, 6.5, 14.9, 6.5], "reason": "v3で追加。洗い場の飛沫と視線を座る水風呂から切る壁。x=14.9〜17は開口のまま。"}
+ ],
+ "doors": [
+  {"seg": [1.3,0,2.7,0], "kind": "entry"},
+  {"seg": [4,1.6,4,2.7], "kind": "timber"},
+  {"seg": [10.5,3.6,11.5,3.6], "kind": "glass"},
+  {"seg": [11.5,1.4,11.5,2.3], "kind": "timber"},
+  {"seg": [14.9,0,15.8,0], "kind": "timber"},
+  {"seg": [17,1.8,17,2.7], "kind": "timber"},
+  {"seg": [17,5.3,17,6.2], "kind": "timber"},
+  {"seg": [6,7,6,8.1], "kind": "glass", "id": "rest-bath"},
+  {"seg": [6,9.25,6,10.25], "kind": "sauna", "id": "main"},
+  {"seg": [7.1,10.5,8.1,10.5], "kind": "sauna", "id": "self"},
+  {"seg": [10.2,10.5,11.2,10.5], "kind": "sauna", "id": "dry"},
+  {"seg": [17,8.0,17,8.9], "kind": "timber"},
+  {"seg": [17,11.5,17,12.4], "kind": "timber"}
+ ],
+ "pools": [
+  {"id": "deep", "room": "water", "name": "立って入る水風呂", "rect": [7.1, 6.8, 3.2, 1.9], "depth": 1.2, "planRect": [7.1, 7, 3.2, 1.9]},
+  {"id": "seated", "room": "water", "name": "座って入る水風呂", "rect": [11.3, 6.8, 3.2, 1.9], "depth": 0.6, "planRect": [11.3, 7, 3.2, 1.9]},
+  {"id": "carbonPool", "room": "carbon", "name": "炭酸泉", "rect": [13.1, 11.1, 3.3, 2.2], "depth": 0.6}
+ ],
+ "adjustments": [
+  "水風呂2槽を南へ0.2m寄せ（y=7.0→6.8）、壁側の縁石を0.3mにした。外形3.2×1.9mと水深は不変。",
+  "洗い場と座る水風呂の間（y=6.5, x=10.5〜14.9）に壁を追加。",
+  "リネン/保守/機械室の間仕切り（y=7, y=10）と扉は旧版に線が無かったため仮に追加。"
+ ]
+}

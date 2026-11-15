@@ -176,6 +176,12 @@ from the diff or log.
 
 ## Development progress & recaps
 
+For comparatively large tasks (including planning, analysis, and development),
+show the user a compact overview of the full milestones, their current progress
+(done/current/pending), and the remaining steps when starting or resuming work,
+at meaningful progress updates, and in the final recap. Keep this overview
+aligned with the project's status document; do not report only the current subtask.
+
 For ongoing development, reuse the project's existing roadmap or status
 document; if none exists and progress needs to persist, use its
 `docs/STATUS.md`. Reconcile it with evidence when resuming work and update

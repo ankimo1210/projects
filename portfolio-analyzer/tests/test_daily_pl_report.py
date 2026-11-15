@@ -239,6 +239,7 @@ def _offline_payload(
     ibkr_available=True,
     benchmark_only_last_day=False,
     foreign_without_history=False,
+    history_reconciled=None,
 ):
     """Exercise the full calculation with real ledgers and only remote prices replaced."""
     import argparse
@@ -309,9 +310,25 @@ def _offline_payload(
         "nav_csv_url": "https://example.invalid/nav",
         "anchor": {"as_of": "2026-09-10", "units": 10000, "contributions_jpy": 200},
     }
+    if history_reconciled is not None:
+        snapshot["capture_status"] = {"history_reconciled": history_reconciled}
+    if history_reconciled is False:
+        snapshot["positions"][0].update(
+            quantity=2, market_value_jpy=200, average_cost=80, average_cost_currency="JPY"
+        )
+        snapshot["accounts"][0]["total_value_jpy"] = cash + 200
+        snapshot["accounts"][0]["tax_rate"] = 0.20315
+        snapshot["positions"][2]["market_value_jpy"] = 400
+        snapshot["accounts"][1]["total_value_jpy"] = 400
+        snapshot["accounts"][1]["tax_rate"] = 0
+        holding["anchor"] = {"as_of": "2026-09-11", "units": 20000, "contributions_jpy": 300}
     if foreign_without_history:
         snapshot["positions"][0].update(
-            symbol="SMH", currency="USD", fx_rate=150, market_value_jpy=15000
+            symbol="SMH",
+            currency="USD",
+            fx_rate=150,
+            market_value_jpy=15000,
+            average_cost_currency="USD",
         )
         ledger["holdings"] = []
     for name, content in (("snapshot", snapshot), ("ledger", ledger), ("dc_holding", holding)):
@@ -389,6 +406,37 @@ def test_daily_rate_uses_total_nav_including_cash_and_unquoted_assets(
     payload = _offline_payload(tmp_path, monkeypatch)
     assert payload["headline"]["day_pnl"] == 10.0
     assert payload["headline"]["day_pnl_pct"] == pytest.approx(100 / 120)
+
+
+def test_new_observations_do_not_replay_stale_history_or_estimate_tax(tmp_path, monkeypatch):
+    payload = _offline_payload(tmp_path, monkeypatch, history_reconciled=False)
+    holding = next(p for p in payload["positions"] if p["sym"] == "1329")
+    assert holding["qty"] == 2
+    assert holding["unreal"] == 60  # latest basis: 2 * (110 - 80), not the old 100/share
+    assert payload["headline"]["nav_total"] == 1520  # 220 securities + 900 cash + 400 DC
+    assert payload["series"]["nav"] == [None, None]
+    assert payload["headline"]["pnl_window"] is None
+    assert payload["headline"]["pnl_incept"] is None
+    assert payload["headline"]["nav_after_tax"] is None
+    assert holding["unreal_after_tax"] is None
+    assert payload["quality"]["history_reconciliation_pending"] is True
+    assert any("履歴未照合" in note for note in payload["quality"]["warnings"])
+
+
+def test_reconciled_observations_keep_existing_history_calculation(tmp_path, monkeypatch):
+    payload = _offline_payload(tmp_path, monkeypatch, history_reconciled=True)
+    assert payload["series"]["nav"] == [1200, 1210]
+    assert payload["headline"]["pnl_incept"] == 10
+
+
+def test_pending_observations_do_not_treat_foreign_native_cost_as_yen(tmp_path, monkeypatch):
+    payload = _offline_payload(
+        tmp_path, monkeypatch, history_reconciled=False, foreign_without_history=True
+    )
+    holding = next(p for p in payload["positions"] if p["sym"] == "SMH")
+    assert holding["qty"] == 2
+    assert holding["unreal"] is None
+    assert holding["avg_cost"] is None
 
 
 def test_fx_statement_adjustment_does_not_become_exact_period_return(tmp_path, monkeypatch) -> None:
