@@ -39,7 +39,7 @@
 | analytics | 数学・統計・ML の体験型教材群 | [README](analytics/README.md)・[統合ポータル](analytics/report/README.md) | 教材シリーズ | 10冊の Python メンバーと SDE Web 教材 | Python / Jupyter Book / Plotly / TypeScript |
 | finance-learning-site | 日本語の金融工学入門サイト「Folio」（複利・分散・オプション） | [README](finance-learning-site/README.md) | 静的サイト・未配信 | johnhull（入門の前段） | HTML / JavaScript / Node.js (stdlib) |
 
-### ゲーム・シミュレーター・体験アプリ（13件）
+### ゲーム・シミュレーター・体験アプリ（14件）
 
 | プロジェクト | 目的 | 入口 | 状態 | 後継・関連 | スタック |
 |---|---|---|---|---|---|
@@ -47,6 +47,7 @@
 | akinator | 確率更新による人物・キャラクター推測 | [README](akinator/README.md) | オフライン seed 付き試作 | Wikidata 取得機能 | Python / FastAPI |
 | pokemon | オリジナル 3D モンスター収集ゲーム | [README](pokemon/README.md) | Web 試作 | 独立 | Vite / React Three Fiber |
 | monster_gate | カードと MP を使うローグライク | [README](monster_gate/README.md) | Web ゲーム | 独立 | TypeScript / pnpm / Vite |
+| shionagi-2am | 汐凪市 午前2時: 肩越し視点の短編 3D サバイバルホラー | [README](shionagi-2am/README.md) | Web 短編ゲーム | 独立 | TypeScript / pnpm / Vite / Three.js |
 | EitanQuest | iPhone 向け英単語クイズ | [README](EitanQuest/README.md) | iOS MVP | Xcode が必要 | Swift / SwiftUI / SwiftData |
 | NeonThread | 発光ラインを操作する無限ランゲーム | [README](NeonThread/README.md) | iOS アプリ | Xcode が必要 | Swift / SwiftUI + SpriteKit |
 | WSET | CruNote: WSET のオフライン学習 | [README](WSET/README.md) | iOS アプリ | Xcode・独立 uv の問題コーパス | Swift / SwiftUI（問題コーパス生成は Python） |
@@ -157,7 +158,7 @@ make tree      # ヘビーディレクトリを除外したツリー表示
 - 対応プラットフォーム: **WSL2 (Ubuntu) を主**とし、ネイティブ Windows (PowerShell) と macOS でも動作（差分は下記セットアップ参照）
 - Python は **ルート単一の uv workspace** で管理（`.venv` は repo root に1個）
   - workspace メンバー（正は root `pyproject.toml` の `[tool.uv.workspace]`）: `agent-profiler`, `JHRMBS`, `gto`, `market-research`, `nbody-gpu`, `line_backup`, `akinator`, `health`, `quantkit`, `deep_hedge_price`, `optimal_execution`, `rough_volatility`, `rates_volatility_model`, `jp_llm_lab`, `labor_ai_quadrant`, `macrokit`, `timesfm_lab`, `bond_timing_lab`, `sector_leadlag_lab`, `market_nn`, `portfolio-analyzer`, `johnhull/hullkit`、`analytics/{linear_algebra,neural_net,bayesian,fourier,laplace,machine_learning,statistics,quant_research}` と `analytics/differential_equation/{ode-book,pde-book}`（`analytics/report` のみメンバー外）
-  - 例外: `aisan_lbo_case` は `requirements.txt`、`csharp_calc` / `CsharpApp` は .NET、`EitanQuest` / `NeonThread` / `WSET` / `My Tianjin` は Xcode (Swift)、`ts-rosetta` / `b737-ops-sim` / `monster_gate` は pnpm、`pokemon` は npm、`eagle` は Rust (cargo) + npm、`notebooks` / `models` / `kaggle` は env 管理なし、`shortest_path` / `interactive-email-demo` は依存なし（前者は `PYTHONPATH=shortest_path/src` で実行）
+  - 例外: `aisan_lbo_case` は `requirements.txt`、`csharp_calc` / `CsharpApp` は .NET、`EitanQuest` / `NeonThread` / `WSET` / `My Tianjin` は Xcode (Swift)、`ts-rosetta` / `b737-ops-sim` / `monster_gate` / `shionagi-2am` は pnpm、`pokemon` は npm、`eagle` は Rust (cargo) + npm、`notebooks` / `models` / `kaggle` は env 管理なし、`shortest_path` / `interactive-email-demo` は依存なし（前者は `PYTHONPATH=shortest_path/src` で実行）
   - `WSET/wset_l3_question_corpus` は**ワークスペース外の独立 uv プロジェクト**（自前の `pyproject.toml` / `uv.lock`）。root の `uv sync --all-packages` では依存が入らないので、そのディレクトリで個別に sync する（詳細は同 README）
 - AI コラボ前提（Claude Code / Codex / Copilot）。エージェント向け規約の正本は各階層の `AGENTS.md`（`CLAUDE.md` は取り込むだけ。階層構成は `AGENTS.md` の「Agent instruction files」）
 
@@ -196,7 +197,7 @@ make help                # 横断ターゲット一覧
 
 | ツール | 必要なプロジェクト | 入れ方 |
 |---|---|---|
-| Node.js 20+ | `gto/web`（Next.js）, `pokemon`（Vite）, `b737-ops-sim` / `ts-rosetta` / `monster_gate`（pnpm）, `eagle/client`（Vite） | WSL/Linux: nvm or apt ／ macOS: `brew install node` ／ Windows: `winget install OpenJS.NodeJS` |
+| Node.js 20+ | `gto/web`（Next.js）, `pokemon`（Vite）, `b737-ops-sim` / `ts-rosetta` / `monster_gate` / `shionagi-2am`（pnpm）, `eagle/client`（Vite） | WSL/Linux: nvm or apt ／ macOS: `brew install node` ／ Windows: `winget install OpenJS.NodeJS` |
 | Rust (cargo) | `gto`（Rust エンジン、maturin でビルド）, `eagle/runtime`（yaAGC ブリッジ） | 全環境 `rustup`（<https://rustup.rs>） |
 | .NET 9 SDK | `csharp_calc`, `CsharpApp` | macOS: `brew install dotnet` ／ Windows: `winget install Microsoft.DotNet.SDK.9` ／ WSL: 公式 apt リポジトリ |
 | NVIDIA CUDA | `nbody-gpu`（CuPy）, `gto` の GPU 機能（preview） | NVIDIA GPU + ドライバ必須。**macOS 非対応** |

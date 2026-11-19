@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>汐凪市 午前2時</title>
+    <link rel="icon" href="data:," />
+  </head>
+  <body>
+    <canvas id="game"></canvas>
+    <div id="hud" hidden>
+      <div id="health" aria-label="体力"><i></i><i></i><i></i><i></i></div>
+      <div id="ammo" hidden aria-label="残弾"><span id="ammo-pips"></span><b id="ammo-num">0</b></div>
+      <div id="crosshair" hidden></div>
+      <div id="guide">
+        <div id="message"></div>
+        <div id="hint"></div>
+        <div id="prompt"></div>
+      </div>
+    </div>
+    <div id="screen"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
