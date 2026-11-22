@@ -37,7 +37,7 @@ project_sourceとartifactsは根拠資料のスナップショットです。
 ZIPを扱えない場合は展開し、この5文書とJSON/CSV、必要なPDF/PNGを個別に添付する。BLEND/GLBの直接表示やBlenderの実行が利用できるとは限らないため、PNGとGLBのJSONメタデータも同梱する。[OpenAIのファイル利用説明](https://help.openai.com/en/articles/8555545-uploading-files-and-audio-to-chatgpt)は、ZIP展開がData Analysisと利用ツールに依存することを案内（確認2026-11-15）。このZIPを外部へ自動アップロードしてはいない。
 
 ## 完全性・適用範囲
-- FILE_INDEX.csv：全収録ファイル、役割、元の場所、バイト数、SHA256。
+- FILE_INDEX.csv：全収録ファイル、役割、元の場所、バイト数、SHA256。索引自身とPACKAGE_MANIFEST.jsonの2件は自己参照を避けるためサイズ/ハッシュ欄を空欄とし、自己メタデータと明記。
 - PACKAGE_MANIFEST.json：選択/除外範囲、作成条件、元ファイルからのコピー一致等。
 - ZIP横の.sha256：ZIP本体のSHA256。内部SELF/manifestの自己ハッシュ循環は作らない。
 - project_source/は元ソースの保存コピー。絶対パス/当時の指示・状態は履歴で、現在の実行環境や採用条件としない。

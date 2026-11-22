@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>サウナ V10 — 170㎡・24人の比較案</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#14120f;color:#e7e0d5;font-family:system-ui,sans-serif}#bar{position:absolute;inset:0 0 auto;z-index:2;padding:10px 12px;background:rgba(20,18,15,.92);display:flex;gap:7px;flex-wrap:wrap;align-items:center}button,a{font:inherit}button{color:inherit;background:#2b2722;border:1px solid #494137;border-radius:6px;padding:8px 12px;cursor:pointer}button[aria-pressed=true]{background:#64462d;border-color:#bd9060}button:disabled{opacity:.4;cursor:default}#note{font-size:12px;line-height:1.5;max-width:56ch;margin-left:auto}#viewport{position:fixed;inset:0;touch-action:none}canvas{display:block;width:100%;height:100%}#status{position:fixed;bottom:10px;left:12px;right:12px;padding:7px 10px;background:rgba(20,18,15,.82);font-size:12px;z-index:2;pointer-events:none}#error{display:none}#error:not(:empty){display:block;color:#ffbbab}#gallery{color:#dfc7a8;padding:5px}button:focus-visible,a:focus-visible{outline:2px solid #e9c48d;outline-offset:2px}@media(max-width:650px){#bar{gap:5px}button{padding:7px 9px;font-size:12px}#note{margin:0;max-width:none;flex-basis:100%;font-size:11px}}
+</style>
+</head>
+<body>
+<div id="viewport" aria-label="170㎡比較案の操作可能な3D"></div>
+<div id="bar" role="group" aria-label="視点と表示">
+<button data-view="overview" aria-pressed="true">全体</button>
+<button data-view="plan" aria-pressed="false">真上</button>
+<button data-view="main" aria-pressed="false">主室</button>
+<button data-view="self" aria-pressed="false">セルフ</button>
+<button data-view="water" aria-pressed="false">浴室</button>
+<button data-view="rest" aria-pressed="false">休憩</button>
+<button data-view="change" aria-pressed="false">更衣</button>
+<button data-layer="ceilings" aria-pressed="false">天井</button>
+<button data-layer="people" aria-pressed="false">人体</button>
+<button data-layer="study" aria-pressed="false">床下・検討線</button>
+<a id="gallery" href="../renders/">画像一覧</a>
+<span id="note">V10は170㎡・24人の比較案です。GLBは画像と光・水・素材の表現が異なります。構造・機種・法適合・費用は未確定。</span>
+</div>
+<div id="status" role="status" aria-live="polite"><span id="message">モデルを読込中…</span><span id="error" role="alert"></span></div>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {DRACOLoader} from 'three/addons/loaders/DRACOLoader.js';
+const viewport=document.getElementById('viewport'),message=document.getElementById('message'),error=document.getElementById('error');
+const renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));renderer.setSize(innerWidth,innerHeight);renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=.95;
+renderer.outputColorSpace=THREE.SRGBColorSpace;viewport.appendChild(renderer.domElement);
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x14120f);
+const perspective=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.03,180),ortho=new THREE.OrthographicCamera(-10,10,10,-10,.03,180);
+let camera=perspective,controls=new OrbitControls(camera,renderer.domElement),loaded=null,current='overview';controls.enableDamping=true;
+const B=(x,y,z)=>new THREE.Vector3(x,z,-y),layers={ceilings:[],people:[],study:[]},roomCameras={};
+const bounds=new THREE.Box3(),center=new THREE.Vector3(),size=new THREE.Vector3();
+scene.add(new THREE.HemisphereLight(0xffe6ca,0x302c25,.22));
+const sun=new THREE.DirectionalLight(0xffe4c6,1.8);sun.position.copy(B(7,-5,16));scene.add(sun);
+for(const [x,y,z,p] of [[2.35,9.3,2.1,24],[7,8,2.3,24],[11,7,2.5,40],[5,5,2.4,30],[11,4,2.4,28],[6,2,2.4,30],[14,2,2.4,18],[14.85,9.4,2.2,24]]){const l=new THREE.PointLight(0xffbb7e,p*.2,8,1.7);l.position.copy(B(x,y,z));scene.add(l)}
+function showLayer(name,on){for(const o of layers[name])o.visible=on;document.querySelector(`[data-layer="${name}"]`).setAttribute('aria-pressed',String(on))}
+for(const b of document.querySelectorAll('[data-layer]'))b.addEventListener('click',()=>showLayer(b.dataset.layer,b.getAttribute('aria-pressed')!=='true'));
+function swap(next){if(camera===next)return;const target=controls.target.clone();controls.dispose();camera=next;controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.target.copy(target)}
+function fit(name){
+ const aspect=innerWidth/innerHeight;
+ if(name==='plan'){
+  swap(ortho);const half=Math.max(size.x/aspect,size.z)/2*1.18;camera.left=-half*aspect;camera.right=half*aspect;camera.top=half;camera.bottom=-half;
+  camera.position.set(center.x,35,center.z);camera.up.set(0,0,-1);controls.target.copy(center);
+ }else{
+  swap(perspective);camera.aspect=aspect;camera.up.set(0,1,0);camera.fov=55;
+  const angle=THREE.MathUtils.degToRad(camera.fov/2),distance=Math.max(size.x/aspect,size.z)/2/Math.tan(angle)*1.5;
+  camera.position.copy(center).add(new THREE.Vector3(0,.88, .60).normalize().multiplyScalar(distance));controls.target.copy(center);
+ }
+ camera.updateProjectionMatrix();controls.update();
+}
+function setView(name){
+ current=name;sun.intensity=(name==='overview'||name==='plan')?.8:0;const source=roomCameras[name];
+ if(name==='overview'||name==='plan'||!source){fit(name);showLayer('ceilings',false)}
+ else{
+  swap(perspective);camera.aspect=innerWidth/innerHeight;camera.up.set(0,1,0);camera.fov=source.isPerspectiveCamera?source.fov:65;
+  source.getWorldPosition(camera.position);const direction=source.getWorldDirection(new THREE.Vector3());controls.target.copy(camera.position).addScaledVector(direction,3);camera.updateProjectionMatrix();controls.update();showLayer('ceilings',true);
+ }
+ for(const b of document.querySelectorAll('[data-view]'))b.setAttribute('aria-pressed',String(b.dataset.view===name));
+ document.body.dataset.view=name;
+}
+for(const b of document.querySelectorAll('[data-view]'))b.addEventListener('click',()=>{setView(b.dataset.view);history.replaceState(null,'','#'+b.dataset.view)});
+function linkedView(){const name=location.hash.slice(1);setView(['overview','plan','main','self','water','rest','change'].includes(name)?name:'overview')}
+const loader=new GLTFLoader(),draco=new DRACOLoader();draco.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/libs/draco/');loader.setDRACOLoader(draco);
+loader.load('../model/sauna_compact_v10.glb',g=>{
+ loaded=g.scene;loaded.updateMatrixWorld(true);
+ loaded.traverse(o=>{
+  if(/^CEIL_|Ceilings/i.test(o.name))layers.ceilings.push(o);
+  if(/^CHECK_/i.test(o.name))layers.people.push(o);
+  if(/^STUDY_|^V10_STUDY/i.test(o.name))layers.study.push(o);
+  if(o.isMesh&&!/^(CHECK_|STUDY_|V10_STUDY)/i.test(o.name)){const b=new THREE.Box3().setFromObject(o);if(!b.isEmpty())bounds.union(b)}
+  if(o.isMesh&&o.material){for(const m of [].concat(o.material)){if(m.transparent)m.depthWrite=false}}
+ });
+ scene.add(loaded);bounds.getCenter(center);bounds.getSize(size);center.y=.5;
+ for(const [key,pattern] of Object.entries({main:/main/i,self:/self/i,water:/water|bath/i,rest:/rest/i,change:/change|locker/i})){
+  roomCameras[key]=(g.cameras||[]).find(c=>pattern.test(c.name)&&!/plan|top|section/i.test(c.name));
+  if(!roomCameras[key])document.querySelector(`[data-view="${key}"]`).disabled=true;
+ }
+ showLayer('people',false);showLayer('study',false);linkedView();message.textContent='ドラッグで回転・ホイールで拡縮・右ドラッグで移動。人体は各場面の例で同時人数ではありません。';
+ document.body.dataset.ready='1';document.body.dataset.cameras=String((g.cameras||[]).length);document.body.dataset.meshes=String(renderer.info.render.calls);
+},e=>{if(e.total)message.textContent=`モデルを読込中… ${Math.round(e.loaded/e.total*100)}%`},e=>{message.textContent='読込に失敗しました。';error.textContent=e.message||String(e);document.body.dataset.ready='error'});
+addEventListener('hashchange',()=>{if(loaded)linkedView()});
+addEventListener('resize',()=>{renderer.setSize(innerWidth,innerHeight);if(loaded)setView(current)});
+renderer.setAnimationLoop(()=>{controls.update();renderer.render(scene,camera)});
+</script>
+</body>
+</html>

@@ -2,6 +2,8 @@
 
 東京で検討中の男性専用サウナ（A案20×14m仮）の内装と実3D。内装の現行は**v8**、建築条件を重ねた照合用試作は[v9](docs/V9_BUILDING_STUDY.md)。v8は水風呂2槽を縮めて空いた床を休憩の離れ（寝椅子4）にし、サブ2室（セルフロウリュ・高温ドライ）の座り方を作り替えた概念3D。施工承認ではない。席数・水風呂に入れる人数は成人の仮寸法を置いた位置の数で定員ではなく、ストーブ機種とメーカー離隔・熱と蒸気の流れ・浴槽設備・構造・法適合・費用は未検証。
 
+**新しい比較版V10（元案は保持）**：[設計・検証](docs/V10_PARENT_REVIEW.md)。170㎡・24人目標/主室12＋セルフ5/休憩16の別案を同じFable/highと制作。画像9点・編集可能BLEND・GLB・フロアマップを出力し、3Dを実表示確認済み。<http://127.0.0.1:8790/viewer/>。生成物は `\\wsl.localhost\Ubuntu\home\kazumasa\projects\_data\sauna-design\fable-v10`。サ室前0.756mや全員休憩8不足、床下/メーカー/法適合/費用は残条件。採用/1億円成立の確定ではない。
+
 v3〜v6とv8はユーザー指定のFable/highがBlender/Cyclesで制作。v7は同じ会話が利用上限で止まり、親が製品反映を仕上げた。同じ会話と旧版を保存している。
 
 生成物（Git管理外）: `\\wsl.localhost\Ubuntu\home\kazumasa\projects\_data\sauna-design\fable-v8`
@@ -21,6 +23,7 @@ v3〜v6とv8はユーザー指定のFable/highがBlender/Cyclesで制作。v7は
 
 - 何を比べて何を選んだか、寸法、限界: [v8設計メモ](docs/V8_DESIGN.md)
 - 完了/進行/残課題: [STATUS](docs/STATUS.md)
+- ChatGPT用の包括的技術引き継ぎ: [統合本文](docs/handoff/2026-11-15/HANDOFF.md)・[開始案内](docs/handoff/2026-11-15/START_HERE.md)。議論/採用要件、V8/V9、建築設備、費用/物件/収益、未解決と設計データ索引を統合。ZIP用の相対パスは展開後ルート基準。共有データchatgpt-handoff-v1/のsauna-chatgpt-handoff-2026-11-15.zip（約381MB/627ファイル）に、現行モデル・本番画像・図面/表/計算・元資料・再生成ソースを梱包し、SHA256/CRC・解析データ/相対参照を検証済み。元のFable会話・凍結版は保持し、今回の新規GPU/モデル生成・外部アップロードはない。
 - 建築基本計画①〜⑤: [条件](docs/ARCHITECTURE_BRIEF.md)・[実行計画](docs/superpowers/plans/2026-11-15-sauna-architecture-basic-plan.md)・[成果と検証](docs/basic_design/REVIEW.md)。断面3案、寸法図、動線、設備概算、30項目の要件照合を作成。生成物は共有データのarchitecture-v1/で凍結。物件とメーカー等の条件は未確定。
 - ⑥[費用試算](docs/basic_design/05-costs.md)：84項目、基準の総資金は運転3か月込み約2.26億円。2億円へ寄せる未交渉の目標例は約1.98億円。成約見積なし・物件改修等の未算入あり。PDF14ページと編集可能Excelは共有データのcost-v1/で凍結。
 - ⑦[物件条件表・候補判定](docs/basic_design/06-property-and-handoff.md)：34条件・9主要確認・家賃/保証金の予算境界、PDF10ページ/Excel4シートと[照会文案（未送信）](docs/basic_design/property-inquiry.md)。未入力フォームはproperty-v1/で保持。
