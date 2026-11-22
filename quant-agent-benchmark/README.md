@@ -51,3 +51,7 @@ Evaluation copies candidate source to a temporary directory, ignores prior outpu
 旧4条件pilotは保存のみとし、今回は使いません。資源別の因果効果は切り分けません。
 秘密データ・配布PDF・候補実行フォルダ・専用環境はGit外に保存し、
 ホスト側のアクセス隔離を確認するまでモデルは起動しません。
+
+## 関連する実験記録
+
+2026年11月のWindows版では、Codex 3モデルを6領域で比較し、Web課題の難度を較正した。採点器を変えると消えた得点差、満点同士で違った保存後の画面表示、実行時間と利用枠を記録している。[Windows版Codex比較の結果と教訓](docs/2026-11-22-codex-benchmark-retrospective.md)
