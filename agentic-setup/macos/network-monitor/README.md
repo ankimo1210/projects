@@ -76,6 +76,48 @@ python3 "$HOME/Library/Application Support/NetworkMonitor/network_monitor.py" --
 通常は概算で数 MB/日。ファイルは 600、ログディレクトリは 700。
 ログや最新状態を Git に入れない。外部通知・メール送信は行わない。
 
+## 純正ルーターの読み取り監視
+
+`router_monitor.py` は BUFFALO WXR-5950AX12 の純正管理画面が使う参照処理だけを
+利用する別プロセス。設定保存、再起動、Wi-Fi スキャン、大容量転送は実行しない。
+
+- 60 秒ごとに接続台数・端末別通信量・WAN/2.4 GHz/5 GHz の表示カウンターを記録。
+- 300 秒ごとに既存ルーターログを取得し、重複を除いて Mac に追記保存。
+  syslog 転送設定を変えずに収集する。ルーター停止直前の未取得ログまでは保証しない。
+- 正常パケット数やエラー数はルーターの表示値。高速化機能などによる集計範囲の
+  制約があり、パケット損失率や無線占有率そのものではない。
+- 管理パスワードは macOS キーチェーンの `com.ankimo.network-router` / `admin`。
+  Swift 補助プログラム内で RSA 暗号化し、Python に平文を返さない。
+- 初回登録は補助プログラムの標準入力で行う。パスワードをコマンド引数・環境変数・
+  設定ファイル・ログに含めない。既存のキーチェーン項目は自動上書きしない。
+- 端末別サンプルに端末名・MAC・IP・SSID は記録せず、端末はローカル鍵による
+  匿名 ID で識別する。既存ログの文面では MAC・IP・既定 SSID・認証項目を伏せる。
+  任意のホスト名等まで完全に匿名化する保証はないため、ログは Mac 内だけに保存する。
+  接続先は既定ゲートウェイ・機種・公開鍵等で照合する。ARP が参照できる環境では
+  MAC のハッシュも照合し、参照できなければ Cookie 送信前に公開鍵を匿名接続で照合。
+- 認証の失敗やセッション喪失時は 15 分間ログインを再試行しない。キーチェーンが
+  読めない場合も対話 UI を要求せず `unavailable` を記録する。
+- `router-monitor.json` は実行先だけの非公開設定。機種・ゲートウェイ・鍵のハッシュと
+  匿名化用の鍵を保存する。ルーターが変わった場合に自動で認証先を変更しない。
+
+復元用ソースはこのディレクトリ、実行先とログは従来の NetworkMonitor と同じ。
+`install_router_monitor.py --prepare` はコードと認証補助だけを配置し、
+初回のキーチェーン登録・接続先の照合設定後に次を実行する。
+
+```sh
+python3 agentic-setup/macos/network-monitor/install_router_monitor.py
+launchctl print "gui/$(id -u)/com.ankimo.network-router"
+```
+
+インストーラーは既存設定の解析、実機での読み取り、バックアップのハッシュ照合を
+完了してから起動設定を反映する。既存の疎通・速度ジョブは再読み込みしない。
+キーチェーンの識別情報を保つため、認証補助のバイナリーは同一ソースなら再生成しない。
+ソース・配置済みバイナリーのハッシュが変わっている場合は自動更新せず停止する。
+
+`router-latest.json` / `router-samples-YYYY-MM-DD.jsonl.gz` が台数・通信量・表示カウンター、
+`router-events-YYYY-MM-DD.jsonl.gz` が取得したルーターログ。
+`router-log-seen.json` は重複防止用のハッシュだけを保持する。
+
 `speed-YYYY-MM-DD.jsonl.gz` と `speed-latest.json` が速度測定、
 `speed-error.json` が速度ジョブ内部のエラー。レポートの `throughput` に
 最新の Mbps・最小・中央値・最大・失敗回数・相対低下回数が含まれる。
@@ -95,7 +137,7 @@ launchctl bootout "gui/$(id -u)/com.ankimo.network-speed"
 launchctl bootstrap "gui/$(id -u)" "$HOME/Library/LaunchAgents/com.ankimo.network-speed.plist"
 ```
 
-型番・管理画面の認証情報は含めない。DFS と WAN のどちらが原因かの確定には、
+管理画面の認証情報・実機固有の識別情報は Git に含めない。DFS と WAN のどちらが原因かの確定には、
 発生時刻に対応するルーター側ログや、有線端末との比較が別途必要。
 
 ## 導入時の検証（2026-11-15）
@@ -111,6 +153,12 @@ launchctl bootstrap "gui/$(id -u)" "$HOME/Library/LaunchAgents/com.ankimo.networ
 - 実効速度追加後は計 23 テストが成功。実際の速度 LaunchAgent が通常優先度・
   Darwin background=false で上下り転送を完了し、300 秒間隔で登録されていること、
   既存の 15 秒監視が継続していることを確認。
+
+2026-11-16 のルーター監視追加では計 35 テストが成功。実機のキーチェーン認証、
+毎分の自動収集、5 分周期の既存ログ取得・重複排除を確認した。
+起動設定の解析・配置前バックアップ・配置後の実プロセスとソースの照合も実施。
+ルーター設定は変更しておらず、導入作業中および導入後の観測範囲では
+LAN 応答欠落・DNS 失敗・HTTPS 接続失敗はいずれも 0 件だった。
 
 launchd の仕様は [Apple の定期実行ガイド](https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/ScheduledJobs.html)
 と、対象 Mac の `man launchd.plist` を参照。
