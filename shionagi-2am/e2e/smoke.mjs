@@ -107,8 +107,12 @@ moved = Math.hypot(b.x - a.x, b.z - a.z);
 check("Shift + W runs (faster than walking)", moved > 3.6, `${moved.toFixed(2)} m in 1.2 s`);
 
 // --- examine the dead automatic doors
-await ev(() => window.__shio.teleport(0, -12.7, 0));
-await wait(250);
+const beforeDoorStep = await ev(() => {
+  window.__shio.teleport(0, -12.7, 0);
+  return window.__shio.steps;
+});
+// The interaction prompt is computed on the next simulation step.
+await page.waitForFunction((step) => window.__shio.steps > step, beforeDoorStep, { timeout: 3000 });
 st = await state();
 check("standing at the front doors offers an interaction", st.prompt === "frontDoor", `prompt=${st.prompt}`);
 const promptText = await ev(() => document.getElementById("prompt").textContent);

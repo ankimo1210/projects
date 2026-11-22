@@ -24,8 +24,9 @@ export class DomBridge implements Driver {
   ) {
     // a real mouse reports whole pixels: carry the remainder to the next move
     bot.look = (_sim, dYaw, dPitch) => {
-      this.accX += -dYaw / this.input.sensitivity;
-      this.accY += -dPitch / this.input.sensitivity;
+      const gain = this.input.radiansPerPixel;
+      this.accX += -dYaw / gain;
+      this.accY += -dPitch / gain;
     };
   }
 

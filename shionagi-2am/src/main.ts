@@ -18,7 +18,7 @@ const view = new View(canvas, sim);
 const hud = new Hud();
 const screens = new Screens();
 const audio = new AudioEngine();
-const input = new Input(canvas, (dy, dp) => sim.applyLook(dy, dp));
+const input = new Input(canvas, (dy, dp) => sim.applyLook(dy, dp), () => sim.s.player.aim);
 
 let mode: Mode = "title";
 let driver: Driver | null = null;

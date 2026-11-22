@@ -1,11 +1,13 @@
 // The two kinds of people in Shionagi: the ferry terminal's night-shift
 // maintenance worker, and the drowned who came back up with the tide. Both are
-// assembled from capsules and posed procedurally.
+// use a shared articulated rig with their own clothing, equipment and poses.
 
 import * as THREE from "three";
-import type { EnemyState } from "../sim/types";
+import { dressDrowned } from "./drowned";
 import { makeRevolver } from "./town";
-import { jacketTexture } from "./textures";
+import { dressWorker } from "./worker-gear";
+
+export { poseDrowned as poseEnemy } from "./drowned";
 
 export interface Rig {
   root: THREE.Group;
@@ -149,39 +151,7 @@ function buildRig(p: Palette, bulk: number): Rig {
 
 export function buildPlayer(): Rig {
   const rig = buildRig({ skin: 0xc79a7a, top: 0x1c2b45, bottom: 0x232a33, shoe: 0x15171a, hair: 0x16130f }, 1.0);
-  // hard hat
-  const hatMat = new THREE.MeshStandardMaterial({ color: 0xd9b21a, roughness: 0.45 });
-  const hat = new THREE.Mesh(new THREE.SphereGeometry(0.135, 14, 8, 0, Math.PI * 2, 0, Math.PI * 0.5), hatMat);
-  hat.scale.set(1, 0.95, 1.08);
-  hat.position.set(0, 0.2, 0);
-  hat.castShadow = true;
-  rig.head.add(hat);
-  const brim = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.155, 0.018, 14), hatMat);
-  brim.position.set(0, 0.205, -0.02);
-  brim.scale.set(1, 1, 1.12);
-  rig.head.add(brim);
-  // reflective bands and the company name across the back
-  const band = new THREE.MeshStandardMaterial({ color: 0xc9d2d6, roughness: 0.35, emissive: 0x0d1012 });
-  for (const y of [0.2, 0.42]) {
-    const b = new THREE.Mesh(new THREE.CylinderGeometry(0.212, 0.212, 0.035, 14), band);
-    b.scale.set(1, 1, 0.7);
-    b.position.y = y;
-    rig.torso.add(b);
-  }
-  const back = new THREE.Mesh(
-    new THREE.PlaneGeometry(0.32, 0.16),
-    new THREE.MeshStandardMaterial({ map: jacketTexture(), roughness: 0.8, emissive: 0x05070a }),
-  );
-  back.position.set(0, 0.36, 0.146);
-  rig.torso.add(back);
-  // chest lamp
-  const lamp = new THREE.Mesh(
-    new THREE.BoxGeometry(0.07, 0.05, 0.04),
-    new THREE.MeshBasicMaterial({ color: 0xfff2d8, toneMapped: false }),
-  );
-  lamp.position.set(-0.09, 0.44, -0.15);
-  rig.torso.add(lamp);
-  rig.mats.push(hatMat, band);
+  dressWorker(rig);
   // sidearm (hidden until it is picked up)
   const steel = new THREE.MeshStandardMaterial({ color: 0x23262b, roughness: 0.35, metalness: 0.85 });
   const wood = new THREE.MeshStandardMaterial({ color: 0x4a2f1c, roughness: 0.6 });
@@ -262,29 +232,6 @@ const LOOKS: Palette[] = [
 export function buildEnemy(look: number): Rig {
   const pal = LOOKS[look % LOOKS.length] as Palette;
   const rig = buildRig(pal, 0.94 + (look % 3) * 0.06);
-  for (const m of rig.mats) m.roughness = 0.66; // soaked through
-  // weed and rope hanging off the shoulders
-  const weed = new THREE.MeshStandardMaterial({ color: 0x131f15, roughness: 0.4 });
-  const n = 4 + (look % 3);
-  for (let i = 0; i < n; i++) {
-    const len = 0.28 + ((look * 7 + i * 13) % 10) / 20;
-    const s = new THREE.Mesh(new THREE.BoxGeometry(0.03, len, 0.014), weed);
-    const side = i % 2 === 0 ? -1 : 1;
-    s.position.set(side * (0.08 + ((i * 37) % 10) / 60), 0.52 - len / 2, i % 3 === 0 ? 0.135 : -0.125);
-    s.rotation.z = side * 0.14;
-    s.castShadow = true;
-    rig.torso.add(s);
-  }
-  // wet hair plastered over the face
-  const hair = rig.mats[4] as THREE.MeshStandardMaterial;
-  const strands = 3 + (look % 2) * 2;
-  for (let i = 0; i < strands; i++) {
-    const len = 0.13 + ((look * 5 + i * 11) % 7) / 50;
-    const s = new THREE.Mesh(new THREE.BoxGeometry(0.03, len, 0.012), hair);
-    s.position.set(-0.06 + (i / (strands - 1)) * 0.12, 0.26 - len / 2, -0.125);
-    s.rotation.x = 0.12;
-    rig.head.add(s);
-  }
   // sea sparkle: a faint cold glimmer that gives them away in the dark
   const count = 46;
   const pos = new Float32Array(count * 3);
@@ -324,107 +271,6 @@ export function buildEnemy(look: number): Rig {
   const glim = new THREE.Points(geo, glimMat);
   rig.torso.add(glim);
   rig.glimmer = glim;
-  rig.mats.push(weed);
+  dressDrowned(rig, look);
   return rig;
-}
-
-export function poseEnemy(r: Rig, e: EnemyState, t: number, dt: number, seed: number): void {
-  const k = Math.min(1, dt * 10);
-  const sn = Math.sin(e.gait);
-  const move = Math.min(1, e.speed / 0.6);
-  const fast = e.speed > 1.6 ? 1 : 0;
-  const sway = Math.sin(t * 0.9 + seed) * 0.03;
-  const twitch = Math.sin(t * 7.3 + seed * 3.1) > 0.97 ? 0.25 : 0;
-
-  let lean = -0.26;
-  let roll = sn * 0.08 * move + 0.05 + sway;
-  let armL = 0.08 + sn * 0.1 * move;
-  let armR = 0.05 - sn * 0.12 * move;
-  let fore = 0.15;
-  let headX = -0.22;
-  let headY = twitch;
-  let stepR = sn * (0.42 + fast * 0.25) * move;
-  let dragL = -0.16 + sn * (0.08 + fast * 0.22) * move;
-  let fall = 0;
-
-  switch (e.mode) {
-    case "dormant":
-      lean = -0.42;
-      headX = -0.55;
-      roll = 0.03 + sway;
-      break;
-    case "suspicious":
-    case "search":
-    case "investigate":
-      headY = Math.sin(t * 1.5 + seed) * 0.55;
-      headX = -0.05;
-      lean = -0.18;
-      break;
-    case "chase":
-      armL = 1.15 + Math.sin(t * 9 + seed) * 0.06;
-      armR = 1.3 + Math.sin(t * 8.3 + seed) * 0.06;
-      fore = 0.35;
-      lean = -0.36;
-      headX = 0.12;
-      break;
-    case "windup":
-      armL = 2.35;
-      armR = 2.55;
-      fore = 0.5;
-      lean = 0.12;
-      headX = 0.2;
-      break;
-    case "recover":
-      armL = 0.55;
-      armR = 0.45;
-      fore = 0.2;
-      lean = -0.62;
-      headX = -0.1;
-      break;
-    case "stagger":
-      lean = 0.4;
-      armL = -0.5;
-      armR = -0.7;
-      headX = 0.4;
-      roll = 0.2;
-      break;
-    case "dead":
-      fall = Math.min(1, e.modeT / 0.75);
-      armL = -0.6;
-      armR = -0.9;
-      lean = 0.1;
-      stepR = 0.15;
-      dragL = -0.1;
-      break;
-    default:
-      break;
-  }
-
-  r.legR.rotation.x = damp(r.legR.rotation.x, stepR, k);
-  r.shinR.rotation.x = damp(r.shinR.rotation.x, -Math.max(0, Math.sin(e.gait + 1.1)) * 0.55 * move, k);
-  r.legL.rotation.x = damp(r.legL.rotation.x, dragL, k);
-  r.legL.rotation.z = -0.1;
-  r.shinL.rotation.x = damp(r.shinL.rotation.x, -0.12, k);
-  r.armL.rotation.x = damp(r.armL.rotation.x, armL, k);
-  r.armR.rotation.x = damp(r.armR.rotation.x, armR, k);
-  r.armL.rotation.z = -0.1;
-  r.armR.rotation.z = 0.14;
-  r.foreL.rotation.x = damp(r.foreL.rotation.x, fore, k);
-  r.foreR.rotation.x = damp(r.foreR.rotation.x, fore * 1.3, k);
-  r.body.rotation.x = damp(r.body.rotation.x, lean, k);
-  r.body.rotation.z = damp(r.body.rotation.z, roll, k);
-  r.body.position.y = HIP_Y - 0.03 - Math.abs(sn) * 0.03 * move;
-  r.head.rotation.x = damp(r.head.rotation.x, headX, k);
-  r.head.rotation.y = damp(r.head.rotation.y, headY, k * 0.6);
-  r.head.rotation.z = 0.36;
-
-  const f = fall * fall * (3 - 2 * fall);
-  r.root.rotation.x = f * 1.5;
-  r.root.position.y = f * 0.1;
-  if (r.glimmer) {
-    const alive = e.mode === "dead" ? Math.max(0, 1 - e.modeT / 4) : 1;
-    const stir = e.mode === "chase" || e.mode === "windup" ? 1 : 0.62;
-    (r.glimmer.material as THREE.PointsMaterial).opacity =
-      alive * stir * (0.5 + 0.3 * Math.sin(t * 2.1 + seed) + 0.2 * Math.sin(t * 5.3 + seed * 2));
-  }
 }
