@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
+import { Vector3 } from "three";
 import { camDir, updateCamera } from "../src/sim/camera";
 import { fwdX, fwdZ, yawTo } from "../src/sim/geom";
 import { DT, Sim, TUNE, viewPitch } from "../src/sim/sim";
 import { NO_INPUT } from "../src/sim/types";
 import type { EnemyState, InputFrame } from "../src/sim/types";
+import { buildEnemy, poseEnemy } from "../src/view/actors";
 
 const input = (o: Partial<InputFrame>): InputFrame => ({ ...NO_INPUT, ...o });
 
@@ -216,6 +218,22 @@ describe("pistol", () => {
     head.sim.step(input({ aim: true, fire: true }));
     expect(head.e.mode).toBe("dead");
     expect(head.sim.s.player.ammo).toBe(4);
+  });
+
+  it("registers a shot aimed at the temple of a slumped enemy seen in profile", () => {
+    const { sim, e } = armed();
+    run(sim, 0.4, input({ aim: true }));
+    e.mode = "dormant";
+    e.yaw = Math.PI / 2;
+    const rig = buildEnemy(5); // E4's suit
+    rig.root.position.set(e.x, 0, e.z);
+    rig.root.rotation.y = e.yaw;
+    for (let frame = 0; frame < 60; frame++) poseEnemy(rig, e, frame * DT, DT, 0);
+
+    const temple = rig.head.localToWorld(new Vector3(-0.10, 0.17, -0.035));
+    aimAt(sim, temple.x, temple.y, temple.z);
+    sim.step(input({ aim: true, fire: true }));
+    expect(sim.events).toContainEqual(expect.objectContaining({ t: "shot", hit: "head" }));
   });
 
   it("clicks when empty and the shot brings others", () => {

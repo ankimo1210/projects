@@ -738,21 +738,115 @@ export function crestTexture(): THREE.Texture {
 
 /** Lettering for the back of the protagonist's work jacket. */
 export function jacketTexture(): THREE.Texture {
-  const w = 256;
-  const h = 128;
+  // One wrap around the garment. The front zip meets at the two edges and
+  // the silkscreen follows the folds across the middle of the back.
+  const w = 1024;
+  const h = 512;
   const [c, ctx] = makeCanvas(w, h);
-  ctx.fillStyle = "#1c2b45";
+  const fabric = ctx.createLinearGradient(0, 0, 0, h);
+  fabric.addColorStop(0, "#40566a");
+  fabric.addColorStop(0.46, "#354c62");
+  fabric.addColorStop(0.8, "#3e5262");
+  fabric.addColorStop(1, "#293c4c");
+  ctx.fillStyle = fabric;
   ctx.fillRect(0, 0, w, h);
-  ctx.fillStyle = "#c8cfd4";
-  ctx.fillRect(0, 96, w, 18);
+  const edge = (x: number): number => 194 - 22 * Math.cos(4 * Math.PI * x / w) + 17 * Math.cos(2 * Math.PI * (x / w - 0.5));
+  const traceYoke = (offset: number): void => {
+    ctx.beginPath();
+    for (let x = 0; x <= w; x += 4) {
+      if (x === 0) ctx.moveTo(x, edge(x) + offset);
+      else ctx.lineTo(x, edge(x) + offset);
+    }
+  };
+  traceYoke(0);
+  ctx.lineTo(w, 0);
+  ctx.lineTo(0, 0);
+  ctx.closePath();
+  const yoke = ctx.createLinearGradient(0, 0, 0, 220);
+  yoke.addColorStop(0, "#536d7c");
+  yoke.addColorStop(0.58, "#455e71");
+  yoke.addColorStop(1, "#40576c");
+  ctx.fillStyle = yoke;
+  ctx.fill();
+  for (const [offset, width, color] of [
+    [5, 22, "#283a49"], [0, 19, "#8d8362"], [0, 12, "#c1cac4"], [13, 2, "#627681"],
+  ] as const) {
+    traceYoke(offset);
+    ctx.lineWidth = width;
+    ctx.strokeStyle = color;
+    ctx.stroke();
+  }
+
+  // The sleeve-side seams and the front placket are sewn into the same cloth.
+  for (const x of [w * 0.25, w * 0.75]) {
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "#344552";
+    ctx.beginPath();
+    ctx.moveTo(x, edge(x) + 13);
+    ctx.bezierCurveTo(x + 14, 285, x - 12, 390, x, h);
+    ctx.stroke();
+  }
+  // Action pleats under the back yoke, and stitched raglan seams up to the collar.
+  for (const side of [-1, 1]) {
+    const start = w / 2 + side * 117;
+    const foot = w / 2 + side * 97;
+    const top = edge(start) + 13;
+    ctx.beginPath();
+    ctx.moveTo(start, top);
+    ctx.bezierCurveTo(start - side * 3, 257, foot + side * 11, 322, foot, 405);
+    ctx.bezierCurveTo(foot + side * 19, 334, start + side * 18, 254, start + side * 11, top);
+    ctx.closePath();
+    const pleat = ctx.createLinearGradient(foot, 0, start + side * 15, 0);
+    pleat.addColorStop(0, "rgba(19,35,49,.04)");
+    pleat.addColorStop(0.53, "rgba(18,34,46,.38)");
+    pleat.addColorStop(1, "rgba(155,178,185,.14)");
+    ctx.fillStyle = pleat;
+    ctx.fill();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "rgba(158,177,181,.32)";
+    ctx.beginPath();
+    ctx.moveTo(w / 2 + side * 119, 2);
+    ctx.bezierCurveTo(w / 2 + side * 157, 45, w / 2 + side * 181, 102, w / 2 + side * 221, 159);
+    ctx.stroke();
+  }
+  for (const x of [0, w]) {
+    ctx.fillStyle = "#283a49";
+    ctx.fillRect(x - 8, 0, 16, h);
+    ctx.fillStyle = "#65747a";
+    ctx.fillRect(x - 1, 0, 2, h);
+  }
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.font = `800 44px ${FONT}`;
-  ctx.fillStyle = "#e9edf0";
-  ctx.fillText("汐凪渡船", w / 2, 44);
-  ctx.font = `700 15px ${FONT}`;
-  ctx.fillStyle = "#9fb0bf";
-  ctx.fillText("設備課", w / 2, 80);
+  ctx.font = `800 60px ${FONT}`;
+  ctx.fillStyle = "#e3e2cc";
+  ctx.fillText("汐凪渡船", w / 2, 103, 245);
+  ctx.font = `700 24px ${FONT}`;
+  ctx.fillStyle = "#c7cfbe";
+  ctx.fillText("設備課", w / 2, 154);
+  ctx.fillRect(w / 2 - 81, 153, 30, 2);
+  ctx.fillRect(w / 2 + 51, 153, 30, 2);
+
+  const rnd = prng(57);
+  for (let i = 0; i < 85; i++) {
+    const x = rnd() * w;
+    const y = rnd() * h;
+    const length = 6 + rnd() * 34;
+    ctx.strokeStyle = i % 4 === 0 ? "rgba(186,205,207,.18)" : "rgba(24,43,56,.12)";
+    ctx.lineWidth = 1 + rnd() * 2;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.quadraticCurveTo(x - 1, y + length * 0.6, x + 2, y + length);
+    ctx.stroke();
+  }
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = "rgba(185,203,206,.065)";
+  ctx.beginPath();
+  for (let x = -h; x < w; x += 4) {
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x + h, h);
+  }
+  ctx.stroke();
+  speckle(ctx, w, h, 6800, 71, 0.16, false);
   return toTexture(c);
 }
 

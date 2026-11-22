@@ -11,7 +11,8 @@ export class Input {
   /** true once the pointer has been captured at least once */
   everLocked = false;
   locked = false;
-  sensitivity = 0.0023;
+  /** Free-look radians per pixel of mouse movement. */
+  sensitivity = 0.00135;
   /** when false, key and mouse input is ignored (title, pause) */
   enabled = false;
   onLock: (locked: boolean) => void = () => {};
@@ -20,6 +21,7 @@ export class Input {
   constructor(
     private canvas: HTMLCanvasElement,
     private look: (dYaw: number, dPitch: number) => void,
+    private readonly aimProgress: () => number = () => 0,
   ) {
     window.addEventListener("keydown", (e) => {
       if (e.repeat) return;
@@ -46,7 +48,8 @@ export class Input {
       if (!this.locked && this.everLocked) return;
       const dx = clampDelta(e.movementX);
       const dy = clampDelta(e.movementY);
-      if (dx !== 0 || dy !== 0) this.look(-dx * this.sensitivity, -dy * this.sensitivity);
+      const gain = this.radiansPerPixel;
+      if (dx !== 0 || dy !== 0) this.look(-dx * gain, -dy * gain);
     });
     document.addEventListener("pointerlockchange", () => {
       this.locked = document.pointerLockElement === this.canvas;
@@ -54,6 +57,11 @@ export class Input {
       else this.release();
       this.onLock(this.locked);
     });
+  }
+
+  /** Follow the sight animation so entering and leaving aim never jumps between gains. */
+  get radiansPerPixel(): number {
+    return this.sensitivity * (1 - this.aimProgress() / 3);
   }
 
   requestLock(): void {
