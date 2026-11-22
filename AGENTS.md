@@ -13,6 +13,9 @@ project index is in the root [`README.md`](README.md).
 ## Workspace policy
 
 - **Respond to the user in Japanese** unless asked otherwise.
+- **Model effort:** Use Opus with `effort=max` (`--effort max`) and Fable
+  with `effort=high` (`--effort high`) for implementation, consultation,
+  and review.
 - **Scope your work to one project.** Follow its `AGENTS.md` and consult its
   `README.md` as needed. Do not grep or scan the whole repository; search
   within the project directory you are working on.

@@ -4,7 +4,7 @@
 
 ## プロジェクト一覧
 
-46件の現役プロジェクトを目的別に案内します（2026-09-28確認）。「状態」は各 README と
+50件の現役プロジェクトを目的別に案内します（一覧の件数は2026-11-18時点）。「状態」は各 README と
 [整理計画](docs/superpowers/plans/2026-09-27-workspace-cleanup.md) に基づく位置づけで、
 今回すべてを実行検証したという意味ではありません。
 個人データを扱うものも、ここではツールの目的と公開文書だけを案内します。
@@ -46,6 +46,7 @@
 | gto | ポーカーの GTO 分析・計算 | [README](gto/README.md) | Web アプリ | 独立 | Rust / FastAPI / Next.js |
 | akinator | 確率更新による人物・キャラクター推測 | [README](akinator/README.md) | オフライン seed 付き試作 | Wikidata 取得機能 | Python / FastAPI |
 | pokemon | オリジナル 3D モンスター収集ゲーム | [README](pokemon/README.md) | Web 試作 | 独立 | Vite / React Three Fiber |
+| shionagi | 港町を舞台にした短編3Dサバイバルホラー『汐凪市 午前2時』 | [README](shionagi/README.md) | PCブラウザゲーム | 独立 | Three.js / TypeScript / Vite |
 | monster_gate | カードと MP を使うローグライク | [README](monster_gate/README.md) | Web ゲーム | 独立 | TypeScript / pnpm / Vite |
 | shionagi-2am | 汐凪市 午前2時: 肩越し視点の短編 3D サバイバルホラー | [README](shionagi-2am/README.md) | Web 短編ゲーム | 独立 | TypeScript / pnpm / Vite / Three.js |
 | EitanQuest | iPhone 向け英単語クイズ | [README](EitanQuest/README.md) | iOS MVP | Xcode が必要 | Swift / SwiftUI / SwiftData |

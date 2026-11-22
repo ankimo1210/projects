@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a1114">
+  <title>汐凪市 午前2時</title>
+  <link rel="icon" type="image/svg+xml" href="./mark.svg">
+  <link rel="stylesheet" href="./src/style.css">
+</head>
+<body>
+<svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+  <symbol id="i-mark" viewBox="0 0 42 34"><path fill="currentColor" d="M2 27.4 15.9 5.2h5.4L7.5 27.4Zm10 0L25.9 5.2h5.5L17.5 27.4Zm10 0L35.9 5.2h5.5L27.5 27.4Z"/><path fill="currentColor" d="M7.6 29.6h20.2l-1.9 2.8H5.8z"/></symbol>
+  <symbol id="i-volume" viewBox="0 0 24 24"><path d="M3.5 9h4.1L13 5v14l-5.4-4H3.5zM16.2 8a6.3 6.3 0 0 1 0 8M18.9 5.2a10.5 10.5 0 0 1 0 13.6"/></symbol>
+  <symbol id="i-muted" viewBox="0 0 24 24"><path d="M3.5 9h4.1L13 5v14l-5.4-4H3.5zM16.5 9l5 6m0-6-5 6"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5.5v13m8-13v13" stroke-width="3"/></symbol>
+  <symbol id="i-mouse" viewBox="0 0 24 24"><rect x="6.5" y="2.5" width="11" height="19" rx="5.5"/><path d="M12 3v6m-5.4 1h10.8"/></symbol>
+  <symbol id="i-vital" viewBox="0 0 36 22"><path d="M1 12h8l3.7-7.5 5.1 15L22.4 2l3.8 10h8.6"/></symbol>
+  <symbol id="i-pouch" viewBox="0 0 40 28"><path d="m5 10 3-5h23l4 5-1 14H6zM5 11l14 4.5h3L35 11m-16 3v4h4v-4M12 5V3h15v2"/></symbol>
+  <symbol id="i-gun" viewBox="0 0 42 28"><path d="M3 5h35l1 6-14 .4-4 4.3-5 .2-2.3 8-7-1.5L10 12H3zM18 12l-.8 4M28 6v3m3-3v3m3-3v3"/></symbol>
+  <symbol id="i-radio" viewBox="0 0 24 24"><path d="M12 9a2 2 0 1 0 0 .1M10 20l2-8 2 8m-7.5-5a7 7 0 0 1 0-10m11 0a7 7 0 0 1 0 10M4 17.5a10.3 10.3 0 0 1 0-15m16 0a10.3 10.3 0 0 1 0 15"/></symbol>
+</defs></svg>
+<div id="app">
+  <header class="topbar">
+    <div class="identity"><svg class="portmark"><use href="#i-mark"/></svg><h1>汐凪市 <span>午前2時</span></h1></div>
+    <nav aria-label="ゲーム設定">
+      <button type="button" id="sound" title="音声の切り替え" aria-label="音声をミュート" aria-pressed="false"><svg><use id="sound-icon" href="#i-volume"/></svg></button>
+      <span class="nav-rule"></span>
+      <button type="button" id="pause" title="一時停止（Esc）" aria-label="一時停止"><svg><use href="#i-pause"/></svg></button>
+    </nav>
+  </header>
+  <main id="stage">
+    <canvas id="view" aria-label="汐凪市の3Dゲーム画面" tabindex="0"></canvas>
+    <div class="vignette"></div><div class="grain"></div><div id="injury"></div>
+    <div id="location">
+      <div class="chapter"><span class="chapter-line"></span><span id="area-num">AREA 01</span><span class="chapter-divider">/</span><span id="area-en">FERRY TERMINAL</span></div>
+      <h2 id="area-jp">渡船ターミナル</h2>
+      <div class="objective"><i></i><span id="objective">非常灯をたどり、裏口を探す</span></div>
+    </div>
+    <div id="reticle" hidden><i></i><i></i><i></i><i></i></div>
+    <div id="radio-caption" class="caption" role="status" hidden><span><svg><use href="#i-radio"/></svg><b>防災無線</b></span><p>避難先は、汐凪警察署です。</p></div>
+    <div id="notice" role="status" hidden></div>
+    <div id="interact" hidden><kbd>E</kbd><span id="interaction"></span></div>
+    <div class="hud vital"><div class="hud-label"><i></i>VITALS <span>体力</span></div><div class="readout"><svg class="pulse"><use href="#i-vital"/></svg><div id="life-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><b id="hp">100</b></div></div>
+    <div class="hud equipment"><div class="hud-label">EQUIPMENT <span>装備</span></div><div class="readout"><svg class="equip-icon"><use id="equip-symbol" href="#i-pouch"/></svg><b id="ammo">―</b><span id="ammo-label">未装備</span></div></div>
+    <div id="curtain"></div>
+    <div id="menu" hidden>
+      <section class="menu-card" role="dialog" aria-modal="true" aria-labelledby="menu-title">
+        <div class="chapter"><span class="chapter-line"></span><span id="menu-kicker">PAUSED</span></div>
+        <h2 id="menu-title">一時停止</h2>
+        <p id="menu-copy"></p>
+        <div id="key-list"><span><kbd>W A S D</kbd>移動</span><span><kbd>マウス</kbd>視点</span><span><kbd>Shift</kbd>走る</span><span><kbd>E</kbd>調べる・拾う</span><span><kbd>右クリック</kbd>構える</span><span><kbd>左クリック</kbd>撃つ</span></div>
+        <button id="continue" type="button" class="action-button">ゲームに戻る<span>↗</span></button>
+      </section>
+    </div>
+    <div id="loading"><span class="chapter-line"></span><p>港の風景を読み込み中…</p></div>
+  </main>
+  <footer class="controls" aria-label="操作案内">
+    <div class="control"><span class="keys"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span>移動</div>
+    <div class="control" id="look-guide"><svg><use href="#i-mouse"/></svg><span>クリックで視点操作</span></div>
+    <div class="control"><kbd>SHIFT</kbd>走る</div><div class="control"><kbd>E</kbd>調べる</div>
+    <div class="control" id="gun-guide" hidden><kbd>右 / 左</kbd>構え・射撃</div>
+    <div class="control escape"><kbd>ESC</kbd>一時停止</div>
+  </footer>
+</div>
+<script type="module" src="./src/main.ts"></script>
+</body></html>
